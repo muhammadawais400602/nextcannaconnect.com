@@ -1,0 +1,102 @@
+import mongoose, { Schema, Document, Model } from "mongoose";
+
+export interface ICompany extends Document {
+  slug: string;
+  name: string;
+  tier: "free" | "claimed" | "select" | "elite" | "featured";
+  category: string;
+  secondaryCategory?: string;
+  location: { city: string; state: string };
+  shortDescription: string;
+  fullDescription?: string;
+  serviceTags: string[];
+  logoUrl?: string;
+  logoPlaceholder: string;
+  logoColor: string;
+  bannerImageUrl?: string;
+  website?: string;
+  phone?: string;
+  email?: string;
+  // Template 1 — Products & Equipment
+  productLines?: string[];
+  minOrderQty?: string;
+  leadTime?: string;
+  serviceArea?: string;
+  certifications?: string[];
+  // Template 2 — Services & Agencies
+  statesServed?: string[];
+  teamSize?: string;
+  yearsInCannabis?: number;
+  pricingModel?: string;
+  caseStudies?: { title: string; summary: string }[];
+  // Template 3 — Consultants
+  specialtyAreas?: string[];
+  credentials?: string[];
+  yearsExperience?: number;
+  hourlyRate?: string;
+  availability?: string;
+  bio?: string;
+  rating?: number;
+  reviewCount?: number;
+  isFeatured: boolean;
+  featuredExpiresAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const CompanySchema = new Schema<ICompany>(
+  {
+    slug: { type: String, required: true, unique: true, index: true },
+    name: { type: String, required: true },
+    tier: {
+      type: String,
+      enum: ["free", "claimed", "select", "elite", "featured"],
+      default: "free",
+    },
+    category: { type: String, required: true, index: true },
+    secondaryCategory: String,
+    location: {
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+    },
+    shortDescription: { type: String, required: true },
+    fullDescription: String,
+    serviceTags: [String],
+    logoUrl: String,
+    logoPlaceholder: { type: String, required: true },
+    logoColor: { type: String, default: "#1A4A35" },
+    bannerImageUrl: String,
+    website: String,
+    phone: String,
+    email: String,
+    productLines: [String],
+    minOrderQty: String,
+    leadTime: String,
+    serviceArea: String,
+    certifications: [String],
+    statesServed: [String],
+    teamSize: String,
+    yearsInCannabis: Number,
+    pricingModel: String,
+    caseStudies: [{ title: String, summary: String }],
+    specialtyAreas: [String],
+    credentials: [String],
+    yearsExperience: Number,
+    hourlyRate: String,
+    availability: String,
+    bio: String,
+    rating: Number,
+    reviewCount: Number,
+    isFeatured: { type: Boolean, default: false },
+    featuredExpiresAt: Date,
+  },
+  { timestamps: true }
+);
+
+CompanySchema.index({ category: 1, tier: 1 });
+CompanySchema.index({ name: "text", shortDescription: "text", serviceTags: "text" });
+
+const Company: Model<ICompany> =
+  mongoose.models.Company || mongoose.model<ICompany>("Company", CompanySchema);
+
+export default Company;
