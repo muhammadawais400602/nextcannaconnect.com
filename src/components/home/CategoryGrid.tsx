@@ -2,86 +2,126 @@
 
 import Link from "next/link";
 import { CATEGORIES } from "@/data/categories";
+import {
+  Sprout, Factory, FlaskConical, Briefcase, Megaphone,
+  Store, Truck, TestTube, Scale, Laptop, Building2, Landmark,
+  ArrowRight,
+} from "lucide-react";
 
-const CATEGORY_COLORS = [
-  "#F7941D", // orange
-  "#1A4A35", // dark green
-  "#5CB85C", // light green
-  "#1C2B3A", // navy
-];
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  "cultivation-growing": <Sprout size={22} />,
+  "manufacturers-suppliers": <Factory size={22} />,
+  "extraction-processing": <FlaskConical size={22} />,
+  "consultants-advisors": <Briefcase size={22} />,
+  "marketing-branding-packaging": <Megaphone size={22} />,
+  "retail-dispensary": <Store size={22} />,
+  "transportation-logistics": <Truck size={22} />,
+  "testing-science": <TestTube size={22} />,
+  "compliance-legal": <Scale size={22} />,
+  "technology-software": <Laptop size={22} />,
+  "real-estate-construction": <Building2 size={22} />,
+  "finance-insurance": <Landmark size={22} />,
+};
 
-const CATEGORY_ICONS: Record<string, string> = {
-  "cultivation-growing": "🌱",
-  "manufacturers-suppliers": "🏭",
-  "extraction-processing": "⚗️",
-  "consultants-advisors": "💼",
-  "marketing-branding-packaging": "🎨",
-  "retail-dispensary": "🏪",
-  "transportation-logistics": "🚛",
-  "testing-science": "🔬",
-  "compliance-legal": "⚖️",
-  "technology-software": "💻",
-  "real-estate-construction": "🏗️",
-  "finance-insurance": "💰",
+const CATEGORY_COUNTS: Record<string, string> = {
+  "cultivation-growing": "1,240+",
+  "manufacturers-suppliers": "3,800+",
+  "extraction-processing": "920+",
+  "consultants-advisors": "2,100+",
+  "marketing-branding-packaging": "1,650+",
+  "retail-dispensary": "8,400+",
+  "transportation-logistics": "710+",
+  "testing-science": "480+",
+  "compliance-legal": "1,320+",
+  "technology-software": "990+",
+  "real-estate-construction": "560+",
+  "finance-insurance": "740+",
 };
 
 export default function CategoryGrid() {
   return (
-    <section className="py-16 px-8" style={{ backgroundColor: "#F7F9F7" }}>
-      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-        <div className="text-center mb-10">
-          <p
-            className="font-semibold uppercase tracking-widest mb-2"
-            style={{ color: "#F7941D", fontSize: "11px", letterSpacing: "2px" }}
+    <section className="py-20 px-6" style={{ backgroundColor: "white" }}>
+      <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
+
+        {/* Section header */}
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <span className="section-label">Browse Directory</span>
+            <h2 className="section-title">12 Cannabis Industry Verticals</h2>
+            <p style={{ color: "#6B7280", fontSize: "15px", marginTop: "8px", maxWidth: "480px" }}>
+              Find vetted businesses across every segment of the cannabis supply chain.
+            </p>
+          </div>
+          <Link
+            href="/directory"
+            className="hidden sm:flex items-center gap-1.5 font-semibold flex-shrink-0"
+            style={{ color: "#F7941D", fontSize: "14px" }}
           >
-            Browse by Category
-          </p>
-          <h2
-            className="font-bold"
-            style={{ fontSize: "28px", color: "#1A4A35", fontWeight: 700 }}
-          >
-            12 Cannabis Industry Verticals
-          </h2>
+            Browse All
+            <ArrowRight size={15} />
+          </Link>
         </div>
 
+        {/* Grid */}
         <div
-          className="grid gap-4"
-          style={{
-            gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
-          }}
+          className="grid gap-3"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}
         >
-          {CATEGORIES.map((cat, i) => {
-            const color = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
-            return (
-              <Link
-                key={cat.slug}
-                href={`/directory/${cat.slug}`}
-                className="group flex flex-col items-start p-6 rounded-xl cursor-pointer"
+          {CATEGORIES.map((cat) => (
+            <Link
+              key={cat.slug}
+              href={`/directory/${cat.slug}`}
+              className="group rounded-xl p-5 flex flex-col gap-3 transition-all"
+              style={{
+                backgroundColor: "#F8FAF8",
+                border: "1px solid #E5E7EB",
+                textDecoration: "none",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.backgroundColor = "white";
+                (e.currentTarget as HTMLElement).style.borderColor = "#1A4A35";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 16px rgba(26,74,53,0.10)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.backgroundColor = "#F8FAF8";
+                (e.currentTarget as HTMLElement).style.borderColor = "#E5E7EB";
+                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+              }}
+            >
+              {/* Icon */}
+              <div
+                className="flex items-center justify-center rounded-xl flex-shrink-0"
                 style={{
-                  backgroundColor: color,
-                  transition: "transform 0.2s ease, filter 0.2s ease",
-                  textDecoration: "none",
-                  minHeight: "120px",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "scale(1.04)";
-                  (e.currentTarget as HTMLElement).style.filter = "brightness(1.1)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-                  (e.currentTarget as HTMLElement).style.filter = "brightness(1)";
+                  width: "44px",
+                  height: "44px",
+                  backgroundColor: "rgba(26,74,53,0.09)",
+                  color: "#1A4A35",
                 }}
               >
-                <span className="text-2xl mb-3">{CATEGORY_ICONS[cat.slug]}</span>
-                <span
-                  className="font-bold text-white leading-tight"
-                  style={{ fontSize: "15px", fontWeight: 700 }}
+                {CATEGORY_ICONS[cat.slug]}
+              </div>
+
+              {/* Label + count */}
+              <div>
+                <p
+                  className="font-bold leading-snug"
+                  style={{ fontSize: "14px", color: "#111827", fontWeight: 700 }}
                 >
                   {cat.label}
-                </span>
-              </Link>
-            );
-          })}
+                </p>
+                <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "3px", fontWeight: 500 }}>
+                  {CATEGORY_COUNTS[cat.slug]} businesses
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile see all */}
+        <div className="sm:hidden text-center mt-8">
+          <Link href="/directory" className="btn-ghost" style={{ fontSize: "14px" }}>
+            View All Categories
+          </Link>
         </div>
       </div>
     </section>

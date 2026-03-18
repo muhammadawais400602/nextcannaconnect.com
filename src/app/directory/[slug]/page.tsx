@@ -5,9 +5,8 @@ import { getCompaniesByCategory } from "@/data/companies";
 import CategoryNavBar from "@/components/directory/CategoryNavBar";
 import FiltersPanel from "@/components/directory/FiltersPanel";
 import ListingCard from "@/components/directory/ListingCard";
-import SponsoredBanner from "@/components/home/SponsoredBanner";
-import SectionDivider from "@/components/ui/SectionDivider";
-import { Search } from "lucide-react";
+import { Search, SlidersHorizontal, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -44,174 +43,206 @@ export default async function CategoryPage({ params }: Props) {
       {/* Category Nav */}
       <CategoryNavBar activeSlug={slug} />
 
-      {/* Search Bar */}
-      <div style={{ backgroundColor: "white", borderBottom: "1px solid #E8EDE8" }}>
-        <div className="mx-auto px-8 py-4" style={{ maxWidth: "1100px" }}>
-          <div
-            className="flex items-center gap-3 rounded-lg px-4 py-2.5"
-            style={{ border: "1px solid #E8EDE8", backgroundColor: "#F7F9F7", maxWidth: "600px" }}
-          >
-            <Search size={16} style={{ color: "#4A5E4A" }} />
-            <input
-              type="text"
-              placeholder="Search the cannabis industry network..."
-              className="flex-1 bg-transparent outline-none"
-              style={{ fontSize: "14px", color: "#1A2E1A", border: "none" }}
-            />
+      {/* Page header */}
+      <div style={{ backgroundColor: "white", borderBottom: "1px solid #E5E7EB" }}>
+        <div className="mx-auto px-6 py-8" style={{ maxWidth: "1180px" }}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2" style={{ fontSize: "13px", color: "#9CA3AF" }}>
+                <Link href="/" style={{ color: "#9CA3AF", textDecoration: "none" }}>Home</Link>
+                <span>/</span>
+                <Link href="/directory" style={{ color: "#9CA3AF", textDecoration: "none" }}>Directory</Link>
+                <span>/</span>
+                <span style={{ color: "#374151" }}>{category.label}</span>
+              </div>
+              <h1 className="font-extrabold" style={{ fontSize: "26px", color: "#111827", fontWeight: 800, letterSpacing: "-0.3px" }}>
+                {category.label}
+              </h1>
+              <p style={{ color: "#6B7280", fontSize: "14px", marginTop: "4px" }}>
+                {category.description}
+              </p>
+            </div>
+
+            {/* Search bar */}
+            <div
+              className="flex items-center gap-2 px-4 py-3 rounded-xl flex-shrink-0"
+              style={{
+                border: "1px solid #E5E7EB",
+                backgroundColor: "#F8FAF8",
+                width: "100%",
+                maxWidth: "320px",
+              }}
+            >
+              <Search size={15} style={{ color: "#9CA3AF", flexShrink: 0 }} />
+              <input
+                type="text"
+                placeholder={`Search ${category.shortLabel}...`}
+                className="flex-1 bg-transparent outline-none"
+                style={{ fontSize: "14px", color: "#111827", border: "none" }}
+              />
+            </div>
+          </div>
+
+          {/* Result count + sort */}
+          <div className="flex items-center justify-between mt-5">
+            <p style={{ color: "#6B7280", fontSize: "13px" }}>
+              Showing <strong style={{ color: "#111827" }}>{companies.length}</strong> businesses
+            </p>
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={14} style={{ color: "#9CA3AF" }} />
+              <span style={{ fontSize: "13px", color: "#6B7280" }}>Sort: Relevance</span>
+            </div>
           </div>
         </div>
       </div>
 
-      <SectionDivider />
-
-      {/* Category Title */}
-      <div className="px-8 py-8" style={{ backgroundColor: "#F7F9F7" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <h1 className="font-bold mb-1" style={{ fontSize: "28px", color: "#1A4A35", fontWeight: 700 }}>
-            {category.label}
-          </h1>
-          <p style={{ color: "#4A5E4A", fontSize: "15px" }}>{category.description}</p>
-        </div>
-      </div>
-
-      {/* Sponsored leaderboard */}
-      <SponsoredBanner
-        companyName="LeafWorks Software"
-        tagline="The all-in-one cannabis ERP. Seed-to-sale tracking, POS, and compliance in one platform."
-        logoInitials="LW"
-        destinationUrl="/vendor/leafworks-software"
-        ctaText="See Platform →"
-      />
-
-      <SectionDivider />
-
-      {/* Main layout: filters + listings */}
-      <div className="px-8 py-8" style={{ backgroundColor: "#F7F9F7" }}>
+      {/* Main layout */}
+      <div className="px-6 py-8" style={{ backgroundColor: "#F8FAF8", minHeight: "60vh" }}>
         <div
-          className="mx-auto flex gap-6"
-          style={{ maxWidth: "1100px", alignItems: "flex-start" }}
+          className="mx-auto flex gap-7"
+          style={{ maxWidth: "1180px", alignItems: "flex-start" }}
         >
-          {/* LEFT: Filters */}
-          <div className="hidden lg:block flex-shrink-0" style={{ width: "220px" }}>
+          {/* Sidebar filters */}
+          <div className="hidden lg:block flex-shrink-0" style={{ width: "230px" }}>
             <FiltersPanel categoryLabel={category.shortLabel} />
           </div>
 
-          {/* RIGHT: Listings + Sidebar */}
-          <div className="flex-1 min-w-0 flex gap-5" style={{ alignItems: "flex-start" }}>
-            {/* Listings column */}
-            <div className="flex-1 min-w-0">
-              <p style={{ color: "#4A5E4A", fontSize: "13px", marginBottom: "16px" }}>
-                Showing <strong>{companies.length}</strong> businesses in {category.label}
-              </p>
+          {/* Main listings */}
+          <div className="flex-1 min-w-0">
 
-              {/* Featured */}
-              {featured.map((c) => (
-                <ListingCard key={c.id} company={c} featured />
-              ))}
+            {/* Featured */}
+            {featured.map((c) => (
+              <ListingCard key={c.id} company={c} featured />
+            ))}
 
-              {/* Elite */}
-              {elite.length > 0 && (
-                <div className="flex flex-col gap-3 mb-3">
-                  {elite.map((c) => <ListingCard key={c.id} company={c} />)}
-                </div>
-              )}
+            {/* Paid tiers */}
+            {[...elite, ...select, ...claimed].map((c) => (
+              <ListingCard key={c.id} company={c} />
+            ))}
 
-              {/* Select */}
-              {select.length > 0 && (
-                <div className="flex flex-col gap-3 mb-3">
-                  {select.map((c) => <ListingCard key={c.id} company={c} />)}
-                </div>
-              )}
-
-              {/* Claimed */}
-              {claimed.length > 0 && (
-                <div className="flex flex-col gap-3 mb-3">
-                  {claimed.map((c) => <ListingCard key={c.id} company={c} />)}
-                </div>
-              )}
-
-              {/* Unclaimed separator */}
-              {free.length > 0 && (
-                <>
-                  <div className="flex items-center gap-3 my-5">
-                    <div style={{ flex: 1, height: "1px", backgroundColor: "#E8EDE8" }} />
-                    <span style={{ color: "#4A5E4A", fontSize: "12px", fontWeight: 600 }}>UNCLAIMED LISTINGS</span>
-                    <div style={{ flex: 1, height: "1px", backgroundColor: "#E8EDE8" }} />
-                  </div>
-                  <div className="flex flex-col gap-3">
-                    {free.map((c) => <ListingCard key={c.id} company={c} />)}
-                  </div>
-                </>
-              )}
-
-              {/* Pagination */}
-              <div className="flex items-center justify-center gap-2 mt-8">
-                <button
-                  className="px-3 py-1.5 rounded font-medium"
-                  style={{ fontSize: "13px", color: "#4A5E4A", border: "1px solid #E8EDE8" }}
-                >
-                  ← Previous
-                </button>
-                {[1, 2, 3].map((n) => (
-                  <button
-                    key={n}
-                    className="px-3 py-1.5 rounded font-medium"
-                    style={{
-                      fontSize: "13px",
-                      backgroundColor: n === 1 ? "#F7941D" : "transparent",
-                      color: n === 1 ? "white" : "#4A5E4A",
-                      border: n === 1 ? "none" : "1px solid #E8EDE8",
-                    }}
+            {/* Unclaimed separator */}
+            {free.length > 0 && (
+              <>
+                <div className="flex items-center gap-3 my-6">
+                  <div style={{ flex: 1, height: "1px", backgroundColor: "#E5E7EB" }} />
+                  <span
+                    className="font-semibold uppercase"
+                    style={{ color: "#9CA3AF", fontSize: "11px", letterSpacing: "1px", whiteSpace: "nowrap" }}
                   >
-                    {n}
-                  </button>
+                    Unclaimed Listings
+                  </span>
+                  <div style={{ flex: 1, height: "1px", backgroundColor: "#E5E7EB" }} />
+                </div>
+                {free.map((c) => (
+                  <ListingCard key={c.id} company={c} />
                 ))}
-                <button
-                  className="px-3 py-1.5 rounded font-medium"
-                  style={{ fontSize: "13px", color: "#4A5E4A", border: "1px solid #E8EDE8" }}
-                >
-                  Next →
-                </button>
-              </div>
-            </div>
+              </>
+            )}
 
-            {/* RIGHT sidebar ad slots */}
-            <div className="hidden xl:flex flex-col gap-4 flex-shrink-0" style={{ width: "300px" }}>
-              {/* Yellow sponsored card */}
-              <div
-                className="rounded-xl p-5"
-                style={{ backgroundColor: "#F9C31A" }}
+            {/* Pagination */}
+            <div className="flex items-center justify-center gap-2 mt-10">
+              <button
+                className="rounded-lg px-4 py-2.5 font-medium transition-colors"
+                style={{ fontSize: "13px", color: "#6B7280", border: "1px solid #E5E7EB", backgroundColor: "white" }}
               >
-                <p className="font-bold text-sm mb-1" style={{ color: "#1A2E1A" }}>SPONSORED</p>
-                <p className="font-bold mb-2" style={{ fontSize: "16px", color: "#1A2E1A" }}>CannaShield Insurance</p>
-                <p style={{ fontSize: "13px", color: "#1A2E1A", marginBottom: "12px" }}>
-                  Specialized cannabis business insurance. Product liability, crop, and property coverage.
+                ← Previous
+              </button>
+              {[1, 2, 3].map((n) => (
+                <button
+                  key={n}
+                  className="rounded-lg px-3.5 py-2.5 font-medium transition-colors"
+                  style={{
+                    fontSize: "13px",
+                    backgroundColor: n === 1 ? "#F7941D" : "white",
+                    color: n === 1 ? "white" : "#6B7280",
+                    border: n === 1 ? "none" : "1px solid #E5E7EB",
+                  }}
+                >
+                  {n}
+                </button>
+              ))}
+              <button
+                className="rounded-lg px-4 py-2.5 font-medium transition-colors"
+                style={{ fontSize: "13px", color: "#6B7280", border: "1px solid #E5E7EB", backgroundColor: "white" }}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+
+          {/* Right ad sidebar */}
+          <div className="hidden xl:flex flex-col gap-5 flex-shrink-0" style={{ width: "280px" }}>
+            {/* Sponsored card */}
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ border: "1px solid #E5E7EB", backgroundColor: "white" }}
+            >
+              <div
+                className="px-4 py-2.5"
+                style={{ backgroundColor: "#F8FAF8", borderBottom: "1px solid #E5E7EB" }}
+              >
+                <span style={{ fontSize: "10px", color: "#9CA3AF", fontWeight: 700, textTransform: "uppercase", letterSpacing: "1px" }}>
+                  Sponsored
+                </span>
+              </div>
+              <div className="p-5">
+                <p className="font-bold mb-1" style={{ fontSize: "15px", color: "#111827" }}>
+                  CannaShield Insurance
+                </p>
+                <p style={{ fontSize: "13px", color: "#6B7280", marginBottom: "12px", lineHeight: 1.55 }}>
+                  Specialized cannabis business insurance — product liability, crop & property.
                 </p>
                 <a
                   href="/vendor/canna-shield-insurance"
-                  className="inline-block font-bold text-sm px-4 py-2 rounded-lg"
-                  style={{ backgroundColor: "#1A4A35", color: "white" }}
+                  className="inline-flex items-center gap-1.5 font-semibold"
+                  style={{ color: "#F7941D", fontSize: "13px" }}
                 >
-                  Get a Quote →
+                  Get a Quote <ArrowRight size={13} />
                 </a>
               </div>
+            </div>
 
-              {/* 300x250 IAB placeholder */}
-              <div
-                className="rounded-xl flex items-center justify-center"
-                style={{ width: "300px", height: "250px", backgroundColor: "#E8EDE8", border: "2px dashed #C0C0C0" }}
+            {/* Upgrade CTA */}
+            <div
+              className="rounded-2xl p-5"
+              style={{ backgroundColor: "#1A4A35" }}
+            >
+              <p
+                className="font-bold text-white mb-2"
+                style={{ fontSize: "15px", fontWeight: 700 }}
               >
-                <div className="text-center">
-                  <p className="font-semibold" style={{ color: "#4A5E4A", fontSize: "13px" }}>AD SLOT</p>
-                  <p style={{ color: "#4A5E4A", fontSize: "11px" }}>300 × 250</p>
-                </div>
+                Boost your visibility
+              </p>
+              <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "13px", marginBottom: "16px", lineHeight: 1.55 }}>
+                Upgrade to Elite or Select to get priority placement and verified badge.
+              </p>
+              <Link
+                href="/membership"
+                className="btn-primary w-full justify-center"
+                style={{ fontSize: "13px", padding: "10px" }}
+              >
+                View Plans
+              </Link>
+            </div>
+
+            {/* 300x250 ad slot */}
+            <div
+              className="rounded-2xl flex items-center justify-center"
+              style={{
+                width: "100%",
+                height: "220px",
+                backgroundColor: "#F3F4F6",
+                border: "2px dashed #D1D5DB",
+              }}
+            >
+              <div className="text-center">
+                <p className="font-semibold" style={{ color: "#9CA3AF", fontSize: "12px" }}>AD SLOT</p>
+                <p style={{ color: "#9CA3AF", fontSize: "11px" }}>300 × 250</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <SectionDivider reverse />
     </>
   );
 }

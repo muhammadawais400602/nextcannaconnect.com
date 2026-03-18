@@ -7,16 +7,16 @@
   --color-brand-green-light: #5CB85C;
   --color-brand-green-dark: #1A4A35;
   --color-brand-navy: #1C2B3A;
-  --color-brand-off-white: #F7F9F7;
-  --color-brand-gray-light: #E8EDE8;
-  --color-brand-text-dark: #1A2E1A;
-  --color-brand-text-mid: #4A5E4A;
+  --color-brand-off-white: #F8FAF8;
+  --color-brand-gray-light: #EAEEEA;
+  --color-brand-text-dark: #111827;
+  --color-brand-text-mid: #6B7280;
 
   /* Typography */
   --font-sans: "Inter", sans-serif;
 
   /* Max content width */
-  --spacing-content: 1100px;
+  --spacing-content: 1180px;
 }
 
 * {
@@ -28,110 +28,134 @@ html {
 }
 
 body {
-  background-color: #F7F9F7;
-  color: #1A2E1A;
+  background-color: #ffffff;
+  color: #111827;
   font-family: "Inter", sans-serif;
   font-size: 15px;
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Section gradient divider */
-.gradient-divider {
-  height: 4px;
-  background: linear-gradient(90deg, #F7941D, #F9C31A, #5CB85C, #1A4A35);
-  border-radius: 2px;
-}
-
-.gradient-divider-reverse {
-  height: 4px;
-  background: linear-gradient(90deg, #1A4A35, #5CB85C, #F9C31A, #F7941D);
-  border-radius: 2px;
-}
-
-/* Card hover */
-.card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-/* Button hover */
+/* ── Buttons ─────────────────────────────────────────────── */
 .btn-primary {
   background-color: #F7941D;
   color: white;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
-  padding: 10px 20px;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  padding: 11px 22px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   border: none;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
 .btn-primary:hover {
-  background-color: #e07e0a;
-  transform: scale(1.02);
+  background-color: #e5860a;
+  box-shadow: 0 4px 12px rgba(247, 148, 29, 0.35);
 }
 
 .btn-secondary {
   background-color: transparent;
-  color: white;
-  border: 2px solid white;
-  border-radius: 6px;
+  color: #111827;
+  border: 1.5px solid #D1D5DB;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
-  padding: 10px 20px;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  padding: 10px 22px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
 .btn-secondary:hover {
-  background-color: rgba(255,255,255,0.1);
-  transform: scale(1.02);
+  border-color: #F7941D;
+  background-color: rgba(247, 148, 29, 0.04);
 }
 
 .btn-ghost {
   background-color: transparent;
-  color: #1A2E1A;
-  border: 2px solid #E8EDE8;
-  border-radius: 6px;
+  color: #374151;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 8px;
   font-weight: 600;
   font-size: 14px;
-  padding: 8px 18px;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  padding: 10px 22px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   cursor: pointer;
   text-decoration: none;
+  white-space: nowrap;
 }
 .btn-ghost:hover {
   border-color: #F7941D;
-  transform: scale(1.02);
+  color: #F7941D;
 }
 
-/* Focus states */
-input:focus, select:focus, textarea:focus {
+.btn-white {
+  background-color: white;
+  color: #111827;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 11px 22px;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-white:hover {
+  background-color: #F9FAFB;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.card {
+  background-color: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.card-hover {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card-hover:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* ── Form elements ───────────────────────────────────────── */
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   border-color: #F7941D !important;
-  box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.1);
+  box-shadow: 0 0 0 3px rgba(247, 148, 29, 0.12);
 }
 
-/* Tier badge base */
+/* ── Tier badge ──────────────────────────────────────────── */
 .tier-badge {
   font-size: 10px;
   font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 4px;
-  letter-spacing: 1px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
@@ -139,11 +163,45 @@ input:focus, select:focus, textarea:focus {
   white-space: nowrap;
 }
 
-/* Scrollbar for category nav */
+/* ── Section helpers ─────────────────────────────────────── */
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #F7941D;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #111827;
+  line-height: 1.25;
+}
+
+/* ── Scrollbar hide (category nav) ───────────────────────── */
 .category-nav-scroll::-webkit-scrollbar {
   display: none;
 }
 .category-nav-scroll {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ── Divider ─────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background-color: #E5E7EB;
+}
+
+/* ── Footer links ────────────────────────────────────────── */
+.footer-link {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.footer-link:hover {
+  color: rgba(255,255,255,0.95);
 }

@@ -1,112 +1,156 @@
 import Link from "next/link";
 import { getFeaturedCompanies } from "@/data/companies";
-import { MapPin, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight, Star } from "lucide-react";
 import TierBadge from "@/components/ui/TierBadge";
-
-const TIER_BORDER_COLORS: Record<string, string> = {
-  elite: "#1A4A35",
-  select: "#5CB85C",
-  claimed: "#F9C31A",
-  featured: "#F7941D",
-  free: "#E8EDE8",
-};
 
 export default function FeaturedVendors() {
   const companies = getFeaturedCompanies();
 
   return (
-    <section className="py-16 px-8" style={{ backgroundColor: "white" }}>
-      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-        <div className="text-center mb-10">
-          <p
-            className="font-semibold uppercase tracking-widest mb-2"
-            style={{ color: "#F7941D", fontSize: "11px", letterSpacing: "2px" }}
+    <section className="py-20 px-6" style={{ backgroundColor: "#F8FAF8" }}>
+      <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
+
+        {/* Section header */}
+        <div className="flex items-end justify-between mb-10">
+          <div>
+            <span className="section-label">Featured Listings</span>
+            <h2 className="section-title">Top Verified Businesses</h2>
+            <p style={{ color: "#6B7280", fontSize: "15px", marginTop: "8px" }}>
+              Vetted, verified partners ready to work with your cannabis operation.
+            </p>
+          </div>
+          <Link
+            href="/directory"
+            className="hidden sm:flex items-center gap-1.5 font-semibold flex-shrink-0"
+            style={{ color: "#F7941D", fontSize: "14px" }}
           >
-            Featured Vendors
-          </p>
-          <h2
-            className="font-bold"
-            style={{ fontSize: "28px", color: "#1A4A35", fontWeight: 700 }}
-          >
-            Top Verified Businesses
-          </h2>
+            Browse All
+            <ArrowRight size={15} />
+          </Link>
         </div>
 
-        <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
-          {companies.map((company) => {
-            const borderColor = TIER_BORDER_COLORS[company.tier] || "#E8EDE8";
-            return (
+        {/* Cards grid */}
+        <div
+          className="grid gap-5"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(310px, 1fr))" }}
+        >
+          {companies.map((company) => (
+            <Link
+              key={company.id}
+              href={`/vendor/${company.slug}`}
+              className="group flex flex-col rounded-2xl overflow-hidden card-hover"
+              style={{
+                backgroundColor: "white",
+                border: "1px solid #E5E7EB",
+                textDecoration: "none",
+              }}
+            >
+              {/* Card top band */}
               <div
-                key={company.id}
-                className="card-hover rounded-xl overflow-hidden"
-                style={{
-                  backgroundColor: "white",
-                  border: "1px solid #E8EDE8",
-                  borderTop: `4px solid ${borderColor}`,
-                }}
-              >
-                <div className="p-6">
-                  {/* Logo + name row */}
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="rounded-xl flex items-center justify-center font-bold text-white flex-shrink-0"
-                        style={{
-                          width: "48px",
-                          height: "48px",
-                          backgroundColor: company.logoColor,
-                          fontSize: "14px",
-                        }}
-                      >
-                        {company.logoPlaceholder}
-                      </div>
-                      <div>
-                        <h3 className="font-bold" style={{ fontSize: "15px", color: "#1A2E1A", fontWeight: 700 }}>
-                          {company.name}
-                        </h3>
-                        <div className="flex items-center gap-1 mt-0.5" style={{ color: "#4A5E4A", fontSize: "12px" }}>
-                          <MapPin size={11} />
-                          {company.location.city}, {company.location.state}
-                        </div>
-                      </div>
-                    </div>
-                    <TierBadge tier={company.tier} />
-                  </div>
+                className="h-1.5 w-full flex-shrink-0"
+                style={{ backgroundColor: company.logoColor }}
+              />
 
-                  <p style={{ color: "#4A5E4A", fontSize: "13px", lineHeight: 1.5, marginBottom: "12px" }}>
-                    {company.shortDescription.slice(0, 100)}...
-                  </p>
-
-                  {/* Service tags */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {company.serviceTags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-xs px-2 py-0.5 rounded-full"
-                        style={{ backgroundColor: "#F7F9F7", color: "#4A5E4A", fontSize: "11px", border: "1px solid #E8EDE8" }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <Link
-                    href={`/vendor/${company.slug}`}
-                    className="group inline-flex items-center gap-1 font-semibold"
-                    style={{ color: "#F7941D", fontSize: "13px" }}
+              <div className="p-6 flex flex-col flex-1">
+                {/* Logo + name */}
+                <div className="flex items-start gap-4 mb-4">
+                  <div
+                    className="rounded-xl flex items-center justify-center font-bold text-white flex-shrink-0"
+                    style={{
+                      width: "52px",
+                      height: "52px",
+                      backgroundColor: company.logoColor,
+                      fontSize: "15px",
+                      fontWeight: 800,
+                    }}
                   >
-                    View Company Page
-                    <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                    {company.logoPlaceholder}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3
+                        className="font-bold leading-tight"
+                        style={{ fontSize: "15px", color: "#111827", fontWeight: 700 }}
+                      >
+                        {company.name}
+                      </h3>
+                      <TierBadge tier={company.tier} />
+                    </div>
+                    <div
+                      className="flex items-center gap-1 mt-1"
+                      style={{ color: "#9CA3AF", fontSize: "12px" }}
+                    >
+                      <MapPin size={11} />
+                      {company.location.city}, {company.location.state}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating */}
+                {company.rating && (
+                  <div className="flex items-center gap-1.5 mb-3">
+                    <div className="flex gap-0.5">
+                      {[1,2,3,4,5].map((s) => (
+                        <Star
+                          key={s}
+                          size={12}
+                          fill={s <= Math.round(company.rating!) ? "#F9C31A" : "#E5E7EB"}
+                          stroke="none"
+                        />
+                      ))}
+                    </div>
+                    <span style={{ fontSize: "12px", color: "#6B7280" }}>
+                      {company.rating} ({company.reviewCount} reviews)
+                    </span>
+                  </div>
+                )}
+
+                {/* Description */}
+                <p
+                  className="flex-1"
+                  style={{ color: "#6B7280", fontSize: "13px", lineHeight: 1.6, marginBottom: "16px" }}
+                >
+                  {company.shortDescription.slice(0, 110)}...
+                </p>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-1.5 mb-5">
+                  {company.serviceTags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2.5 py-1 rounded-full"
+                      style={{
+                        backgroundColor: "#F3F4F6",
+                        color: "#374151",
+                        fontSize: "11px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <div
+                  className="flex items-center gap-1 font-semibold transition-colors"
+                  style={{ color: "#F7941D", fontSize: "13px" }}
+                >
+                  View Full Profile
+                  <ArrowRight
+                    size={13}
+                    className="group-hover:translate-x-1 transition-transform"
+                  />
                 </div>
               </div>
-            );
-          })}
+            </Link>
+          ))}
         </div>
 
         <div className="text-center mt-10">
           <Link href="/directory" className="btn-primary" style={{ fontSize: "14px" }}>
-            Browse Full Directory →
+            Browse Full Directory
+            <ArrowRight size={15} />
           </Link>
         </div>
       </div>

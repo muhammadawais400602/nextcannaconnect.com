@@ -1,4 +1,4 @@
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, CheckCircle } from "lucide-react";
 
 interface VerifiedBoxProps {
   certifications?: string[];
@@ -11,23 +11,28 @@ export default function VerifiedBox({ certifications, credentials }: VerifiedBox
 
   return (
     <div
-      className="rounded-xl p-5"
+      className="rounded-2xl p-5"
       style={{
-        backgroundColor: "#f0faf0",
-        border: "1px solid #5CB85C",
-        borderLeft: "4px solid #5CB85C",
+        backgroundColor: "white",
+        border: "1px solid #E5E7EB",
       }}
     >
-      <div className="flex items-center gap-2 mb-3">
-        <ShieldCheck size={16} style={{ color: "#5CB85C" }} />
-        <h4 className="font-bold" style={{ fontSize: "13px", color: "#1A4A35", fontWeight: 700 }}>
+      <div className="flex items-center gap-2.5 mb-4">
+        <div
+          className="flex items-center justify-center rounded-xl"
+          style={{ width: "36px", height: "36px", backgroundColor: "rgba(92,184,92,0.1)" }}
+        >
+          <ShieldCheck size={18} style={{ color: "#5CB85C" }} />
+        </div>
+        <h4 className="font-bold" style={{ fontSize: "14px", color: "#111827", fontWeight: 700 }}>
           Verified Credentials
         </h4>
       </div>
-      <ul className="flex flex-col gap-1.5">
+      <ul className="flex flex-col gap-2.5">
         {items.map((item) => (
-          <li key={item} className="flex items-center gap-2" style={{ fontSize: "13px", color: "#1A4A35" }}>
-            <span style={{ color: "#5CB85C" }}>✓</span> {item}
+          <li key={item} className="flex items-start gap-2.5">
+            <CheckCircle size={14} className="flex-shrink-0 mt-0.5" style={{ color: "#5CB85C" }} />
+            <span style={{ fontSize: "13px", color: "#374151" }}>{item}</span>
           </li>
         ))}
       </ul>

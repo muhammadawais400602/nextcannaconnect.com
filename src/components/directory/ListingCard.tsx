@@ -1,22 +1,14 @@
 import Link from "next/link";
-import { MapPin, ArrowRight, Star } from "lucide-react";
+import { MapPin, ArrowRight, Star, ExternalLink } from "lucide-react";
 import { Company } from "@/types";
 import TierBadge from "@/components/ui/TierBadge";
 
-const TIER_BORDER: Record<string, string> = {
+const TIER_ACCENT: Record<string, string> = {
   featured: "#F7941D",
   elite: "#1A4A35",
   select: "#5CB85C",
   claimed: "#F9C31A",
-  free: "#E8EDE8",
-};
-
-const TIER_BG: Record<string, string> = {
-  featured: "white",
-  elite: "white",
-  select: "white",
-  claimed: "white",
-  free: "#FAFAFA",
+  free: "#E5E7EB",
 };
 
 interface ListingCardProps {
@@ -26,63 +18,73 @@ interface ListingCardProps {
 
 export default function ListingCard({ company, featured = false }: ListingCardProps) {
   const isFree = company.tier === "free";
-  const borderColor = TIER_BORDER[company.tier];
-  const bgColor = TIER_BG[company.tier];
+  const accent = TIER_ACCENT[company.tier];
 
   if (featured) {
-    // Full-width featured card
     return (
       <div
-        className="card-hover rounded-xl overflow-hidden mb-4"
+        className="rounded-2xl overflow-hidden mb-5 card-hover"
         style={{
           backgroundColor: "white",
-          border: `1px solid ${borderColor}`,
-          borderTop: `4px solid ${borderColor}`,
+          border: "1px solid #E5E7EB",
+          borderLeft: `4px solid ${accent}`,
         }}
       >
-        {/* Banner */}
+        {/* Featured label bar */}
         <div
-          className="w-full flex items-center px-6 py-3"
-          style={{ background: "linear-gradient(135deg, #1A4A35, #1C2B3A)", minHeight: "60px" }}
+          className="px-5 py-2.5 flex items-center gap-2"
+          style={{ backgroundColor: "#FAFAF5", borderBottom: "1px solid #E5E7EB" }}
         >
+          <Star size={13} fill="#F7941D" stroke="none" />
           <span
-            className="font-semibold uppercase"
-            style={{ color: "#F7941D", fontSize: "11px", letterSpacing: "2px" }}
+            className="font-bold uppercase"
+            style={{ color: "#F7941D", fontSize: "11px", letterSpacing: "1px" }}
           >
-            ★ FEATURED LISTING
+            Featured Listing
           </span>
         </div>
 
         <div className="p-6">
-          <div className="flex flex-col sm:flex-row sm:items-start gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-5">
             {/* Logo */}
             <div
-              className="rounded-xl flex items-center justify-center font-bold text-white flex-shrink-0"
+              className="rounded-2xl flex items-center justify-center font-bold text-white flex-shrink-0"
               style={{
-                width: "60px",
-                height: "60px",
+                width: "64px",
+                height: "64px",
                 backgroundColor: company.logoColor,
-                fontSize: "16px",
+                fontSize: "18px",
+                fontWeight: 800,
               }}
             >
               {company.logoPlaceholder}
             </div>
 
-            <div className="flex-1">
-              <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
                 <div>
-                  <h3 className="font-bold" style={{ fontSize: "18px", color: "#1A2E1A", fontWeight: 700 }}>
+                  <h3 className="font-bold" style={{ fontSize: "18px", color: "#111827", fontWeight: 700 }}>
                     {company.name}
                   </h3>
-                  <div className="flex items-center gap-1 mt-0.5" style={{ color: "#4A5E4A", fontSize: "13px" }}>
-                    <MapPin size={12} />
-                    {company.location.city}, {company.location.state}
+                  <div className="flex items-center gap-3 mt-1 flex-wrap">
+                    <span className="flex items-center gap-1" style={{ color: "#9CA3AF", fontSize: "12px" }}>
+                      <MapPin size={11} />
+                      {company.location.city}, {company.location.state}
+                    </span>
+                    {company.rating && (
+                      <span className="flex items-center gap-1">
+                        <Star size={11} fill="#F9C31A" stroke="none" />
+                        <span style={{ fontSize: "12px", color: "#6B7280" }}>
+                          {company.rating} ({company.reviewCount})
+                        </span>
+                      </span>
+                    )}
                   </div>
                 </div>
                 <TierBadge tier={company.tier} />
               </div>
 
-              <p style={{ color: "#4A5E4A", fontSize: "14px", lineHeight: 1.6, marginBottom: "12px" }}>
+              <p style={{ color: "#6B7280", fontSize: "14px", lineHeight: 1.6, marginBottom: "14px" }}>
                 {company.shortDescription}
               </p>
 
@@ -92,7 +94,12 @@ export default function ListingCard({ company, featured = false }: ListingCardPr
                     <span
                       key={tag}
                       className="px-2.5 py-1 rounded-full"
-                      style={{ backgroundColor: "#F7F9F7", color: "#4A5E4A", fontSize: "12px", border: "1px solid #E8EDE8" }}
+                      style={{
+                        backgroundColor: "#F3F4F6",
+                        color: "#374151",
+                        fontSize: "12px",
+                        fontWeight: 500,
+                      }}
                     >
                       {tag}
                     </span>
@@ -100,10 +107,11 @@ export default function ListingCard({ company, featured = false }: ListingCardPr
                 </div>
                 <Link
                   href={`/vendor/${company.slug}`}
-                  className="btn-primary"
-                  style={{ fontSize: "13px", padding: "8px 16px" }}
+                  className="btn-primary flex-shrink-0"
+                  style={{ fontSize: "13px", padding: "9px 18px" }}
                 >
-                  View Full Profile <ArrowRight size={13} />
+                  View Full Profile
+                  <ArrowRight size={13} />
                 </Link>
               </div>
             </div>
@@ -116,91 +124,102 @@ export default function ListingCard({ company, featured = false }: ListingCardPr
   // Standard card
   return (
     <div
-      className={`card-hover rounded-xl overflow-hidden ${isFree ? "opacity-80" : ""}`}
+      className={`rounded-xl overflow-hidden card-hover ${isFree ? "opacity-75" : ""}`}
       style={{
-        backgroundColor: bgColor,
-        border: `1px solid ${borderColor}`,
-        borderLeft: `4px solid ${borderColor}`,
+        backgroundColor: "white",
+        border: "1px solid #E5E7EB",
+        borderLeft: `3px solid ${accent}`,
+        marginBottom: "10px",
       }}
     >
       <div className="p-5">
         <div className="flex items-start gap-4">
           {/* Logo */}
           <div
-            className="rounded-lg flex items-center justify-center font-bold text-white flex-shrink-0"
+            className="rounded-xl flex items-center justify-center font-bold text-white flex-shrink-0"
             style={{
               width: "48px",
               height: "48px",
-              backgroundColor: isFree ? "#C0C0C0" : company.logoColor,
+              backgroundColor: isFree ? "#D1D5DB" : company.logoColor,
               fontSize: "13px",
+              fontWeight: 700,
             }}
           >
             {company.logoPlaceholder}
           </div>
 
           <div className="flex-1 min-w-0">
+            {/* Name + badge */}
             <div className="flex items-start justify-between gap-2 mb-1">
               <h3
-                className="font-bold truncate"
-                style={{ fontSize: "15px", color: isFree ? "#4A5E4A" : "#1A2E1A", fontWeight: 700 }}
+                className="font-bold leading-tight"
+                style={{ fontSize: "15px", color: isFree ? "#6B7280" : "#111827", fontWeight: 700 }}
               >
                 {company.name}
               </h3>
               <TierBadge tier={company.tier} />
             </div>
 
-            <div className="flex items-center gap-1 mb-2" style={{ color: "#4A5E4A", fontSize: "12px" }}>
-              <MapPin size={11} />
-              {company.location.city}, {company.location.state}
+            {/* Location + rating */}
+            <div className="flex items-center gap-3 flex-wrap mb-2">
+              <span
+                className="flex items-center gap-1"
+                style={{ color: "#9CA3AF", fontSize: "12px" }}
+              >
+                <MapPin size={10} />
+                {company.location.city}, {company.location.state}
+              </span>
+              {company.rating && !isFree && (
+                <span className="flex items-center gap-1">
+                  <Star size={11} fill="#F9C31A" stroke="none" />
+                  <span style={{ fontSize: "12px", color: "#6B7280" }}>
+                    {company.rating} ({company.reviewCount})
+                  </span>
+                </span>
+              )}
             </div>
 
             {!isFree && (
-              <p style={{ color: "#4A5E4A", fontSize: "13px", lineHeight: 1.5, marginBottom: "10px" }}>
-                {company.shortDescription}
-              </p>
+              <>
+                <p style={{ color: "#6B7280", fontSize: "13px", lineHeight: 1.55, marginBottom: "10px" }}>
+                  {company.shortDescription.slice(0, 120)}...
+                </p>
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {company.serviceTags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2 py-0.5 rounded-full"
+                      style={{
+                        backgroundColor: "#F3F4F6",
+                        color: "#374151",
+                        fontSize: "11px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </>
             )}
 
-            {/* Rating */}
-            {company.rating && !isFree && (
-              <div className="flex items-center gap-1 mb-2">
-                <Star size={12} fill="#F9C31A" stroke="#F9C31A" />
-                <span style={{ fontSize: "12px", color: "#4A5E4A" }}>
-                  {company.rating} ({company.reviewCount} reviews)
-                </span>
-              </div>
-            )}
-
-            {/* Service tags */}
-            {!isFree && (
-              <div className="flex flex-wrap gap-1.5 mb-3">
-                {company.serviceTags.slice(0, 3).map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-0.5 rounded-full"
-                    style={{ backgroundColor: "#F7F9F7", color: "#4A5E4A", fontSize: "11px", border: "1px solid #E8EDE8" }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Action button */}
+            {/* Action */}
             {isFree ? (
               <Link
                 href={`/signup?listing=${company.slug}`}
                 className="inline-flex items-center gap-1 font-semibold"
-                style={{ color: "#4A5E4A", fontSize: "12px", textDecoration: "underline" }}
+                style={{ color: "#9CA3AF", fontSize: "12px" }}
               >
-                Claim This Listing →
+                Claim this listing →
               </Link>
             ) : (
               <Link
                 href={`/vendor/${company.slug}`}
-                className="inline-flex items-center gap-1 font-semibold"
+                className="inline-flex items-center gap-1 font-semibold transition-colors"
                 style={{ color: "#F7941D", fontSize: "13px" }}
               >
-                View Full Profile <ArrowRight size={13} />
+                View Full Profile
+                <ArrowRight size={13} />
               </Link>
             )}
           </div>

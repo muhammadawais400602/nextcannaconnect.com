@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
 
 interface FiltersPanelProps {
   categoryLabel: string;
@@ -13,41 +14,125 @@ const US_STATES = [
   "VA","WA","WV","WI","WY",
 ];
 
+function FilterSection({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(true);
+  return (
+    <div style={{ borderBottom: "1px solid #F3F4F6", paddingBottom: "16px", marginBottom: "16px" }}>
+      <button
+        className="w-full flex items-center justify-between mb-3"
+        onClick={() => setOpen(!open)}
+        style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+      >
+        <span
+          className="font-semibold uppercase tracking-wider"
+          style={{ fontSize: "11px", color: "#374151", letterSpacing: "1px" }}
+        >
+          {label}
+        </span>
+        {open ? (
+          <ChevronUp size={14} style={{ color: "#9CA3AF" }} />
+        ) : (
+          <ChevronDown size={14} style={{ color: "#9CA3AF" }} />
+        )}
+      </button>
+      {open && children}
+    </div>
+  );
+}
+
+const inputStyle = {
+  width: "100%",
+  padding: "8px 12px",
+  border: "1px solid #E5E7EB",
+  borderRadius: "8px",
+  fontSize: "13px",
+  color: "#111827",
+  backgroundColor: "white",
+  outline: "none",
+};
+
 export default function FiltersPanel({ categoryLabel }: FiltersPanelProps) {
   const [location, setLocation] = useState("");
   const [serviceType, setServiceType] = useState("all");
   const [licenseType, setLicenseType] = useState("all");
   const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [search, setSearch] = useState("");
 
-  const inputStyle = {
-    width: "100%",
-    padding: "8px 12px",
-    border: "1px solid #E8EDE8",
-    borderRadius: "6px",
-    fontSize: "13px",
-    color: "#1A2E1A",
-    backgroundColor: "white",
-    outline: "none",
-  };
+  const hasFilters = location || serviceType !== "all" || licenseType !== "all" || verifiedOnly;
 
   return (
     <div
-      className="rounded-xl p-5 sticky top-20"
-      style={{ backgroundColor: "white", border: "1px solid #E8EDE8" }}
+      className="rounded-2xl p-5 sticky top-24"
+      style={{ backgroundColor: "white", border: "1px solid #E5E7EB" }}
     >
-      <h3
-        className="font-bold mb-4"
-        style={{ fontSize: "14px", color: "#1A4A35", fontWeight: 700, borderBottom: "2px solid #F7941D", paddingBottom: "8px" }}
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="font-bold" style={{ fontSize: "14px", color: "#111827", fontWeight: 700 }}>
+          Filters
+        </h3>
+        {hasFilters && (
+          <button
+            className="flex items-center gap-1 transition-colors"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              color: "#F7941D",
+              fontSize: "12px",
+              fontWeight: 600,
+            }}
+            onClick={() => {
+              setLocation("");
+              setServiceType("all");
+              setLicenseType("all");
+              setVerifiedOnly(false);
+            }}
+          >
+            <RotateCcw size={11} />
+            Reset
+          </button>
+        )}
+      </div>
+
+      {/* Verified toggle */}
+      <div
+        className="flex items-center justify-between p-3 rounded-xl mb-5 cursor-pointer"
+        style={{
+          backgroundColor: verifiedOnly ? "rgba(26,74,53,0.07)" : "#F8FAF8",
+          border: verifiedOnly ? "1px solid #1A4A35" : "1px solid #E5E7EB",
+        }}
+        onClick={() => setVerifiedOnly(!verifiedOnly)}
       >
-        Filters
-      </h3>
+        <span style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>
+          Verified Only
+        </span>
+        <div
+          className="rounded-full flex items-center flex-shrink-0 transition-colors"
+          style={{
+            width: "36px",
+            height: "20px",
+            backgroundColor: verifiedOnly ? "#1A4A35" : "#D1D5DB",
+            padding: "2px",
+          }}
+        >
+          <div
+            className="rounded-full bg-white transition-transform"
+            style={{
+              width: "16px",
+              height: "16px",
+              transform: verifiedOnly ? "translateX(16px)" : "translateX(0)",
+            }}
+          />
+        </div>
+      </div>
 
       {/* Location */}
-      <div className="mb-4">
-        <label className="block font-semibold mb-1.5 uppercase tracking-wider" style={{ fontSize: "11px", color: "#4A5E4A", letterSpacing: "1px" }}>
-          Location
-        </label>
+      <FilterSection label="Location">
         <select
           value={location}
           onChange={(e) => setLocation(e.target.value)}
@@ -56,31 +141,34 @@ export default function FiltersPanel({ categoryLabel }: FiltersPanelProps) {
           <option value="">All States</option>
           {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
         </select>
-      </div>
+      </FilterSection>
 
       {/* Service Type */}
-      <div className="mb-4">
-        <label className="block font-semibold mb-1.5 uppercase tracking-wider" style={{ fontSize: "11px", color: "#4A5E4A", letterSpacing: "1px" }}>
-          Service Type
-        </label>
-        <select
-          value={serviceType}
-          onChange={(e) => setServiceType(e.target.value)}
-          style={inputStyle}
-        >
-          <option value="all">All Services</option>
-          <option value="manufacturing">Manufacturing</option>
-          <option value="consulting">Consulting</option>
-          <option value="distribution">Distribution</option>
-          <option value="software">Software</option>
-        </select>
-      </div>
+      <FilterSection label="Service Type">
+        <div className="flex flex-col gap-2">
+          {["all", "manufacturing", "consulting", "distribution", "software"].map((v) => (
+            <label
+              key={v}
+              className="flex items-center gap-2.5 cursor-pointer"
+            >
+              <input
+                type="radio"
+                name="serviceType"
+                value={v}
+                checked={serviceType === v}
+                onChange={() => setServiceType(v)}
+                style={{ accentColor: "#F7941D", width: "14px", height: "14px" }}
+              />
+              <span style={{ fontSize: "13px", color: "#374151" }}>
+                {v === "all" ? "All Services" : v.charAt(0).toUpperCase() + v.slice(1)}
+              </span>
+            </label>
+          ))}
+        </div>
+      </FilterSection>
 
       {/* License Type */}
-      <div className="mb-4">
-        <label className="block font-semibold mb-1.5 uppercase tracking-wider" style={{ fontSize: "11px", color: "#4A5E4A", letterSpacing: "1px" }}>
-          License Type
-        </label>
+      <FilterSection label="License Type">
         <select
           value={licenseType}
           onChange={(e) => setLicenseType(e.target.value)}
@@ -93,39 +181,7 @@ export default function FiltersPanel({ categoryLabel }: FiltersPanelProps) {
           <option value="retailer">Retailer</option>
           <option value="testing">Testing Lab</option>
         </select>
-      </div>
-
-      {/* Verified only */}
-      <div className="mb-4 flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="verified-only"
-          checked={verifiedOnly}
-          onChange={(e) => setVerifiedOnly(e.target.checked)}
-          style={{ accentColor: "#F7941D", width: "15px", height: "15px" }}
-        />
-        <label
-          htmlFor="verified-only"
-          className="cursor-pointer"
-          style={{ fontSize: "13px", color: "#1A2E1A", fontWeight: 500 }}
-        >
-          Verified Companies Only
-        </label>
-      </div>
-
-      {/* Search within category */}
-      <div className="mb-2">
-        <label className="block font-semibold mb-1.5 uppercase tracking-wider" style={{ fontSize: "11px", color: "#4A5E4A", letterSpacing: "1px" }}>
-          Search within {categoryLabel}
-        </label>
-        <input
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={inputStyle}
-        />
-      </div>
+      </FilterSection>
     </div>
   );
 }

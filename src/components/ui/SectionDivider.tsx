@@ -1,9 +1,4 @@
-interface SectionDividerProps {
-  reverse?: boolean;
-}
-
-export default function SectionDivider({ reverse = false }: SectionDividerProps) {
-  return (
-    <div className={reverse ? "gradient-divider-reverse" : "gradient-divider"} />
-  );
+// Kept for backward compatibility — renders nothing in new design
+export default function SectionDivider({ reverse }: { reverse?: boolean }) {
+  return null;
 }

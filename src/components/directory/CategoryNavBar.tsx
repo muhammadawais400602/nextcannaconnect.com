@@ -10,12 +10,15 @@ interface CategoryNavBarProps {
 export default function CategoryNavBar({ activeSlug }: CategoryNavBarProps) {
   return (
     <div
-      className="w-full border-b overflow-x-auto category-nav-scroll"
-      style={{ backgroundColor: "white", borderColor: "#E8EDE8" }}
+      className="w-full overflow-x-auto category-nav-scroll"
+      style={{
+        backgroundColor: "white",
+        borderBottom: "1px solid #E5E7EB",
+      }}
     >
       <div
-        className="mx-auto flex items-center gap-1 px-8"
-        style={{ maxWidth: "1100px", minWidth: "max-content" }}
+        className="mx-auto flex items-center gap-0 px-6"
+        style={{ maxWidth: "1180px", minWidth: "max-content" }}
       >
         {CATEGORIES.map((cat) => {
           const isActive = cat.slug === activeSlug;
@@ -23,18 +26,23 @@ export default function CategoryNavBar({ activeSlug }: CategoryNavBarProps) {
             <Link
               key={cat.slug}
               href={`/directory/${cat.slug}`}
-              className="relative flex items-center px-3 py-4 font-medium whitespace-nowrap transition-colors"
+              className="relative flex items-center px-4 py-4 whitespace-nowrap transition-colors"
               style={{
                 fontSize: "13px",
-                color: isActive ? "#F7941D" : "#4A5E4A",
-                fontWeight: isActive ? 600 : 500,
+                color: isActive ? "#1A4A35" : "#6B7280",
+                fontWeight: isActive ? 700 : 500,
+                textDecoration: "none",
               }}
             >
               {cat.shortLabel}
               {isActive && (
                 <span
                   className="absolute bottom-0 left-0 right-0"
-                  style={{ height: "3px", backgroundColor: "#F7941D", borderRadius: "2px 2px 0 0" }}
+                  style={{
+                    height: "2.5px",
+                    backgroundColor: "#1A4A35",
+                    borderRadius: "2px 2px 0 0",
+                  }}
                 />
               )}
             </Link>
