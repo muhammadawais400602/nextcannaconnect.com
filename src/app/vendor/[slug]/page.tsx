@@ -227,6 +227,7 @@ export default async function VendorPage({ params }: Props) {
       <section
         style={{
           position: "relative",
+          zIndex: 1,
           height: "260px",
           background: heroGradient,
           overflow: "hidden",
@@ -265,7 +266,7 @@ export default async function VendorPage({ params }: Props) {
       </section>
 
       {/* ── Main Content ── */}
-      <div className="mx-auto px-6" style={{ maxWidth: "1180px", marginTop: "-80px", paddingBottom: "64px" }}>
+      <div className="mx-auto px-6" style={{ maxWidth: "1180px", marginTop: "-80px", paddingBottom: "64px", position: "relative", zIndex: 10 }}>
         <div className="flex gap-6" style={{ alignItems: "flex-start" }}>
 
           {/* ══ Left Column ══ */}
