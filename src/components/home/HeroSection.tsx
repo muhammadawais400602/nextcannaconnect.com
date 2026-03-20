@@ -47,8 +47,8 @@ export default function HeroSection() {
         {/* Tag */}
         <span
           className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold mb-6 animate-fade-in"
-          style={{ animationDelay: "0ms" }}
           style={{
+            animationDelay: "0ms",
             backgroundColor: "rgba(26,74,53,0.08)",
             color: "#1A4A35",
             fontSize: "13px",
