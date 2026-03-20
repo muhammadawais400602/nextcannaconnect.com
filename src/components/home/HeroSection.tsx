@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Search, MapPin, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { CATEGORIES } from "@/data/categories";
@@ -25,8 +26,17 @@ const POPULAR_CATEGORIES = [
 ];
 
 export default function HeroSection() {
+  const router = useRouter();
   const [category, setCategory] = useState("");
   const [state, setState] = useState("");
+
+  function handleSearch() {
+    const path = category ? `/directory/${category}` : "/directory";
+    const params = new URLSearchParams();
+    if (state) params.set("state", state);
+    const qs = params.toString();
+    router.push(qs ? `${path}?${qs}` : path);
+  }
 
   return (
     <section className="w-full" style={{ backgroundColor: "#F8FAF8", borderBottom: "1px solid #E5E7EB" }}>
@@ -36,7 +46,8 @@ export default function HeroSection() {
       >
         {/* Tag */}
         <span
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold mb-6"
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full font-semibold mb-6 animate-fade-in"
+          style={{ animationDelay: "0ms" }}
           style={{
             backgroundColor: "rgba(26,74,53,0.08)",
             color: "#1A4A35",
@@ -53,8 +64,9 @@ export default function HeroSection() {
 
         {/* Headline */}
         <h1
-          className="font-extrabold mb-5 leading-tight"
+          className="font-extrabold mb-5 leading-tight animate-fade-in-up"
           style={{
+            animationDelay: "80ms",
             fontSize: "clamp(36px, 5.5vw, 54px)",
             color: "#111827",
             fontWeight: 900,
@@ -66,8 +78,8 @@ export default function HeroSection() {
         </h1>
 
         <p
-          className="mb-10"
-          style={{
+          className="mb-10 animate-fade-in-up"
+          style={{ animationDelay: "160ms",
             color: "#6B7280",
             fontSize: "18px",
             lineHeight: 1.65,
@@ -80,8 +92,9 @@ export default function HeroSection() {
 
         {/* Search Card */}
         <div
-          className="w-full rounded-2xl p-2 flex flex-col sm:flex-row gap-2"
+          className="w-full rounded-2xl p-2 flex flex-col sm:flex-row gap-2 animate-fade-in-up"
           style={{
+            animationDelay: "240ms",
             backgroundColor: "white",
             boxShadow: "0 4px 24px rgba(0,0,0,0.09)",
             border: "1px solid #E5E7EB",
@@ -132,18 +145,18 @@ export default function HeroSection() {
           </div>
 
           {/* Search button */}
-          <Link
-            href={`/directory${category ? `/${category}` : ""}`}
+          <button
+            onClick={handleSearch}
             className="btn-primary sm:flex-shrink-0 justify-center"
             style={{ fontSize: "14px", padding: "12px 24px", borderRadius: "10px" }}
           >
             <Search size={15} />
             Search
-          </Link>
+          </button>
         </div>
 
         {/* Popular quick links */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
+        <div className="flex flex-wrap items-center justify-center gap-2 mt-6 animate-fade-in" style={{ animationDelay: "400ms" }}>
           <span style={{ fontSize: "13px", color: "#9CA3AF", fontWeight: 500 }}>Popular:</span>
           {POPULAR_CATEGORIES.map((label) => {
             const cat = CATEGORIES.find((c) => c.label === label);

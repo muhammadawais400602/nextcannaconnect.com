@@ -1,11 +1,12 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CATEGORIES, getCategoryBySlug } from "@/data/categories";
 import { getCompaniesByCategory } from "@/data/companies";
 import CategoryNavBar from "@/components/directory/CategoryNavBar";
 import FiltersPanel from "@/components/directory/FiltersPanel";
-import ListingCard from "@/components/directory/ListingCard";
-import { Search, SlidersHorizontal, ArrowRight } from "lucide-react";
+import DirectoryListings from "@/components/directory/DirectoryListings";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface Props {
@@ -32,11 +33,6 @@ export default async function CategoryPage({ params }: Props) {
   if (!category) notFound();
 
   const companies = getCompaniesByCategory(slug);
-  const featured = companies.filter((c) => c.tier === "featured");
-  const elite = companies.filter((c) => c.tier === "elite");
-  const select = companies.filter((c) => c.tier === "select");
-  const claimed = companies.filter((c) => c.tier === "claimed");
-  const free = companies.filter((c) => c.tier === "free");
 
   return (
     <>
@@ -62,36 +58,6 @@ export default async function CategoryPage({ params }: Props) {
                 {category.description}
               </p>
             </div>
-
-            {/* Search bar */}
-            <div
-              className="flex items-center gap-2 px-4 py-3 rounded-xl flex-shrink-0"
-              style={{
-                border: "1px solid #E5E7EB",
-                backgroundColor: "#F8FAF8",
-                width: "100%",
-                maxWidth: "320px",
-              }}
-            >
-              <Search size={15} style={{ color: "#9CA3AF", flexShrink: 0 }} />
-              <input
-                type="text"
-                placeholder={`Search ${category.shortLabel}...`}
-                className="flex-1 bg-transparent outline-none"
-                style={{ fontSize: "14px", color: "#111827", border: "none" }}
-              />
-            </div>
-          </div>
-
-          {/* Result count + sort */}
-          <div className="flex items-center justify-between mt-5">
-            <p style={{ color: "#6B7280", fontSize: "13px" }}>
-              Showing <strong style={{ color: "#111827" }}>{companies.length}</strong> businesses
-            </p>
-            <div className="flex items-center gap-2">
-              <SlidersHorizontal size={14} style={{ color: "#9CA3AF" }} />
-              <span style={{ fontSize: "13px", color: "#6B7280" }}>Sort: Relevance</span>
-            </div>
           </div>
         </div>
       </div>
@@ -109,65 +75,9 @@ export default async function CategoryPage({ params }: Props) {
 
           {/* Main listings */}
           <div className="flex-1 min-w-0">
-
-            {/* Featured */}
-            {featured.map((c) => (
-              <ListingCard key={c.id} company={c} featured />
-            ))}
-
-            {/* Paid tiers */}
-            {[...elite, ...select, ...claimed].map((c) => (
-              <ListingCard key={c.id} company={c} />
-            ))}
-
-            {/* Unclaimed separator */}
-            {free.length > 0 && (
-              <>
-                <div className="flex items-center gap-3 my-6">
-                  <div style={{ flex: 1, height: "1px", backgroundColor: "#E5E7EB" }} />
-                  <span
-                    className="font-semibold uppercase"
-                    style={{ color: "#9CA3AF", fontSize: "11px", letterSpacing: "1px", whiteSpace: "nowrap" }}
-                  >
-                    Unclaimed Listings
-                  </span>
-                  <div style={{ flex: 1, height: "1px", backgroundColor: "#E5E7EB" }} />
-                </div>
-                {free.map((c) => (
-                  <ListingCard key={c.id} company={c} />
-                ))}
-              </>
-            )}
-
-            {/* Pagination */}
-            <div className="flex items-center justify-center gap-2 mt-10">
-              <button
-                className="rounded-lg px-4 py-2.5 font-medium transition-colors"
-                style={{ fontSize: "13px", color: "#6B7280", border: "1px solid #E5E7EB", backgroundColor: "white" }}
-              >
-                ← Previous
-              </button>
-              {[1, 2, 3].map((n) => (
-                <button
-                  key={n}
-                  className="rounded-lg px-3.5 py-2.5 font-medium transition-colors"
-                  style={{
-                    fontSize: "13px",
-                    backgroundColor: n === 1 ? "#F7941D" : "white",
-                    color: n === 1 ? "white" : "#6B7280",
-                    border: n === 1 ? "none" : "1px solid #E5E7EB",
-                  }}
-                >
-                  {n}
-                </button>
-              ))}
-              <button
-                className="rounded-lg px-4 py-2.5 font-medium transition-colors"
-                style={{ fontSize: "13px", color: "#6B7280", border: "1px solid #E5E7EB", backgroundColor: "white" }}
-              >
-                Next →
-              </button>
-            </div>
+            <Suspense fallback={<div style={{ padding: "40px", textAlign: "center", color: "#9CA3AF" }}>Loading listings…</div>}>
+              <DirectoryListings companies={companies} categoryShortLabel={category.shortLabel} />
+            </Suspense>
           </div>
 
           {/* Right ad sidebar */}

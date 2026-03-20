@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
 
 const PERKS = [
   "Free standard directory listing — forever",
@@ -8,6 +11,8 @@ const PERKS = [
 ];
 
 export default function FreeListingCTA() {
+  const [ref, inView] = useInView();
+
   return (
     <section
       className="w-full relative overflow-hidden"
@@ -15,32 +20,43 @@ export default function FreeListingCTA() {
     >
       {/* Subtle background circles */}
       <div
-        className="absolute rounded-full opacity-5"
+        className="absolute rounded-full animate-float"
         style={{
           width: "600px",
           height: "600px",
           backgroundColor: "white",
+          opacity: 0.04,
           top: "-200px",
           right: "-200px",
         }}
       />
       <div
-        className="absolute rounded-full opacity-5"
+        className="absolute rounded-full animate-float"
         style={{
           width: "400px",
           height: "400px",
           backgroundColor: "white",
+          opacity: 0.04,
           bottom: "-150px",
           left: "-100px",
+          animationDelay: "1.2s",
         }}
       />
 
       <div
+        ref={ref as React.RefObject<HTMLDivElement>}
         className="relative mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between gap-10"
         style={{ maxWidth: "1180px" }}
       >
         {/* Left */}
-        <div style={{ maxWidth: "560px" }}>
+        <div
+          style={{
+            maxWidth: "560px",
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateX(0)" : "translateX(-28px)",
+            transition: "opacity 0.6s cubic-bezier(0.22,1,0.36,1), transform 0.6s cubic-bezier(0.22,1,0.36,1)",
+          }}
+        >
           <span
             className="inline-block px-3 py-1 rounded-full font-bold mb-4"
             style={{
@@ -65,8 +81,16 @@ export default function FreeListingCTA() {
           </p>
 
           <ul className="flex flex-col gap-3">
-            {PERKS.map((perk) => (
-              <li key={perk} className="flex items-center gap-3">
+            {PERKS.map((perk, i) => (
+              <li
+                key={perk}
+                className="flex items-center gap-3"
+                style={{
+                  opacity: inView ? 1 : 0,
+                  transform: inView ? "translateX(0)" : "translateX(-16px)",
+                  transition: `opacity 0.5s ease ${200 + i * 80}ms, transform 0.5s ease ${200 + i * 80}ms`,
+                }}
+              >
                 <CheckCircle size={17} style={{ color: "#5CB85C", flexShrink: 0 }} />
                 <span style={{ color: "rgba(255,255,255,0.85)", fontSize: "14px" }}>{perk}</span>
               </li>
@@ -75,10 +99,17 @@ export default function FreeListingCTA() {
         </div>
 
         {/* Right */}
-        <div className="flex flex-col gap-3 flex-shrink-0">
+        <div
+          className="flex flex-col gap-3 flex-shrink-0"
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateX(0)" : "translateX(28px)",
+            transition: "opacity 0.6s cubic-bezier(0.22,1,0.36,1) 100ms, transform 0.6s cubic-bezier(0.22,1,0.36,1) 100ms",
+          }}
+        >
           <Link
             href="/signup"
-            className="btn-primary"
+            className="btn-primary animate-pulse-glow"
             style={{ fontSize: "15px", padding: "14px 32px" }}
           >
             Claim Your Free Listing

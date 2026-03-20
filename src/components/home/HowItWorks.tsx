@@ -1,5 +1,8 @@
+"use client";
+
 import { Search, Filter, Eye, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { useInView } from "@/hooks/useInView";
 
 const STEPS = [
   {
@@ -32,13 +35,26 @@ const STEPS = [
   },
 ];
 
+const DELAYS = [0, 100, 200, 300];
+
 export default function HowItWorks() {
+  const [headerRef, headerInView] = useInView();
+  const [gridRef, gridInView] = useInView();
+
   return (
     <section id="how-it-works" className="py-20 px-6" style={{ backgroundColor: "#F8FAF8" }}>
       <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
 
         {/* Header */}
-        <div className="text-center mb-14">
+        <div
+          ref={headerRef as React.RefObject<HTMLDivElement>}
+          className="text-center mb-14"
+          style={{
+            opacity: headerInView ? 1 : 0,
+            transform: headerInView ? "translateY(0)" : "translateY(24px)",
+            transition: "opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)",
+          }}
+        >
           <span className="section-label">Simple Process</span>
           <h2 className="section-title">Finding a Partner Is Simple</h2>
           <p style={{ color: "#6B7280", fontSize: "16px", marginTop: "10px", maxWidth: "500px", margin: "10px auto 0" }}>
@@ -47,7 +63,10 @@ export default function HowItWorks() {
         </div>
 
         {/* Steps */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div
+          ref={gridRef as React.RefObject<HTMLDivElement>}
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+        >
           {STEPS.map((step, i) => (
             <div
               key={step.number}
@@ -55,6 +74,9 @@ export default function HowItWorks() {
               style={{
                 backgroundColor: "white",
                 border: "1px solid #E5E7EB",
+                opacity: gridInView ? 1 : 0,
+                transform: gridInView ? "translateY(0)" : "translateY(28px)",
+                transition: `opacity 0.55s cubic-bezier(0.22,1,0.36,1) ${DELAYS[i]}ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${DELAYS[i]}ms`,
               }}
             >
               {/* Number + Icon */}
@@ -103,7 +125,14 @@ export default function HowItWorks() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div
+          className="text-center mt-12"
+          style={{
+            opacity: gridInView ? 1 : 0,
+            transform: gridInView ? "translateY(0)" : "translateY(16px)",
+            transition: "opacity 0.55s cubic-bezier(0.22,1,0.36,1) 400ms, transform 0.55s cubic-bezier(0.22,1,0.36,1) 400ms",
+          }}
+        >
           <Link href="/directory" className="btn-primary" style={{ fontSize: "14px" }}>
             Start Searching Now
           </Link>

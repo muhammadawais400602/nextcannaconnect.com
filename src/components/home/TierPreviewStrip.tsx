@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { Check, Star } from "lucide-react";
+import { Check } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
 
 const TIERS = [
   {
@@ -87,12 +90,23 @@ const TIERS = [
 ];
 
 export default function TierPreviewStrip() {
+  const [headerRef, headerInView] = useInView();
+  const [gridRef, gridInView] = useInView();
+
   return (
     <section className="py-20 px-6" style={{ backgroundColor: "white" }}>
       <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
 
         {/* Header */}
-        <div className="text-center mb-12">
+        <div
+          ref={headerRef as React.RefObject<HTMLDivElement>}
+          className="text-center mb-12"
+          style={{
+            opacity: headerInView ? 1 : 0,
+            transform: headerInView ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.5s ease, transform 0.5s ease",
+          }}
+        >
           <span className="section-label">Membership Plans</span>
           <h2 className="section-title">Grow Your Business Visibility</h2>
           <p style={{ color: "#6B7280", fontSize: "16px", marginTop: "10px" }}>
@@ -100,8 +114,12 @@ export default function TierPreviewStrip() {
           </p>
         </div>
 
-        <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}>
-          {TIERS.map((tier) => (
+        <div
+          ref={gridRef as React.RefObject<HTMLDivElement>}
+          className="grid gap-5"
+          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}
+        >
+          {TIERS.map((tier, i) => (
             <div
               key={tier.name}
               className="relative rounded-2xl flex flex-col overflow-hidden"
@@ -109,6 +127,9 @@ export default function TierPreviewStrip() {
                 backgroundColor: "white",
                 border: tier.highlight ? "2px solid #1A4A35" : "1px solid #E5E7EB",
                 boxShadow: tier.highlight ? "0 8px 32px rgba(26,74,53,0.13)" : "none",
+                opacity: gridInView ? 1 : 0,
+                transform: gridInView ? "translateY(0)" : "translateY(24px)",
+                transition: `opacity 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms, transform 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms`,
               }}
             >
               {/* Top accent */}
@@ -180,7 +201,7 @@ export default function TierPreviewStrip() {
                 {/* CTA */}
                 <Link
                   href={tier.ctaHref}
-                  className="w-full justify-center text-center font-semibold py-3 px-4 rounded-xl transition-colors"
+                  className="w-full justify-center text-center font-semibold py-3 px-4 rounded-xl transition-all"
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -191,6 +212,22 @@ export default function TierPreviewStrip() {
                     textDecoration: "none",
                     fontWeight: 600,
                   }}
+                  onMouseEnter={(e) => {
+                    if (tier.highlight) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = "#153d2b";
+                    } else {
+                      (e.currentTarget as HTMLElement).style.borderColor = "#F7941D";
+                      (e.currentTarget as HTMLElement).style.color = "#F7941D";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (tier.highlight) {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = "#1A4A35";
+                    } else {
+                      (e.currentTarget as HTMLElement).style.borderColor = "#E5E7EB";
+                      (e.currentTarget as HTMLElement).style.color = "#111827";
+                    }
+                  }}
                 >
                   {tier.cta}
                 </Link>
@@ -199,7 +236,13 @@ export default function TierPreviewStrip() {
           ))}
         </div>
 
-        <div className="text-center mt-10">
+        <div
+          className="text-center mt-10"
+          style={{
+            opacity: gridInView ? 1 : 0,
+            transition: "opacity 0.5s ease 380ms",
+          }}
+        >
           <Link
             href="/membership"
             className="font-semibold"

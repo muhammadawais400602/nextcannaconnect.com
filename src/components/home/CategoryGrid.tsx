@@ -7,6 +7,7 @@ import {
   Store, Truck, TestTube, Scale, Laptop, Building2, Landmark,
   ArrowRight,
 } from "lucide-react";
+import { useInView } from "@/hooks/useInView";
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
   "cultivation-growing": <Sprout size={22} />,
@@ -39,12 +40,23 @@ const CATEGORY_COUNTS: Record<string, string> = {
 };
 
 export default function CategoryGrid() {
+  const [headerRef, headerInView] = useInView();
+  const [gridRef, gridInView] = useInView();
+
   return (
     <section className="py-20 px-6" style={{ backgroundColor: "white" }}>
       <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
 
         {/* Section header */}
-        <div className="flex items-end justify-between mb-10">
+        <div
+          ref={headerRef as React.RefObject<HTMLDivElement>}
+          className="flex items-end justify-between mb-10"
+          style={{
+            opacity: headerInView ? 1 : 0,
+            transform: headerInView ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.5s ease, transform 0.5s ease",
+          }}
+        >
           <div>
             <span className="section-label">Browse Directory</span>
             <h2 className="section-title">12 Cannabis Industry Verticals</h2>
@@ -64,10 +76,11 @@ export default function CategoryGrid() {
 
         {/* Grid */}
         <div
+          ref={gridRef as React.RefObject<HTMLDivElement>}
           className="grid gap-3"
           style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}
         >
-          {CATEGORIES.map((cat) => (
+          {CATEGORIES.map((cat, i) => (
             <Link
               key={cat.slug}
               href={`/directory/${cat.slug}`}
@@ -76,6 +89,9 @@ export default function CategoryGrid() {
                 backgroundColor: "#F8FAF8",
                 border: "1px solid #E5E7EB",
                 textDecoration: "none",
+                opacity: gridInView ? 1 : 0,
+                transform: gridInView ? "translateY(0) scale(1)" : "translateY(18px) scale(0.97)",
+                transition: `opacity 0.45s cubic-bezier(0.22,1,0.36,1) ${i * 50}ms, transform 0.45s cubic-bezier(0.22,1,0.36,1) ${i * 50}ms`,
               }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.backgroundColor = "white";

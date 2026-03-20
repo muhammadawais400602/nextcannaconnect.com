@@ -1,17 +1,30 @@
+"use client";
+
 import Link from "next/link";
 import { getFeaturedCompanies } from "@/data/companies";
 import { MapPin, ArrowRight, Star } from "lucide-react";
 import TierBadge from "@/components/ui/TierBadge";
+import { useInView } from "@/hooks/useInView";
 
 export default function FeaturedVendors() {
   const companies = getFeaturedCompanies();
+  const [headerRef, headerInView] = useInView();
+  const [gridRef, gridInView] = useInView();
 
   return (
     <section className="py-20 px-6" style={{ backgroundColor: "#F8FAF8" }}>
       <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
 
         {/* Section header */}
-        <div className="flex items-end justify-between mb-10">
+        <div
+          ref={headerRef as React.RefObject<HTMLDivElement>}
+          className="flex items-end justify-between mb-10"
+          style={{
+            opacity: headerInView ? 1 : 0,
+            transform: headerInView ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.5s ease, transform 0.5s ease",
+          }}
+        >
           <div>
             <span className="section-label">Featured Listings</span>
             <h2 className="section-title">Top Verified Businesses</h2>
@@ -31,10 +44,11 @@ export default function FeaturedVendors() {
 
         {/* Cards grid */}
         <div
+          ref={gridRef as React.RefObject<HTMLDivElement>}
           className="grid gap-5"
           style={{ gridTemplateColumns: "repeat(auto-fill, minmax(310px, 1fr))" }}
         >
-          {companies.map((company) => (
+          {companies.map((company, i) => (
             <Link
               key={company.id}
               href={`/vendor/${company.slug}`}
@@ -43,6 +57,9 @@ export default function FeaturedVendors() {
                 backgroundColor: "white",
                 border: "1px solid #E5E7EB",
                 textDecoration: "none",
+                opacity: gridInView ? 1 : 0,
+                transform: gridInView ? "translateY(0)" : "translateY(24px)",
+                transition: `opacity 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms, transform 0.5s cubic-bezier(0.22,1,0.36,1) ${i * 80}ms`,
               }}
             >
               {/* Card top band */}
@@ -147,7 +164,13 @@ export default function FeaturedVendors() {
           ))}
         </div>
 
-        <div className="text-center mt-10">
+        <div
+          className="text-center mt-10"
+          style={{
+            opacity: gridInView ? 1 : 0,
+            transition: "opacity 0.5s ease 350ms",
+          }}
+        >
           <Link href="/directory" className="btn-primary" style={{ fontSize: "14px" }}>
             Browse Full Directory
             <ArrowRight size={15} />

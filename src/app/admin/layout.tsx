@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { LogOut, ExternalLink } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard", icon: "▦" },
@@ -143,9 +144,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               color: "#86A898",
               fontSize: "13px",
               marginBottom: "4px",
+              transition: "color 0.15s",
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "white")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#86A898")}
           >
-            <span>↗</span> View Site
+            <ExternalLink size={14} /> View Site
           </Link>
           <button
             onClick={handleLogout}
@@ -155,15 +159,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               gap: "8px",
               padding: "8px 12px",
               borderRadius: "8px",
-              background: "none",
-              border: "none",
+              background: "rgba(239,68,68,0.08)",
+              border: "1px solid rgba(239,68,68,0.15)",
               cursor: "pointer",
-              color: "#86A898",
+              color: "#F87171",
               fontSize: "13px",
+              fontWeight: 600,
               width: "100%",
+              transition: "all 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "rgba(239,68,68,0.18)";
+              (e.currentTarget as HTMLButtonElement).style.color = "#FCA5A5";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "rgba(239,68,68,0.08)";
+              (e.currentTarget as HTMLButtonElement).style.color = "#F87171";
             }}
           >
-            <span>⬡</span> Sign Out
+            <LogOut size={14} /> Sign Out
           </button>
         </div>
       </aside>
@@ -192,35 +206,64 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </span>
             </span>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              background: "#F3F4F6",
-              padding: "6px 12px",
-              borderRadius: "8px",
-            }}
-          >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <div
               style={{
-                width: "24px",
-                height: "24px",
-                background: "#1A4A35",
-                borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontSize: "11px",
-                fontWeight: "700",
+                gap: "8px",
+                background: "#F3F4F6",
+                padding: "6px 12px",
+                borderRadius: "8px",
               }}
             >
-              SA
+              <div
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  background: "#1A4A35",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: "white",
+                  fontSize: "11px",
+                  fontWeight: "700",
+                }}
+              >
+                SA
+              </div>
+              <span style={{ fontSize: "13px", fontWeight: "500", color: "#374151" }}>
+                Super Admin
+              </span>
             </div>
-            <span style={{ fontSize: "13px", fontWeight: "500", color: "#374151" }}>
-              Super Admin
-            </span>
+            <button
+              onClick={handleLogout}
+              title="Sign Out"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                padding: "6px 12px",
+                borderRadius: "8px",
+                background: "rgba(239,68,68,0.07)",
+                border: "1px solid rgba(239,68,68,0.15)",
+                cursor: "pointer",
+                color: "#EF4444",
+                fontSize: "13px",
+                fontWeight: 600,
+                transition: "all 0.15s",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "rgba(239,68,68,0.14)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLButtonElement).style.background = "rgba(239,68,68,0.07)";
+              }}
+            >
+              <LogOut size={14} />
+              Logout
+            </button>
           </div>
         </header>
 
