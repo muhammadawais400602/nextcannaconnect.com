@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "How It Works", href: "/#how-it-works" },
   { label: "Directory", href: "/directory" },
+  { label: "Marketplace", href: "/marketplace" },
   { label: "Membership", href: "/membership" },
+  { label: "Insights", href: "/insights" },
   { label: "About", href: "/about" },
 ];
 
@@ -23,44 +24,58 @@ export default function Navbar() {
 
   return (
     <nav
-      className="sticky top-0 z-50 w-full"
+      className="fixed top-0 w-full z-50 glass-panel"
       style={{
-        backgroundColor: "white",
-        borderBottom: "1px solid #E5E7EB",
-        height: "68px",
+        borderBottom: "1px solid rgba(192,201,193,0.3)",
+        boxShadow: "0 4px 60px rgba(27,28,28,0.05)",
       }}
     >
       <div
-        className="mx-auto flex h-full items-center justify-between px-6"
-        style={{ maxWidth: "1180px" }}
+        className="flex justify-between items-center w-full px-8 py-4 mx-auto"
+        style={{ maxWidth: "1440px" }}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-1.5 select-none flex-shrink-0">
-          <div
-            className="flex items-center justify-center rounded-lg font-black text-white"
-            style={{ width: "32px", height: "32px", backgroundColor: "#1A4A35", fontSize: "14px" }}
-          >
-            N
-          </div>
-          <span className="font-extrabold tracking-tight" style={{ color: "#111827", fontSize: "17px", letterSpacing: "-0.4px" }}>
-            NextCanna
-          </span>
-          <span className="font-extrabold tracking-tight" style={{ color: "#F7941D", fontSize: "17px", letterSpacing: "-0.4px" }}>
-            Connect
-          </span>
+        <Link
+          href="/"
+          className="select-none flex-shrink-0"
+          style={{
+            fontFamily: "'Noto Serif', serif",
+            fontStyle: "italic",
+            fontSize: "20px",
+            fontWeight: 400,
+            color: "#003320",
+            textDecoration: "none",
+          }}
+        >
+          NextCanna Connect
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="px-4 py-2 rounded-lg font-medium transition-colors text-sm"
               style={{
-                color: isActive(link.href) ? "#F7941D" : "#4B5563",
-                backgroundColor: isActive(link.href) ? "rgba(247,148,29,0.07)" : "transparent",
-                fontSize: "14px",
+                fontSize: "11px",
+                fontWeight: 600,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                textDecoration: "none",
+                color: isActive(link.href) ? "#003320" : "#6b7280",
+                borderBottom: isActive(link.href) ? "2px solid #003320" : "2px solid transparent",
+                paddingBottom: "2px",
+                transition: "color 0.2s ease, border-color 0.2s ease",
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive(link.href)) {
+                  (e.currentTarget as HTMLElement).style.color = "#003320";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive(link.href)) {
+                  (e.currentTarget as HTMLElement).style.color = "#6b7280";
+                }
               }}
             >
               {link.label}
@@ -69,18 +84,27 @@ export default function Navbar() {
         </div>
 
         {/* Right actions */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-6">
           <Link
-            href="/signup"
-            className="btn-ghost"
-            style={{ fontSize: "13px", padding: "8px 16px" }}
+            href="/signin"
+            style={{
+              fontSize: "11px",
+              fontWeight: 600,
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              color: "#6b7280",
+              textDecoration: "none",
+              transition: "color 0.2s ease",
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#003320"; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "#6b7280"; }}
           >
             Sign In
           </Link>
           <Link
             href="/signup"
             className="btn-primary"
-            style={{ fontSize: "13px", padding: "9px 18px" }}
+            style={{ fontSize: "11px", padding: "10px 20px" }}
           >
             List Your Business
           </Link>
@@ -88,8 +112,8 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 rounded-lg transition-colors"
-          style={{ color: "#374151" }}
+          className="md:hidden p-2 rounded-lg"
+          style={{ color: "#003320" }}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
@@ -100,26 +124,33 @@ export default function Navbar() {
       {/* Mobile drawer */}
       {mobileOpen && (
         <div
-          className="md:hidden absolute top-[68px] left-0 right-0 z-50 shadow-lg"
-          style={{ backgroundColor: "white", borderBottom: "1px solid #E5E7EB" }}
+          className="md:hidden"
+          style={{
+            backgroundColor: "rgba(251,249,248,0.98)",
+            borderBottom: "1px solid rgba(192,201,193,0.4)",
+          }}
         >
-          <div className="flex flex-col px-4 py-3 gap-1">
+          <div className="flex flex-col px-8 py-4 gap-1">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="font-medium py-3 px-4 rounded-lg transition-colors text-sm"
+                className="py-3 font-medium"
                 style={{
-                  color: isActive(link.href) ? "#F7941D" : "#374151",
-                  backgroundColor: isActive(link.href) ? "rgba(247,148,29,0.07)" : "transparent",
+                  fontSize: "11px",
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: isActive(link.href) ? "#003320" : "#6b7280",
+                  fontWeight: isActive(link.href) ? 700 : 500,
+                  textDecoration: "none",
                 }}
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
-            <div className="pt-3 pb-2 flex flex-col gap-2 border-t mt-2" style={{ borderColor: "#E5E7EB" }}>
-              <Link href="/signup" className="btn-ghost w-full justify-center" onClick={() => setMobileOpen(false)}>
+            <div className="pt-4 pb-2 flex flex-col gap-3 border-t mt-2" style={{ borderColor: "rgba(192,201,193,0.4)" }}>
+              <Link href="/signin" className="btn-ghost w-full justify-center" onClick={() => setMobileOpen(false)}>
                 Sign In
               </Link>
               <Link href="/signup" className="btn-primary w-full justify-center" onClick={() => setMobileOpen(false)}>

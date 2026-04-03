@@ -1,143 +1,180 @@
 "use client";
 
 import Link from "next/link";
-import { CATEGORIES } from "@/data/categories";
-import {
-  Sprout, Factory, FlaskConical, Briefcase, Megaphone,
-  Store, Truck, TestTube, Scale, Laptop, Building2, Landmark,
-  ArrowRight,
-} from "lucide-react";
 import { useInView } from "@/hooks/useInView";
 
-const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  "cultivation-growing": <Sprout size={22} />,
-  "manufacturers-suppliers": <Factory size={22} />,
-  "extraction-processing": <FlaskConical size={22} />,
-  "consultants-advisors": <Briefcase size={22} />,
-  "marketing-branding-packaging": <Megaphone size={22} />,
-  "retail-dispensary": <Store size={22} />,
-  "transportation-logistics": <Truck size={22} />,
-  "testing-science": <TestTube size={22} />,
-  "compliance-legal": <Scale size={22} />,
-  "technology-software": <Laptop size={22} />,
-  "real-estate-construction": <Building2 size={22} />,
-  "finance-insurance": <Landmark size={22} />,
-};
-
-const CATEGORY_COUNTS: Record<string, string> = {
-  "cultivation-growing": "1,240+",
-  "manufacturers-suppliers": "3,800+",
-  "extraction-processing": "920+",
-  "consultants-advisors": "2,100+",
-  "marketing-branding-packaging": "1,650+",
-  "retail-dispensary": "8,400+",
-  "transportation-logistics": "710+",
-  "testing-science": "480+",
-  "compliance-legal": "1,320+",
-  "technology-software": "990+",
-  "real-estate-construction": "560+",
-  "finance-insurance": "740+",
-};
+const VERTICALS = [
+  {
+    icon: "eco",
+    title: "Cultivation",
+    description: "Bulk raw material, specialized genetics, and licensed grow operations.",
+    count: "1,420",
+    slug: "cultivation-growing",
+  },
+  {
+    icon: "storefront",
+    title: "Retail & Dispensary",
+    description: "Licensed retail storefronts and delivery service networks.",
+    count: "3,890",
+    slug: "retail-dispensary",
+  },
+  {
+    icon: "biotech",
+    title: "Testing Labs",
+    description: "Accredited testing facilities for potency, purity, and compliance.",
+    count: "412",
+    slug: "testing-science",
+  },
+  {
+    icon: "local_shipping",
+    title: "Distribution",
+    description: "Secure logistics, specialized transport, and supply chain solutions.",
+    count: "215",
+    slug: "transportation-logistics",
+  },
+];
 
 export default function CategoryGrid() {
-  const [headerRef, headerInView] = useInView();
-  const [gridRef, gridInView] = useInView();
+  const [ref, inView] = useInView();
 
   return (
-    <section className="py-20 px-6" style={{ backgroundColor: "white" }}>
-      <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
+    <section className="py-24 px-8" style={{ backgroundColor: "#f6f3f2" }}>
+      <div style={{ maxWidth: "1440px", margin: "0 auto" }}>
 
-        {/* Section header */}
-        <div
-          ref={headerRef as React.RefObject<HTMLDivElement>}
-          className="flex items-end justify-between mb-10"
-          style={{
-            opacity: headerInView ? 1 : 0,
-            transform: headerInView ? "translateY(0)" : "translateY(20px)",
-            transition: "opacity 0.5s ease, transform 0.5s ease",
-          }}
-        >
-          <div>
-            <span className="section-label">Browse Directory</span>
-            <h2 className="section-title">12 Cannabis Industry Verticals</h2>
-            <p style={{ color: "#6B7280", fontSize: "15px", marginTop: "8px", maxWidth: "480px" }}>
-              Find vetted businesses across every segment of the cannabis supply chain.
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+          <div style={{ maxWidth: "520px" }}>
+            <h2
+              style={{
+                fontFamily: "'Noto Serif', serif",
+                fontSize: "clamp(28px, 3vw, 40px)",
+                fontWeight: 700,
+                color: "#003320",
+                marginBottom: "12px",
+              }}
+            >
+              Ecosystem Verticals
+            </h2>
+            <p style={{ color: "#414943", fontSize: "15px", lineHeight: 1.7 }}>
+              Our marketplace is structurally segmented into specialized nodes, ensuring
+              high-fidelity discovery and transactional security across all sectors.
             </p>
           </div>
           <Link
             href="/directory"
-            className="hidden sm:flex items-center gap-1.5 font-semibold flex-shrink-0"
-            style={{ color: "#F7941D", fontSize: "14px" }}
+            className="flex items-center gap-2 flex-shrink-0"
+            style={{
+              color: "#003320",
+              fontWeight: 700,
+              fontSize: "11px",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              textDecoration: "none",
+              transition: "gap 0.2s ease",
+            }}
           >
-            Browse All
-            <ArrowRight size={15} />
+            View Entire Directory
+            <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
           </Link>
         </div>
 
-        {/* Grid */}
+        {/* 4-column grid */}
         <div
-          ref={gridRef as React.RefObject<HTMLDivElement>}
-          className="grid gap-3"
-          style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}
+          ref={ref as React.RefObject<HTMLDivElement>}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          {CATEGORIES.map((cat, i) => (
+          {VERTICALS.map((v, i) => (
             <Link
-              key={cat.slug}
-              href={`/directory/${cat.slug}`}
-              className="group rounded-xl p-5 flex flex-col gap-3 transition-all"
+              key={v.slug}
+              href={`/directory/${v.slug}`}
+              className="group relative rounded-xl overflow-hidden"
               style={{
-                backgroundColor: "#F8FAF8",
-                border: "1px solid #E5E7EB",
+                backgroundColor: "white",
+                padding: "32px",
                 textDecoration: "none",
-                opacity: gridInView ? 1 : 0,
-                transform: gridInView ? "translateY(0) scale(1)" : "translateY(18px) scale(0.97)",
-                transition: `opacity 0.45s cubic-bezier(0.22,1,0.36,1) ${i * 50}ms, transform 0.45s cubic-bezier(0.22,1,0.36,1) ${i * 50}ms`,
+                transition: "box-shadow 0.4s ease",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateY(0)" : "translateY(20px)",
+                transitionDelay: `${i * 80}ms`,
+                transitionProperty: "opacity, transform, box-shadow",
+                transitionDuration: inView ? "0.5s" : "0s",
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "white";
-                (e.currentTarget as HTMLElement).style.borderColor = "#1A4A35";
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 16px rgba(26,74,53,0.10)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 20px 60px rgba(0,51,32,0.12)";
               }}
               onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = "#F8FAF8";
-                (e.currentTarget as HTMLElement).style.borderColor = "#E5E7EB";
                 (e.currentTarget as HTMLElement).style.boxShadow = "none";
               }}
             >
               {/* Icon */}
               <div
-                className="flex items-center justify-center rounded-xl flex-shrink-0"
+                className="flex items-center justify-center rounded-lg mb-6"
                 style={{
-                  width: "44px",
-                  height: "44px",
-                  backgroundColor: "rgba(26,74,53,0.09)",
-                  color: "#1A4A35",
+                  width: "48px",
+                  height: "48px",
+                  backgroundColor: "#f0eded",
+                  color: "#003320",
+                  transition: "transform 0.3s ease",
                 }}
               >
-                {CATEGORY_ICONS[cat.slug]}
+                <span className="material-symbols-outlined" style={{ fontSize: "28px" }}>{v.icon}</span>
               </div>
 
-              {/* Label + count */}
-              <div>
-                <p
-                  className="font-bold leading-snug"
-                  style={{ fontSize: "14px", color: "#111827", fontWeight: 700 }}
+              <h3
+                style={{
+                  fontWeight: 700,
+                  fontSize: "18px",
+                  color: "#003320",
+                  marginBottom: "8px",
+                }}
+              >
+                {v.title}
+              </h3>
+              <p
+                style={{
+                  fontSize: "13px",
+                  color: "#414943",
+                  lineHeight: 1.65,
+                  marginBottom: "24px",
+                }}
+              >
+                {v.description}
+              </p>
+
+              {/* Footer row */}
+              <div
+                className="flex justify-between items-center pt-5"
+                style={{ borderTop: "1px solid rgba(192,201,193,0.4)" }}
+              >
+                <span
+                  style={{
+                    fontSize: "11px",
+                    fontWeight: 700,
+                    color: "#88b99e",
+                  }}
                 >
-                  {cat.label}
-                </p>
-                <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "3px", fontWeight: 500 }}>
-                  {CATEGORY_COUNTS[cat.slug]} businesses
-                </p>
+                  {v.count} Listings
+                </span>
+                <span className="material-symbols-outlined" style={{ fontSize: "20px", color: "#c0c9c1" }}>
+                  chevron_right
+                </span>
+              </div>
+
+              {/* Background ghost icon */}
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  right: "-48px",
+                  bottom: "-48px",
+                  opacity: 0.03,
+                  transition: "opacity 0.3s ease",
+                  fontSize: "0px",
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: "180px" }}>{v.icon}</span>
               </div>
             </Link>
           ))}
-        </div>
-
-        {/* Mobile see all */}
-        <div className="sm:hidden text-center mt-8">
-          <Link href="/directory" className="btn-ghost" style={{ fontSize: "14px" }}>
-            View All Categories
-          </Link>
         </div>
       </div>
     </section>
