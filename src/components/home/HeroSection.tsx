@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CATEGORIES } from "@/data/categories";
@@ -21,8 +20,7 @@ export default function HeroSection() {
     const path = category ? `/directory/${category}` : "/directory";
     const params = new URLSearchParams();
     if (state) {
-      const stateOnly = state.replace(", USA", "").replace(", Canada", "");
-      params.set("state", stateOnly);
+      params.set("state", state.replace(/, (USA|Canada)$/, ""));
     }
     const qs = params.toString();
     router.push(qs ? `${path}?${qs}` : path);
@@ -30,37 +28,84 @@ export default function HeroSection() {
 
   return (
     <section
-      className="relative w-full overflow-hidden flex items-center"
-      style={{ minHeight: "700px", paddingTop: "80px", backgroundColor: "#fbf9f8" }}
+      style={{
+        position: "relative",
+        minHeight: "700px",
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        paddingTop: "80px",
+        overflow: "hidden",
+        backgroundColor: "#f5f2ed",
+      }}
     >
-      {/* Subtle background texture */}
+      {/* Topographic / radial background */}
       <div
-        className="absolute inset-0 z-0"
+        aria-hidden
         style={{
+          position: "absolute",
+          inset: 0,
           backgroundImage: `
-            radial-gradient(ellipse at 20% 50%, rgba(26,74,53,0.06) 0%, transparent 60%),
-            radial-gradient(ellipse at 80% 20%, rgba(136,185,158,0.08) 0%, transparent 50%)
+            radial-gradient(ellipse 80% 60% at 50% 50%, rgba(192,201,193,0.25) 0%, transparent 70%),
+            radial-gradient(ellipse 60% 80% at 20% 30%, rgba(136,185,158,0.10) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 60% at 80% 70%, rgba(26,74,53,0.06) 0%, transparent 55%)
           `,
         }}
       />
 
-      <div
-        className="relative z-10 w-full mx-auto px-8 lg:px-16 text-center"
-        style={{ maxWidth: "1440px", paddingTop: "48px", paddingBottom: "80px" }}
+      {/* Subtle wave lines overlay */}
+      <svg
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          opacity: 0.12,
+        }}
+        viewBox="0 0 1440 700"
+        preserveAspectRatio="xMidYMid slice"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <div style={{ maxWidth: "860px", margin: "0 auto" }}>
+        {[0, 40, 80, 120, 160, 200, 240, 280, 320].map((offset, i) => (
+          <path
+            key={i}
+            d={`M-200 ${200 + offset} Q360 ${160 + offset - 30} 720 ${200 + offset} T1640 ${200 + offset}`}
+            fill="none"
+            stroke="#1a4a35"
+            strokeWidth="1"
+          />
+        ))}
+      </svg>
+
+      {/* Content */}
+      <div
+        style={{
+          position: "relative",
+          zIndex: 10,
+          width: "100%",
+          maxWidth: "1440px",
+          margin: "0 auto",
+          padding: "64px 32px 80px",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+
           {/* Badge */}
-          <div className="animate-fade-in" style={{ animationDelay: "0ms" }}>
+          <div style={{ marginBottom: "32px" }}>
             <span
-              className="inline-block px-4 py-1.5 rounded-full"
               style={{
+                display: "inline-block",
                 backgroundColor: "#1a4a35",
                 color: "#88b99e",
                 fontSize: "10px",
                 fontWeight: 700,
                 letterSpacing: "0.2em",
                 textTransform: "uppercase",
-                marginBottom: "28px",
+                padding: "8px 20px",
+                borderRadius: "9999px",
+                fontFamily: "'Inter', sans-serif",
               }}
             >
               Premier B2B Infrastructure
@@ -69,33 +114,36 @@ export default function HeroSection() {
 
           {/* Headline */}
           <h1
-            className="animate-fade-in-up"
             style={{
-              animationDelay: "80ms",
-              fontFamily: "'Noto Serif', serif",
-              fontSize: "clamp(42px, 6vw, 72px)",
+              fontFamily: "'Noto Serif', Georgia, serif",
+              fontSize: "clamp(44px, 7vw, 80px)",
               fontWeight: 700,
               color: "#003320",
-              lineHeight: 1.1,
+              lineHeight: 1.08,
               marginBottom: "24px",
+              letterSpacing: "-0.5px",
             }}
           >
-            The Modern Authority in{" "}
+            The Modern Authority in
             <br />
-            <span style={{ fontStyle: "italic", color: "#88b99e" }}>
+            <span
+              style={{
+                fontStyle: "italic",
+                color: "#88b99e",
+              }}
+            >
               Cannabis Commerce.
             </span>
           </h1>
 
           {/* Subtitle */}
           <p
-            className="animate-fade-in-up"
             style={{
-              animationDelay: "160ms",
-              color: "#414943",
-              fontSize: "17px",
-              lineHeight: 1.65,
-              maxWidth: "540px",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(15px, 1.8vw, 18px)",
+              color: "#5a6360",
+              lineHeight: 1.7,
+              maxWidth: "520px",
               margin: "0 auto 48px",
             }}
           >
@@ -105,177 +153,193 @@ export default function HeroSection() {
 
           {/* Search Bar */}
           <div
-            className="animate-fade-in-up search-shadow"
             style={{
-              animationDelay: "240ms",
-              maxWidth: "820px",
+              maxWidth: "860px",
               margin: "0 auto",
+              backgroundColor: "white",
+              borderRadius: "16px",
+              padding: "12px",
+              display: "flex",
+              flexDirection: "row",
+              gap: "8px",
+              boxShadow: "0 8px 40px -8px rgba(0,51,32,0.18), 0 2px 8px rgba(0,0,0,0.04)",
+              border: "1px solid rgba(192,201,193,0.25)",
             }}
+            className="hero-search-bar"
           >
+            {/* State dropdown */}
             <div
-              className="flex flex-col md:flex-row items-stretch gap-4 p-4 rounded-2xl"
               style={{
-                backgroundColor: "white",
-                border: "1px solid rgba(192,201,193,0.3)",
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "10px 16px",
+                backgroundColor: "#f6f3f2",
+                borderRadius: "10px",
+                border: "1px solid rgba(192,201,193,0.35)",
+                minWidth: 0,
               }}
             >
-              {/* State selector */}
-              <div
-                className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl"
-                style={{
-                  backgroundColor: "#f6f3f2",
-                  border: "1px solid rgba(192,201,193,0.4)",
-                }}
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "20px", color: "#717973", flexShrink: 0 }}
               >
-                <span
-                  className="material-symbols-outlined flex-shrink-0"
-                  style={{ color: "#414943", fontSize: "20px" }}
-                >
-                  location_on
-                </span>
-                <div className="flex flex-col items-start w-full">
-                  <label
-                    style={{
-                      fontSize: "9px",
-                      fontWeight: 700,
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color: "rgba(65,73,67,0.6)",
-                      marginBottom: "2px",
-                    }}
-                  >
-                    Select State
-                  </label>
-                  <select
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
-                    className="w-full bg-transparent border-none appearance-none"
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: 500,
-                      color: state ? "#003320" : "#9CA3AF",
-                      padding: 0,
-                    }}
-                  >
-                    <option value="">All States</option>
-                    {US_STATES.map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Category selector */}
-              <div
-                className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl"
-                style={{
-                  backgroundColor: "#f6f3f2",
-                  border: "1px solid rgba(192,201,193,0.4)",
-                }}
-              >
-                <span
-                  className="material-symbols-outlined flex-shrink-0"
-                  style={{ color: "#414943", fontSize: "20px" }}
-                >
-                  category
-                </span>
-                <div className="flex flex-col items-start w-full">
-                  <label
-                    style={{
-                      fontSize: "9px",
-                      fontWeight: 700,
-                      letterSpacing: "0.15em",
-                      textTransform: "uppercase",
-                      color: "rgba(65,73,67,0.6)",
-                      marginBottom: "2px",
-                    }}
-                  >
-                    Select Service
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-transparent border-none appearance-none"
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: 500,
-                      color: category ? "#003320" : "#9CA3AF",
-                      padding: 0,
-                    }}
-                  >
-                    <option value="">All Services</option>
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat.slug} value={cat.slug}>{cat.label}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Search button */}
-              <button
-                onClick={handleSearch}
-                className="flex items-center justify-center gap-2 rounded-xl"
-                style={{
-                  backgroundColor: "#003320",
-                  color: "white",
-                  padding: "14px 36px",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  border: "none",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                  boxShadow: "0 4px 16px rgba(0,51,32,0.25)",
-                  transition: "background-color 0.2s ease",
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#1a4a35"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#003320"; }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>search</span>
-                Browse
-              </button>
-            </div>
-          </div>
-
-          {/* Popular quick links */}
-          <div
-            className="flex flex-wrap items-center justify-center gap-2 animate-fade-in"
-            style={{ animationDelay: "400ms", marginTop: "24px" }}
-          >
-            <span style={{ fontSize: "12px", color: "#9CA3AF", fontWeight: 500 }}>Popular:</span>
-            {["Cultivation & Growing", "Testing & Science", "Compliance & Legal", "Retail & Dispensary"].map((label) => {
-              const cat = CATEGORIES.find((c) => c.label === label);
-              return (
-                <Link
-                  key={label}
-                  href={cat ? `/directory/${cat.slug}` : "/directory"}
-                  className="rounded-full transition-all"
+                location_on
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
                   style={{
-                    fontSize: "12px",
-                    color: "#414943",
-                    backgroundColor: "white",
-                    border: "1px solid rgba(192,201,193,0.5)",
-                    padding: "4px 14px",
-                    fontWeight: 500,
-                    textDecoration: "none",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "#003320";
-                    (e.currentTarget as HTMLElement).style.color = "#003320";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(192,201,193,0.5)";
-                    (e.currentTarget as HTMLElement).style.color = "#414943";
+                    fontSize: "9px",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: "rgba(65,73,67,0.55)",
+                    marginBottom: "2px",
+                    fontFamily: "'Inter', sans-serif",
                   }}
                 >
-                  {label}
-                </Link>
-              );
-            })}
+                  Select State
+                </div>
+                <select
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: state ? "#003320" : "#717973",
+                    fontFamily: "'Inter', sans-serif",
+                    cursor: "pointer",
+                    appearance: "none",
+                    padding: 0,
+                  }}
+                >
+                  <option value="">California, USA</option>
+                  {US_STATES.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "18px", color: "#9CA3AF", flexShrink: 0 }}
+              >
+                expand_more
+              </span>
+            </div>
+
+            {/* Service dropdown */}
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "10px 16px",
+                backgroundColor: "#f6f3f2",
+                borderRadius: "10px",
+                border: "1px solid rgba(192,201,193,0.35)",
+                minWidth: 0,
+              }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "20px", color: "#717973", flexShrink: 0 }}
+              >
+                category
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontSize: "9px",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: "rgba(65,73,67,0.55)",
+                    marginBottom: "2px",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Select Service
+                </div>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: category ? "#003320" : "#717973",
+                    fontFamily: "'Inter', sans-serif",
+                    cursor: "pointer",
+                    appearance: "none",
+                    padding: 0,
+                  }}
+                >
+                  <option value="">Cultivation</option>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat.slug} value={cat.slug}>{cat.label}</option>
+                  ))}
+                </select>
+              </div>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "18px", color: "#9CA3AF", flexShrink: 0 }}
+              >
+                expand_more
+              </span>
+            </div>
+
+            {/* Browse button */}
+            <button
+              onClick={handleSearch}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                backgroundColor: "#003320",
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
+                padding: "12px 32px",
+                fontSize: "12px",
+                fontWeight: 700,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                fontFamily: "'Inter', sans-serif",
+                cursor: "pointer",
+                flexShrink: 0,
+                whiteSpace: "nowrap",
+                transition: "background-color 0.2s ease",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#1a4a35"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#003320"; }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>search</span>
+              Browse
+            </button>
           </div>
+
         </div>
       </div>
+
+      {/* Mobile responsive styles */}
+      <style>{`
+        @media (max-width: 640px) {
+          .hero-search-bar {
+            flex-direction: column !important;
+            padding: 10px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
