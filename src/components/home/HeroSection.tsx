@@ -39,44 +39,18 @@ export default function HeroSection() {
         backgroundColor: "#eeeae3",
       }}
     >
-      {/* Topographic / radial background */}
+      {/* Background image */}
       <div
         aria-hidden
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `
-            radial-gradient(ellipse 90% 70% at 50% 40%, rgba(240,237,230,0.9) 0%, transparent 65%),
-            radial-gradient(ellipse 60% 80% at 15% 50%, rgba(200,210,200,0.3) 0%, transparent 55%),
-            radial-gradient(ellipse 50% 60% at 85% 60%, rgba(180,200,185,0.2) 0%, transparent 50%)
-          `,
+          backgroundImage: "url('/hero-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       />
-
-      {/* Subtle wave lines overlay */}
-      <svg
-        aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          opacity: 0.12,
-        }}
-        viewBox="0 0 1440 700"
-        preserveAspectRatio="xMidYMid slice"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {[0, 40, 80, 120, 160, 200, 240, 280, 320].map((offset, i) => (
-          <path
-            key={i}
-            d={`M-200 ${200 + offset} Q360 ${160 + offset - 30} 720 ${200 + offset} T1640 ${200 + offset}`}
-            fill="none"
-            stroke="#1a4a35"
-            strokeWidth="1"
-          />
-        ))}
-      </svg>
 
       {/* Content */}
       <div
