@@ -38,11 +38,11 @@ export default function CategoryGrid() {
   const [ref, inView] = useInView();
 
   return (
-    <section className="py-24 px-8" style={{ backgroundColor: "#f6f3f2" }}>
+    <section className="py-14 md:py-24 px-4 md:px-8" style={{ backgroundColor: "#f6f3f2" }}>
       <div style={{ maxWidth: "1440px", margin: "0 auto" }}>
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-4 md:gap-6">
           <div style={{ maxWidth: "520px" }}>
             <h2
               style={{

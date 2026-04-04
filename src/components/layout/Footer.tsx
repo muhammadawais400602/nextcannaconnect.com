@@ -45,7 +45,7 @@ const REGIONS = [
 export default function Footer() {
   return (
     <footer style={{ backgroundColor: "#003320", color: "rgba(136,185,158,0.7)" }}>
-      <div className="mx-auto px-8 pt-24 pb-12" style={{ maxWidth: "1440px" }}>
+      <div className="mx-auto px-4 md:px-8 pt-14 md:pt-24 pb-12" style={{ maxWidth: "1440px" }}>
 
         {/* Row 1: Logo & Description */}
         <div style={{ maxWidth: "560px", marginBottom: "80px" }}>
@@ -85,7 +85,7 @@ export default function Footer() {
           >
             Market Filters
           </h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 md:gap-8">
             {MARKET_FILTERS.map((col) => (
               <div key={col.heading}>
                 <h5

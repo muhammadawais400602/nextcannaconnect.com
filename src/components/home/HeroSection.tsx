@@ -54,6 +54,7 @@ export default function HeroSection() {
 
       {/* Content */}
       <div
+        className="hero-section-content"
         style={{
           position: "relative",
           zIndex: 10,
@@ -307,16 +308,29 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Mobile responsive styles */}
       <style>{`
         @media (max-width: 768px) {
           .hero-search-bar {
             flex-direction: column !important;
             padding: 10px !important;
+            gap: 10px !important;
           }
           .hero-headline {
             white-space: normal !important;
-            font-size: clamp(34px, 9vw, 54px) !important;
+            font-size: clamp(30px, 9vw, 48px) !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .hero-section-content {
+            padding: 32px 20px 60px !important;
+          }
+          .hero-subtitle {
+            font-size: 14px !important;
+            margin-bottom: 32px !important;
+          }
+          .hero-badge {
+            font-size: 9px !important;
+            padding: 6px 14px !important;
           }
         }
       `}</style>

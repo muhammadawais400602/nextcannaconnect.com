@@ -35,11 +35,11 @@ export default function StatsBar() {
         backgroundColor: "#1a4a35",
         borderTop: "1px solid rgba(255,255,255,0.05)",
         borderBottom: "1px solid rgba(255,255,255,0.05)",
-        padding: "32px 32px",
+        padding: "28px 20px",
       }}
     >
       <div
-        className="flex flex-wrap justify-between items-center gap-8 mx-auto"
+        className="grid grid-cols-2 md:flex md:flex-wrap md:justify-between items-center gap-6 md:gap-8 mx-auto"
         style={{ maxWidth: "1440px" }}
       >
         {STATS.map((stat, i) => (

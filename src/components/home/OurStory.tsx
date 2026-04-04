@@ -7,7 +7,7 @@ export default function OurStory() {
 
   return (
     <section
-      className="relative py-24 px-8 overflow-hidden"
+      className="relative py-14 md:py-24 px-4 md:px-8 overflow-hidden"
       style={{ backgroundColor: "#fbf9f8" }}
     >
       {/* Decorative background icon */}
@@ -25,7 +25,7 @@ export default function OurStory() {
 
       <div
         ref={ref as React.RefObject<HTMLDivElement>}
-        className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 relative z-10"
+        className="flex flex-col lg:flex-row items-center gap-10 lg:gap-24 relative z-10"
         style={{ maxWidth: "1440px", margin: "0 auto" }}
       >
         {/* Left: Text */}
@@ -140,7 +140,7 @@ export default function OurStory() {
           >
             <div
               style={{
-                height: "520px",
+                height: "clamp(300px, 50vw, 520px)",
                 background: "linear-gradient(135deg, #003320 0%, #1a4a35 40%, #2d6e52 70%, #88b99e 100%)",
                 display: "flex",
                 alignItems: "center",
