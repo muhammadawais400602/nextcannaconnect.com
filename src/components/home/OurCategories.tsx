@@ -87,7 +87,7 @@ export default function OurCategories() {
         backgroundColor: "#fbf9f8",
         borderTop: "1px solid rgba(192,201,193,0.25)",
         borderBottom: "1px solid rgba(192,201,193,0.25)",
-        padding: "80px 0",
+        padding: "56px 0 80px",
         overflow: "hidden",
       }}
     >
@@ -123,13 +123,13 @@ export default function OurCategories() {
         style={{ position: "relative", overflow: "hidden" }}
       >
         {/* Fade edges */}
-        <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: "80px", zIndex: 2,
+        <div className="cat-fade-edge" style={{
+          position: "absolute", left: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
           background: "linear-gradient(to right, #fbf9f8, transparent)",
           pointerEvents: "none",
         }} />
-        <div style={{
-          position: "absolute", right: 0, top: 0, bottom: 0, width: "80px", zIndex: 2,
+        <div className="cat-fade-edge" style={{
+          position: "absolute", right: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
           background: "linear-gradient(to left, #fbf9f8, transparent)",
           pointerEvents: "none",
         }} />
@@ -233,12 +233,12 @@ export default function OurCategories() {
         }
 
         .category-card {
-          width: 280px;
-          min-width: 280px;
+          width: 260px;
+          min-width: 260px;
           background: white;
           border: 1px solid rgba(192,201,193,0.35);
           border-radius: 16px;
-          padding: 28px;
+          padding: 24px;
           display: flex;
           flex-direction: column;
           transition: box-shadow 0.3s ease, border-color 0.3s ease;
@@ -248,6 +248,17 @@ export default function OurCategories() {
         .category-card:hover {
           box-shadow: 0 8px 32px rgba(0,51,32,0.1);
           border-color: rgba(0,51,32,0.2);
+        }
+
+        @media (max-width: 480px) {
+          .category-card {
+            width: 220px;
+            min-width: 220px;
+            padding: 20px;
+          }
+          .cat-fade-edge {
+            width: 32px !important;
+          }
         }
       `}</style>
     </section>

@@ -14,12 +14,12 @@ export default function OurServices() {
 
   return (
     <section
-      className="relative py-24 px-8 overflow-hidden"
+      className="relative py-14 md:py-24 px-4 md:px-8 overflow-hidden"
       style={{ backgroundColor: "#f6f3f2" }}
     >
       <div
         ref={ref as React.RefObject<HTMLDivElement>}
-        className="flex flex-col-reverse lg:flex-row items-center gap-16 lg:gap-24 relative z-10"
+        className="flex flex-col-reverse lg:flex-row items-center gap-10 lg:gap-24 relative z-10"
         style={{ maxWidth: "1440px", margin: "0 auto" }}
       >
         {/* Left: Image */}
@@ -37,7 +37,7 @@ export default function OurServices() {
           >
             <div
               style={{
-                height: "520px",
+                height: "clamp(280px, 50vw, 520px)",
                 background: "linear-gradient(145deg, #1a4a35 0%, #003320 50%, #001a10 100%)",
                 display: "flex",
                 alignItems: "center",
@@ -171,7 +171,7 @@ export default function OurServices() {
 
           {/* Checklist */}
           <div
-            className="grid grid-cols-2 gap-4 mb-10"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10"
           >
             {SERVICE_ITEMS.map((item) => (
               <div key={item.label} className="flex items-center gap-2">

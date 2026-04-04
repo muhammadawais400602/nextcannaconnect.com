@@ -17,7 +17,7 @@ export default function FeaturedVendors() {
   const loopedCompanies = [...companies, ...companies];
 
   return (
-    <section className="py-16 px-8" style={{ backgroundColor: "#fbf9f8" }}>
+    <section className="py-10 md:py-16 px-4 md:px-8" style={{ backgroundColor: "#fbf9f8" }}>
       <div style={{ maxWidth: "1440px", margin: "0 auto" }}>
 
         {/* Header */}
@@ -59,13 +59,13 @@ export default function FeaturedVendors() {
           className="featured-marquee-wrapper"
         >
           {/* Fade edges */}
-          <div style={{
-            position: "absolute", left: 0, top: 0, bottom: 0, width: "80px", zIndex: 2,
+          <div className="marquee-fade-left" style={{
+            position: "absolute", left: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
             background: "linear-gradient(to right, #fbf9f8, transparent)",
             pointerEvents: "none",
           }} />
-          <div style={{
-            position: "absolute", right: 0, top: 0, bottom: 0, width: "80px", zIndex: 2,
+          <div className="marquee-fade-right" style={{
+            position: "absolute", right: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
             background: "linear-gradient(to left, #fbf9f8, transparent)",
             pointerEvents: "none",
           }} />
@@ -190,7 +190,7 @@ export default function FeaturedVendors() {
 
         .featured-marquee-track {
           display: flex;
-          gap: 24px;
+          gap: 20px;
           width: max-content;
           animation: marquee 30s linear infinite;
           padding-bottom: 8px;
@@ -201,8 +201,18 @@ export default function FeaturedVendors() {
         }
 
         .featured-card {
-          width: 280px;
-          min-width: 280px;
+          width: 260px;
+          min-width: 260px;
+        }
+
+        @media (max-width: 480px) {
+          .featured-card {
+            width: 220px;
+            min-width: 220px;
+          }
+          .marquee-fade-left, .marquee-fade-right {
+            width: 32px !important;
+          }
         }
       `}</style>
     </section>
