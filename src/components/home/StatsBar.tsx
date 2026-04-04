@@ -1,72 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Building2, Users, LayoutGrid, Globe } from "lucide-react";
 
 interface Stat {
-  value: number;
-  suffix: string;
+  display: string;
   label: string;
-  icon: React.ReactNode;
 }
 
 const STATS: Stat[] = [
-  { value: 50000, suffix: "+", label: "Licensed Businesses", icon: <Building2 size={20} style={{ color: "#1A4A35" }} /> },
-  { value: 20000, suffix: "+", label: "Verified Vendors", icon: <Users size={20} style={{ color: "#1A4A35" }} /> },
-  { value: 12, suffix: "", label: "Industry Categories", icon: <LayoutGrid size={20} style={{ color: "#1A4A35" }} /> },
-  { value: 2, suffix: "", label: "Countries (US & Canada)", icon: <Globe size={20} style={{ color: "#1A4A35" }} /> },
+  { display: "50k+", label: "Global\nBusinesses" },
+  { display: "20k+", label: "Verified\nVendors" },
+  { display: "$4.2B", label: "Transaction\nVolume" },
+  { display: "12", label: "Regulatory\nNodes" },
 ];
-
-function useCountUp(target: number, duration: number = 1400, start: boolean = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [target, duration, start]);
-  return count;
-}
-
-function StatItem({ stat, animate }: { stat: Stat; animate: boolean }) {
-  const count = useCountUp(stat.value, 1400, animate);
-  const display = animate ? count : stat.value;
-  const formatted = display >= 1000 ? (display / 1000).toFixed(0) + "K" : display.toString();
-
-  return (
-    <div className="flex flex-col items-center text-center px-8 py-6">
-      <div
-        className="flex items-center justify-center rounded-xl mb-3"
-        style={{ width: "44px", height: "44px", backgroundColor: "rgba(26,74,53,0.08)" }}
-      >
-        {stat.icon}
-      </div>
-      <span
-        className="font-extrabold"
-        style={{ fontSize: "26px", color: "#111827", fontWeight: 800, lineHeight: 1.1 }}
-      >
-        {formatted}{stat.suffix}
-      </span>
-      <span style={{ color: "#6B7280", fontSize: "13px", marginTop: "4px", fontWeight: 500 }}>
-        {stat.label}
-      </span>
-    </div>
-  );
-}
 
 export default function StatsBar() {
   const ref = useRef<HTMLDivElement>(null);
-  const [animated, setAnimated] = useState(false);
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setAnimated(true); },
+      ([entry]) => { if (entry.isIntersecting) setInView(true); },
       { threshold: 0.3 }
     );
     if (ref.current) observer.observe(ref.current);
@@ -76,22 +30,54 @@ export default function StatsBar() {
   return (
     <div
       ref={ref}
-      className="w-full"
-      style={{ backgroundColor: "white", borderBottom: "1px solid #E5E7EB" }}
+      className="relative overflow-hidden"
+      style={{
+        backgroundColor: "#1a4a35",
+        borderTop: "1px solid rgba(255,255,255,0.05)",
+        borderBottom: "1px solid rgba(255,255,255,0.05)",
+        padding: "32px 32px",
+      }}
     >
       <div
-        className="mx-auto grid grid-cols-2 md:grid-cols-4"
-        style={{ maxWidth: "1180px" }}
+        className="flex flex-wrap justify-between items-center gap-8 mx-auto"
+        style={{ maxWidth: "1440px" }}
       >
         {STATS.map((stat, i) => (
-          <div
-            key={i}
-            style={{
-              borderRight: i < STATS.length - 1 ? "1px solid #E5E7EB" : "none",
-              borderBottom: "none",
-            }}
-          >
-            <StatItem stat={stat} animate={animated} />
+          <div key={i} className="flex items-center gap-5">
+            <span
+              style={{
+                fontFamily: "'Noto Serif', serif",
+                fontSize: "clamp(28px, 3vw, 40px)",
+                fontWeight: 700,
+                color: "#88b99e",
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateY(0)" : "translateY(12px)",
+                transition: `opacity 0.6s ease ${i * 100}ms, transform 0.6s ease ${i * 100}ms`,
+              }}
+            >
+              {stat.display}
+            </span>
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.25em",
+                textTransform: "uppercase",
+                color: "rgba(136,185,158,0.5)",
+                lineHeight: 1.5,
+                whiteSpace: "pre-line",
+                opacity: inView ? 1 : 0,
+                transition: `opacity 0.6s ease ${i * 100 + 50}ms`,
+              }}
+            >
+              {stat.label}
+            </span>
+            {i < STATS.length - 1 && (
+              <div
+                className="hidden md:block"
+                style={{ width: "1px", height: "32px", backgroundColor: "rgba(255,255,255,0.08)", marginLeft: "12px" }}
+              />
+            )}
           </div>
         ))}
       </div>

@@ -1,0 +1,272 @@
+"use client";
+
+import { useInView } from "@/hooks/useInView";
+
+export default function OurStory() {
+  const [ref, inView] = useInView();
+
+  return (
+    <section
+      className="relative py-24 px-8 overflow-hidden"
+      style={{ backgroundColor: "#fbf9f8" }}
+    >
+      {/* Decorative background icon */}
+      <div
+        className="absolute top-0 right-0 pointer-events-none"
+        style={{ width: "33%", height: "100%", opacity: 0.025, overflow: "hidden" }}
+      >
+        <span
+          className="material-symbols-outlined absolute"
+          style={{ fontSize: "600px", lineHeight: 1, right: "-96px", top: 0 }}
+        >
+          all_inclusive
+        </span>
+      </div>
+
+      <div
+        ref={ref as React.RefObject<HTMLDivElement>}
+        className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 relative z-10"
+        style={{ maxWidth: "1440px", margin: "0 auto" }}
+      >
+        {/* Left: Text */}
+        <div
+          className="w-full lg:w-1/2"
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateX(0)" : "translateX(-32px)",
+            transition: "opacity 0.7s ease, transform 0.7s ease",
+          }}
+        >
+          <span className="section-label" style={{ marginBottom: "12px" }}>
+            Established Excellence
+          </span>
+          <h2
+            style={{
+              fontFamily: "'Noto Serif', serif",
+              fontSize: "clamp(32px, 3.5vw, 48px)",
+              fontWeight: 700,
+              color: "#003320",
+              lineHeight: 1.15,
+              marginBottom: "32px",
+            }}
+          >
+            The Vision Behind{" "}
+            <br />
+            <span style={{ fontStyle: "italic", color: "#88b99e" }}>NextCanna</span>
+          </h2>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "40px" }}>
+            <p style={{ fontSize: "16px", color: "#414943", lineHeight: 1.75 }}>
+              In a rapidly evolving landscape, NextCanna Connect emerged as the response to
+              the need for institutional-grade reliability in cannabis commerce. Our journey
+              began with a singular premise: the industry&apos;s growth is limited not by its
+              potential, but by its fragmentation.
+            </p>
+            <p style={{ fontSize: "16px", color: "#414943", lineHeight: 1.75 }}>
+              We built this ecosystem to serve as the definitive bridge between high-yield
+              innovation and retail excellence. By vetting every participant and standardizing
+              transactional integrity, we aren&apos;t just facilitating trades — we are
+              architecting the future of a global industry.
+            </p>
+          </div>
+
+          {/* Stats row */}
+          <div className="flex flex-wrap gap-10 mb-10">
+            {[
+              { value: "2018", label: "Founded" },
+              { value: "Global", label: "Footprint" },
+              { value: "Verified", label: "Only" },
+            ].map((s) => (
+              <div key={s.label} className="flex flex-col">
+                <span
+                  style={{
+                    fontFamily: "'Noto Serif', serif",
+                    fontSize: "26px",
+                    fontWeight: 700,
+                    color: "#003320",
+                  }}
+                >
+                  {s.value}
+                </span>
+                <span
+                  style={{
+                    fontSize: "9px",
+                    fontWeight: 700,
+                    letterSpacing: "0.25em",
+                    textTransform: "uppercase",
+                    color: "rgba(65,73,67,0.6)",
+                    marginTop: "4px",
+                  }}
+                >
+                  {s.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <button
+            className="group flex items-center gap-3"
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              color: "#003320",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            Learn more about our mission
+            <span className="material-symbols-outlined" style={{ fontSize: "18px", transition: "transform 0.2s" }}>
+              arrow_forward
+            </span>
+          </button>
+        </div>
+
+        {/* Right: Image */}
+        <div
+          className="w-full lg:w-1/2 relative"
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateX(0)" : "translateX(32px)",
+            transition: "opacity 0.7s ease 0.15s, transform 0.7s ease 0.15s",
+          }}
+        >
+          <div
+            className="relative rounded-3xl overflow-hidden"
+            style={{ boxShadow: "0 24px 80px rgba(0,51,32,0.15)" }}
+          >
+            <div
+              style={{
+                height: "520px",
+                background: "linear-gradient(135deg, #003320 0%, #1a4a35 40%, #2d6e52 70%, #88b99e 100%)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              {/* Decorative circles */}
+              <div
+                style={{
+                  position: "absolute",
+                  width: "400px",
+                  height: "400px",
+                  borderRadius: "50%",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  top: "-100px",
+                  right: "-100px",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  width: "280px",
+                  height: "280px",
+                  borderRadius: "50%",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  bottom: "-60px",
+                  left: "-60px",
+                }}
+              />
+              <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+                <div
+                  style={{
+                    fontFamily: "'Noto Serif', serif",
+                    fontSize: "80px",
+                    fontStyle: "italic",
+                    color: "rgba(255,255,255,0.15)",
+                    lineHeight: 1,
+                    marginBottom: "16px",
+                  }}
+                >
+                  NC
+                </div>
+                <p
+                  style={{
+                    fontFamily: "'Noto Serif', serif",
+                    fontSize: "20px",
+                    fontStyle: "italic",
+                    color: "rgba(255,255,255,0.7)",
+                  }}
+                >
+                  NextCanna Connect
+                </p>
+                <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "8px", letterSpacing: "0.1em" }}>
+                  Est. 2018
+                </p>
+              </div>
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "linear-gradient(to top, rgba(0,51,32,0.4) 0%, transparent 50%)",
+              }}
+            />
+          </div>
+
+          {/* Floating quote card */}
+          <div
+            className="absolute hidden xl:block"
+            style={{
+              top: "50%",
+              right: "-48px",
+              transform: "translateY(-50%)",
+              zIndex: 20,
+              backgroundColor: "rgba(255,255,255,0.92)",
+              backdropFilter: "blur(12px)",
+              padding: "24px",
+              borderRadius: "16px",
+              boxShadow: "0 8px 32px rgba(0,51,32,0.12)",
+              border: "1px solid rgba(255,255,255,0.6)",
+              maxWidth: "220px",
+            }}
+          >
+            <p
+              style={{
+                fontFamily: "'Noto Serif', serif",
+                fontSize: "12px",
+                fontStyle: "italic",
+                color: "#003320",
+                lineHeight: 1.7,
+              }}
+            >
+              &ldquo;The first platform that mirrors the professionalism of traditional finance in the cannabis space.&rdquo;
+            </p>
+            <p
+              style={{
+                marginTop: "12px",
+                fontSize: "9px",
+                fontWeight: 700,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "rgba(65,73,67,0.55)",
+              }}
+            >
+              — Executive Member
+            </p>
+          </div>
+
+          {/* Decorative blurs */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "-40px",
+              left: "-40px",
+              width: "200px",
+              height: "200px",
+              borderRadius: "50%",
+              backgroundColor: "rgba(26,74,53,0.12)",
+              filter: "blur(60px)",
+              zIndex: 0,
+            }}
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
