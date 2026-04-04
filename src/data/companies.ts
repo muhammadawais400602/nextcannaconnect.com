@@ -404,5 +404,7 @@ export function getCompanyBySlug(slug: string): Company | undefined {
 }
 
 export function getFeaturedCompanies(): Company[] {
-  return COMPANIES.filter((c) => c.tier === "elite" || c.tier === "select" || c.tier === "claimed").slice(0, 3);
+  return COMPANIES.filter((c) =>
+    c.tier === "elite" || c.tier === "featured" || c.tier === "select"
+  ).slice(0, 8);
 }
