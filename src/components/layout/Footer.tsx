@@ -35,12 +35,6 @@ const MARKET_FILTERS = [
   },
 ];
 
-const REGIONS = [
-  { label: "West Coast", states: ["California", "Oregon", "Washington"] },
-  { label: "Mountain", states: ["Colorado", "Nevada", "Montana"] },
-  { label: "Northeast", states: ["New York", "Massachusetts", "New Jersey"] },
-  { label: "Midwest", states: ["Michigan", "Illinois", "Ohio"] },
-];
 
 export default function Footer() {
   return (
@@ -113,51 +107,6 @@ export default function Footer() {
                     </li>
                   ))}
                 </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 3: Regions */}
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "64px", marginBottom: "64px" }}>
-          <h4
-            style={{
-              fontSize: "10px",
-              fontWeight: 700,
-              letterSpacing: "0.25em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.3)",
-              marginBottom: "40px",
-            }}
-          >
-            Regions
-          </h4>
-          <div className="flex flex-wrap gap-x-12 gap-y-6">
-            {REGIONS.map((region) => (
-              <div key={region.label}>
-                <h5
-                  style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.2em",
-                    textTransform: "uppercase",
-                    color: "rgba(255,255,255,0.45)",
-                    marginBottom: "10px",
-                  }}
-                >
-                  {region.label}
-                </h5>
-                <div className="flex gap-4">
-                  {region.states.map((state) => (
-                    <Link
-                      key={state}
-                      href={`/directory?state=${encodeURIComponent(state)}`}
-                      className="footer-link"
-                    >
-                      {state}
-                    </Link>
-                  ))}
-                </div>
               </div>
             ))}
           </div>
