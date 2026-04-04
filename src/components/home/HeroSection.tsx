@@ -36,7 +36,7 @@ export default function HeroSection() {
         alignItems: "center",
         paddingTop: "80px",
         overflow: "hidden",
-        backgroundColor: "#f5f2ed",
+        backgroundColor: "#eeeae3",
       }}
     >
       {/* Topographic / radial background */}
@@ -46,9 +46,9 @@ export default function HeroSection() {
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            radial-gradient(ellipse 80% 60% at 50% 50%, rgba(192,201,193,0.25) 0%, transparent 70%),
-            radial-gradient(ellipse 60% 80% at 20% 30%, rgba(136,185,158,0.10) 0%, transparent 60%),
-            radial-gradient(ellipse 50% 60% at 80% 70%, rgba(26,74,53,0.06) 0%, transparent 55%)
+            radial-gradient(ellipse 90% 70% at 50% 40%, rgba(240,237,230,0.9) 0%, transparent 65%),
+            radial-gradient(ellipse 60% 80% at 15% 50%, rgba(200,210,200,0.3) 0%, transparent 55%),
+            radial-gradient(ellipse 50% 60% at 85% 60%, rgba(180,200,185,0.2) 0%, transparent 50%)
           `,
         }}
       />
@@ -116,13 +116,15 @@ export default function HeroSection() {
           <h1
             style={{
               fontFamily: "'Noto Serif', Georgia, serif",
-              fontSize: "clamp(44px, 7vw, 80px)",
-              fontWeight: 700,
+              fontSize: "clamp(38px, 5.5vw, 76px)",
+              fontWeight: 400,
               color: "#003320",
-              lineHeight: 1.08,
+              lineHeight: 1.1,
               marginBottom: "24px",
-              letterSpacing: "-0.5px",
+              letterSpacing: "-0.3px",
+              whiteSpace: "nowrap",
             }}
+            className="hero-headline"
           >
             The Modern Authority in
             <br />
@@ -333,10 +335,14 @@ export default function HeroSection() {
 
       {/* Mobile responsive styles */}
       <style>{`
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .hero-search-bar {
             flex-direction: column !important;
             padding: 10px !important;
+          }
+          .hero-headline {
+            white-space: normal !important;
+            font-size: clamp(34px, 9vw, 54px) !important;
           }
         }
       `}</style>
