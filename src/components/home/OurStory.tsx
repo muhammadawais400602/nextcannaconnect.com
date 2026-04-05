@@ -73,8 +73,8 @@ export default function OurStory() {
           {/* Stats row */}
           <div className="flex flex-wrap gap-10 mb-10">
             {[
-              { value: "2018", label: "Founded" },
-              { value: "Global", label: "Footprint" },
+              { value: "2025", label: "Founded" },
+              { value: "North America", label: "Footprint" },
               { value: "Verified", label: "Only" },
             ].map((s) => (
               <div key={s.label} className="flex flex-col">
@@ -196,7 +196,7 @@ export default function OurStory() {
                   NextCanna Connect
                 </p>
                 <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "8px", letterSpacing: "0.1em" }}>
-                  Est. 2018
+                  Est. 2025
                 </p>
               </div>
             </div>
