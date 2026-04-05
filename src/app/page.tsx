@@ -1,6 +1,5 @@
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedVendors from "@/components/home/FeaturedVendors";
-import CategoryGrid from "@/components/home/CategoryGrid";
 import OurCategories from "@/components/home/OurCategories";
 import OurStory from "@/components/home/OurStory";
 import OurServices from "@/components/home/OurServices";
@@ -11,7 +10,6 @@ export default function HomePage() {
     <>
       <HeroSection />
       <FeaturedVendors />
-      <CategoryGrid />
       <OurCategories />
       <OurStory />
       <OurServices />
