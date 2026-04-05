@@ -5,10 +5,16 @@ import { useState } from "react";
 import { CATEGORIES } from "@/data/categories";
 
 const US_STATES = [
-  "California, USA", "Colorado, USA", "Oregon, USA", "Washington, USA",
-  "Nevada, USA", "New York, USA", "Michigan, USA", "Massachusetts, USA",
-  "Illinois, USA", "New Jersey, USA", "Arizona, USA", "Montana, USA",
-  "New Mexico, USA", "Connecticut, USA", "Maryland, USA",
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California",
+  "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+  "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
+  "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+  "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+  "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+  "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
+  "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+  "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+  "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
 ];
 
 export default function HeroSection() {
@@ -20,7 +26,7 @@ export default function HeroSection() {
     const path = category ? `/directory/${category}` : "/directory";
     const params = new URLSearchParams();
     if (state) {
-      params.set("state", state.replace(/, (USA|Canada)$/, ""));
+      params.set("state", state);
     }
     const qs = params.toString();
     router.push(qs ? `${path}?${qs}` : path);
@@ -144,71 +150,6 @@ export default function HeroSection() {
             }}
             className="hero-search-bar"
           >
-            {/* State dropdown */}
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                padding: "10px 16px",
-                backgroundColor: "#f6f3f2",
-                borderRadius: "10px",
-                border: "1px solid rgba(192,201,193,0.35)",
-                minWidth: 0,
-              }}
-            >
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "20px", color: "#717973", flexShrink: 0 }}
-              >
-                location_on
-              </span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div
-                  style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(65,73,67,0.55)",
-                    marginBottom: "2px",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
-                  Select State
-                </div>
-                <select
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: state ? "#003320" : "#717973",
-                    fontFamily: "'Inter', sans-serif",
-                    cursor: "pointer",
-                    appearance: "none",
-                    padding: 0,
-                  }}
-                >
-                  <option value="">California, USA</option>
-                  {US_STATES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </select>
-              </div>
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "18px", color: "#9CA3AF", flexShrink: 0 }}
-              >
-                expand_more
-              </span>
-            </div>
-
             {/* Service dropdown */}
             <div
               style={{
@@ -260,9 +201,74 @@ export default function HeroSection() {
                     padding: 0,
                   }}
                 >
-                  <option value="">Cultivation</option>
+                  <option value="">Select Service</option>
                   {CATEGORIES.map((cat) => (
                     <option key={cat.slug} value={cat.slug}>{cat.label}</option>
+                  ))}
+                </select>
+              </div>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "18px", color: "#9CA3AF", flexShrink: 0 }}
+              >
+                expand_more
+              </span>
+            </div>
+
+            {/* State dropdown */}
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                padding: "10px 16px",
+                backgroundColor: "#f6f3f2",
+                borderRadius: "10px",
+                border: "1px solid rgba(192,201,193,0.35)",
+                minWidth: 0,
+              }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: "20px", color: "#717973", flexShrink: 0 }}
+              >
+                location_on
+              </span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div
+                  style={{
+                    fontSize: "9px",
+                    fontWeight: 700,
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: "rgba(65,73,67,0.55)",
+                    marginBottom: "2px",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  Select State
+                </div>
+                <select
+                  value={state}
+                  onChange={(e) => setState(e.target.value)}
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                    color: state ? "#003320" : "#717973",
+                    fontFamily: "'Inter', sans-serif",
+                    cursor: "pointer",
+                    appearance: "none",
+                    padding: 0,
+                  }}
+                >
+                  <option value="">Select State</option>
+                  {US_STATES.map((s) => (
+                    <option key={s} value={s}>{s}</option>
                   ))}
                 </select>
               </div>
