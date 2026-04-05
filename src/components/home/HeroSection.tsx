@@ -101,7 +101,7 @@ export default function HeroSection() {
             }}
             className="hero-headline"
           >
-            The Modern Authority in
+            Cultivated Partners.{" "}
             <br />
             <span
               style={{
@@ -109,7 +109,7 @@ export default function HeroSection() {
                 color: "#88b99e",
               }}
             >
-              Cannabis Commerce.
+              Built for Growth.
             </span>
           </h1>
 
@@ -124,8 +124,7 @@ export default function HeroSection() {
               margin: "0 auto 48px",
             }}
           >
-            Connecting high-yield cultivators with verified retail networks.
-            Find the right partners for your growth journey.
+            Connect with the right partners to grow your cannabis business.
           </p>
 
           {/* Search Bar */}
