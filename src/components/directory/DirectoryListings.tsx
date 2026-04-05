@@ -2,11 +2,16 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, SlidersHorizontal, X } from "lucide-react";
 import ListingCard from "@/components/directory/ListingCard";
 import { Company } from "@/types";
 
 const PAGE_SIZE = 10;
+
+const SORT_OPTIONS = [
+  { value: "score", label: "Partner Score" },
+  { value: "rating", label: "Rating" },
+  { value: "name", label: "Name (A–Z)" },
+];
 
 interface Props {
   companies: Company[];
@@ -16,18 +21,17 @@ interface Props {
 export default function DirectoryListings({ companies, categoryShortLabel }: Props) {
   const searchParams = useSearchParams();
   const initialState = searchParams.get("state") ?? "";
+  const initialQuery = searchParams.get("q") ?? "";
 
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [stateFilter, setStateFilter] = useState(initialState);
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [sort, setSort] = useState("score");
   const [page, setPage] = useState(1);
 
-  // Reset page on filter change
-  useEffect(() => { setPage(1); }, [query, stateFilter, verifiedOnly]);
+  useEffect(() => { setPage(1); }, [query, stateFilter, sort]);
 
   const filtered = useMemo(() => {
-    return companies.filter((c) => {
-      if (verifiedOnly && c.tier !== "elite" && c.tier !== "select") return false;
+    let list = companies.filter((c) => {
       if (stateFilter && c.location.state !== stateFilter) return false;
       if (query) {
         const q = query.toLowerCase();
@@ -39,148 +43,223 @@ export default function DirectoryListings({ companies, categoryShortLabel }: Pro
       }
       return true;
     });
-  }, [companies, query, stateFilter, verifiedOnly]);
 
-  const featured = filtered.filter((c) => c.tier === "featured");
-  const paid = filtered.filter((c) => ["elite", "select", "claimed"].includes(c.tier));
+    if (sort === "rating") {
+      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+    } else if (sort === "name") {
+      list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+    } else {
+      // score: tier priority then rating
+      const tierOrder: Record<string, number> = { featured: 0, elite: 1, select: 2, claimed: 3, free: 4 };
+      list = [...list].sort((a, b) => {
+        const ta = tierOrder[a.tier] ?? 5;
+        const tb = tierOrder[b.tier] ?? 5;
+        if (ta !== tb) return ta - tb;
+        return (b.rating ?? 0) - (a.rating ?? 0);
+      });
+    }
+
+    return list;
+  }, [companies, query, stateFilter, sort]);
+
+  const paid = filtered.filter((c) => c.tier !== "free");
   const free = filtered.filter((c) => c.tier === "free");
-  const allNonFree = [...featured, ...paid];
 
-  const totalPages = Math.max(1, Math.ceil((allNonFree.length + free.length) / PAGE_SIZE));
-  const pagedNonFree = allNonFree.slice(0, Math.min(page * PAGE_SIZE, allNonFree.length));
-  const pagedFree = free.slice(0, Math.max(0, page * PAGE_SIZE - allNonFree.length));
+  const totalPages = Math.max(1, Math.ceil((paid.length + free.length) / PAGE_SIZE));
+  const pagedPaid = paid.slice(0, Math.min(page * PAGE_SIZE, paid.length));
+  const pagedFree = free.slice(0, Math.max(0, page * PAGE_SIZE - paid.length));
 
-  const hasFilters = query || stateFilter || verifiedOnly;
+  const verifiedCount = paid.length;
 
   return (
     <>
-      {/* Search + controls bar */}
+      {/* Header row */}
       <div
-        className="flex flex-col sm:flex-row sm:items-center gap-3 mb-5"
-        style={{ flexWrap: "wrap" }}
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          gap: "16px",
+          marginBottom: "24px",
+          flexWrap: "wrap",
+        }}
       >
-        {/* Search input */}
-        <div
-          className="flex items-center gap-2 px-4 py-3 rounded-xl flex-1"
-          style={{
-            border: "1px solid #E5E7EB",
-            backgroundColor: "#F8FAF8",
-            minWidth: "200px",
-            maxWidth: "380px",
-          }}
-        >
-          <Search size={15} style={{ color: "#9CA3AF", flexShrink: 0 }} />
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={`Search ${categoryShortLabel}...`}
-            className="flex-1 bg-transparent outline-none"
-            style={{ fontSize: "14px", color: "#111827", border: "none" }}
-          />
-          {query && (
-            <button onClick={() => setQuery("")} style={{ background: "none", border: "none", cursor: "pointer", color: "#9CA3AF", padding: 0 }}>
-              <X size={14} />
-            </button>
-          )}
+        <div>
+          <p
+            style={{
+              fontSize: "10px",
+              fontWeight: 700,
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              color: "rgba(65,73,67,0.45)",
+              fontFamily: "'Inter', sans-serif",
+              marginBottom: "6px",
+            }}
+          >
+            Marketplace Listings
+          </p>
+          <h2
+            style={{
+              fontFamily: "'Noto Serif', serif",
+              fontSize: "clamp(20px, 3vw, 28px)",
+              fontWeight: 700,
+              color: "#111827",
+              lineHeight: 1.2,
+            }}
+          >
+            Found{" "}
+            <span style={{ color: "#003320" }}>{verifiedCount}</span>{" "}
+            Verified Partners
+          </h2>
         </div>
 
-        {/* State filter */}
-        <select
-          value={stateFilter}
-          onChange={(e) => setStateFilter(e.target.value)}
-          className="rounded-xl px-3 py-3"
-          style={{
-            border: "1px solid #E5E7EB",
-            backgroundColor: "#F8FAF8",
-            fontSize: "13px",
-            color: stateFilter ? "#111827" : "#9CA3AF",
-            outline: "none",
-            minWidth: "140px",
-          }}
-        >
-          <option value="">All States</option>
-          {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-
-        {/* Verified toggle */}
-        <button
-          onClick={() => setVerifiedOnly(!verifiedOnly)}
-          className="flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all"
-          style={{
-            border: `1px solid ${verifiedOnly ? "#1A4A35" : "#E5E7EB"}`,
-            backgroundColor: verifiedOnly ? "rgba(26,74,53,0.07)" : "#F8FAF8",
-            color: verifiedOnly ? "#1A4A35" : "#6B7280",
-            fontSize: "13px",
-            cursor: "pointer",
-          }}
-        >
-          <SlidersHorizontal size={14} />
-          Verified Only
-        </button>
-
-        {/* Clear all */}
-        {hasFilters && (
-          <button
-            onClick={() => { setQuery(""); setStateFilter(""); setVerifiedOnly(false); }}
-            className="flex items-center gap-1.5 font-semibold"
-            style={{ background: "none", border: "none", cursor: "pointer", color: "#F7941D", fontSize: "13px" }}
+        {/* Sort + search */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          {/* Search input */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "9px 14px",
+              backgroundColor: "white",
+              border: "1px solid #e5e7eb",
+              borderRadius: "10px",
+            }}
           >
-            <X size={13} /> Clear Filters
-          </button>
-        )}
-      </div>
+            <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#9CA3AF" }}>search</span>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={`Search ${categoryShortLabel}…`}
+              style={{
+                border: "none",
+                outline: "none",
+                fontSize: "13px",
+                color: "#111827",
+                fontFamily: "'Inter', sans-serif",
+                backgroundColor: "transparent",
+                width: "160px",
+              }}
+            />
+          </div>
 
-      {/* Result count */}
-      <p style={{ color: "#6B7280", fontSize: "13px", marginBottom: "16px" }}>
-        Showing <strong style={{ color: "#111827" }}>{filtered.length}</strong> businesses
-        {hasFilters && <span style={{ color: "#9CA3AF" }}> (filtered)</span>}
-      </p>
+          {/* Sort */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "9px 14px",
+              backgroundColor: "white",
+              border: "1px solid #e5e7eb",
+              borderRadius: "10px",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "12px",
+                color: "#6B7280",
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: 600,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Sort by:
+            </span>
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              style={{
+                border: "none",
+                outline: "none",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "#111827",
+                fontFamily: "'Inter', sans-serif",
+                backgroundColor: "transparent",
+                cursor: "pointer",
+                appearance: "none",
+              }}
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
 
       {/* No results */}
       {filtered.length === 0 && (
         <div
-          className="rounded-2xl p-12 text-center"
-          style={{ backgroundColor: "white", border: "1px solid #E5E7EB" }}
+          style={{
+            backgroundColor: "white",
+            border: "1px solid #e5e7eb",
+            borderRadius: "16px",
+            padding: "60px 24px",
+            textAlign: "center",
+          }}
         >
-          <p className="font-semibold mb-2" style={{ fontSize: "16px", color: "#111827" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "#D1D5DB" }}>
+            search_off
+          </span>
+          <p style={{ fontSize: "16px", fontWeight: 600, color: "#111827", margin: "12px 0 6px", fontFamily: "'Inter', sans-serif" }}>
             No results found
           </p>
-          <p style={{ color: "#6B7280", fontSize: "14px" }}>
+          <p style={{ color: "#9CA3AF", fontSize: "14px", fontFamily: "'Inter', sans-serif" }}>
             Try adjusting your search or filters.
           </p>
           <button
-            onClick={() => { setQuery(""); setStateFilter(""); setVerifiedOnly(false); }}
-            className="btn-primary mt-4"
-            style={{ fontSize: "13px" }}
+            onClick={() => { setQuery(""); setStateFilter(""); }}
+            style={{
+              marginTop: "16px",
+              backgroundColor: "#003320",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              fontSize: "13px",
+              fontWeight: 600,
+              fontFamily: "'Inter', sans-serif",
+              cursor: "pointer",
+            }}
           >
-            Clear All Filters
+            Clear Filters
           </button>
         </div>
       )}
 
-      {/* Featured */}
-      {pagedNonFree
-        .filter((c) => c.tier === "featured")
-        .map((c) => <ListingCard key={c.id} company={c} featured />)}
-
-      {/* Paid tiers */}
-      {pagedNonFree
-        .filter((c) => c.tier !== "featured")
-        .map((c) => <ListingCard key={c.id} company={c} />)}
+      {/* Paid listings */}
+      {pagedPaid.map((c) => <ListingCard key={c.id} company={c} />)}
 
       {/* Unclaimed separator */}
       {pagedFree.length > 0 && (
         <>
-          <div className="flex items-center gap-3 my-6">
-            <div style={{ flex: 1, height: "1px", backgroundColor: "#E5E7EB" }} />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              margin: "28px 0 16px",
+            }}
+          >
+            <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e7eb" }} />
             <span
-              className="font-semibold uppercase"
-              style={{ color: "#9CA3AF", fontSize: "11px", letterSpacing: "1px", whiteSpace: "nowrap" }}
+              style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "#9CA3AF",
+                whiteSpace: "nowrap",
+                fontFamily: "'Inter', sans-serif",
+              }}
             >
               Unclaimed Listings
             </span>
-            <div style={{ flex: 1, height: "1px", backgroundColor: "#E5E7EB" }} />
+            <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e7eb" }} />
           </div>
           {pagedFree.map((c) => <ListingCard key={c.id} company={c} />)}
         </>
@@ -188,64 +267,105 @@ export default function DirectoryListings({ companies, categoryShortLabel }: Pro
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-10">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "6px",
+            marginTop: "40px",
+          }}
+        >
           <button
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
-            className="rounded-lg px-4 py-2.5 font-medium transition-colors"
             style={{
-              fontSize: "13px",
-              color: page === 1 ? "#D1D5DB" : "#6B7280",
-              border: "1px solid #E5E7EB",
+              width: "36px",
+              height: "36px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "8px",
+              border: "1px solid #e5e7eb",
               backgroundColor: "white",
+              color: page === 1 ? "#D1D5DB" : "#6B7280",
               cursor: page === 1 ? "default" : "pointer",
+              fontSize: "16px",
             }}
           >
-            ← Previous
+            ‹
           </button>
+
           {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((n) => (
             <button
               key={n}
               onClick={() => setPage(n)}
-              className="rounded-lg px-3.5 py-2.5 font-medium transition-colors"
               style={{
-                fontSize: "13px",
-                backgroundColor: n === page ? "#F7941D" : "white",
+                width: "36px",
+                height: "36px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: "8px",
+                border: n === page ? "none" : "1px solid #e5e7eb",
+                backgroundColor: n === page ? "#003320" : "white",
                 color: n === page ? "white" : "#6B7280",
-                border: n === page ? "none" : "1px solid #E5E7EB",
                 cursor: "pointer",
+                fontSize: "13px",
+                fontWeight: n === page ? 700 : 500,
+                fontFamily: "'Inter', sans-serif",
               }}
             >
               {n}
             </button>
           ))}
+
+          {totalPages > 5 && (
+            <>
+              <span style={{ color: "#9CA3AF", fontSize: "13px" }}>…</span>
+              <button
+                onClick={() => setPage(totalPages)}
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "8px",
+                  border: "1px solid #e5e7eb",
+                  backgroundColor: "white",
+                  color: "#6B7280",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                  fontFamily: "'Inter', sans-serif",
+                }}
+              >
+                {totalPages}
+              </button>
+            </>
+          )}
+
           <button
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
-            className="rounded-lg px-4 py-2.5 font-medium transition-colors"
             style={{
-              fontSize: "13px",
-              color: page === totalPages ? "#D1D5DB" : "#6B7280",
-              border: "1px solid #E5E7EB",
+              width: "36px",
+              height: "36px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "8px",
+              border: "1px solid #e5e7eb",
               backgroundColor: "white",
+              color: page === totalPages ? "#D1D5DB" : "#6B7280",
               cursor: page === totalPages ? "default" : "pointer",
+              fontSize: "16px",
             }}
           >
-            Next →
+            ›
           </button>
         </div>
       )}
     </>
   );
 }
-
-const US_STATES = [
-  "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
-  "Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa",
-  "Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan",
-  "Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire",
-  "New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio",
-  "Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota",
-  "Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia",
-  "Wisconsin","Wyoming",
-];
