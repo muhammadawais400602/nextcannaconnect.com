@@ -171,19 +171,6 @@ export default function HeroSection() {
                 category
               </span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div
-                  style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(65,73,67,0.55)",
-                    marginBottom: "2px",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
-                  Select Service
-                </div>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
@@ -236,19 +223,6 @@ export default function HeroSection() {
                 location_on
               </span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div
-                  style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(65,73,67,0.55)",
-                    marginBottom: "2px",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                >
-                  Select State
-                </div>
                 <select
                   value={state}
                   onChange={(e) => setState(e.target.value)}
