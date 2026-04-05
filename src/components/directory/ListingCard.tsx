@@ -1,18 +1,6 @@
 import Link from "next/link";
 import { Company } from "@/types";
 
-function getScore(company: Company): number {
-  if (company.rating) return Math.round(company.rating * 20);
-  const tierBase: Record<string, number> = {
-    featured: 96,
-    elite: 94,
-    select: 88,
-    claimed: 78,
-    free: 70,
-  };
-  return tierBase[company.tier] ?? 75;
-}
-
 function getBadge(company: Company): { label: string; color: string; bg: string } | null {
   if (company.tier === "elite" || company.tier === "featured") {
     return { label: "Verified Partner", color: "#1a4a35", bg: "rgba(26,74,53,0.1)" };
@@ -70,7 +58,6 @@ interface Props {
 
 export default function ListingCard({ company }: Props) {
   const isFree = company.tier === "free";
-  const score = getScore(company);
   const badge = getBadge(company);
   const stat1 = getStat1(company);
   const stat2 = getStat2(company);
@@ -240,33 +227,6 @@ export default function ListingCard({ company }: Props) {
             )}
           </div>
 
-          {/* Score */}
-          <div style={{ textAlign: "right", flexShrink: 0 }}>
-            <p
-              style={{
-                fontSize: "9px",
-                fontWeight: 700,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "rgba(65,73,67,0.45)",
-                fontFamily: "'Inter', sans-serif",
-                marginBottom: "2px",
-              }}
-            >
-              Partner Score
-            </p>
-            <p
-              style={{
-                fontFamily: "'Noto Serif', serif",
-                fontSize: "30px",
-                fontWeight: 700,
-                color: "#003320",
-                lineHeight: 1,
-              }}
-            >
-              {score}
-            </p>
-          </div>
         </div>
 
         {/* Company name */}

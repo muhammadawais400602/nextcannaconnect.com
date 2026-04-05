@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import ListingCard from "@/components/directory/ListingCard";
 import { Company } from "@/types";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 20;
 
 const SORT_OPTIONS = [
   { value: "score", label: "Partner Score" },
