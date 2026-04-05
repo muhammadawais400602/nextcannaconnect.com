@@ -1,40 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
-const MARKET_FILTERS = [
-  {
-    heading: "Cultivation",
-    links: ["Bulk Flower", "Genetics & Clones", "Seeds", "Biomass"],
-    hrefs: ["/directory/manufacturers-suppliers", "/directory/cultivation-growing", "/directory/cultivation-growing", "/directory/cultivation-growing"],
-  },
-  {
-    heading: "Manufacturing",
-    links: ["Concentrates", "Distillates", "Edibles", "Topicals"],
-    hrefs: ["/directory/extraction-processing", "/directory/extraction-processing", "/directory/manufacturers-suppliers", "/directory/manufacturers-suppliers"],
-  },
-  {
-    heading: "Operations",
-    links: ["Testing Labs", "Secure Logistics", "Warehousing", "Packaging"],
-    hrefs: ["/directory/testing-science", "/directory/transportation-logistics", "/directory/transportation-logistics", "/directory/manufacturers-suppliers"],
-  },
-  {
-    heading: "Compliance",
-    links: ["Legal Counsel", "Auditing", "Track & Trace", "Licensing"],
-    hrefs: ["/directory/compliance-legal", "/directory/compliance-legal", "/directory/technology-software", "/directory/compliance-legal"],
-  },
-  {
-    heading: "Facilities",
-    links: ["HVAC Systems", "LED Lighting", "Automation", "Real Estate"],
-    hrefs: ["/directory/real-estate-construction", "/directory/cultivation-growing", "/directory/technology-software", "/directory/real-estate-construction"],
-  },
-  {
-    heading: "Services",
-    links: ["Brand Strategy", "Financing", "HR Solutions", "Advisory"],
-    hrefs: ["/directory/marketing-branding-packaging", "/directory/finance-insurance", "/directory/consultants-advisors", "/directory/consultants-advisors"],
-  },
-];
-
+import { CATEGORIES } from "@/data/categories";
 
 export default function Footer() {
   return (
@@ -66,7 +33,7 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* Row 2: Market Filters */}
+        {/* Row 2: Categories */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "64px", marginBottom: "64px" }}>
           <h4
             style={{
@@ -78,37 +45,21 @@ export default function Footer() {
               marginBottom: "40px",
             }}
           >
-            Market Filters
+            Categories
           </h4>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 md:gap-8">
-            {MARKET_FILTERS.map((col) => (
-              <div key={col.heading}>
-                <h5
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                    color: "white",
-                    marginBottom: "16px",
-                  }}
-                >
-                  {col.heading}
-                </h5>
-                <ul style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  {col.links.map((label, i) => (
-                    <li key={label}>
-                      <Link
-                        href={col.hrefs[i]}
-                        className="footer-link"
-                        style={{ display: "block" }}
-                      >
-                        {label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/directory/${cat.slug}`}
+                className="footer-link"
+                style={{
+                  fontSize: "13px",
+                  fontWeight: 500,
+                }}
+              >
+                {cat.label}
+              </Link>
             ))}
           </div>
         </div>
