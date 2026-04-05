@@ -115,12 +115,12 @@ export default function HeroSection() {
 
           {/* Subtitle */}
           <p
+            className="hero-subtitle"
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: "clamp(15px, 1.8vw, 18px)",
+              fontSize: "16px",
               color: "#5a6360",
               lineHeight: 1.7,
-              maxWidth: "800px",
               whiteSpace: "nowrap",
               margin: "0 auto 48px",
             }}
@@ -320,11 +320,12 @@ export default function HeroSection() {
             font-size: clamp(30px, 9vw, 48px) !important;
           }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
           .hero-section-content {
             padding: 32px 20px 60px !important;
           }
           .hero-subtitle {
+            white-space: normal !important;
             font-size: 14px !important;
             margin-bottom: 32px !important;
           }
