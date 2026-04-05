@@ -1,187 +1,203 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, ChevronUp, RotateCcw } from "lucide-react";
+import Link from "next/link";
+import { Category } from "@/types";
 
 interface FiltersPanelProps {
-  categoryLabel: string;
+  category: Category;
 }
 
-const US_STATES = [
-  "AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA",
-  "KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ",
-  "NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT",
-  "VA","WA","WV","WI","WY",
+const VERIFICATION_OPTIONS = [
+  { id: "verified", label: "Verified Partner" },
+  { id: "certified", label: "Certified Member" },
+  { id: "claimed", label: "Claimed Listing" },
 ];
 
-function FilterSection({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(true);
+export default function FiltersPanel({ category }: FiltersPanelProps) {
   return (
-    <div style={{ borderBottom: "1px solid #F3F4F6", paddingBottom: "16px", marginBottom: "16px" }}>
-      <button
-        className="w-full flex items-center justify-between mb-3"
-        onClick={() => setOpen(!open)}
-        style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
-      >
-        <span
-          className="font-semibold uppercase tracking-wider"
-          style={{ fontSize: "11px", color: "#374151", letterSpacing: "1px" }}
-        >
-          {label}
-        </span>
-        {open ? (
-          <ChevronUp size={14} style={{ color: "#9CA3AF" }} />
-        ) : (
-          <ChevronDown size={14} style={{ color: "#9CA3AF" }} />
-        )}
-      </button>
-      {open && children}
-    </div>
-  );
-}
-
-const inputStyle = {
-  width: "100%",
-  padding: "8px 12px",
-  border: "1px solid #E5E7EB",
-  borderRadius: "8px",
-  fontSize: "13px",
-  color: "#111827",
-  backgroundColor: "white",
-  outline: "none",
-};
-
-export default function FiltersPanel({ categoryLabel }: FiltersPanelProps) {
-  const [location, setLocation] = useState("");
-  const [serviceType, setServiceType] = useState("all");
-  const [licenseType, setLicenseType] = useState("all");
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
-
-  const hasFilters = location || serviceType !== "all" || licenseType !== "all" || verifiedOnly;
-
-  return (
-    <div
-      className="rounded-2xl p-5 sticky top-24"
-      style={{ backgroundColor: "white", border: "1px solid #E5E7EB" }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="font-bold" style={{ fontSize: "14px", color: "#111827", fontWeight: 700 }}>
-          Filters
-        </h3>
-        {hasFilters && (
-          <button
-            className="flex items-center gap-1 transition-colors"
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "#F7941D",
-              fontSize: "12px",
-              fontWeight: 600,
-            }}
-            onClick={() => {
-              setLocation("");
-              setServiceType("all");
-              setLicenseType("all");
-              setVerifiedOnly(false);
-            }}
-          >
-            <RotateCcw size={11} />
-            Reset
-          </button>
-        )}
-      </div>
-
-      {/* Verified toggle */}
-      <div
-        className="flex items-center justify-between p-3 rounded-xl mb-5 cursor-pointer"
+    <div className="sticky" style={{ top: "100px" }}>
+      <h3
         style={{
-          backgroundColor: verifiedOnly ? "rgba(26,74,53,0.07)" : "#F8FAF8",
-          border: verifiedOnly ? "1px solid #1A4A35" : "1px solid #E5E7EB",
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "13px",
+          fontWeight: 700,
+          color: "#111827",
+          letterSpacing: "0.05em",
+          textTransform: "uppercase",
+          marginBottom: "24px",
         }}
-        onClick={() => setVerifiedOnly(!verifiedOnly)}
       >
-        <span style={{ fontSize: "13px", color: "#111827", fontWeight: 500 }}>
-          Verified Only
-        </span>
-        <div
-          className="rounded-full flex items-center flex-shrink-0 transition-colors"
+        Refine Results
+      </h3>
+
+      {/* Verification Status */}
+      <div style={{ marginBottom: "28px" }}>
+        <p
           style={{
-            width: "36px",
-            height: "20px",
-            backgroundColor: verifiedOnly ? "#1A4A35" : "#D1D5DB",
-            padding: "2px",
+            fontSize: "10px",
+            fontWeight: 700,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(65,73,67,0.5)",
+            marginBottom: "14px",
+            fontFamily: "'Inter', sans-serif",
           }}
         >
-          <div
-            className="rounded-full bg-white transition-transform"
-            style={{
-              width: "16px",
-              height: "16px",
-              transform: verifiedOnly ? "translateX(16px)" : "translateX(0)",
-            }}
-          />
-        </div>
-      </div>
-
-      {/* Location */}
-      <FilterSection label="Location">
-        <select
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          style={inputStyle}
-        >
-          <option value="">All States</option>
-          {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
-      </FilterSection>
-
-      {/* Service Type */}
-      <FilterSection label="Service Type">
-        <div className="flex flex-col gap-2">
-          {["all", "manufacturing", "consulting", "distribution", "software"].map((v) => (
+          Verification Status
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {VERIFICATION_OPTIONS.map((opt) => (
             <label
-              key={v}
-              className="flex items-center gap-2.5 cursor-pointer"
+              key={opt.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                cursor: "pointer",
+                fontSize: "13px",
+                color: "#374151",
+                fontFamily: "'Inter', sans-serif",
+              }}
             >
               <input
-                type="radio"
-                name="serviceType"
-                value={v}
-                checked={serviceType === v}
-                onChange={() => setServiceType(v)}
-                style={{ accentColor: "#F7941D", width: "14px", height: "14px" }}
+                type="checkbox"
+                style={{
+                  width: "15px",
+                  height: "15px",
+                  accentColor: "#003320",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
               />
-              <span style={{ fontSize: "13px", color: "#374151" }}>
-                {v === "all" ? "All Services" : v.charAt(0).toUpperCase() + v.slice(1)}
-              </span>
+              {opt.label}
             </label>
           ))}
         </div>
-      </FilterSection>
+      </div>
 
-      {/* License Type */}
-      <FilterSection label="License Type">
-        <select
-          value={licenseType}
-          onChange={(e) => setLicenseType(e.target.value)}
-          style={inputStyle}
+      {/* Divider */}
+      <div style={{ height: "1px", backgroundColor: "#e5e7eb", marginBottom: "28px" }} />
+
+      {/* Service Vertical */}
+      <div style={{ marginBottom: "28px" }}>
+        <p
+          style={{
+            fontSize: "10px",
+            fontWeight: 700,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            color: "rgba(65,73,67,0.5)",
+            marginBottom: "14px",
+            fontFamily: "'Inter', sans-serif",
+          }}
         >
-          <option value="all">All License Types</option>
-          <option value="cultivator">Cultivator</option>
-          <option value="manufacturer">Manufacturer</option>
-          <option value="distributor">Distributor</option>
-          <option value="retailer">Retailer</option>
-          <option value="testing">Testing Lab</option>
-        </select>
-      </FilterSection>
+          Service Vertical
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {category.description
+            .split(",")
+            .slice(0, 4)
+            .map((item) => item.trim().split(" ").slice(0, 2).join(" "))
+            .map((label, i) => (
+              <label
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                  color: "#374151",
+                  fontFamily: "'Inter', sans-serif",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  style={{
+                    width: "15px",
+                    height: "15px",
+                    accentColor: "#003320",
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
+                />
+                {label}
+              </label>
+            ))}
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: "1px", backgroundColor: "#e5e7eb", marginBottom: "28px" }} />
+
+      {/* Member Benefit Card */}
+      <div
+        style={{
+          backgroundColor: "#003320",
+          borderRadius: "14px",
+          padding: "20px",
+          position: "relative",
+          overflow: "hidden",
+        }}
+      >
+        <span
+          style={{
+            display: "inline-block",
+            backgroundColor: "rgba(136,185,158,0.2)",
+            color: "#88b99e",
+            fontSize: "9px",
+            fontWeight: 700,
+            letterSpacing: "0.18em",
+            textTransform: "uppercase",
+            padding: "4px 10px",
+            borderRadius: "999px",
+            marginBottom: "12px",
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
+          Member Benefit
+        </span>
+        <p
+          style={{
+            fontFamily: "'Noto Serif', serif",
+            fontSize: "15px",
+            fontWeight: 700,
+            color: "white",
+            lineHeight: 1.3,
+            marginBottom: "10px",
+          }}
+        >
+          Priority Analytics Now Available
+        </p>
+        <p
+          style={{
+            fontSize: "12px",
+            color: "rgba(255,255,255,0.55)",
+            lineHeight: 1.65,
+            marginBottom: "16px",
+            fontFamily: "'Inter', sans-serif",
+          }}
+        >
+          Gain deep insights into market pricing and output trends across all 50 states.
+        </p>
+        <Link
+          href="/membership"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            fontSize: "12px",
+            fontWeight: 700,
+            color: "#88b99e",
+            textDecoration: "none",
+            fontFamily: "'Inter', sans-serif",
+            letterSpacing: "0.05em",
+          }}
+        >
+          Upgrade Today
+          <span className="material-symbols-outlined" style={{ fontSize: "15px" }}>arrow_forward</span>
+        </Link>
+      </div>
     </div>
   );
 }
