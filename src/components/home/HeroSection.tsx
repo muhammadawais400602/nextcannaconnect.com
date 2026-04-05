@@ -120,7 +120,8 @@ export default function HeroSection() {
               fontSize: "clamp(15px, 1.8vw, 18px)",
               color: "#5a6360",
               lineHeight: 1.7,
-              maxWidth: "520px",
+              maxWidth: "800px",
+              whiteSpace: "nowrap",
               margin: "0 auto 48px",
             }}
           >
