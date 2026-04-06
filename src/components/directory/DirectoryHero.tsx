@@ -39,7 +39,7 @@ export default function DirectoryHero({ activeSlug }: { activeSlug: string }) {
     >
       <div
         className="mx-auto px-4 md:px-8"
-        style={{ maxWidth: "1440px" }}
+        style={{ maxWidth: "1440px", textAlign: "center" }}
       >
         <h1
           style={{
@@ -49,13 +49,10 @@ export default function DirectoryHero({ activeSlug }: { activeSlug: string }) {
             color: "white",
             lineHeight: 1.1,
             marginBottom: "20px",
-            maxWidth: "700px",
           }}
         >
           Your Gateway to Elite{" "}
-          <span style={{ color: "#88b99e", fontStyle: "italic" }}>B2B</span>
-          <br />
-          <span style={{ fontStyle: "italic", color: "#88b99e" }}>Procurement</span>
+          <span style={{ color: "#88b99e", fontStyle: "italic" }}>B2B Procurement</span>
         </h1>
 
         <p
@@ -65,7 +62,6 @@ export default function DirectoryHero({ activeSlug }: { activeSlug: string }) {
             color: "rgba(255,255,255,0.6)",
             lineHeight: 1.7,
             marginBottom: "40px",
-            maxWidth: "520px",
           }}
         >
           Access the industry&apos;s most rigorous network of verified cultivators,
@@ -84,6 +80,7 @@ export default function DirectoryHero({ activeSlug }: { activeSlug: string }) {
             overflow: "hidden",
             maxWidth: "760px",
             boxShadow: "0 8px 40px rgba(0,0,0,0.25)",
+            margin: "0 auto",
           }}
         >
           {/* Text search */}
