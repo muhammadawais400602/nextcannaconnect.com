@@ -4,6 +4,10 @@ import { Category } from "@/types";
 
 interface FiltersPanelProps {
   category: Category;
+  verificationFilters: string[];
+  onVerificationChange: (filters: string[]) => void;
+  serviceFilters: string[];
+  onServiceChange: (filters: string[]) => void;
 }
 
 const VERIFICATION_OPTIONS = [
@@ -13,7 +17,22 @@ const VERIFICATION_OPTIONS = [
   { id: "unclaimed", label: "Unclaimed Listing" },
 ];
 
-export default function FiltersPanel({ category }: FiltersPanelProps) {
+function toggle(arr: string[], value: string): string[] {
+  return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
+}
+
+export default function FiltersPanel({
+  category,
+  verificationFilters,
+  onVerificationChange,
+  serviceFilters,
+  onServiceChange,
+}: FiltersPanelProps) {
+  const serviceOptions = category.description
+    .split(",")
+    .slice(0, 4)
+    .map((item) => item.trim().split(" ").slice(0, 2).join(" "));
+
   return (
     <div className="sticky" style={{ top: "100px" }}>
       <h3
@@ -61,6 +80,8 @@ export default function FiltersPanel({ category }: FiltersPanelProps) {
             >
               <input
                 type="checkbox"
+                checked={verificationFilters.includes(opt.id)}
+                onChange={() => onVerificationChange(toggle(verificationFilters, opt.id))}
                 style={{
                   width: "15px",
                   height: "15px",
@@ -94,39 +115,56 @@ export default function FiltersPanel({ category }: FiltersPanelProps) {
           Service Vertical
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          {category.description
-            .split(",")
-            .slice(0, 4)
-            .map((item) => item.trim().split(" ").slice(0, 2).join(" "))
-            .map((label, i) => (
-              <label
-                key={i}
+          {serviceOptions.map((label) => (
+            <label
+              key={label}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                cursor: "pointer",
+                fontSize: "13px",
+                color: "#374151",
+                fontFamily: "'Inter', sans-serif",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={serviceFilters.includes(label)}
+                onChange={() => onServiceChange(toggle(serviceFilters, label))}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
+                  width: "15px",
+                  height: "15px",
+                  accentColor: "#003320",
                   cursor: "pointer",
-                  fontSize: "13px",
-                  color: "#374151",
-                  fontFamily: "'Inter', sans-serif",
+                  flexShrink: 0,
                 }}
-              >
-                <input
-                  type="checkbox"
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    accentColor: "#003320",
-                    cursor: "pointer",
-                    flexShrink: 0,
-                  }}
-                />
-                {label}
-              </label>
-            ))}
+              />
+              {label}
+            </label>
+          ))}
         </div>
       </div>
 
+      {/* Clear All */}
+      {(verificationFilters.length > 0 || serviceFilters.length > 0) && (
+        <button
+          onClick={() => { onVerificationChange([]); onServiceChange([]); }}
+          style={{
+            fontSize: "12px",
+            fontWeight: 600,
+            color: "#003320",
+            fontFamily: "'Inter', sans-serif",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: 0,
+            textDecoration: "underline",
+          }}
+        >
+          Clear all filters
+        </button>
+      )}
     </div>
   );
 }
