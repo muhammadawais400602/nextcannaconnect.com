@@ -1,0 +1,229 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+
+export default function SignInPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    // Auth logic goes here
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f0eeea",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "100px 16px 60px",
+      }}
+    >
+      {/* Card */}
+      <div
+        style={{
+          backgroundColor: "white",
+          borderRadius: "4px",
+          padding: "56px 48px",
+          width: "100%",
+          maxWidth: "420px",
+          boxShadow: "0 2px 16px rgba(0,0,0,0.06)",
+        }}
+      >
+        {/* Heading */}
+        <h1
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "28px",
+            fontWeight: 700,
+            color: "#111827",
+            marginBottom: "10px",
+          }}
+        >
+          Welcome Back
+        </h1>
+        <p
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "14px",
+            color: "#6B7280",
+            lineHeight: 1.6,
+            marginBottom: "40px",
+          }}
+        >
+          Access your institutional digital asset terminal and marketplace analytics.
+        </p>
+
+        <form onSubmit={handleSubmit}>
+          {/* Email */}
+          <div style={{ marginBottom: "24px" }}>
+            <label
+              style={{
+                display: "block",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "10px",
+                fontWeight: 700,
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: "#374151",
+                marginBottom: "8px",
+              }}
+            >
+              Institutional Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="name@firm.com"
+              required
+              style={{
+                width: "100%",
+                padding: "13px 16px",
+                border: "1px solid #e5e7eb",
+                borderRadius: "4px",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "14px",
+                color: "#111827",
+                backgroundColor: "#fafafa",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = "#003320"; e.currentTarget.style.backgroundColor = "white"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.backgroundColor = "#fafafa"; }}
+            />
+          </div>
+
+          {/* Password */}
+          <div style={{ marginBottom: "32px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+              <label
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: "#374151",
+                }}
+              >
+                Password
+              </label>
+              <Link
+                href="/forgot-password"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  color: "#374151",
+                  textDecoration: "none",
+                }}
+              >
+                Forgot Password
+              </Link>
+            </div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••••"
+              required
+              style={{
+                width: "100%",
+                padding: "13px 16px",
+                border: "1px solid #e5e7eb",
+                borderRadius: "4px",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "18px",
+                color: "#111827",
+                backgroundColor: "#fafafa",
+                outline: "none",
+                boxSizing: "border-box",
+                letterSpacing: "0.2em",
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = "#003320"; e.currentTarget.style.backgroundColor = "white"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "#e5e7eb"; e.currentTarget.style.backgroundColor = "#fafafa"; }}
+            />
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            style={{
+              width: "100%",
+              padding: "16px",
+              backgroundColor: "#003320",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "14px",
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+              cursor: "pointer",
+              transition: "background-color 0.2s",
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#1a4a35"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#003320"; }}
+          >
+            Sign In to Terminal
+          </button>
+        </form>
+
+        {/* Divider */}
+        <div style={{ height: "1px", backgroundColor: "#f3f4f6", margin: "36px 0" }} />
+
+        {/* Register */}
+        <div style={{ textAlign: "center" }}>
+          <p
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "13px",
+              color: "#9CA3AF",
+              marginBottom: "10px",
+            }}
+          >
+            New institutional participant?
+          </p>
+          <Link
+            href="/request-membership"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "14px",
+              fontWeight: 600,
+              color: "#111827",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            Request Membership →
+          </Link>
+        </div>
+      </div>
+
+      {/* Security note */}
+      <p
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "10px",
+          fontWeight: 600,
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: "#9CA3AF",
+          marginTop: "28px",
+        }}
+      >
+        Secure Institutional Access • 256-Bit Encryption
+      </p>
+    </div>
+  );
+}
