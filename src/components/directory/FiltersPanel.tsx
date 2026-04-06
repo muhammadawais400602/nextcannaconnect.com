@@ -10,6 +10,7 @@ const VERIFICATION_OPTIONS = [
   { id: "verified", label: "Verified Partner" },
   { id: "certified", label: "Certified Member" },
   { id: "claimed", label: "Claimed Listing" },
+  { id: "unclaimed", label: "Unclaimed Listing" },
 ];
 
 export default function FiltersPanel({ category }: FiltersPanelProps) {
