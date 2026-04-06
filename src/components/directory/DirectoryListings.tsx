@@ -13,12 +13,22 @@ const SORT_OPTIONS = [
   { value: "name", label: "Name (A–Z)" },
 ];
 
+// Maps filter checkbox IDs to the tiers they represent
+const TIER_MAP: Record<string, string[]> = {
+  verified: ["featured", "elite"],
+  certified: ["select"],
+  claimed: ["claimed"],
+  unclaimed: ["free"],
+};
+
 interface Props {
   companies: Company[];
   categoryShortLabel: string;
+  verificationFilters: string[];
+  serviceFilters: string[];
 }
 
-export default function DirectoryListings({ companies, categoryShortLabel }: Props) {
+export default function DirectoryListings({ companies, categoryShortLabel, verificationFilters, serviceFilters }: Props) {
   const searchParams = useSearchParams();
   const initialState = searchParams.get("state") ?? "";
   const initialQuery = searchParams.get("q") ?? "";
@@ -28,11 +38,25 @@ export default function DirectoryListings({ companies, categoryShortLabel }: Pro
   const [sort, setSort] = useState("score");
   const [page, setPage] = useState(1);
 
-  useEffect(() => { setPage(1); }, [query, stateFilter, sort]);
+  useEffect(() => { setPage(1); }, [query, stateFilter, sort, verificationFilters, serviceFilters]);
 
   const filtered = useMemo(() => {
+    // Build allowed tiers from verification checkboxes
+    const allowedTiers =
+      verificationFilters.length > 0
+        ? verificationFilters.flatMap((id) => TIER_MAP[id] ?? [])
+        : null; // null = no filter applied
+
     let list = companies.filter((c) => {
       if (stateFilter && c.location.state !== stateFilter) return false;
+      if (allowedTiers && !allowedTiers.includes(c.tier)) return false;
+      if (serviceFilters.length > 0) {
+        const tags = (c.serviceTags ?? []).map((t) => t.toLowerCase());
+        const matches = serviceFilters.some((sf) =>
+          tags.some((t) => t.includes(sf.toLowerCase()))
+        );
+        if (!matches) return false;
+      }
       if (query) {
         const q = query.toLowerCase();
         return (
@@ -60,7 +84,7 @@ export default function DirectoryListings({ companies, categoryShortLabel }: Pro
     }
 
     return list;
-  }, [companies, query, stateFilter, sort]);
+  }, [companies, query, stateFilter, sort, verificationFilters, serviceFilters]);
 
   const paid = filtered.filter((c) => c.tier !== "free");
   const free = filtered.filter((c) => c.tier === "free");
