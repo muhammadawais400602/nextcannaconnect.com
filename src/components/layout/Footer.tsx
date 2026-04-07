@@ -72,7 +72,7 @@ export default function Footer() {
           <div className="flex flex-wrap gap-8">
             {[
               { label: "Privacy Policy", href: "/privacy" },
-              { label: "Disclaimer", href: "/terms" },
+              { label: "Disclaimer", href: "/disclaimer" },
               { label: "Terms & Conditions", href: "/terms" },
               { label: "Cookie Policy", href: "/privacy" },
             ].map((item) => (
