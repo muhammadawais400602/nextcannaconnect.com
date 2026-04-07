@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import SectionDivider from "@/components/ui/SectionDivider";
 import { CATEGORIES } from "@/data/categories";
-import { Check, Building2, Search } from "lucide-react";
+import { Check } from "lucide-react";
 
 const TIERS = [
   { key: "free", name: "Free", price: "$0/mo", bg: "#F7F9F7", border: "#E8EDE8", textColor: "#1A2E1A" },
@@ -18,7 +18,7 @@ function SignUpForm() {
   const initialTier = searchParams.get("tier") || "free";
   const initialListing = searchParams.get("listing") || "";
 
-  const [accountType, setAccountType] = useState<"vendor" | "buyer">("vendor");
+  const accountType = "vendor";
   const [selectedTier, setSelectedTier] = useState(initialTier);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
@@ -71,31 +71,6 @@ function SignUpForm() {
 
   return (
     <div className="mx-auto" style={{ maxWidth: "640px" }}>
-      {/* Account type toggle */}
-      <div
-        className="flex rounded-xl mb-8 p-1"
-        style={{ backgroundColor: "#E8EDE8" }}
-      >
-        {[
-          { key: "vendor", label: "List My Business", icon: <Building2 size={15} /> },
-          { key: "buyer", label: "Find Vendors", icon: <Search size={15} /> },
-        ].map((opt) => (
-          <button
-            key={opt.key}
-            type="button"
-            onClick={() => setAccountType(opt.key as "vendor" | "buyer")}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-semibold transition-all"
-            style={{
-              fontSize: "14px",
-              backgroundColor: accountType === opt.key ? "#1A4A35" : "transparent",
-              color: accountType === opt.key ? "white" : "#4A5E4A",
-            }}
-          >
-            {opt.icon}
-            {opt.label}
-          </button>
-        ))}
-      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         {/* Common fields */}
