@@ -6,150 +6,139 @@ export const metadata: Metadata = {
   description: "Terms of Service governing the NextCanna Connect B2B enterprise marketplace ecosystem.",
 };
 
-const body: React.CSSProperties = {
-  fontFamily: "'Inter', sans-serif",
-  fontSize: "14px",
-  color: "#4B5563",
-  lineHeight: 1.8,
-  marginBottom: "16px",
-};
-
-function Section({ number, title, children, last }: { number: string; title: string; children: React.ReactNode; last?: boolean }) {
-  return (
-    <div style={{ marginBottom: last ? 0 : "40px", paddingBottom: last ? 0 : "40px", borderBottom: last ? "none" : "1px solid #F3F4F6" }}>
-      <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "clamp(20px, 3vw, 26px)", fontWeight: 400, color: "#111827", marginBottom: "14px" }}>
-        {number}. {title}
-      </h2>
-      {children}
-    </div>
-  );
-}
-
-function SubPoint({ number, text }: { number: string; text: string }) {
-  return (
-    <div className="flex gap-4" style={{ marginBottom: "10px" }}>
-      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", fontWeight: 700, color: "#003320", flexShrink: 0, minWidth: "28px" }}>{number}</span>
-      <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#4B5563", lineHeight: 1.7, margin: 0 }}>{text}</p>
-    </div>
-  );
-}
-
 export default function TermsPage() {
   return (
-    <div style={{ backgroundColor: "#f5f4f1", minHeight: "100vh", paddingTop: "80px" }}>
+    <div className="text-[#1b1c1c]" style={{ backgroundColor: "#fbf9f8", fontFamily: "'Inter', sans-serif" }}>
+      <main className="pt-32 pb-24 px-6">
+        <div className="max-w-4xl mx-auto">
 
-      {/* Hero */}
-      <div className="px-4 md:px-8" style={{ padding: "60px 0 48px" }}>
-        <div className="mx-auto px-4 md:px-8" style={{ maxWidth: "860px" }}>
-          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "#6B7280", marginBottom: "16px" }}>
-            Legal Framework
-          </p>
-          <h1 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "clamp(32px, 5vw, 54px)", fontWeight: 400, color: "#111827", lineHeight: 1.1, marginBottom: "20px" }}>
-            Terms of Service
-          </h1>
-          <div style={{ borderLeft: "3px solid #003320", paddingLeft: "16px" }}>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", fontStyle: "italic", color: "#6B7280", marginBottom: "4px" }}>
-              Governing the B2B enterprise marketplace ecosystem.
-            </p>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "#9CA3AF" }}>
-              Effective Date: April 1, 2026
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Main content card */}
-      <div className="mx-auto px-4 md:px-8" style={{ maxWidth: "860px", marginBottom: "32px" }}>
-        <div className="rounded" style={{ backgroundColor: "white", padding: "clamp(24px, 5vw, 52px)", boxShadow: "0 1px 8px rgba(0,0,0,0.06)" }}>
-
-          <p style={{ ...body, marginBottom: "40px" }}>
-            Welcome to NextCanna Connect. These Terms of Service ("Terms") constitute a legally binding agreement between you ("User," "you," or "your") and NextCanna Connect ("we," "us," or "our") governing your access to and use of our B2B marketplace platform and associated enterprise services.
-          </p>
-
-          <Section number="1" title="Eligibility and Registration">
-            <p style={body}>
-              Access to the NextCanna Connect platform is restricted to authorized commercial entities operating within legally compliant jurisdictions. By registering, you represent that you have the legal authority to bind your organization.
-            </p>
-            <SubPoint number="1.1" text="Verification: We reserve the right to verify licenses and tax documentation prior to account activation." />
-            <SubPoint number="1.2" text="Security: Users are responsible for maintaining the confidentiality of their credentials." />
-          </Section>
-
-          <Section number="2" title="Marketplace Transactions">
-            <p style={body}>
-              The platform facilitates B2B transactions. NextCanna Connect acts as a platform provider and, unless explicitly stated otherwise, is not a party to the underlying commercial agreements between buyers and sellers.
-            </p>
-            <blockquote style={{ margin: "20px 0", padding: "18px 22px", backgroundColor: "#f9fafb", borderLeft: "4px solid #003320", borderRadius: "0 4px 4px 0" }}>
-              <p style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "14px", fontStyle: "italic", color: "#374151", lineHeight: 1.7, margin: 0 }}>
-                "Compliance is the cornerstone of the NextCanna ecosystem. All trades must adhere to regional regulatory requirements."
+          {/* Hero */}
+          <div className="mb-16">
+            <span className="text-[#003320] font-medium tracking-[0.2em] text-[0.6875rem] uppercase mb-4 block">
+              Legal Framework
+            </span>
+            <h1 className="text-[3.5rem] leading-[1.1] text-[#003320] mb-6" style={{ fontFamily: "'Noto Serif', serif" }}>
+              Terms of Service
+            </h1>
+            <div className="flex flex-col md:flex-row md:items-center gap-4 text-[#414943]">
+              <p className="text-[0.875rem] border-l-2 border-[#1a4a35] pl-4 italic">
+                Governing the B2B enterprise marketplace ecosystem.
               </p>
-            </blockquote>
-          </Section>
-
-          <Section number="3" title="Compliance and Regional Laws">
-            <p style={body}>
-              Users must comply with all local, state, and international regulations pertaining to their specific product categories. Our automated compliance tracking tools are provided for convenience but do not substitute for professional legal counsel.
-            </p>
-            <SubPoint number="3.1" text="Documentation: All necessary shipping manifests and compliance certificates must be uploaded to the secure vault." />
-            <SubPoint number="3.2" text="Reporting: Suspected fraudulent activity must be reported immediately via the Support hub." />
-          </Section>
-
-          <Section number="4" title="Intellectual Property">
-            <p style={body}>
-              All software, branding, data visualization techniques, and proprietary algorithms used on the platform are the exclusive property of NextCanna Connect. Users are granted a limited, revocable license to access these tools for commercial use.
-            </p>
-          </Section>
-
-          <Section number="5" title="Limitation of Liability" last>
-            <p style={{ ...body, textTransform: "uppercase", fontSize: "13px", fontWeight: 500 }}>
-              TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, NEXTCANNA CONNECT SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OF THE PLATFORM.
-            </p>
-          </Section>
-
-          {/* CTA */}
-          <div style={{ textAlign: "center", paddingTop: "40px" }}>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#6B7280", marginBottom: "20px" }}>
-              Have questions regarding our enterprise terms?
-            </p>
-            <Link
-              href="/contact"
-              style={{ display: "inline-block", backgroundColor: "#003320", color: "white", fontFamily: "'Inter', sans-serif", fontSize: "13px", fontWeight: 600, padding: "13px 28px", borderRadius: "4px", textDecoration: "none", letterSpacing: "0.02em" }}
-            >
-              Contact Legal Support
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Commitment to Transparency */}
-      <div className="mx-auto px-4 md:px-8" style={{ maxWidth: "860px", paddingBottom: "80px" }}>
-        <div className="grid grid-cols-1 md:grid-cols-2 rounded overflow-hidden" style={{ boxShadow: "0 1px 8px rgba(0,0,0,0.08)" }}>
-          {/* Demo image */}
-          <div style={{ minHeight: "260px", backgroundColor: "#c8c5bc" }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://picsum.photos/seed/nextcanna-tos/600/400"
-              alt="Office building"
-              style={{ width: "100%", height: "100%", minHeight: "260px", objectFit: "cover", display: "block" }}
-            />
-          </div>
-          {/* Text */}
-          <div style={{ backgroundColor: "white", padding: "clamp(28px, 4vw, 44px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-            <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "clamp(18px, 2.5vw, 22px)", fontWeight: 400, color: "#111827", marginBottom: "14px", lineHeight: 1.3 }}>
-              Our Commitment to Transparency
-            </h2>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#6B7280", lineHeight: 1.7, marginBottom: "22px" }}>
-              NextCanna Connect operates with a mandate of absolute clarity. Our terms are designed to protect both the integrity of the marketplace and the growth of your enterprise.
-            </p>
-            <div className="flex items-center gap-2">
-              <span style={{ fontSize: "16px" }}>🛡️</span>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#374151" }}>
-                ISO 27001 Certified Infrastructure
-              </span>
+              <span className="hidden md:block w-1 h-1 rounded-full bg-[#c0c9c1]"></span>
+              <p className="text-[0.875rem] font-medium">Effective Date: April 1, 2026</p>
             </div>
           </div>
-        </div>
-      </div>
 
+          {/* Content card */}
+          <article className="bg-white p-8 md:p-16 rounded-lg relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 rounded-full -mr-32 -mt-32" style={{ backgroundColor: "rgba(26,74,53,0.05)", filter: "blur(80px)" }}></div>
+            <div className="relative z-10">
+              <p className="text-[1rem] leading-relaxed text-[#414943] mb-12">
+                Welcome to NextCanna Connect. These Terms of Service (&quot;Terms&quot;) constitute a legally binding agreement between you (&quot;User,&quot; &quot;you,&quot; or &quot;your&quot;) and NextCanna Connect (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) governing your access to and use of our B2B marketplace platform and associated enterprise services.
+              </p>
+
+              {/* Section 1 */}
+              <section className="mb-12">
+                <h2 className="text-[1.75rem] text-[#003320] mb-6" style={{ fontFamily: "'Noto Serif', serif" }}>1. Eligibility and Registration</h2>
+                <div className="space-y-4 text-[#414943] leading-relaxed text-[0.875rem]">
+                  <p>Access to the NextCanna Connect platform is restricted to authorized commercial entities operating within legally compliant jurisdictions. By registering, you represent that you have the legal authority to bind your organization.</p>
+                  <ul className="list-none space-y-3 pl-0">
+                    <li className="flex gap-4">
+                      <span className="text-[#1a4a35] font-bold">1.1</span>
+                      <span>Verification: We reserve the right to verify licenses and tax documentation prior to account activation.</span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-[#1a4a35] font-bold">1.2</span>
+                      <span>Security: Users are responsible for maintaining the confidentiality of their credentials.</span>
+                    </li>
+                  </ul>
+                </div>
+              </section>
+
+              {/* Section 2 */}
+              <section className="mb-12">
+                <h2 className="text-[1.75rem] text-[#003320] mb-6" style={{ fontFamily: "'Noto Serif', serif" }}>2. Marketplace Transactions</h2>
+                <div className="space-y-4 text-[#414943] leading-relaxed text-[0.875rem]">
+                  <p>The platform facilitates B2B transactions. NextCanna Connect acts as a platform provider and, unless explicitly stated otherwise, is not a party to the underlying commercial agreements between buyers and sellers.</p>
+                  <div className="p-6 rounded-md border-l-4 border-[#003320]" style={{ backgroundColor: "#f6f3f2" }}>
+                    <p className="italic">&quot;Compliance is the cornerstone of the NextCanna ecosystem. All trades must adhere to regional regulatory requirements.&quot;</p>
+                  </div>
+                </div>
+              </section>
+
+              {/* Section 3 */}
+              <section className="mb-12">
+                <h2 className="text-[1.75rem] text-[#003320] mb-6" style={{ fontFamily: "'Noto Serif', serif" }}>3. Compliance and Regional Laws</h2>
+                <div className="space-y-4 text-[#414943] leading-relaxed text-[0.875rem]">
+                  <p>Users must comply with all local, state, and international regulations pertaining to their specific product categories. Our automated compliance tracking tools are provided for convenience but do not substitute for professional legal counsel.</p>
+                  <ul className="list-none space-y-3 pl-0">
+                    <li className="flex gap-4">
+                      <span className="text-[#1a4a35] font-bold">3.1</span>
+                      <span>Documentation: All necessary shipping manifests and compliance certificates must be uploaded to the secure vault.</span>
+                    </li>
+                    <li className="flex gap-4">
+                      <span className="text-[#1a4a35] font-bold">3.2</span>
+                      <span>Reporting: Suspected fraudulent activity must be reported immediately via the Support hub.</span>
+                    </li>
+                  </ul>
+                </div>
+              </section>
+
+              {/* Section 4 */}
+              <section className="mb-12">
+                <h2 className="text-[1.75rem] text-[#003320] mb-6" style={{ fontFamily: "'Noto Serif', serif" }}>4. Intellectual Property</h2>
+                <div className="space-y-4 text-[#414943] leading-relaxed text-[0.875rem]">
+                  <p>All software, branding, data visualization techniques, and proprietary algorithms used on the platform are the exclusive property of NextCanna Connect. Users are granted a limited, revocable license to access these tools for commercial use.</p>
+                </div>
+              </section>
+
+              {/* Section 5 */}
+              <section className="mb-12">
+                <h2 className="text-[1.75rem] text-[#003320] mb-6" style={{ fontFamily: "'Noto Serif', serif" }}>5. Limitation of Liability</h2>
+                <div className="space-y-4 text-[#414943] leading-relaxed text-[0.875rem]">
+                  <p>TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, NEXTCANNA CONNECT SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OF THE PLATFORM.</p>
+                </div>
+              </section>
+
+              {/* CTA */}
+              <div className="mt-20 pt-12 border-t border-[#c0c9c1]/20 flex flex-col items-center text-center">
+                <p className="text-[#414943] text-[0.875rem] mb-6">Have questions regarding our enterprise terms?</p>
+                <Link
+                  href="/contact"
+                  className="text-white px-8 py-3 rounded-md font-medium text-sm transition-all hover:opacity-90"
+                  style={{ backgroundColor: "#003320" }}
+                >
+                  Contact Legal Support
+                </Link>
+              </div>
+            </div>
+          </article>
+
+          {/* Commitment to Transparency */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="relative rounded-xl overflow-hidden group" style={{ aspectRatio: "4/3" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt="Modern corporate office architecture"
+                className="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
+                src="https://picsum.photos/seed/nextcanna-tos/600/450"
+              />
+              <div className="absolute inset-0 bg-[#003320]/20 mix-blend-overlay"></div>
+            </div>
+            <div className="pl-0 md:pl-8">
+              <h3 className="text-[1.5rem] text-[#003320] mb-4" style={{ fontFamily: "'Noto Serif', serif" }}>Our Commitment to Transparency</h3>
+              <p className="text-[#414943] text-[0.875rem] leading-relaxed mb-6">
+                NextCanna Connect operates with a mandate of absolute clarity. Our terms are designed to protect both the integrity of the marketplace and the growth of your enterprise.
+              </p>
+              <div className="flex items-center gap-4">
+                <span className="material-symbols-outlined text-[#1a4a35]">verified_user</span>
+                <span className="text-[0.6875rem] uppercase tracking-widest font-bold text-[#003320]">ISO 27001 Certified Infrastructure</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
     </div>
   );
 }

@@ -5,185 +5,154 @@ export const metadata: Metadata = {
   description: "NextCanna Connect Privacy Policy — how we collect, use, and protect your personal information.",
 };
 
-const body: React.CSSProperties = {
-  fontFamily: "'Inter', sans-serif",
-  fontSize: "14px",
-  color: "#4B5563",
-  lineHeight: 1.8,
-  margin: 0,
-};
-
-function SectionHeading({ number, title }: { number: string; title: string }) {
-  return (
-    <div className="flex items-baseline gap-4" style={{ marginBottom: "14px" }}>
-      <span style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 700, color: "#9CA3AF", letterSpacing: "0.05em", minWidth: "28px", flexShrink: 0 }}>
-        {number}
-      </span>
-      <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "clamp(18px, 2.5vw, 22px)", fontWeight: 400, color: "#111827", margin: 0 }}>
-        {title}
-      </h2>
-    </div>
-  );
-}
-
-function Section({ number, title, children }: { number: string; title: string; children: React.ReactNode }) {
-  return (
-    <div style={{ marginBottom: "36px", paddingBottom: "36px", borderBottom: "1px solid #F3F4F6" }}>
-      <SectionHeading number={number} title={title} />
-      {children}
-    </div>
-  );
-}
-
 export default function PrivacyPage() {
   return (
-    <div style={{ backgroundColor: "#f5f4f1", minHeight: "100vh", paddingTop: "80px" }}>
+    <div className="text-[#1b1c1c]" style={{ backgroundColor: "#fbf9f8" }}>
 
       {/* Hero */}
-      <div className="mx-auto px-4 md:px-8" style={{ maxWidth: "860px", padding: "60px 0 48px" }}>
-        <div className="px-4 md:px-8">
-          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.2em", textTransform: "uppercase", color: "#6B7280", marginBottom: "16px" }}>
+      <section className="w-full pt-32 pb-20 px-8 md:px-16 max-w-5xl mx-auto">
+        <div className="space-y-6">
+          <span className="text-[#003320] font-medium tracking-widest text-[0.6875rem] uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>
             Legal Documentation
-          </p>
-          <h1 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "clamp(32px, 5vw, 54px)", fontWeight: 400, color: "#111827", lineHeight: 1.1, marginBottom: "20px" }}>
+          </span>
+          <h1 className="text-5xl md:text-6xl font-bold text-[#003320] tracking-tight leading-none" style={{ fontFamily: "'Noto Serif', serif" }}>
             Privacy Policy
           </h1>
-          <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "14px", color: "#6B7280", lineHeight: 1.7, maxWidth: "560px" }}>
+          <p className="text-[#4e6073] text-lg max-w-2xl leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
             Last updated: May 24, 2024. NextCanna Connect is committed to the highest standards of data integrity and regional compliance across the global marketplace.
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Main content */}
-      <div className="mx-auto px-4 md:px-8" style={{ maxWidth: "860px", paddingBottom: "80px" }}>
+      {/* Content */}
+      <section className="w-full px-8 md:px-16 max-w-5xl mx-auto pb-32">
+        <div className="grid grid-cols-1 gap-16">
 
-        {/* Sections 01–04 card */}
-        <div className="rounded" style={{ backgroundColor: "white", padding: "clamp(24px, 4vw, 48px)", marginBottom: "24px", boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}>
-
-          <Section number="01" title="Introduction">
-            <p style={body}>
-              NextCanna Connect ("we", "us", "our") operates the NextCanna B2B Enterprise Marketplace. This Privacy Policy describes how your personal information is collected, used, and shared when you visit or make a purchase from NextCanna. We recognize the sensitive nature of the cannabis industry and prioritize discreet, secure data handling protocols.
+          {/* 01 Introduction */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-4">
+              <span className="text-3xl font-bold text-[#1a4a35]/20" style={{ fontFamily: "'Noto Serif', serif" }}>01</span>
+              <h2 className="text-2xl font-bold text-[#003320]" style={{ fontFamily: "'Noto Serif', serif" }}>Introduction</h2>
+            </div>
+            <p className="text-[#414943] leading-loose text-[0.875rem]" style={{ fontFamily: "'Inter', sans-serif" }}>
+              NextCanna Connect (&quot;we&quot;, &quot;us&quot;, &quot;our&quot;) operates the NextCanna B2B Enterprise Marketplace. This Privacy Policy describes how your personal information is collected, used, and shared when you visit or make a purchase from NextCanna. We recognize the sensitive nature of the cannabis industry and prioritize discreet, secure data handling protocols.
             </p>
-          </Section>
+          </div>
 
-          {/* Section 02 — responsive two column */}
-          <div style={{ marginBottom: "36px", paddingBottom: "36px", borderBottom: "1px solid #F3F4F6" }}>
-            <SectionHeading number="02" title="Personal Information We Collect" />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <p style={body}>
+          {/* 02 Data Collection */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="bg-white p-10 space-y-4" style={{ border: "0.5px solid rgba(192, 201, 193, 0.3)" }}>
+              <div className="flex items-center gap-4 text-[#003320] mb-2">
+                <span className="material-symbols-outlined">dataset</span>
+                <span className="text-[0.6875rem] font-bold uppercase tracking-widest" style={{ fontFamily: "'Inter', sans-serif" }}>Section 02</span>
+              </div>
+              <h3 className="text-xl font-bold" style={{ fontFamily: "'Noto Serif', serif" }}>Personal Information We Collect</h3>
+              <p className="text-[#414943] text-[0.875rem] leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
                 When you visit the Site, we automatically collect certain information about your device, including information about your web browser, IP address, time zone, and some of the cookies that are installed on your device.
               </p>
-              <div className="rounded-md" style={{ backgroundColor: "#003320", padding: "22px" }}>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "11px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", marginBottom: "10px" }}>
-                  Operational Transparency
-                </p>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "rgba(255,255,255,0.85)", lineHeight: 1.6, margin: 0 }}>
-                  Our data collection is strictly limited to information necessary for facilitating high-stakes B2B transactions and maintaining regulatory compliance within regional jurisdictions.
-                </p>
-              </div>
             </div>
-          </div>
-
-          <Section number="03" title="How we use your information">
-            <p style={body}>
-              We use the Order Information that we collect generally to fulfill any orders placed through the Site (including processing your payment information, arranging for shipping, and providing you with invoices and/or order confirmations).
-            </p>
-          </Section>
-
-          <div>
-            <SectionHeading number="04" title="Sharing your personal information" />
-            <p style={body}>
-              We share your Personal Information with third parties to help us use your Personal Information, as described above. For example, we use Shopify to power our online store — you can read more about how Shopify uses your Personal Information here.
-            </p>
-          </div>
-        </div>
-
-        {/* Image with quote */}
-        <div className="rounded overflow-hidden" style={{ position: "relative", marginBottom: "24px", backgroundColor: "#2a2a2a" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="https://picsum.photos/seed/nextcanna-privacy/1200/500"
-            alt="Data center"
-            style={{ width: "100%", height: "clamp(200px, 35vw, 360px)", objectFit: "cover", display: "block", opacity: 0.65 }}
-          />
-          <div className="absolute bottom-4 right-4 md:bottom-8 md:right-10 rounded" style={{ backgroundColor: "white", padding: "clamp(16px, 3vw, 24px) clamp(16px, 3vw, 28px)", maxWidth: "min(320px, 80%)" }}>
-            <p style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "clamp(13px, 2vw, 15px)", fontStyle: "italic", color: "#111827", lineHeight: 1.6, marginBottom: "8px" }}>
-              "Security is not a product, but a process."
-            </p>
-            <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#9CA3AF", margin: 0 }}>
-              — Enterprise Standards
-            </p>
-          </div>
-        </div>
-
-        {/* Sections 05–15 card */}
-        <div className="rounded" style={{ backgroundColor: "white", padding: "clamp(24px, 4vw, 48px)", marginBottom: "24px", boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}>
-
-          {/* 05–07: responsive 3-col */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8" style={{ marginBottom: "36px", paddingBottom: "36px", borderBottom: "1px solid #F3F4F6" }}>
-            {[
-              { n: "05", title: "Behavioral Advertising", text: "As described above, we use your Personal Information to provide you with targeted advertisements or marketing communications we believe may be of interest to you." },
-              { n: "06", title: "Do Not Track", text: "Please note that we do not alter our Site's data collection and use practices when we see a Do Not Track signal from your browser." },
-              { n: "07", title: "Your Rights", text: "If you are a European resident, you have the right to access personal information we hold about you and to ask that your personal information be corrected, updated, or deleted." },
-            ].map((s) => (
-              <div key={s.n}>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "#9CA3AF", marginBottom: "6px" }}>{s.n}</p>
-                <h3 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "16px", fontWeight: 400, color: "#111827", marginBottom: "8px" }}>{s.title}</h3>
-                <p style={{ ...body, fontSize: "13px" }}>{s.text}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Sections 08–15 */}
-          {[
-            { n: "08", title: "Data Retention", text: "When you place an order through the Site, we will maintain your Order Information for our records unless and until you ask us to delete this information." },
-            { n: "09", title: "Changes to Policy", text: "We may update this privacy policy from time to time in order to reflect, for example, changes to our practices or for other operational, legal or regulatory reasons." },
-            { n: "10", title: "Minors", text: "The Site is not intended for individuals under the age of 21. We do not knowingly collect information from individuals under this legal threshold." },
-            { n: "11", title: "International Transfers", text: "Information may be transferred to and maintained on computers located outside of your state, province, country or other governmental jurisdiction." },
-            { n: "12", title: "Security of Data", text: "The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure." },
-            { n: "13", title: "Service Providers", text: "We may employ third party companies and individuals to facilitate our Service, to provide the Service on our behalf, or to perform Service-related services." },
-            { n: "14", title: "Links to Other Sites", text: "Our Service may contain links to other sites that are not operated by us. If you click on a third party link, you will be directed to that third party's site." },
-            { n: "15", title: "Analytics", text: "We may use third-party Service Providers to monitor and analyze the use of our Service, specifically tracking supply chain efficiency." },
-          ].map((s, i, arr) => (
-            <div key={s.n} style={{ marginBottom: i < arr.length - 1 ? "28px" : 0, paddingBottom: i < arr.length - 1 ? "28px" : 0, borderBottom: i < arr.length - 1 ? "1px solid #F3F4F6" : "none" }}>
-              <SectionHeading number={s.n} title={s.title} />
-              <p style={body}>{s.text}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* Sections 16–21 grid */}
-        <div className="rounded" style={{ backgroundColor: "white", padding: "clamp(24px, 4vw, 48px)", boxShadow: "0 1px 6px rgba(0,0,0,0.05)" }}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {[
-              { n: "16", title: "Behavioral Remarketing", text: "NextCanna Connect uses remarketing services to advertise on third party websites to you after you visited our Service." },
-              { n: "17", title: "Payments Compliance", text: "We provide paid products and/or services within the Service. In that case, we use third-party services for payment processing." },
-              { n: "18", title: "GDPR Data Protection", text: "Our legal basis for collecting and using the personal information described in this Privacy Policy depends on the Personal Information we collect and the specific context." },
-              { n: "19", title: "CCPA Privacy Rights", text: "This section provides additional details about the Personal Information we collect about California consumers and the rights afforded to them." },
-              { n: "20", title: "Governing Law", text: "This Privacy Policy and our legal obligations are governed by the laws of the jurisdiction in which our headquarters reside." },
-            ].map((s) => (
-              <div key={s.n} className="rounded-md" style={{ padding: "22px", border: "1px solid #F3F4F6" }}>
-                <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "#9CA3AF", marginBottom: "6px" }}>{s.n}</p>
-                <h3 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "16px", fontWeight: 400, color: "#111827", marginBottom: "8px" }}>{s.title}</h3>
-                <p style={{ ...body, fontSize: "13px" }}>{s.text}</p>
-              </div>
-            ))}
-
-            {/* 21 — Contact Us */}
-            <div className="rounded-md" style={{ padding: "22px", backgroundColor: "#003320" }}>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", color: "rgba(255,255,255,0.5)", marginBottom: "6px" }}>21</p>
-              <h3 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "16px", fontWeight: 400, color: "white", marginBottom: "10px" }}>Contact Us</h3>
-              <p style={{ fontFamily: "'Inter', sans-serif", fontSize: "13px", color: "rgba(255,255,255,0.8)", lineHeight: 1.7, margin: 0 }}>
-                For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us at{" "}
-                <a href="mailto:compliance@nextcanna.connect" style={{ color: "rgba(255,255,255,0.9)", textDecoration: "underline" }}>
-                  compliance@nextcanna.connect
-                </a>
+            <div className="bg-[#003320] text-white p-10 space-y-4 flex flex-col justify-center">
+              <h3 className="text-xl font-bold" style={{ fontFamily: "'Noto Serif', serif" }}>Operational Transparency</h3>
+              <p className="text-[#88b99e] text-[0.875rem] leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+                Our data collection is strictly limited to information necessary for facilitating high-stakes B2B transactions and maintaining regulatory compliance within regional jurisdictions.
               </p>
             </div>
           </div>
-        </div>
 
-      </div>
+          {/* 03 & 04 */}
+          <div className="space-y-12">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold flex items-center gap-3" style={{ fontFamily: "'Noto Serif', serif" }}>
+                <span className="w-8 h-px bg-[#1a4a35] inline-block"></span>
+                03. How we use your information
+              </h3>
+              <p className="text-[#414943] leading-loose text-[0.875rem] pl-11" style={{ fontFamily: "'Inter', sans-serif" }}>
+                We use the Order Information that we collect generally to fulfill any orders placed through the Site (including processing your payment information, arranging for shipping, and providing you with invoices and/or order confirmations).
+              </p>
+            </div>
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold flex items-center gap-3" style={{ fontFamily: "'Noto Serif', serif" }}>
+                <span className="w-8 h-px bg-[#1a4a35] inline-block"></span>
+                04. Sharing your personal information
+              </h3>
+              <p className="text-[#414943] leading-loose text-[0.875rem] pl-11" style={{ fontFamily: "'Inter', sans-serif" }}>
+                We share your Personal Information with third parties to help us use your Personal Information, as described above. For example, we use Shopify to power our online store—you can read more about how Shopify uses your Personal Information here.
+              </p>
+            </div>
+          </div>
+
+          {/* Image */}
+          <div className="relative w-full overflow-hidden group" style={{ height: "400px" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://picsum.photos/seed/nextcanna-privacy-hero/1200/500"
+              alt="Professional server room"
+              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+            />
+            <div className="absolute inset-0 bg-[#003320]/20 mix-blend-multiply"></div>
+            <div className="absolute bottom-8 right-8 bg-white p-8 max-w-sm shadow-sm" style={{ border: "0.5px solid rgba(192, 201, 193, 0.3)" }}>
+              <p className="italic text-[#003320] text-lg" style={{ fontFamily: "'Noto Serif', serif" }}>&quot;Security is not a product, but a process.&quot;</p>
+              <p className="text-[0.6875rem] mt-2 text-[#4e6073] font-bold uppercase tracking-widest" style={{ fontFamily: "'Inter', sans-serif" }}>— Enterprise Standards</p>
+            </div>
+          </div>
+
+          {/* 05–07 Three column */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 border-t border-[#c0c9c1]/20 pt-16">
+            {[
+              { n: "05. Behavioral Advertising", text: "As described above, we use your Personal Information to provide you with targeted advertisements or marketing communications we believe may be of interest to you." },
+              { n: "06. Do Not Track", text: "Please note that we do not alter our Site's data collection and use practices when we see a Do Not Track signal from your browser." },
+              { n: "07. Your Rights", text: "If you are a European resident, you have the right to access personal information we hold about you and to ask that your personal information be corrected, updated, or deleted." },
+            ].map((s) => (
+              <div key={s.n} className="space-y-4">
+                <h4 className="font-bold text-[#003320]" style={{ fontFamily: "'Noto Serif', serif" }}>{s.n}</h4>
+                <p className="text-[0.875rem] text-[#414943] leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>{s.text}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* 08–15 */}
+          <div className="space-y-16 max-w-3xl">
+            {[
+              { n: "08. Data Retention", text: "When you place an order through the Site, we will maintain your Order Information for our records unless and until you ask us to delete this information." },
+              { n: "09. Changes to Policy", text: "We may update this privacy policy from time to time in order to reflect, for example, changes to our practices or for other operational, legal or regulatory reasons." },
+              { n: "10. Minors", text: "The Site is not intended for individuals under the age of 21. We do not knowingly collect information from individuals under this legal threshold." },
+              { n: "11. International Transfers", text: "Information may be transferred to and maintained on computers located outside of your state, province, country or other governmental jurisdiction." },
+              { n: "12. Security of Data", text: "The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure." },
+              { n: "13. Service Providers", text: "We may employ third party companies and individuals to facilitate our Service, to provide the Service on our behalf, or to perform Service-related services." },
+              { n: "14. Links to Other Sites", text: "Our Service may contain links to other sites that are not operated by us. If you click on a third party link, you will be directed to that third party's site." },
+              { n: "15. Analytics", text: "We may use third-party Service Providers to monitor and analyze the use of our Service, specifically tracking supply chain efficiency." },
+            ].map((s) => (
+              <div key={s.n} className="space-y-4">
+                <h3 className="text-xl font-bold" style={{ fontFamily: "'Noto Serif', serif" }}>{s.n}</h3>
+                <p className="text-[#414943] text-[0.875rem] leading-loose" style={{ fontFamily: "'Inter', sans-serif" }}>{s.text}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* 16–21 Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { n: "16. Behavioral Remarketing", text: "NextCanna Connect uses remarketing services to advertise on third party websites to you after you visited our Service." },
+              { n: "17. Payments Compliance", text: "We provide paid products and/or services within the Service. In that case, we use third-party services for payment processing." },
+              { n: "18. GDPR Data Protection", text: "Our legal basis for collecting and using the personal information described in this Privacy Policy depends on the Personal Information we collect and the specific context." },
+              { n: "19. CCPA Privacy Rights", text: "This section provides additional details about the personal information we collect about California consumers and the rights afforded to them." },
+              { n: "20. Governing Law", text: "This Privacy Policy and our legal obligations are governed by the laws of the jurisdiction in which our headquarters reside." },
+            ].map((s) => (
+              <div key={s.n} className="p-8" style={{ border: "0.5px solid rgba(192, 201, 193, 0.3)", backgroundColor: "rgba(246, 243, 242, 0.3)" }}>
+                <h4 className="font-bold text-[#003320] mb-4 uppercase text-[0.6875rem] tracking-tighter" style={{ fontFamily: "'Inter', sans-serif" }}>{s.n}</h4>
+                <p className="text-[0.875rem] text-[#414943] leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>{s.text}</p>
+              </div>
+            ))}
+            <div className="p-8 bg-[#003320] text-white" style={{ border: "0.5px solid rgba(192, 201, 193, 0.3)" }}>
+              <h4 className="font-bold mb-4 uppercase text-[0.6875rem] tracking-tighter" style={{ fontFamily: "'Inter', sans-serif" }}>21. Contact Us</h4>
+              <p className="text-[0.875rem] leading-relaxed" style={{ fontFamily: "'Inter', sans-serif" }}>
+                For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us at compliance@nextcanna.connect
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </section>
     </div>
   );
 }
