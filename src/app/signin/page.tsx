@@ -212,18 +212,6 @@ export default function SignInPage() {
 
       {/* Security note */}
       <p
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          fontSize: "10px",
-          fontWeight: 600,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          color: "#9CA3AF",
-          marginTop: "28px",
-        }}
-      >
-        Secure Institutional Access • 256-Bit Encryption
-      </p>
     </div>
   );
 }
