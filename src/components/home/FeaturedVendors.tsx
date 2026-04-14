@@ -9,7 +9,7 @@ const TIER_LABELS: Record<string, string> = {
   featured: "Verified",
   select: "Select",
   claimed: "Select",
-  free: "Unclaimed",
+  free: "Claimed",
 };
 
 export default function FeaturedVendors() {

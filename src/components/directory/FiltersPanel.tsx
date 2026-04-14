@@ -14,7 +14,7 @@ const VERIFICATION_OPTIONS = [
   { id: "verified", label: "Verified Partner" },
   { id: "certified", label: "Certified Member" },
   { id: "claimed", label: "Claimed Listing" },
-  { id: "unclaimed", label: "Unclaimed Listing" },
+  { id: "unclaimed", label: "Claimed Listing" },
 ];
 
 function toggle(arr: string[], value: string): string[] {

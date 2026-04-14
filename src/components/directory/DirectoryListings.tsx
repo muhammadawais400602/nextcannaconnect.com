@@ -281,7 +281,7 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
                 fontFamily: "'Inter', sans-serif",
               }}
             >
-              Unclaimed Listings
+              Claimed Listings
             </span>
             <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e7eb" }} />
           </div>
