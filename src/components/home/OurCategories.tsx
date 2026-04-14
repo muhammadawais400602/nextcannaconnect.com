@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRef, useEffect } from "react";
 import { CATEGORIES } from "@/data/categories";
 
 const CATEGORY_ICONS: Record<string, string> = {
@@ -25,10 +26,75 @@ const CATEGORIES_DISPLAY = CATEGORIES.map((cat) => ({
   slug: cat.slug,
 }));
 
-// Duplicate for seamless loop
 const LOOPED = [...CATEGORIES_DISPLAY, ...CATEGORIES_DISPLAY];
 
 export default function OurCategories() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const isPaused = useRef(false);
+  const startX = useRef(0);
+  const startScrollLeft = useRef(0);
+  const animRef = useRef<number>(0);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const tick = () => {
+      if (!isDragging.current && !isPaused.current) {
+        track.scrollLeft += 0.5;
+        if (track.scrollLeft >= track.scrollWidth / 2) {
+          track.scrollLeft = 0;
+        }
+      }
+      animRef.current = requestAnimationFrame(tick);
+    };
+    animRef.current = requestAnimationFrame(tick);
+    return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
+  }, []);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    const track = trackRef.current;
+    if (!track) return;
+    isDragging.current = true;
+    startX.current = e.pageX - track.getBoundingClientRect().left;
+    startScrollLeft.current = track.scrollLeft;
+    track.style.cursor = "grabbing";
+    track.style.userSelect = "none";
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.getBoundingClientRect().left;
+    const walk = (x - startX.current) * 1.5;
+    trackRef.current.scrollLeft = startScrollLeft.current - walk;
+  };
+
+  const onMouseUp = () => {
+    isDragging.current = false;
+    if (trackRef.current) {
+      trackRef.current.style.cursor = "grab";
+      trackRef.current.style.userSelect = "";
+    }
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const track = trackRef.current;
+    if (!track) return;
+    isDragging.current = true;
+    startX.current = e.touches[0].pageX;
+    startScrollLeft.current = track.scrollLeft;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || !trackRef.current) return;
+    const walk = startX.current - e.touches[0].pageX;
+    trackRef.current.scrollLeft = startScrollLeft.current + walk;
+  };
+
+  const onTouchEnd = () => { isDragging.current = false; };
+
   return (
     <section
       style={{
@@ -36,7 +102,6 @@ export default function OurCategories() {
         borderTop: "1px solid rgba(192,201,193,0.25)",
         borderBottom: "1px solid rgba(192,201,193,0.25)",
         padding: "56px 0 80px",
-        overflow: "hidden",
       }}
     >
       {/* Header */}
@@ -57,7 +122,7 @@ export default function OurCategories() {
             marginBottom: "10px",
           }}
         >
-          Our Categories
+          Our Marketplace
         </h2>
         <p style={{ color: "#414943", fontSize: "15px", lineHeight: 1.65, maxWidth: "520px" }}>
           Browse the marketplace through our specialized product and operational classifications.
@@ -65,11 +130,8 @@ export default function OurCategories() {
         </p>
       </div>
 
-      {/* Marquee track */}
-      <div
-        className="categories-marquee-wrapper"
-        style={{ position: "relative", overflow: "hidden" }}
-      >
+      {/* Scrollable track */}
+      <div style={{ position: "relative" }}>
         {/* Fade edges */}
         <div className="cat-fade-edge" style={{
           position: "absolute", left: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
@@ -82,13 +144,27 @@ export default function OurCategories() {
           pointerEvents: "none",
         }} />
 
-        <div className="categories-marquee-track">
+        <div
+          ref={trackRef}
+          className="categories-scroll-track"
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseUp}
+          onMouseEnter={() => { isPaused.current = true; }}
+          onMouseOut={() => { if (!isDragging.current) isPaused.current = false; }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           {LOOPED.map((cat, i) => (
             <Link
               key={`${cat.slug}-${i}`}
               href={`/directory/${cat.slug}`}
               className="category-card"
               style={{ textDecoration: "none" }}
+              onClick={(e) => { if (isDragging.current) e.preventDefault(); }}
+              draggable={false}
             >
               {/* Icon circle */}
               <div
@@ -163,23 +239,21 @@ export default function OurCategories() {
       </div>
 
       <style>{`
-        @keyframes categoriesMarquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-
-        .categories-marquee-track {
+        .categories-scroll-track {
           display: flex;
           gap: 20px;
-          width: max-content;
-          animation: categoriesMarquee 40s linear infinite;
+          overflow-x: scroll;
+          overflow-y: hidden;
+          scroll-behavior: auto;
           padding: 8px 32px 16px;
+          cursor: grab;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
         }
-
-        .categories-marquee-wrapper:hover .categories-marquee-track {
-          animation-play-state: paused;
+        .categories-scroll-track::-webkit-scrollbar {
+          display: none;
         }
-
         .category-card {
           width: 260px;
           min-width: 260px;
@@ -190,14 +264,12 @@ export default function OurCategories() {
           display: flex;
           flex-direction: column;
           transition: box-shadow 0.3s ease, border-color 0.3s ease;
-          cursor: pointer;
+          flex-shrink: 0;
         }
-
         .category-card:hover {
           box-shadow: 0 8px 32px rgba(0,51,32,0.1);
           border-color: rgba(0,51,32,0.2);
         }
-
         @media (max-width: 480px) {
           .category-card {
             width: 220px;
