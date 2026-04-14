@@ -62,6 +62,7 @@ const TIERS = [
       { label: "Priority search placement", included: true },
       { label: "Real-time calendar sync", included: true },
       { label: "Dedicated account support", included: true },
+      { label: "Links to social media (LinkedIn, Instagram)", included: true },
     ],
   },
 ];
