@@ -56,7 +56,7 @@ export default function SignInPage() {
             marginBottom: "40px",
           }}
         >
-          Access your institutional digital asset terminal and marketplace analytics.
+          Access your account to make updates.
         </p>
 
         <form onSubmit={handleSubmit}>
