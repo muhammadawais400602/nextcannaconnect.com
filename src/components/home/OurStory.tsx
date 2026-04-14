@@ -132,7 +132,7 @@ export default function OurStory() {
             <div
               style={{
                 height: "clamp(300px, 50vw, 520px)",
-                background: "linear-gradient(135deg, #003320 0%, #1a4a35 40%, #2d6e52 70%, #88b99e 100%)",
+                backgroundColor: "#003320",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -140,56 +140,16 @@ export default function OurStory() {
                 overflow: "hidden",
               }}
             >
-              {/* Decorative circles */}
-              <div
+              <img
+                src="/globe.svg"
+                alt="Global cannabis marketplace"
                 style={{
-                  position: "absolute",
-                  width: "400px",
-                  height: "400px",
-                  borderRadius: "50%",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  top: "-100px",
-                  right: "-100px",
+                  width: "80%",
+                  height: "80%",
+                  objectFit: "contain",
+                  opacity: 0.9,
                 }}
               />
-              <div
-                style={{
-                  position: "absolute",
-                  width: "280px",
-                  height: "280px",
-                  borderRadius: "50%",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  bottom: "-60px",
-                  left: "-60px",
-                }}
-              />
-              <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
-                <div
-                  style={{
-                    fontFamily: "'Noto Serif', serif",
-                    fontSize: "80px",
-                    fontStyle: "italic",
-                    color: "rgba(255,255,255,0.15)",
-                    lineHeight: 1,
-                    marginBottom: "16px",
-                  }}
-                >
-                  NC
-                </div>
-                <p
-                  style={{
-                    fontFamily: "'Noto Serif', serif",
-                    fontSize: "20px",
-                    fontStyle: "italic",
-                    color: "rgba(255,255,255,0.7)",
-                  }}
-                >
-                  NextCanna Connect
-                </p>
-                <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.4)", marginTop: "8px", letterSpacing: "0.1em" }}>
-                  Est. 2025
-                </p>
-              </div>
             </div>
             <div
               style={{
