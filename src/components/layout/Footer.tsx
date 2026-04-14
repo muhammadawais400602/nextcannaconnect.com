@@ -25,11 +25,7 @@ export default function Footer() {
             NextCanna Connect
           </Link>
           <p style={{ fontSize: "13px", lineHeight: 1.75, color: "rgba(136,185,158,0.75)" }}>
-            NextCanna Connect is the commercial backbone of the cannabis industry.
-            We unify every critical component of the value chain—from funding and licensing to cultivation,
-            manufacturing, and retail—into a single, institutional-grade platform. By connecting operators
-            with vetted partners across legal, banking, accounting, and advisory services, we enable
-            seamless execution, faster scaling, and consistent performance across state markets.
+            NextCanna Connect is the commercial backbone of the cannabis industry. We unify every critical component of the value chain from funding and licensing to cultivation, manufacturing, and retail into a single, institutional-grade platform. By connecting operators with vetted partners across legal, banking, accounting, and advisory services, we enable seamless execution, faster scaling, and consistent performance across state markets.
           </p>
         </div>
 
