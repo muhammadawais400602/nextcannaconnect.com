@@ -44,7 +44,7 @@ export default function AboutPage() {
                 fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
               }}
             >
-              The Vision Behind NextCanna.
+              The Mission Behind NextCanna.
             </h1>
             <div style={{ width: "96px", height: "4px", backgroundColor: "#88b99e" }} />
           </div>

@@ -50,23 +50,15 @@ export default function OurStory() {
               marginBottom: "32px",
             }}
           >
-            The Vision Behind{" "}
+            The Mission Behind{" "}
             <br />
             <span style={{ fontStyle: "italic", color: "#88b99e" }}>NextCanna</span>
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "40px" }}>
             <p style={{ fontSize: "16px", color: "#414943", lineHeight: 1.75 }}>
-              In a rapidly evolving landscape, NextCanna Connect emerged as the response to
-              the need for institutional-grade reliability in cannabis commerce. Our journey
-              began with a singular premise: the industry&apos;s growth is limited not by its
-              potential, but by its fragmentation.
-            </p>
-            <p style={{ fontSize: "16px", color: "#414943", lineHeight: 1.75 }}>
-              We built this ecosystem to serve as the definitive bridge between high-yield
-              innovation and retail excellence. By vetting every participant and standardizing
-              transactional integrity, we aren&apos;t just facilitating trades — we are
-              architecting the future of a global industry.
+              To eliminate fragmentation in the cannabis industry and enable a more connected,
+              transparent, and efficient marketplace for all participants.
             </p>
           </div>
 
