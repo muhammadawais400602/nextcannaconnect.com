@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useInView } from "@/hooks/useInView";
 
 export default function OurStory() {
@@ -96,7 +97,8 @@ export default function OurStory() {
             ))}
           </div>
 
-          <button
+          <Link
+            href="/about"
             className="group flex items-center gap-3"
             style={{
               fontSize: "11px",
@@ -104,17 +106,14 @@ export default function OurStory() {
               color: "#003320",
               letterSpacing: "0.2em",
               textTransform: "uppercase",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: 0,
+              textDecoration: "none",
             }}
           >
             Learn more about our mission
             <span className="material-symbols-outlined" style={{ fontSize: "18px", transition: "transform 0.2s" }}>
               arrow_forward
             </span>
-          </button>
+          </Link>
         </div>
 
         {/* Right: Image */}
