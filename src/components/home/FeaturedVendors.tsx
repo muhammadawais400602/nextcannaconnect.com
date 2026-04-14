@@ -4,11 +4,11 @@ import Link from "next/link";
 import { getFeaturedCompanies } from "@/data/companies";
 
 const TIER_LABELS: Record<string, string> = {
-  elite: "Platinum",
+  elite: "Verified",
   featured: "Verified",
-  select: "Premier",
-  claimed: "Verified",
-  free: "Listed",
+  select: "Select",
+  claimed: "Select",
+  free: "Unclaimed",
 };
 
 export default function FeaturedVendors() {
@@ -130,18 +130,10 @@ export default function FeaturedVendors() {
 
                 {/* Card body */}
                 <div className="p-5 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-1">
+                  <div className="mb-1">
                     <h3 style={{ fontWeight: 700, color: "#003320", fontSize: "15px", lineHeight: 1.3 }}>
                       {company.name}
                     </h3>
-                    {company.rating && (
-                      <div className="flex items-center gap-1 flex-shrink-0">
-                        <span style={{ color: "#f59e0b", fontSize: "12px" }}>★</span>
-                        <span style={{ fontSize: "11px", fontWeight: 700, color: "#1b1c1c" }}>
-                          {company.rating}
-                        </span>
-                      </div>
-                    )}
                   </div>
 
                   <div className="flex items-center gap-1 mb-5" style={{ color: "#414943", fontSize: "11px" }}>

@@ -1,81 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import { CATEGORIES } from "@/data/categories";
 
-const CATEGORIES_DISPLAY = [
-  {
-    icon: "potted_plant",
-    title: "Genetics & Clones",
-    description: "High-yield, lab-verified genetics and proprietary strains for commercial cultivation.",
-    slug: "cultivation-growing",
-  },
-  {
-    icon: "inventory_2",
-    title: "Bulk Flower",
-    description: "Wholesale cannabis flower sourced from premium licensed cultivators nationwide.",
-    slug: "manufacturers-suppliers",
-  },
-  {
-    icon: "science",
-    title: "Concentrates",
-    description: "Extracts, distillates, and isolates refined by certified extraction facilities.",
-    slug: "extraction-processing",
-  },
-  {
-    icon: "medical_services",
-    title: "Ancillary Goods",
-    description: "Packaging, cultivation equipment, and hardware for vertically integrated operations.",
-    slug: "manufacturers-suppliers",
-  },
-  {
-    icon: "gavel",
-    title: "Compliance & Legal",
-    description: "Regulatory experts, licensing specialists, and legal counsel for cannabis operators.",
-    slug: "compliance-legal",
-  },
-  {
-    icon: "laptop_mac",
-    title: "Technology & Software",
-    description: "Seed-to-sale platforms, POS systems, and cannabis-specific SaaS tools.",
-    slug: "technology-software",
-  },
-  {
-    icon: "local_shipping",
-    title: "Transportation",
-    description: "Licensed cannabis transport, last-mile delivery, and supply chain management.",
-    slug: "transportation-logistics",
-  },
-  {
-    icon: "biotech",
-    title: "Testing Labs",
-    description: "Accredited facilities for potency, purity, pesticides, and regulatory compliance.",
-    slug: "testing-science",
-  },
-  {
-    icon: "storefront",
-    title: "Retail & Dispensary",
-    description: "Dispensary operations, POS systems, retail design, and customer experience solutions.",
-    slug: "retail-dispensary",
-  },
-  {
-    icon: "domain",
-    title: "Real Estate",
-    description: "Cannabis facility design, construction, real estate brokerage, and zoning consultation.",
-    slug: "real-estate-construction",
-  },
-  {
-    icon: "campaign",
-    title: "Marketing & Branding",
-    description: "Brand strategy, packaging design, digital marketing, and creative services.",
-    slug: "marketing-branding-packaging",
-  },
-  {
-    icon: "account_balance",
-    title: "Finance & Insurance",
-    description: "Banking, lending, insurance, accounting, and financial services for cannabis businesses.",
-    slug: "finance-insurance",
-  },
-];
+const CATEGORY_ICONS: Record<string, string> = {
+  "cultivation-growing": "potted_plant",
+  "manufacturers-suppliers": "inventory_2",
+  "extraction-processing": "science",
+  "consultants-advisors": "groups",
+  "marketing-branding-packaging": "campaign",
+  "retail-dispensary": "storefront",
+  "transportation-logistics": "local_shipping",
+  "testing-science": "biotech",
+  "compliance-legal": "gavel",
+  "technology-software": "laptop_mac",
+  "real-estate-construction": "domain",
+  "finance-insurance": "account_balance",
+};
+
+const CATEGORIES_DISPLAY = CATEGORIES.map((cat) => ({
+  icon: CATEGORY_ICONS[cat.slug] ?? "category",
+  title: cat.label,
+  description: cat.description,
+  slug: cat.slug,
+}));
 
 // Duplicate for seamless loop
 const LOOPED = [...CATEGORIES_DISPLAY, ...CATEGORIES_DISPLAY];
