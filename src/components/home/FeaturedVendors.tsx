@@ -98,7 +98,7 @@ export default function FeaturedVendors() {
                 marginBottom: "6px",
               }}
             >
-              Featured Premium Listings
+              Featured Select Listings
             </h2>
             <p style={{ color: "#414943", fontSize: "14px" }}>
               Top-tier verified partners currently active in the marketplace.
