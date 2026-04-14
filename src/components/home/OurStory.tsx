@@ -132,22 +132,18 @@ export default function OurStory() {
             <div
               style={{
                 height: "clamp(300px, 50vw, 520px)",
-                backgroundColor: "#003320",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 position: "relative",
                 overflow: "hidden",
               }}
             >
               <img
-                src="/globe.svg"
-                alt="Global cannabis marketplace"
+                src="/mission.jpg"
+                alt="Cannabis cultivation professional"
                 style={{
-                  width: "80%",
-                  height: "80%",
-                  objectFit: "contain",
-                  opacity: 0.9,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center",
                 }}
               />
             </div>
