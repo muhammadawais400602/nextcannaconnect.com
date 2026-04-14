@@ -54,7 +54,7 @@ const TIERS = [
     badgeBg: "#1A4A35",
     badgeColor: "#F9C31A",
     highlight: true,
-    pill: "MOST POPULAR",
+    pill: "BEST VALUE",
     description: "The highest tier — full vetting, premium placement, and real-time calendar sync.",
     features: [
       { label: "Premium company page", included: true },
