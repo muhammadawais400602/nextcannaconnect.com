@@ -89,7 +89,7 @@ export default function HeroSection() {
                 fontFamily: "'Inter', sans-serif",
               }}
             >
-              Premier B2B Infrastructure
+              WHERE CANNABIS OPERATORS CONNECT
             </span>
           </div>
 
