@@ -54,7 +54,7 @@ const TIERS = [
     badgeBg: "#1A4A35",
     badgeColor: "#F9C31A",
     highlight: true,
-    pill: "MOST POPULAR",
+    pill: "BEST VALUE",
     description: "The highest tier — full vetting, premium placement, and real-time calendar sync.",
     features: [
       { label: "Premium company page", included: true },
@@ -62,6 +62,8 @@ const TIERS = [
       { label: "Priority search placement", included: true },
       { label: "Real-time calendar sync", included: true },
       { label: "Dedicated account support", included: true },
+      { label: "Links to social media (LinkedIn, Instagram)", included: true },
+      { label: "Display of Certifications", included: true },
     ],
   },
 ];
@@ -246,16 +248,17 @@ function SignUpForm() {
                 style={{ ...inputStyle, color: basicForm.stateProvince ? "#003320" : "#9CA3AF" }}>
                 <option value="">Select State / Province</option>
                 <optgroup label="United States">
+                  <option value="all-us">All States (USA)</option>
                   {["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"].map((s) => (
                     <option key={s} value={s}>{s}</option>
                   ))}
                 </optgroup>
                 <optgroup label="Canada">
+                  <option value="all-ca">All Provinces (Canada)</option>
                   {["Alberta","British Columbia","Manitoba","New Brunswick","Newfoundland and Labrador","Northwest Territories","Nova Scotia","Nunavut","Ontario","Prince Edward Island","Quebec","Saskatchewan","Yukon"].map((p) => (
                     <option key={p} value={p}>{p}</option>
                   ))}
                 </optgroup>
-                <option value="all">All States</option>
               </select>
             </div>
             <div>
