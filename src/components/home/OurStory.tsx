@@ -53,7 +53,7 @@ export default function OurStory() {
           >
             The Mission Behind{" "}
             <br />
-            <span style={{ fontStyle: "italic", color: "#88b99e" }}>NextCanna</span>
+            <span style={{ fontStyle: "italic", color: "#88b99e" }}>NextCanna Connect</span>
           </h2>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "40px" }}>
@@ -61,40 +61,6 @@ export default function OurStory() {
               To eliminate fragmentation in the cannabis industry and enable a more connected,
               transparent, and efficient marketplace for all participants.
             </p>
-          </div>
-
-          {/* Stats row */}
-          <div className="flex flex-wrap gap-10 mb-10">
-            {[
-              { value: "2025", label: "Founded" },
-              { value: "North America", label: "Footprint" },
-              { value: "Verified", label: "Only" },
-            ].map((s) => (
-              <div key={s.label} className="flex flex-col">
-                <span
-                  style={{
-                    fontFamily: "'Noto Serif', serif",
-                    fontSize: "26px",
-                    fontWeight: 700,
-                    color: "#003320",
-                  }}
-                >
-                  {s.value}
-                </span>
-                <span
-                  style={{
-                    fontSize: "9px",
-                    fontWeight: 700,
-                    letterSpacing: "0.25em",
-                    textTransform: "uppercase",
-                    color: "rgba(65,73,67,0.6)",
-                    marginTop: "4px",
-                  }}
-                >
-                  {s.label}
-                </span>
-              </div>
-            ))}
           </div>
 
           <Link

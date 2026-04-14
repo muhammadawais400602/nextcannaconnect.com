@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRef, useEffect } from "react";
 import { getFeaturedCompanies } from "@/data/companies";
 
 const TIER_LABELS: Record<string, string> = {
@@ -13,8 +14,73 @@ const TIER_LABELS: Record<string, string> = {
 
 export default function FeaturedVendors() {
   const companies = getFeaturedCompanies();
-  // Duplicate cards for seamless infinite loop
   const loopedCompanies = [...companies, ...companies];
+
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const isPaused = useRef(false);
+  const startX = useRef(0);
+  const startScrollLeft = useRef(0);
+  const animRef = useRef<number>(0);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const tick = () => {
+      if (!isDragging.current && !isPaused.current) {
+        track.scrollLeft += 0.6;
+        if (track.scrollLeft >= track.scrollWidth / 2) {
+          track.scrollLeft = 0;
+        }
+      }
+      animRef.current = requestAnimationFrame(tick);
+    };
+    animRef.current = requestAnimationFrame(tick);
+    return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
+  }, []);
+
+  const onMouseDown = (e: React.MouseEvent) => {
+    const track = trackRef.current;
+    if (!track) return;
+    isDragging.current = true;
+    startX.current = e.pageX - track.getBoundingClientRect().left;
+    startScrollLeft.current = track.scrollLeft;
+    track.style.cursor = "grabbing";
+    track.style.userSelect = "none";
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.getBoundingClientRect().left;
+    const walk = (x - startX.current) * 1.5;
+    trackRef.current.scrollLeft = startScrollLeft.current - walk;
+  };
+
+  const onMouseUp = () => {
+    isDragging.current = false;
+    if (trackRef.current) {
+      trackRef.current.style.cursor = "grab";
+      trackRef.current.style.userSelect = "";
+    }
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const track = trackRef.current;
+    if (!track) return;
+    isDragging.current = true;
+    startX.current = e.touches[0].pageX;
+    startScrollLeft.current = track.scrollLeft;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging.current || !trackRef.current) return;
+    const walk = startX.current - e.touches[0].pageX;
+    trackRef.current.scrollLeft = startScrollLeft.current + walk;
+  };
+
+  const onTouchEnd = () => { isDragging.current = false; };
 
   return (
     <section className="py-10 md:py-16 px-4 md:px-8" style={{ backgroundColor: "#fbf9f8" }}>
@@ -38,7 +104,6 @@ export default function FeaturedVendors() {
               Top-tier verified partners currently active in the marketplace.
             </p>
           </div>
-
           <span
             style={{
               fontSize: "10px",
@@ -53,24 +118,33 @@ export default function FeaturedVendors() {
           </span>
         </div>
 
-        {/* Auto-scrolling marquee container */}
-        <div
-          style={{ overflow: "hidden", position: "relative" }}
-          className="featured-marquee-wrapper"
-        >
+        {/* Scrollable marquee */}
+        <div style={{ position: "relative" }}>
           {/* Fade edges */}
-          <div className="marquee-fade-left" style={{
+          <div style={{
             position: "absolute", left: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
             background: "linear-gradient(to right, #fbf9f8, transparent)",
             pointerEvents: "none",
           }} />
-          <div className="marquee-fade-right" style={{
+          <div style={{
             position: "absolute", right: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
             background: "linear-gradient(to left, #fbf9f8, transparent)",
             pointerEvents: "none",
           }} />
 
-          <div className="featured-marquee-track">
+          <div
+            ref={trackRef}
+            className="featured-scroll-track"
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseUp}
+            onMouseEnter={() => { isPaused.current = true; }}
+            onMouseOut={() => { if (!isDragging.current) isPaused.current = false; }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
             {loopedCompanies.map((company, i) => (
               <Link
                 key={`${company.id}-${i}`}
@@ -89,6 +163,8 @@ export default function FeaturedVendors() {
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 4px rgba(0,51,32,0.04)";
                 }}
+                onClick={(e) => { if (isDragging.current) e.preventDefault(); }}
+                draggable={false}
               >
                 {/* Image / color block */}
                 <div className="relative overflow-hidden" style={{ height: "176px" }}>
@@ -135,12 +211,10 @@ export default function FeaturedVendors() {
                       {company.name}
                     </h3>
                   </div>
-
                   <div className="flex items-center gap-1 mb-5" style={{ color: "#414943", fontSize: "11px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>location_on</span>
                     {company.location.city}, {company.location.state}
                   </div>
-
                   <button
                     className="mt-auto w-full py-2.5 rounded-lg"
                     style={{
@@ -175,35 +249,29 @@ export default function FeaturedVendors() {
       </div>
 
       <style>{`
-        @keyframes marquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-
-        .featured-marquee-track {
+        .featured-scroll-track {
           display: flex;
           gap: 20px;
-          width: max-content;
-          animation: marquee 30s linear infinite;
+          overflow-x: scroll;
+          overflow-y: hidden;
+          scroll-behavior: auto;
           padding-bottom: 8px;
+          cursor: grab;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
         }
-
-        .featured-marquee-wrapper:hover .featured-marquee-track {
-          animation-play-state: paused;
+        .featured-scroll-track::-webkit-scrollbar {
+          display: none;
         }
-
         .featured-card {
           width: 260px;
           min-width: 260px;
         }
-
         @media (max-width: 480px) {
           .featured-card {
             width: 220px;
             min-width: 220px;
-          }
-          .marquee-fade-left, .marquee-fade-right {
-            width: 32px !important;
           }
         }
       `}</style>
