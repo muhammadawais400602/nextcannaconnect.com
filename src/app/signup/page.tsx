@@ -244,7 +244,7 @@ function SignUpForm() {
               <select value={basicForm.stateProvince}
                 onChange={(e) => setBasicForm({ ...basicForm, stateProvince: e.target.value })}
                 style={{ ...inputStyle, color: basicForm.stateProvince ? "#003320" : "#9CA3AF" }}>
-                <option value="">All States</option>
+                <option value="">Select State / Province</option>
                 <optgroup label="United States">
                   {["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"].map((s) => (
                     <option key={s} value={s}>{s}</option>
@@ -255,6 +255,7 @@ function SignUpForm() {
                     <option key={p} value={p}>{p}</option>
                   ))}
                 </optgroup>
+                <option value="all">All States</option>
               </select>
             </div>
             <div>
