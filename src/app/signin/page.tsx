@@ -173,7 +173,7 @@ export default function SignInPage() {
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#1a4a35"; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#003320"; }}
           >
-            Sign In to Terminal
+            Sign In to your Account
           </button>
         </form>
 
