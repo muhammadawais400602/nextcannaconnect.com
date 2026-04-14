@@ -9,7 +9,7 @@ const TIER_LABELS: Record<string, string> = {
   featured: "Verified",
   select: "Select",
   claimed: "Select",
-  free: "Unclaimed",
+  free: "Claimed",
 };
 
 export default function FeaturedVendors() {
@@ -101,7 +101,7 @@ export default function FeaturedVendors() {
               Featured Select Listings
             </h2>
             <p style={{ color: "#414943", fontSize: "14px" }}>
-              Top-tier verified partners currently active in the marketplace.
+              Select partners currently active in the marketplace.
             </p>
           </div>
         </div>

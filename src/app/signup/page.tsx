@@ -9,7 +9,7 @@ import { Check, X } from "lucide-react";
 const TIERS = [
   {
     key: "free",
-    name: "Unclaimed",
+    name: "Claimed",
     price: "$0",
     period: "/mo",
     badge: null,
@@ -24,7 +24,6 @@ const TIERS = [
       { label: "Contact information", included: false },
       { label: "Full company page", included: false },
       { label: "Tier badge", included: false },
-      { label: "RFP Bid Board access", included: false },
     ],
   },
   {
@@ -41,7 +40,6 @@ const TIERS = [
     features: [
       { label: "Full company page", included: true },
       { label: "NextCanna Select Seal badge", included: true },
-      { label: "RFP Bid Board access", included: true },
       { label: "Contact info on profile", included: true },
       { label: "Enhanced directory card", included: true },
       { label: "Priority search placement", included: false },
@@ -63,7 +61,6 @@ const TIERS = [
       { label: "NextCanna Verified badge (full vetting)", included: true },
       { label: "Priority search placement", included: true },
       { label: "Real-time calendar sync", included: true },
-      { label: "RFP Bid Board access", included: true },
       { label: "Dedicated account support", included: true },
     ],
   },
