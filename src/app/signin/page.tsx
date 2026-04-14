@@ -210,8 +210,6 @@ export default function SignInPage() {
         </div>
       </div>
 
-      {/* Security note */}
-      <p
     </div>
   );
 }
