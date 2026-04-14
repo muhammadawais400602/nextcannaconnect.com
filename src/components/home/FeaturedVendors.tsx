@@ -104,18 +104,6 @@ export default function FeaturedVendors() {
               Top-tier verified partners currently active in the marketplace.
             </p>
           </div>
-          <span
-            style={{
-              fontSize: "10px",
-              fontWeight: 700,
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              color: "rgba(65,73,67,0.5)",
-              flexShrink: 0,
-            }}
-          >
-            Verified Ads ⓘ
-          </span>
         </div>
 
         {/* Scrollable marquee */}
