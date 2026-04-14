@@ -63,6 +63,7 @@ const TIERS = [
       { label: "Real-time calendar sync", included: true },
       { label: "Dedicated account support", included: true },
       { label: "Links to social media (LinkedIn, Instagram)", included: true },
+      { label: "Display of Certifications", included: true },
     ],
   },
 ];
