@@ -74,7 +74,7 @@ export default function SignInPage() {
                 marginBottom: "8px",
               }}
             >
-              Institutional Email
+              Members Email
             </label>
             <input
               type="email"
