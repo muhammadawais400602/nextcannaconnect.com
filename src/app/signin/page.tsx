@@ -190,7 +190,7 @@ export default function SignInPage() {
               marginBottom: "10px",
             }}
           >
-            New institutional participant?
+            Interested in Joining?
           </p>
           <Link
             href="/request-membership"
