@@ -56,7 +56,7 @@ export default function SignInPage() {
             marginBottom: "40px",
           }}
         >
-          Access your institutional digital asset terminal and marketplace analytics.
+          Access your account to make updates.
         </p>
 
         <form onSubmit={handleSubmit}>
@@ -173,7 +173,7 @@ export default function SignInPage() {
             onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#1a4a35"; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#003320"; }}
           >
-            Sign In to Terminal
+            Sign In to your Account
           </button>
         </form>
 
@@ -190,7 +190,7 @@ export default function SignInPage() {
               marginBottom: "10px",
             }}
           >
-            New institutional participant?
+            Interested in Joining?
           </p>
           <Link
             href="/request-membership"
@@ -210,20 +210,6 @@ export default function SignInPage() {
         </div>
       </div>
 
-      {/* Security note */}
-      <p
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          fontSize: "10px",
-          fontWeight: 600,
-          letterSpacing: "0.18em",
-          textTransform: "uppercase",
-          color: "#9CA3AF",
-          marginTop: "28px",
-        }}
-      >
-        Secure Institutional Access • 256-Bit Encryption
-      </p>
     </div>
   );
 }
