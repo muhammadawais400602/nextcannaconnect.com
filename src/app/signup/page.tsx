@@ -241,8 +241,21 @@ function SignUpForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label style={labelStyle}>State / Province</label>
-              <input type="text" placeholder="e.g. Colorado" value={basicForm.stateProvince}
-                onChange={(e) => setBasicForm({ ...basicForm, stateProvince: e.target.value })} style={inputStyle} />
+              <select value={basicForm.stateProvince}
+                onChange={(e) => setBasicForm({ ...basicForm, stateProvince: e.target.value })}
+                style={{ ...inputStyle, color: basicForm.stateProvince ? "#003320" : "#9CA3AF" }}>
+                <option value="">All States</option>
+                <optgroup label="United States">
+                  {["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"].map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </optgroup>
+                <optgroup label="Canada">
+                  {["Alberta","British Columbia","Manitoba","New Brunswick","Newfoundland and Labrador","Northwest Territories","Nova Scotia","Nunavut","Ontario","Prince Edward Island","Quebec","Saskatchewan","Yukon"].map((p) => (
+                    <option key={p} value={p}>{p}</option>
+                  ))}
+                </optgroup>
+              </select>
             </div>
             <div>
               <label style={labelStyle}>Business Category</label>
