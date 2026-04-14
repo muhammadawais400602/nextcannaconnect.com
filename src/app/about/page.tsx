@@ -14,7 +14,7 @@ export default function AboutPage() {
       {/* Cinematic Hero */}
       <section
         className="relative flex items-end overflow-hidden"
-        style={{ height: "870px", backgroundColor: "#003320" }}
+        style={{ height: "clamp(420px, 80vh, 870px)", backgroundColor: "#003320" }}
       >
         <img
           src="https://picsum.photos/seed/lab-interior/1600/870"
@@ -28,7 +28,7 @@ export default function AboutPage() {
             background: "linear-gradient(to top, #003320 0%, rgba(0,51,32,0.4) 50%, transparent 100%)",
           }}
         />
-        <div className="relative max-w-7xl mx-auto px-8 pb-24 w-full">
+        <div className="relative max-w-7xl mx-auto px-4 md:px-8 pb-24 w-full">
           <div style={{ maxWidth: "750px" }}>
             <span
               className="block mb-4 text-sm uppercase"
@@ -53,7 +53,7 @@ export default function AboutPage() {
 
       {/* Our Story */}
       <section className="py-24" style={{ backgroundColor: "#fbf9f8" }}>
-        <div className="max-w-7xl mx-auto px-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             {/* Left col */}
             <div className="lg:col-span-5">
@@ -134,7 +134,7 @@ export default function AboutPage() {
 
       {/* Our Commitment */}
       <section className="py-24" style={{ backgroundColor: "#f6f3f2" }}>
-        <div className="max-w-7xl mx-auto px-8">
+        <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="mb-16">
             <h2
               className="font-bold mb-4"

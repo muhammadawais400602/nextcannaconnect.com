@@ -13,12 +13,12 @@ export default function OurStory() {
     >
       {/* Decorative background icon */}
       <div
-        className="absolute top-0 right-0 pointer-events-none"
+        className="absolute top-0 right-0 pointer-events-none hidden md:block"
         style={{ width: "33%", height: "100%", opacity: 0.025, overflow: "hidden" }}
       >
         <span
           className="material-symbols-outlined absolute"
-          style={{ fontSize: "600px", lineHeight: 1, right: "-96px", top: 0 }}
+          style={{ fontSize: "clamp(200px, 40vw, 600px)", lineHeight: 1, right: "-96px", top: 0 }}
         >
           all_inclusive
         </span>

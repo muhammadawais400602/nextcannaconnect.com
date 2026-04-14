@@ -21,7 +21,7 @@ export default function SignInPage() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "100px 16px 60px",
+        padding: "clamp(80px, 12vw, 120px) 16px 60px",
       }}
     >
       {/* Card */}
@@ -29,7 +29,7 @@ export default function SignInPage() {
         style={{
           backgroundColor: "white",
           borderRadius: "4px",
-          padding: "56px 48px",
+          padding: "clamp(28px, 6vw, 56px) clamp(20px, 6vw, 48px)",
           width: "100%",
           maxWidth: "420px",
           boxShadow: "0 2px 16px rgba(0,0,0,0.06)",

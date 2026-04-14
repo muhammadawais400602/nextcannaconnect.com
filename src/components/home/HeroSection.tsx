@@ -93,7 +93,6 @@ export default function HeroSection() {
               lineHeight: 1.1,
               marginBottom: "24px",
               letterSpacing: "-0.3px",
-              whiteSpace: "nowrap",
             }}
             className="hero-headline"
           >
@@ -117,7 +116,6 @@ export default function HeroSection() {
               fontSize: "16px",
               color: "#5a6360",
               lineHeight: 1.7,
-              whiteSpace: "nowrap",
               margin: "0 auto 48px",
             }}
           >
@@ -288,6 +286,9 @@ export default function HeroSection() {
       </div>
 
       <style>{`
+        .hero-headline {
+          white-space: normal;
+        }
         @media (max-width: 768px) {
           .hero-search-bar {
             flex-direction: column !important;
@@ -295,18 +296,19 @@ export default function HeroSection() {
             gap: 10px !important;
           }
           .hero-headline {
-            white-space: normal !important;
-            font-size: clamp(30px, 9vw, 48px) !important;
+            font-size: clamp(28px, 8vw, 46px) !important;
+          }
+          .hero-subtitle {
+            font-size: 15px !important;
+            margin-bottom: 32px !important;
           }
         }
         @media (max-width: 600px) {
           .hero-section-content {
-            padding: 32px 20px 60px !important;
+            padding: 24px 16px 48px !important;
           }
           .hero-subtitle {
-            white-space: normal !important;
             font-size: 14px !important;
-            margin-bottom: 32px !important;
           }
           .hero-badge {
             font-size: 9px !important;

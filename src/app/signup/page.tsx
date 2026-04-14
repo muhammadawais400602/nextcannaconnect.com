@@ -474,7 +474,7 @@ export default function SignUpPage() {
   return (
     <>
       <SectionDivider />
-      <div className="px-8" style={{ backgroundColor: "#F7F9F7", paddingTop: "120px", paddingBottom: "64px" }}>
+      <div className="px-4 md:px-8" style={{ backgroundColor: "#F7F9F7", paddingTop: "120px", paddingBottom: "64px" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <div className="text-center mb-10">
             <p className="font-semibold uppercase tracking-widest mb-2" style={{ color: "#F7941D", fontSize: "11px", letterSpacing: "2px" }}>

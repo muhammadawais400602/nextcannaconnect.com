@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <div className="text-[#1b1c1c]" style={{ backgroundColor: "#fbf9f8", fontFamily: "'Inter', sans-serif" }}>
-      <main className="pt-32 pb-24 px-6">
+      <main className="pt-32 pb-24 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
 
           {/* Hero */}
