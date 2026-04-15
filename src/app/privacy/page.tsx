@@ -10,7 +10,7 @@ export default function PrivacyPage() {
     <div className="text-[#1b1c1c]" style={{ backgroundColor: "#fbf9f8" }}>
 
       {/* Hero */}
-      <section className="w-full pt-32 pb-20 px-8 md:px-16 max-w-5xl mx-auto">
+      <section className="w-full pt-32 pb-20 px-4 md:px-8 lg:px-16 max-w-5xl mx-auto">
         <div className="space-y-6">
           <span className="text-[#003320] font-medium tracking-widest text-[0.6875rem] uppercase" style={{ fontFamily: "'Inter', sans-serif" }}>
             Legal Documentation
@@ -25,7 +25,7 @@ export default function PrivacyPage() {
       </section>
 
       {/* Content */}
-      <section className="w-full px-8 md:px-16 max-w-5xl mx-auto pb-32">
+      <section className="w-full px-4 md:px-8 lg:px-16 max-w-5xl mx-auto pb-32">
         <div className="grid grid-cols-1 gap-16">
 
           {/* 01 Introduction */}

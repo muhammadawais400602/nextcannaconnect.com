@@ -33,7 +33,7 @@ function Table({ headers, rows, note }: { headers: string[]; rows: [string, stri
 export default function CookiePolicyPage() {
   return (
     <div style={{ backgroundColor: "#fbf9f8", fontFamily: "'Inter', sans-serif" }} className="text-[#1b1c1c]">
-      <main className="pt-32 pb-24 px-8 max-w-5xl mx-auto">
+      <main className="pt-32 pb-24 px-4 md:px-8 max-w-5xl mx-auto">
 
         {/* Hero */}
         <header className="mb-20">
