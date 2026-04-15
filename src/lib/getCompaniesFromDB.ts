@@ -1,23 +1,23 @@
+import { unstable_cache } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
-import Company from "@/lib/models/Company";
+import Company, { ICompany } from "@/lib/models/Company";
 import type { Company as CompanyType } from "@/types";
 
 const TIER_ORDER: Record<string, number> = { featured: 0, elite: 1, select: 2, claimed: 3, free: 4 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function docToCompany(doc: any): CompanyType {
+function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
   return {
-    id: doc._id?.toString() ?? doc.slug,
-    slug: doc.slug,
-    name: doc.name,
-    tier: doc.tier,
-    category: doc.category,
-    secondaryCategory: doc.secondaryCategory,
-    location: doc.location,
-    shortDescription: doc.shortDescription,
+    id: String(doc._id ?? doc.slug),
+    slug: doc.slug!,
+    name: doc.name!,
+    tier: doc.tier!,
+    category: doc.category as CompanyType["category"],
+    secondaryCategory: doc.secondaryCategory as CompanyType["category"] | undefined,
+    location: doc.location!,
+    shortDescription: doc.shortDescription!,
     fullDescription: doc.fullDescription,
     serviceTags: doc.serviceTags ?? [],
-    logoPlaceholder: doc.logoPlaceholder,
+    logoPlaceholder: doc.logoPlaceholder!,
     logoColor: doc.logoColor ?? "#1A4A35",
     bannerColor: doc.bannerImageUrl,
     website: doc.website,
@@ -44,8 +44,10 @@ function docToCompany(doc: any): CompanyType {
   };
 }
 
-export async function getCompaniesByCategory(categorySlug: string): Promise<CompanyType[]> {
-  try {
+// ─── Cached DB fetchers ────────────────────────────────────────────────────
+
+const fetchCompaniesByCategory = unstable_cache(
+  async (categorySlug: string): Promise<CompanyType[]> => {
     await connectDB();
     const docs = await Company.find({
       $or: [{ category: categorySlug }, { secondaryCategory: categorySlug }],
@@ -56,13 +58,13 @@ export async function getCompaniesByCategory(categorySlug: string): Promise<Comp
     return docs
       .map(docToCompany)
       .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
-  } catch {
-    return [];
-  }
-}
+  },
+  ["companies-by-category"],
+  { revalidate: 1800, tags: ["companies"] }
+);
 
-export async function getFeaturedCompanies(): Promise<CompanyType[]> {
-  try {
+const fetchFeaturedCompanies = unstable_cache(
+  async (): Promise<CompanyType[]> => {
     await connectDB();
     const docs = await Company.find({ tier: { $in: ["featured", "elite", "select"] } })
       .sort({ tier: 1 })
@@ -70,17 +72,46 @@ export async function getFeaturedCompanies(): Promise<CompanyType[]> {
       .select("-__v")
       .lean();
     return docs.map(docToCompany);
-  } catch {
+  },
+  ["featured-companies"],
+  { revalidate: 3600, tags: ["companies"] }
+);
+
+const fetchCompanyBySlug = unstable_cache(
+  async (slug: string): Promise<CompanyType | undefined> => {
+    await connectDB();
+    const doc = await Company.findOne({ slug }).select("-__v").lean();
+    return doc ? docToCompany(doc) : undefined;
+  },
+  ["company-by-slug"],
+  { revalidate: 1800, tags: ["companies"] }
+);
+
+// ─── Public API ────────────────────────────────────────────────────────────
+
+export async function getCompaniesByCategory(categorySlug: string): Promise<CompanyType[]> {
+  try {
+    return await fetchCompaniesByCategory(categorySlug);
+  } catch (err) {
+    console.error(`[getCompaniesByCategory] Failed for "${categorySlug}":`, err);
+    return [];
+  }
+}
+
+export async function getFeaturedCompanies(): Promise<CompanyType[]> {
+  try {
+    return await fetchFeaturedCompanies();
+  } catch (err) {
+    console.error("[getFeaturedCompanies] Failed:", err);
     return [];
   }
 }
 
 export async function getCompanyBySlug(slug: string): Promise<CompanyType | undefined> {
   try {
-    await connectDB();
-    const doc = await Company.findOne({ slug }).select("-__v").lean();
-    return doc ? docToCompany(doc) : undefined;
-  } catch {
+    return await fetchCompanyBySlug(slug);
+  } catch (err) {
+    console.error(`[getCompanyBySlug] Failed for "${slug}":`, err);
     return undefined;
   }
 }

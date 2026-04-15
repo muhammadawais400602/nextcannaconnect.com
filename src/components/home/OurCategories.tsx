@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useEffect } from "react";
 import { CATEGORIES } from "@/data/categories";
 
@@ -185,15 +186,12 @@ export default function OurCategories() {
               {/* Category image */}
               <div className="category-card-image">
                 {cat.image && (
-                  <img
+                  <Image
                     src={cat.image}
                     alt={cat.title}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      objectPosition: "center",
-                    }}
+                    fill
+                    sizes="260px"
+                    style={{ objectFit: "cover", objectPosition: "center" }}
                     draggable={false}
                   />
                 )}
