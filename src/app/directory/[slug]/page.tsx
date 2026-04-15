@@ -5,7 +5,7 @@ import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import DirectoryHero from "@/components/directory/DirectoryHero";
 import DirectoryContent from "@/components/directory/DirectoryContent";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 1800; // revalidate every 30 minutes
 
 interface Props {
   params: Promise<{ slug: string }>;

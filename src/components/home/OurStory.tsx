@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
 
 export default function OurStory() {
@@ -102,15 +103,13 @@ export default function OurStory() {
                 overflow: "hidden",
               }}
             >
-              <img
+              <Image
                 src="/mission.jpg"
                 alt="Cannabis cultivation professional"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center",
-                }}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                style={{ objectFit: "cover", objectPosition: "center" }}
+                priority
               />
             </div>
             <div
