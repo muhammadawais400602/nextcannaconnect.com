@@ -1,16 +1,14 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { CATEGORIES, getCategoryBySlug } from "@/data/categories";
-import { getCompaniesByCategory } from "@/data/companies";
+import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import DirectoryHero from "@/components/directory/DirectoryHero";
 import DirectoryContent from "@/components/directory/DirectoryContent";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
-}
-
-export async function generateStaticParams() {
-  return CATEGORIES.map((cat) => ({ slug: cat.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -23,12 +21,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+export async function generateStaticParams() {
+  return CATEGORIES.map((cat) => ({ slug: cat.slug }));
+}
+
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
   if (!category) notFound();
 
-  const companies = getCompaniesByCategory(slug);
+  const companies = await getCompaniesByCategory(slug);
 
   return (
     <>

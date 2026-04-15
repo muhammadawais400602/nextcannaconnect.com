@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { COMPANIES, getCompanyBySlug, getCompaniesByCategory } from "@/data/companies";
+import { getCompanyBySlug, getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import { getCategoryBySlug } from "@/data/categories";
 import { Star, MapPin, Globe, Phone, Mail, ChevronDown, ArrowLeft, ArrowRight, Linkedin, Facebook, Instagram, Youtube } from "lucide-react";
 import Link from "next/link";
@@ -10,13 +10,15 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
-  return COMPANIES.map((c) => ({ slug: c.slug }));
+  return [];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const company = getCompanyBySlug(slug);
+  const company = await getCompanyBySlug(slug);
   if (!company) return {};
   return {
     title: `${company.name} | NextCanna Connect`,
@@ -191,18 +193,16 @@ function SimilarCard({ company }: { company: Company }) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default async function VendorPage({ params }: Props) {
   const { slug } = await params;
-  const company = getCompanyBySlug(slug);
+  const company = await getCompanyBySlug(slug);
   if (!company) notFound();
 
   const category = getCategoryBySlug(company.category);
 
   // Get similar companies (same category, excluding current)
-  const similar = getCompaniesByCategory(company.category)
-    .filter((c) => c.slug !== company.slug)
-    .slice(0, 4);
+  const allInCategory = await getCompaniesByCategory(company.category);
+  const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
   // Navigate to next/prev company
-  const allInCategory = getCompaniesByCategory(company.category);
   const currentIndex = allInCategory.findIndex((c) => c.slug === company.slug);
   const nextCompany = allInCategory[currentIndex + 1] || allInCategory[0];
 
