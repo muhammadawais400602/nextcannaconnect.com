@@ -26,11 +26,11 @@ const CATEGORY_IMAGES: Record<string, string> = {
   "consultants-advisors": "/consultants and advisors.jpg",
   "marketing-branding-packaging": "/cannabis marketing.jpg",
   "retail-dispensary": "/cannabis retails.jpg",
-  "transportation-logistics": "/cannabis transportation.webp",
+  "transportation-logistics": "/cannabis transportation.jpg",
   "testing-science": "/cannabis testing.jpg",
-  "compliance-legal": "/cannabis finance and compliance.png",
-  "technology-software": "/cannabis technology.png",
-  "real-estate-construction": "/cannabis real estate.webp",
+  "compliance-legal": "/cannabis finance and compliance.jpg",
+  "technology-software": "/cannabis technology.jpg",
+  "real-estate-construction": "/cannabis real estate.jpg",
   "finance-insurance": "/cannabis consultants.jpg",
 };
 
