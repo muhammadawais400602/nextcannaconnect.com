@@ -183,17 +183,7 @@ export default function OurCategories() {
               draggable={false}
             >
               {/* Category image */}
-              <div
-                style={{
-                  height: "160px",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                  marginBottom: "20px",
-                  flexShrink: 0,
-                  position: "relative",
-                  backgroundColor: "#1a4a35",
-                }}
-              >
+              <div className="category-card-image">
                 {cat.image && (
                   <img
                     src={cat.image}
@@ -207,33 +197,6 @@ export default function OurCategories() {
                     draggable={false}
                   />
                 )}
-                {/* Icon overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: "10px",
-                    left: "10px",
-                    backgroundColor: "rgba(0,51,32,0.75)",
-                    backdropFilter: "blur(6px)",
-                    borderRadius: "6px",
-                    width: "32px",
-                    height: "32px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <span
-                    className="material-symbols-outlined"
-                    style={{
-                      fontSize: "16px",
-                      color: "#88b99e",
-                      fontVariationSettings: "'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24",
-                    }}
-                  >
-                    {cat.icon}
-                  </span>
-                </div>
               </div>
 
               <h3
@@ -310,6 +273,14 @@ export default function OurCategories() {
           transition: box-shadow 0.3s ease, border-color 0.3s ease;
           flex-shrink: 0;
         }
+        .category-card-image {
+          height: 160px;
+          border-radius: 15px 15px 0 0;
+          overflow: hidden;
+          margin: -24px -24px 20px -24px;
+          flex-shrink: 0;
+          background-color: #1a4a35;
+        }
         .category-card:hover {
           box-shadow: 0 8px 32px rgba(0,51,32,0.1);
           border-color: rgba(0,51,32,0.2);
@@ -319,6 +290,9 @@ export default function OurCategories() {
             width: 220px;
             min-width: 220px;
             padding: 20px;
+          }
+          .category-card-image {
+            margin: -20px -20px 20px -20px;
           }
           .cat-fade-edge {
             width: 32px !important;
