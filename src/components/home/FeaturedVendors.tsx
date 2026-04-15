@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useEffect } from "react";
-import { getFeaturedCompanies } from "@/data/companies";
+import type { Company } from "@/types";
 
 const TIER_LABELS: Record<string, string> = {
   elite: "Verified",
@@ -12,8 +12,7 @@ const TIER_LABELS: Record<string, string> = {
   free: "Claimed",
 };
 
-export default function FeaturedVendors() {
-  const companies = getFeaturedCompanies();
+export default function FeaturedVendors({ companies }: { companies: Company[] }) {
   const loopedCompanies = [...companies, ...companies];
 
   const trackRef = useRef<HTMLDivElement>(null);

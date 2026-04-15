@@ -3,6 +3,7 @@ import HeroSection from "@/components/home/HeroSection";
 import FeaturedVendors from "@/components/home/FeaturedVendors";
 import OurCategories from "@/components/home/OurCategories";
 import OurStory from "@/components/home/OurStory";
+import { getFeaturedCompanies } from "@/lib/getCompaniesFromDB";
 
 export const metadata: Metadata = {
   title: "NextCanna Connect — Where Cannabis Operators Connect",
@@ -39,11 +40,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const featuredCompanies = await getFeaturedCompanies();
+
   return (
     <>
       <HeroSection />
-      <FeaturedVendors />
+      <FeaturedVendors companies={featuredCompanies} />
       <OurCategories />
       <OurStory />
     </>
