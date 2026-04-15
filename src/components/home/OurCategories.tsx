@@ -19,8 +19,24 @@ const CATEGORY_ICONS: Record<string, string> = {
   "finance-insurance": "account_balance",
 };
 
+const CATEGORY_IMAGES: Record<string, string> = {
+  "cultivation-growing": "/cannabis growth and cultivation.jpg",
+  "manufacturers-suppliers": "/cannabis manufacture and supplier.jpg",
+  "extraction-processing": "/cannabis extraction.jpg",
+  "consultants-advisors": "/consultants and advisors.jpg",
+  "marketing-branding-packaging": "/cannabis marketing.jpg",
+  "retail-dispensary": "/cannabis retails.jpg",
+  "transportation-logistics": "/cannabis transportation.webp",
+  "testing-science": "/cannabis testing.jpg",
+  "compliance-legal": "/cannabis finance and compliance.png",
+  "technology-software": "/cannabis technology.png",
+  "real-estate-construction": "/cannabis real estate.webp",
+  "finance-insurance": "/cannabis consultants.jpg",
+};
+
 const CATEGORIES_DISPLAY = CATEGORIES.map((cat) => ({
   icon: CATEGORY_ICONS[cat.slug] ?? "category",
+  image: CATEGORY_IMAGES[cat.slug] ?? null,
   title: cat.label,
   description: cat.description,
   slug: cat.slug,
@@ -166,30 +182,58 @@ export default function OurCategories() {
               onClick={(e) => { if (isDragging.current) e.preventDefault(); }}
               draggable={false}
             >
-              {/* Icon circle */}
+              {/* Category image */}
               <div
                 style={{
-                  width: "56px",
-                  height: "56px",
-                  borderRadius: "50%",
-                  backgroundColor: "#f0eded",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: "24px",
+                  height: "160px",
+                  borderRadius: "10px",
+                  overflow: "hidden",
+                  marginBottom: "20px",
                   flexShrink: 0,
+                  position: "relative",
+                  backgroundColor: "#1a4a35",
                 }}
               >
-                <span
-                  className="material-symbols-outlined"
+                {cat.image && (
+                  <img
+                    src={cat.image}
+                    alt={cat.title}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "center",
+                    }}
+                    draggable={false}
+                  />
+                )}
+                {/* Icon overlay */}
+                <div
                   style={{
-                    fontSize: "24px",
-                    color: "#003320",
-                    fontVariationSettings: "'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24",
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "10px",
+                    backgroundColor: "rgba(0,51,32,0.75)",
+                    backdropFilter: "blur(6px)",
+                    borderRadius: "6px",
+                    width: "32px",
+                    height: "32px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  {cat.icon}
-                </span>
+                  <span
+                    className="material-symbols-outlined"
+                    style={{
+                      fontSize: "16px",
+                      color: "#88b99e",
+                      fontVariationSettings: "'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24",
+                    }}
+                  >
+                    {cat.icon}
+                  </span>
+                </div>
               </div>
 
               <h3
