@@ -139,6 +139,8 @@ function SignUpForm() {
   const [step, setStep] = useState(1);
   const [selectedTier, setSelectedTier] = useState(initialTier);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const [basicForm, setBasicForm] = useState({
     fullName: "",
@@ -169,10 +171,32 @@ function SignUpForm() {
     setSelectedTier(key);
   }
 
+  async function submitApplication(extraFields = {}) {
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      const res = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...basicForm, tier: selectedTier, ...extraFields }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Submission failed");
+      }
+      setSubmitted(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   function handleTierContinue() {
     if (!selectedTier) return;
     if (selectedTier === "free") {
-      setSubmitted(true);
+      submitApplication();
     } else {
       setStep(3);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -181,8 +205,7 @@ function SignUpForm() {
 
   function handleFinalSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSubmitted(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    submitApplication(tierForm);
   }
 
   const tier = TIERS.find((t) => t.key === selectedTier);
@@ -363,13 +386,14 @@ function SignUpForm() {
           <button
             type="button"
             onClick={handleTierContinue}
-            disabled={!selectedTier}
+            disabled={!selectedTier || submitting}
             className="btn-primary justify-center"
-            style={{ flex: 2, padding: "13px", fontSize: "15px", opacity: selectedTier ? 1 : 0.5, cursor: selectedTier ? "pointer" : "default" }}
+            style={{ flex: 2, padding: "13px", fontSize: "15px", opacity: (selectedTier && !submitting) ? 1 : 0.5, cursor: (selectedTier && !submitting) ? "pointer" : "default" }}
           >
-            Continue →
+            {submitting ? "Submitting…" : "Continue →"}
           </button>
         </div>
+        {submitError && <p style={{ textAlign: "center", color: "#DC2626", fontSize: "13px", marginTop: "8px" }}>{submitError}</p>}
       </div>
     );
   }
@@ -455,10 +479,11 @@ function SignUpForm() {
           >
             ← Back
           </button>
-          <button type="submit" className="btn-primary justify-center" style={{ flex: 1, padding: "14px", fontSize: "15px" }}>
-            Complete Registration →
+          <button type="submit" disabled={submitting} className="btn-primary justify-center" style={{ flex: 1, padding: "14px", fontSize: "15px", opacity: submitting ? 0.7 : 1, cursor: submitting ? "not-allowed" : "pointer" }}>
+            {submitting ? "Submitting…" : "Complete Registration →"}
           </button>
         </div>
+        {submitError && <p style={{ textAlign: "center", color: "#DC2626", fontSize: "13px", marginTop: "8px" }}>{submitError}</p>}
 
         <p className="text-center" style={{ fontSize: "12px", color: "#4A5E4A" }}>
           By signing up you agree to our{" "}

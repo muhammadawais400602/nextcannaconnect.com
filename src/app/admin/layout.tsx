@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: "/admin/companies", label: "Companies", icon: "🏢" },
   { href: "/admin/users", label: "Users", icon: "👥" },
   { href: "/admin/leads", label: "Leads", icon: "📋" },
+  { href: "/admin/signups", label: "Signups", icon: "📝" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
