@@ -30,30 +30,34 @@ export interface Company {
   name: string;
   tier: Tier;
   category: CategorySlug;
-  secondaryCategory?: CategorySlug; // consultant double-listing
+  secondaryCategory?: CategorySlug;
   location: { city: string; state: string };
   shortDescription: string;
   fullDescription?: string;
   serviceTags: string[];
-  logoPlaceholder: string; // initials for placeholder
+  logoPlaceholder: string;
   logoColor: string;
-  bannerColor?: string; // for featured card
+  bannerColor?: string;
+  bannerImageUrl?: string;
+  bannerCaption?: string;       // "Series-7 Supercritical Fluid Extractor"
+  foundedYear?: number;         // FOUNDED stat
   website?: string;
   phone?: string;
   email?: string;
-  // Template 1 — Products & Equipment
+  // Products & Equipment
   productLines?: string[];
+  products?: { name: string; description: string; imageUrl?: string }[];
   minOrderQty?: string;
   leadTime?: string;
   serviceArea?: string;
   certifications?: string[];
-  // Template 2 — Services & Agencies
+  // Services & Agencies
   statesServed?: string[];
   teamSize?: string;
   yearsInCannabis?: number;
   pricingModel?: string;
   caseStudies?: { title: string; summary: string }[];
-  // Template 3 — Consultants
+  // Consultants
   specialtyAreas?: string[];
   credentials?: string[];
   yearsExperience?: number;

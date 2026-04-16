@@ -1,17 +1,18 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { getCompanyBySlug, getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import { getCategoryBySlug } from "@/data/categories";
-import { Star, MapPin, Phone, Mail, ChevronDown, ArrowLeft, ArrowRight, Linkedin, Facebook, Instagram, Youtube } from "lucide-react";
-import Link from "next/link";
+import { MapPin, ArrowLeft } from "lucide-react";
 import { Company } from "@/types";
+import ContactForm from "./ContactForm";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 1800; // revalidate every 30 minutes
-
+export const revalidate = 1800;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -23,678 +24,274 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// ── Star Rating ───────────────────────────────────────────────────────────────
-function StarRating({ rating, size = 14 }: { rating: number; size?: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <Star
-          key={s}
-          size={size}
-          fill={s <= Math.round(rating) ? "#F9C31A" : "#D1D5DB"}
-          stroke="none"
-        />
-      ))}
-    </div>
-  );
-}
+const TIER_BADGE: Record<string, { label: string; bg: string; color: string }> = {
+  featured:  { label: "Verified Pro",       bg: "rgba(26,74,53,0.1)",  color: "#003320" },
+  elite:     { label: "Verified Pro",       bg: "rgba(26,74,53,0.1)",  color: "#003320" },
+  select:    { label: "Select Member",      bg: "rgba(37,99,235,0.08)", color: "#1d4ed8" },
+  claimed:   { label: "Claimed Listing",    bg: "rgba(124,58,237,0.08)", color: "#6d28d9" },
+  free:      { label: "Unclaimed Listing",  bg: "#F3F4F6",              color: "#6B7280" },
+};
 
-// ── Capability Row (accordion-style display) ──────────────────────────────────
-function CapabilityRow({ label, value }: { label: string; value?: string }) {
-  if (!value) return null;
-  return (
-    <div
-      className="flex items-center justify-between py-3 px-4 cursor-pointer"
-      style={{ borderBottom: "1px solid #E5E7EB" }}
-    >
-      <span
-        className="font-semibold uppercase tracking-wide"
-        style={{ fontSize: "11px", color: "#374151", letterSpacing: "0.8px" }}
-      >
-        {label}
-      </span>
-      <div className="flex items-center gap-2">
-        <span style={{ fontSize: "12px", color: "#6B7280", maxWidth: "120px", textAlign: "right" }}>
-          {value}
-        </span>
-        <ChevronDown size={13} style={{ color: "#9CA3AF", flexShrink: 0 }} />
-      </div>
-    </div>
-  );
-}
-
-// ── Project Card (placeholder) ────────────────────────────────────────────────
-function ProjectCard({ color, index }: { color: string; index: number }) {
-  const gradients = [
-    "linear-gradient(135deg, #1A4A35 0%, #2d6b50 100%)",
-    "linear-gradient(135deg, #2d4a2d 0%, #3d6e3d 100%)",
-    "linear-gradient(135deg, #1a3a2a 0%, #2a5a3f 100%)",
-    "linear-gradient(135deg, #0f2d1e 0%, #1A4A35 100%)",
-    "linear-gradient(135deg, #244d35 0%, #3a6e4f 100%)",
-    "linear-gradient(135deg, #1d4030 0%, #2d5e45 100%)",
-  ];
-  return (
-    <div
-      className="rounded-lg overflow-hidden"
-      style={{
-        background: gradients[index % gradients.length],
-        aspectRatio: "4/3",
-        border: "1px solid rgba(0,0,0,0.08)",
-      }}
-    >
-      <div
-        className="w-full h-full flex items-center justify-center"
-        style={{ opacity: 0.3 }}
-      >
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-          <rect x="4" y="20" width="32" height="16" rx="2" fill="white" />
-          <polygon points="2,20 20,6 38,20" fill="white" />
-          <rect x="14" y="26" width="12" height="10" fill={color} />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
-// ── Certification Card ────────────────────────────────────────────────────────
-function CertCard({ name }: { name: string }) {
-  return (
-    <div
-      className="flex flex-col items-center justify-center rounded-lg p-3 text-center"
-      style={{
-        border: "1.5px solid #E5E7EB",
-        background: "white",
-        minWidth: "100px",
-        minHeight: "80px",
-      }}
-    >
-      <div
-        className="mb-1.5 rounded"
-        style={{
-          width: "36px",
-          height: "28px",
-          background: "linear-gradient(135deg, #f0f4f0, #e0e8e0)",
-          border: "1px solid #D1D5DB",
-        }}
-      />
-      <span style={{ fontSize: "11px", color: "#374151", fontWeight: 600, lineHeight: 1.3 }}>
-        {name}
-      </span>
-    </div>
-  );
-}
-
-// ── "You Might Also Like" Card ────────────────────────────────────────────────
 function SimilarCard({ company }: { company: Company }) {
   return (
-    <div
-      className="rounded-xl overflow-hidden"
-      style={{ background: "white", border: "1px solid #E5E7EB" }}
+    <Link
+      href={`/vendor/${company.slug}`}
+      style={{ textDecoration: "none", display: "block", background: "white", borderRadius: "12px", border: "1px solid #E5E7EB", overflow: "hidden" }}
     >
-      {/* Logo banner */}
-      <div
-        className="flex items-center justify-center"
-        style={{ height: "90px", background: company.logoColor + "22", borderBottom: "1px solid #E5E7EB" }}
-      >
-        <div
-          className="rounded-xl flex items-center justify-center font-black text-white"
-          style={{ width: "56px", height: "56px", backgroundColor: company.logoColor, fontSize: "16px" }}
-        >
+      <div style={{ height: "72px", background: company.logoColor + "22", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: "44px", height: "44px", borderRadius: "10px", background: company.logoColor, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: "800", fontSize: "14px" }}>
           {company.logoPlaceholder}
         </div>
       </div>
-      <div className="p-4">
-        {company.rating && (
-          <div className="flex items-center gap-1.5 mb-1">
-            <StarRating rating={company.rating} size={12} />
-            <span style={{ fontSize: "11px", color: "#6B7280" }}>
-              {company.rating} ({company.reviewCount})
-            </span>
-          </div>
-        )}
-        <h4 className="font-bold mb-1" style={{ fontSize: "14px", color: "#111827" }}>
-          {company.name}
-        </h4>
-        <p
-          className="mb-3"
-          style={{ fontSize: "12px", color: "#6B7280", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}
-        >
-          {company.shortDescription}
-        </p>
+      <div style={{ padding: "14px 16px" }}>
+        <div style={{ fontSize: "14px", fontWeight: "700", color: "#111827", marginBottom: "4px" }}>{company.name}</div>
+        <div style={{ fontSize: "12px", color: "#6B7280", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>{company.shortDescription}</div>
         {company.location && (
-          <div className="flex items-center gap-1 mb-3" style={{ color: "#9CA3AF", fontSize: "11px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "8px", fontSize: "11px", color: "#9CA3AF" }}>
             <MapPin size={10} />
             {company.location.city}, {company.location.state}
           </div>
         )}
-        <div className="flex gap-2">
-          <button
-            className="flex-1 py-1.5 rounded-lg font-semibold text-white text-center"
-            style={{ fontSize: "12px", backgroundColor: "#F7941D" }}
-          >
-            Contact ›
-          </button>
-          <Link
-            href={`/vendor/${company.slug}`}
-            className="flex-1 py-1.5 rounded-lg font-semibold text-center"
-            style={{ fontSize: "12px", border: "1px solid #E5E7EB", color: "#374151" }}
-          >
-            View Details
-          </Link>
-        </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default async function VendorPage({ params }: Props) {
   const { slug } = await params;
   const company = await getCompanyBySlug(slug);
   if (!company) notFound();
 
   const category = getCategoryBySlug(company.category);
-
-  // Get similar companies (same category, excluding current)
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
-  // Navigate to next/prev company
-  const currentIndex = allInCategory.findIndex((c) => c.slug === company.slug);
-  const nextCompany = allInCategory[currentIndex + 1] || allInCategory[0];
+  const badge = TIER_BADGE[company.tier] ?? TIER_BADGE.free;
+  const certs = company.certifications ?? company.credentials ?? [];
+  const services = company.serviceTags ?? [];
+  const products = company.products ?? [];
 
-  // Build capability rows from company data
-  const capabilities = [
-    { label: "Category", value: category?.label },
-    { label: "Service Types", value: company.serviceTags?.slice(0, 2).join(", ") },
-    { label: "States Served", value: company.statesServed?.join(", ") || company.serviceArea },
-    { label: "Team Size", value: company.teamSize },
-    { label: "Pricing Model", value: company.pricingModel },
-    { label: "Certifications", value: company.certifications?.join(", ") },
-    { label: "Specialty Areas", value: company.specialtyAreas?.join(", ") },
-    { label: "Availability", value: company.availability },
-  ].filter((c) => c.value);
-
-  const heroGradient = `linear-gradient(160deg, ${company.logoColor}cc 0%, #0f1a12 60%, #111827 100%)`;
+  // Stats row
+  const stats = [
+    { label: "Founded",       value: company.foundedYear?.toString() },
+    { label: "Employees",     value: company.teamSize },
+    { label: "Certification", value: certs[0] },
+    { label: "Regions",       value: company.serviceArea },
+  ].filter(s => s.value);
 
   return (
-    <div style={{ backgroundColor: "#F0F2F0", minHeight: "100vh" }}>
+    <div style={{ backgroundColor: "#fbf9f8", minHeight: "100vh" }}>
 
-      {/* ── Hero ── */}
-      <section
-        style={{
-          position: "relative",
-          zIndex: 1,
-          height: "260px",
-          background: heroGradient,
-          overflow: "hidden",
-        }}
-      >
-        {/* Decorative pattern overlay */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "radial-gradient(circle at 70% 50%, rgba(255,255,255,0.04) 0%, transparent 60%)",
-          }}
-        />
-        {/* Back / Next nav */}
-        <div
-          className="mx-auto flex items-center justify-between px-6"
-          style={{ maxWidth: "1180px", paddingTop: "28px" }}
+      {/* Back nav */}
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "28px 24px 0" }}>
+        <Link
+          href={`/directory/${company.category}`}
+          style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "#6B7280", textDecoration: "none", fontWeight: 600 }}
         >
-          <Link
-            href={`/directory/${company.category}`}
-            className="flex items-center gap-2 font-semibold"
-            style={{ color: "rgba(255,255,255,0.85)", fontSize: "13px", textDecoration: "none" }}
-          >
-            <ArrowLeft size={14} />
-            Back to Results
-          </Link>
-          <Link
-            href={`/vendor/${nextCompany.slug}`}
-            className="flex items-center gap-2 font-semibold"
-            style={{ color: "rgba(255,255,255,0.85)", fontSize: "13px", textDecoration: "none" }}
-          >
-            Show Next
-            <ArrowRight size={14} />
-          </Link>
+          <ArrowLeft size={14} />
+          Back to {category?.label ?? "Directory"}
+        </Link>
+      </div>
+
+      {/* Main */}
+      <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 24px 80px" }}>
+
+        {/* Header */}
+        <div style={{ marginBottom: "28px" }}>
+          <span style={{ display: "inline-block", fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", textTransform: "uppercase", padding: "4px 10px", borderRadius: "20px", background: badge.bg, color: badge.color, marginBottom: "14px" }}>
+            {badge.label}
+          </span>
+          <h1 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: "800", color: "#111827", letterSpacing: "-0.5px", marginBottom: "10px", fontFamily: "'Inter', sans-serif" }}>
+            {company.name}
+          </h1>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px", fontSize: "14px", color: "#6B7280" }}>
+            <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#9CA3AF" }}>category</span>
+              {company.shortDescription}
+            </span>
+            <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <MapPin size={14} style={{ color: "#9CA3AF" }} />
+              {company.location.city}, {company.location.state}
+            </span>
+          </div>
         </div>
-      </section>
 
-      {/* ── Main Content ── */}
-      <div className="mx-auto px-6" style={{ maxWidth: "1180px", marginTop: "-80px", paddingBottom: "64px", position: "relative", zIndex: 10 }}>
-        <div className="flex gap-6" style={{ alignItems: "flex-start" }}>
+        {/* Two-column grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "28px", alignItems: "flex-start" }}>
 
-          {/* ══ Left Column ══ */}
-          <div className="flex-1 min-w-0 flex flex-col gap-5">
+          {/* ── Left column ── */}
+          <div>
 
-            {/* Company Card */}
-            <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #E5E7EB" }}>
-              <div className="p-6">
-                {/* Logo + Name + Buttons row */}
-                <div className="flex items-start gap-4 mb-4">
-                  {/* Logo */}
-                  <div
-                    className="rounded-full flex items-center justify-center font-black text-white flex-shrink-0"
-                    style={{ width: "72px", height: "72px", backgroundColor: company.logoColor, fontSize: "20px", border: "3px solid white", boxShadow: "0 2px 12px rgba(0,0,0,0.15)" }}
-                  >
+            {/* Hero banner image */}
+            <div style={{ position: "relative", height: "360px", borderRadius: "14px", overflow: "hidden", marginBottom: "24px", background: company.logoColor }}>
+              {company.bannerImageUrl ? (
+                <Image
+                  src={company.bannerImageUrl}
+                  alt={`${company.name} banner`}
+                  fill
+                  sizes="(max-width: 1100px) 100vw, 770px"
+                  style={{ objectFit: "cover" }}
+                  priority
+                />
+              ) : (
+                <div style={{ width: "100%", height: "100%", background: `linear-gradient(160deg, ${company.logoColor} 0%, #0f1a12 100%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <div style={{ fontSize: "80px", fontWeight: "900", color: "rgba(255,255,255,0.08)", fontFamily: "'Inter', sans-serif" }}>
                     {company.logoPlaceholder}
                   </div>
+                </div>
+              )}
+              {/* Dark gradient at bottom */}
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)" }} />
+              {/* Caption overlay */}
+              {company.bannerCaption && (
+                <div style={{ position: "absolute", bottom: "20px", left: "20px" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                    <div style={{ width: "3px", height: "14px", background: "#E8821E", borderRadius: "2px" }} />
+                    <span style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.15em", color: "rgba(255,255,255,0.7)", textTransform: "uppercase" }}>Featured Installation</span>
+                  </div>
+                  <p style={{ fontSize: "14px", fontStyle: "italic", color: "white", fontFamily: "'Noto Serif', serif", margin: 0 }}>
+                    {company.bannerCaption}
+                  </p>
+                </div>
+              )}
+            </div>
 
-                  {/* Name + rating + buttons */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div>
-                        <h1 className="font-extrabold" style={{ fontSize: "22px", color: "#111827", letterSpacing: "-0.3px" }}>
-                          {company.name}
-                        </h1>
-                        {company.rating && (
-                          <div className="flex items-center gap-2 mt-1">
-                            <StarRating rating={company.rating} />
-                            <span style={{ fontSize: "13px", color: "#6B7280" }}>{company.rating}</span>
+            {/* Stats row */}
+            {stats.length > 0 && (
+              <div style={{ display: "grid", gridTemplateColumns: `repeat(${stats.length}, 1fr)`, border: "1px solid #E5E7EB", borderRadius: "12px", overflow: "hidden", marginBottom: "32px", background: "white" }}>
+                {stats.map((stat, i) => (
+                  <div
+                    key={stat.label}
+                    style={{ padding: "18px 20px", borderLeft: i > 0 ? "1px solid #E5E7EB" : "none" }}
+                  >
+                    <div style={{ fontSize: "10px", fontWeight: "700", color: "#9CA3AF", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "6px" }}>{stat.label}</div>
+                    <div style={{ fontSize: "18px", fontWeight: "800", color: "#111827", fontFamily: "'Inter', sans-serif" }}>{stat.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Description */}
+            <h2 style={{ fontSize: "20px", fontWeight: "800", color: "#111827", marginBottom: "16px", fontFamily: "'Inter', sans-serif" }}>
+              Market Leadership Overview
+            </h2>
+            <div style={{ fontSize: "15px", color: "#4B5563", lineHeight: 1.8, marginBottom: "40px" }}>
+              {(company.fullDescription || company.shortDescription).split("\n\n").map((para, i) => (
+                <p key={i} style={{ marginBottom: "16px" }}>{para}</p>
+              ))}
+            </div>
+
+            {/* Product Offerings */}
+            {products.length > 0 && (
+              <div style={{ marginBottom: "40px" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+                  <h2 style={{ fontSize: "20px", fontWeight: "800", color: "#111827", fontFamily: "'Inter', sans-serif" }}>
+                    Product Offerings
+                  </h2>
+                  {company.website && (
+                    <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", color: "#003320", fontWeight: "600", textDecoration: "none" }}>
+                      View Full Catalog →
+                    </a>
+                  )}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px" }}>
+                  {products.map((product) => (
+                    <div key={product.name} style={{ borderRadius: "10px", overflow: "hidden", border: "1px solid #E5E7EB", background: "white" }}>
+                      <div style={{ position: "relative", height: "160px", background: company.logoColor + "33" }}>
+                        {product.imageUrl ? (
+                          <Image src={product.imageUrl} alt={product.name} fill sizes="200px" style={{ objectFit: "cover" }} />
+                        ) : (
+                          <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}44, ${company.logoColor}22)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <span className="material-symbols-outlined" style={{ fontSize: "36px", color: company.logoColor, opacity: 0.4 }}>inventory_2</span>
                           </div>
                         )}
                       </div>
-                      <div className="flex gap-2 flex-shrink-0">
-                        <button
-                          className="font-semibold rounded-lg px-4 py-2 text-white"
-                          style={{ backgroundColor: "#F7941D", fontSize: "13px" }}
-                        >
-                          Contact ›
-                        </button>
-                        {company.website && (
-                          <a
-                            href={company.website}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-semibold rounded-lg px-4 py-2"
-                            style={{ border: "1.5px solid #D1D5DB", color: "#374151", fontSize: "13px", textDecoration: "none" }}
-                          >
-                            Visit Website
-                          </a>
-                        )}
+                      <div style={{ padding: "14px" }}>
+                        <div style={{ fontSize: "13px", fontWeight: "700", color: "#111827", marginBottom: "6px" }}>{product.name}</div>
+                        <div style={{ fontSize: "12px", color: "#6B7280", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>{product.description}</div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Badges row */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {company.yearsExperience && (
-                    <span className="px-3 py-1 rounded-full font-medium" style={{ backgroundColor: "#F3F4F6", color: "#374151", fontSize: "12px", border: "1px solid #E5E7EB" }}>
-                      {company.yearsExperience} Years Of Experience
-                    </span>
-                  )}
-                  {company.yearsInCannabis && (
-                    <span className="px-3 py-1 rounded-full font-medium" style={{ backgroundColor: "#F3F4F6", color: "#374151", fontSize: "12px", border: "1px solid #E5E7EB" }}>
-                      {company.yearsInCannabis} Years In Cannabis
-                    </span>
-                  )}
-                  {company.pricingModel && (
-                    <span className="px-3 py-1 rounded-full font-medium" style={{ backgroundColor: "#F3F4F6", color: "#374151", fontSize: "12px", border: "1px solid #E5E7EB" }}>
-                      {company.pricingModel}
-                    </span>
-                  )}
-                  {company.teamSize && (
-                    <span className="px-3 py-1 rounded-full font-medium" style={{ backgroundColor: "#F3F4F6", color: "#374151", fontSize: "12px", border: "1px solid #E5E7EB" }}>
-                      {company.teamSize}
-                    </span>
-                  )}
-                  {!company.yearsExperience && !company.yearsInCannabis && category && (
-                    <span className="px-3 py-1 rounded-full font-medium" style={{ backgroundColor: "#EEF7F0", color: "#1A4A35", fontSize: "12px", border: "1px solid #C8E0CC" }}>
-                      {category.shortLabel}
-                    </span>
-                  )}
-                </div>
-
-                {/* Description */}
-                <p style={{ color: "#6B7280", fontSize: "14px", lineHeight: 1.75, marginBottom: "20px" }}>
-                  {company.fullDescription || company.shortDescription}
-                </p>
-
-                {/* Social icons */}
-                <div className="flex items-center gap-3">
-                  {[
-                    { Icon: Linkedin, label: "LinkedIn" },
-                    { Icon: Facebook, label: "Facebook" },
-                    { Icon: Instagram, label: "Instagram" },
-                    { Icon: Youtube, label: "YouTube" },
-                  ].map(({ Icon, label }) => (
-                    <div
-                      key={label}
-                      className="flex items-center justify-center rounded-full cursor-pointer"
-                      style={{ width: "32px", height: "32px", border: "1.5px solid #E5E7EB", color: "#6B7280" }}
-                      title={label}
-                    >
-                      <Icon size={14} />
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Service Area */}
-            <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #E5E7EB" }}>
-              <div className="p-6">
-                <h2 className="font-bold mb-4" style={{ fontSize: "16px", color: "#111827" }}>
-                  Service Area
-                </h2>
-
-                {/* Location row */}
-                <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-                  <div className="flex items-center gap-2" style={{ color: "#6B7280", fontSize: "13px" }}>
-                    <MapPin size={14} style={{ color: "#F7941D" }} />
-                    {company.location.city}, {company.location.state}
-                    {company.serviceArea && (
-                      <span className="ml-1" style={{ color: "#9CA3AF" }}>• {company.serviceArea}</span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="px-3 py-1 rounded-full font-medium"
-                      style={{ backgroundColor: "#EEF7F0", color: "#1A4A35", fontSize: "12px", border: "1px solid #C8E0CC" }}
-                    >
-                      Availability For Your Area
-                    </span>
-                    <button
-                      className="px-3 py-1 rounded-lg font-semibold text-white"
-                      style={{ backgroundColor: "#F7941D", fontSize: "12px" }}
-                    >
-                      Change Zip
-                    </button>
-                  </div>
-                </div>
-
-                {/* States served */}
-                {(company.statesServed && company.statesServed.length > 0) ? (
-                  <div>
-                    <p className="font-semibold mb-3" style={{ fontSize: "13px", color: "#374151" }}>
-                      {company.name} Serving These States:
-                    </p>
-                    <div className="flex gap-8">
-                      <div className="flex-1">
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-1.5">
-                          {company.statesServed.map((state) => (
-                            <span key={state} style={{ fontSize: "13px", color: "#6B7280" }}>
-                              {state}
-                            </span>
-                          ))}
-                        </div>
-                        <button className="mt-3 font-semibold" style={{ fontSize: "12px", color: "#F7941D", background: "none", border: "none", cursor: "pointer" }}>
-                          Show Full List ›
-                        </button>
-                      </div>
-                      {/* Simple US map placeholder */}
-                      <div
-                        className="hidden sm:flex rounded-lg items-center justify-center flex-shrink-0"
-                        style={{ width: "160px", height: "100px", background: "#F0F6F2", border: "1px solid #E5E7EB" }}
-                      >
-                        <svg viewBox="0 0 200 130" width="140" height="88" fill="none">
-                          <path d="M20 40 L60 20 L140 15 L180 30 L190 60 L170 90 L140 105 L80 110 L30 95 Z" fill="#D1E8D8" stroke="#A3C4A8" strokeWidth="1.5" />
-                          <circle cx="45" cy="65" r="8" fill="#1A4A35" opacity="0.6" />
-                          <text x="45" y="68" textAnchor="middle" fontSize="7" fill="white" fontWeight="bold">
-                            {company.location.state}
-                          </text>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <div
-                      className="px-3 py-1 rounded-full font-medium"
-                      style={{ backgroundColor: "#F3F4F6", color: "#374151", fontSize: "12px" }}
-                    >
-                      {company.serviceArea || `${company.location.city}, ${company.location.state}`}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Featured Projects */}
-            <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #E5E7EB" }}>
-              <div className="p-6">
-                <h2 className="font-bold mb-4" style={{ fontSize: "16px", color: "#111827" }}>
-                  Featured Projects
-                </h2>
-                <div className="grid grid-cols-3 gap-3">
-                  {[0, 1, 2, 3, 4, 5].map((i) => (
-                    <ProjectCard key={i} color={company.logoColor} index={i} />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Certifications */}
-            {(company.certifications && company.certifications.length > 0) || (company.credentials && company.credentials.length > 0) ? (
-              <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #E5E7EB" }}>
-                <div className="p-6">
-                  <h2 className="font-bold mb-4" style={{ fontSize: "16px", color: "#111827" }}>
-                    Certifications
-                  </h2>
-                  <div className="flex flex-wrap gap-3">
-                    {(company.certifications || company.credentials || []).map((cert) => (
-                      <CertCard key={cert} name={cert} />
-                    ))}
-                  </div>
-                  <button className="mt-4 font-semibold" style={{ fontSize: "12px", color: "#F7941D", background: "none", border: "none", cursor: "pointer" }}>
-                    Show More ›
-                  </button>
-                </div>
-              </div>
-            ) : null}
           </div>
 
-          {/* ══ Right Sidebar ══ */}
-          <div className="hidden lg:flex flex-col gap-5 flex-shrink-0" style={{ width: "272px" }}>
+          {/* ── Right sidebar ── */}
+          <div style={{ position: "sticky", top: "24px" }}>
 
-            {/* Capabilities card */}
-            <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #E5E7EB" }}>
-              <div
-                className="px-4 py-3"
-                style={{ borderBottom: "1px solid #E5E7EB" }}
-              >
-                <h3 className="font-bold" style={{ fontSize: "14px", color: "#111827" }}>
-                  Capabilities
-                </h3>
+            {/* Contact form */}
+            <ContactForm companyName={company.name} serviceTags={services} />
+
+            {/* Certifications */}
+            {certs.length > 0 && (
+              <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", border: "1px solid #E5E7EB", marginBottom: "16px" }}>
+                <div style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", color: "#9CA3AF", textTransform: "uppercase", marginBottom: "14px" }}>
+                  Certifications & Compliance
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                  {certs.map((cert) => (
+                    <span key={cert} style={{ padding: "6px 14px", border: "1px solid #E5E7EB", borderRadius: "6px", fontSize: "13px", fontWeight: "600", color: "#374151", background: "white" }}>
+                      {cert}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div>
-                {capabilities.length > 0 ? (
-                  capabilities.map((cap) => (
-                    <CapabilityRow key={cap.label} label={cap.label} value={cap.value} />
-                  ))
-                ) : (
-                  company.serviceTags.map((tag) => (
-                    <CapabilityRow key={tag} label={tag} value="View Details" />
-                  ))
-                )}
+            )}
+
+            {/* Core Services */}
+            {services.length > 0 && (
+              <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", border: "1px solid #E5E7EB", marginBottom: "16px" }}>
+                <div style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", color: "#9CA3AF", textTransform: "uppercase", marginBottom: "14px" }}>
+                  Core Services
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {services.map((s) => (
+                    <div key={s} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>check_circle</span>
+                      <span style={{ fontSize: "13px", color: "#374151" }}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Location map placeholder */}
+            <div style={{ background: "#1a2e22", borderRadius: "12px", overflow: "hidden", border: "1px solid #E5E7EB", height: "160px", position: "relative" }}>
+              {/* Grid pattern */}
+              <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
+              {/* Pin */}
+              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
+                <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#E8821E", boxShadow: "0 0 0 4px rgba(232,130,30,0.2)" }} />
+                <span style={{ background: "white", padding: "4px 10px", borderRadius: "6px", fontSize: "11px", fontWeight: "700", color: "#111827", whiteSpace: "nowrap" }}>
+                  {company.name.split(" ")[0].toUpperCase()} HQ
+                </span>
+                <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.5)" }}>
+                  {company.location.city}, {company.location.state}
+                </span>
               </div>
             </div>
 
-            {/* Contact card */}
-            <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #E5E7EB" }}>
-              <div
-                className="px-4 py-3"
-                style={{ borderBottom: "1px solid #E5E7EB" }}
-              >
-                <h3 className="font-bold" style={{ fontSize: "14px", color: "#111827" }}>
-                  {company.name}
-                </h3>
-              </div>
-              <div className="p-4 flex flex-col gap-3">
-                {company.email && (
-                  <a
-                    href={`mailto:${company.email}`}
-                    className="flex items-center gap-2"
-                    style={{ color: "#6B7280", fontSize: "13px", textDecoration: "none" }}
-                  >
-                    <Mail size={13} style={{ color: "#9CA3AF" }} />
-                    {company.email}
-                  </a>
-                )}
-                {company.phone && (
-                  <a
-                    href={`tel:${company.phone}`}
-                    className="flex items-center gap-2"
-                    style={{ color: "#6B7280", fontSize: "13px", textDecoration: "none" }}
-                  >
-                    <Phone size={13} style={{ color: "#9CA3AF" }} />
-                    {company.phone}
-                  </a>
-                )}
-                <button
-                  className="w-full py-2.5 rounded-lg font-semibold text-white mt-1"
-                  style={{ backgroundColor: "#F7941D", fontSize: "13px" }}
-                >
-                  Contact ›
-                </button>
-                {company.website && (
-                  <a
-                    href={company.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-center font-medium"
-                    style={{ color: "#6B7280", fontSize: "13px", textDecoration: "none" }}
-                  >
-                    Visit Website
-                  </a>
-                )}
-              </div>
-            </div>
           </div>
         </div>
       </div>
 
-      {/* ── Contact CTA Banner ── */}
-      <section
-        style={{
-          background: `linear-gradient(100deg, #111827 55%, ${company.logoColor}88 100%)`,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        {/* Decorative overlay */}
-        <div
-          style={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: "45%",
-            background: `linear-gradient(135deg, ${company.logoColor}44, #1a4a3588)`,
-            clipPath: "polygon(15% 0, 100% 0, 100% 100%, 0% 100%)",
-          }}
-        />
-        <div className="mx-auto px-6 py-16 relative" style={{ maxWidth: "1180px" }}>
-          <div style={{ maxWidth: "480px" }}>
-            <h2 className="font-extrabold mb-3 text-white" style={{ fontSize: "28px", letterSpacing: "-0.4px" }}>
-              Contact {company.name}
-            </h2>
-            <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "14px", lineHeight: 1.7, marginBottom: "28px" }}>
-              {company.shortDescription}
-            </p>
-            <div className="flex items-center gap-4 flex-wrap">
-              <button
-                className="font-semibold rounded-lg px-6 py-3 text-white"
-                style={{ backgroundColor: "#F7941D", fontSize: "14px" }}
-              >
-                Contact ›
-              </button>
-              {company.website && (
-                <a
-                  href={company.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold"
-                  style={{ color: "rgba(255,255,255,0.8)", fontSize: "14px", textDecoration: "none" }}
-                >
-                  Visit Website
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── You Might Also Like ── */}
+      {/* Similar companies */}
       {similar.length > 0 && (
-        <section style={{ background: "white", borderTop: "1px solid #E5E7EB" }}>
-          <div className="mx-auto px-6 py-16" style={{ maxWidth: "1180px" }}>
-            <h2
-              className="font-extrabold text-center mb-10"
-              style={{ fontSize: "26px", color: "#111827", letterSpacing: "-0.3px" }}
-            >
-              You Might Also Like
+        <section style={{ background: "white", borderTop: "1px solid #E5E7EB", padding: "56px 24px" }}>
+          <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+            <h2 style={{ fontSize: "20px", fontWeight: "800", color: "#111827", marginBottom: "24px", fontFamily: "'Inter', sans-serif" }}>
+              Similar Listings
             </h2>
-            <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "16px" }}>
               {similar.map((c) => (
                 <SimilarCard key={c.slug} company={c} />
               ))}
             </div>
-            <div className="flex justify-center mt-10">
-              <Link
-                href={`/directory/${company.category}`}
-                className="flex items-center gap-2 font-semibold px-6 py-2.5 rounded-lg"
-                style={{ border: "1.5px solid #D1D5DB", color: "#374151", fontSize: "14px", textDecoration: "none" }}
-              >
-                <ArrowLeft size={14} />
-                Back to Results
-              </Link>
-            </div>
           </div>
         </section>
       )}
-
-      {/* ── Email Newsletter ── */}
-      <section
-        style={{
-          background: `linear-gradient(160deg, #0f1a12 0%, #1A4A35 50%, #111827 100%)`,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "radial-gradient(circle at 30% 60%, rgba(92,184,92,0.1) 0%, transparent 60%)",
-          }}
-        />
-        <div className="mx-auto px-6 py-20 text-center relative" style={{ maxWidth: "680px" }}>
-          <h2
-            className="font-extrabold text-white mb-4"
-            style={{ fontSize: "36px", letterSpacing: "-0.5px" }}
-          >
-            Email Newsletter
-          </h2>
-          <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "15px", marginBottom: "32px" }}>
-            Stay up to date with the latest cannabis industry news, vendor spotlights, and platform updates.
-          </p>
-          <div className="flex gap-0 max-w-md mx-auto" style={{ border: "1.5px solid rgba(255,255,255,0.2)", borderRadius: "10px", overflow: "hidden" }}>
-            <input
-              type="email"
-              placeholder="Enter Your Email Address"
-              style={{
-                flex: 1,
-                background: "rgba(255,255,255,0.08)",
-                border: "none",
-                outline: "none",
-                color: "white",
-                fontSize: "14px",
-                padding: "14px 18px",
-              }}
-            />
-            <button
-              className="font-semibold text-white px-5"
-              style={{ backgroundColor: "#F7941D", fontSize: "14px", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}
-            >
-              Sign Up ›
-            </button>
-          </div>
-        </div>
-      </section>
 
     </div>
   );
