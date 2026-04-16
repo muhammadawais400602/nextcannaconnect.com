@@ -67,9 +67,11 @@ export async function POST() {
   try {
     await connectDB();
 
-    // Upsert so re-running is safe
-    await Company.deleteOne({ slug: DEMO.slug });
-    const company = await Company.create(DEMO);
+    const company = await Company.findOneAndUpdate(
+      { slug: DEMO.slug },
+      { $set: DEMO },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
     return NextResponse.json({
       success: true,
