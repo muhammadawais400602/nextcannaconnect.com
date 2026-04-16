@@ -98,7 +98,7 @@ export async function PUT(request: NextRequest) {
       { new: true }
     );
 
-    revalidateTag("companies");
+    revalidateTag("companies", "max");
     if (company?.slug) revalidatePath(`/vendor/${company.slug}`);
     return NextResponse.json({ success: true, company });
   } catch (err) {
