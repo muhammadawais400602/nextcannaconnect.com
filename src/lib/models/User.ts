@@ -12,6 +12,11 @@ export interface IUser extends Document {
   companyId?: mongoose.Types.ObjectId;
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
+  // Auth
+  passwordHash?: string;
+  setupToken?: string;
+  setupTokenExpires?: Date;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +34,10 @@ const UserSchema = new Schema<IUser>(
     companyId: { type: Schema.Types.ObjectId, ref: "Company" },
     stripeCustomerId: String,
     stripeSubscriptionId: String,
+    passwordHash: String,
+    setupToken: { type: String, index: true },
+    setupTokenExpires: Date,
+    isActive: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
