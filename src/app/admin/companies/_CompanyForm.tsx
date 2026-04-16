@@ -126,8 +126,10 @@ export default function CompanyForm({ initial, mode }: Props) {
     location: { city: "", state: "" },
     website: "", phone: "", email: "",
     logoPlaceholder: "", logoColor: "#1A4A35",
+    bannerImageUrl: "", bannerCaption: "", foundedYear: "",
     serviceTags: [], certifications: [], statesServed: [],
     productLines: [], specialtyAreas: [], credentials: [],
+    products: [],
     teamSize: "", yearsInCannabis: "", pricingModel: "",
     minOrderQty: "", leadTime: "", serviceArea: "",
     yearsExperience: "", hourlyRate: "", availability: "", bio: "",
@@ -150,6 +152,7 @@ export default function CompanyForm({ initial, mode }: Props) {
 
     const payload = {
       ...form,
+      foundedYear: form.foundedYear ? Number(form.foundedYear) : undefined,
       yearsInCannabis: form.yearsInCannabis ? Number(form.yearsInCannabis) : undefined,
       yearsExperience: form.yearsExperience ? Number(form.yearsExperience) : undefined,
       rating: form.rating ? Number(form.rating) : undefined,
@@ -294,6 +297,115 @@ export default function CompanyForm({ initial, mode }: Props) {
             style={{ ...inputStyle, maxWidth: "300px" }} value={form.phone || ""}
             onChange={(e) => set("phone", e.target.value)}
           />
+        </div>
+      </Section>
+
+      <Section title="Listing Page — Banner & Stats">
+        <div>
+          <label style={labelStyle}>Banner Image URL</label>
+          <input
+            style={inputStyle} value={form.bannerImageUrl || ""}
+            onChange={(e) => set("bannerImageUrl", e.target.value)}
+            placeholder="https://... (hero image shown at top of listing page)"
+          />
+        </div>
+        <div>
+          <label style={labelStyle}>Banner Caption (Featured Installation text)</label>
+          <input
+            style={inputStyle} value={form.bannerCaption || ""}
+            onChange={(e) => set("bannerCaption", e.target.value)}
+            placeholder="e.g. Series-7 Supercritical Fluid Extractor"
+          />
+        </div>
+        <Row>
+          <div>
+            <label style={labelStyle}>Founded Year</label>
+            <input
+              style={inputStyle} type="number" min="1900" max="2099"
+              value={form.foundedYear || ""}
+              onChange={(e) => set("foundedYear", e.target.value)}
+              placeholder="e.g. 2018"
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Team Size / Employees</label>
+            <input
+              style={inputStyle} value={form.teamSize || ""}
+              onChange={(e) => set("teamSize", e.target.value)}
+              placeholder="e.g. 50-100"
+            />
+          </div>
+        </Row>
+        <div>
+          <label style={labelStyle}>Regions Served (shown as "REGIONS" stat)</label>
+          <input
+            style={{ ...inputStyle, maxWidth: "400px" }} value={form.serviceArea || ""}
+            onChange={(e) => set("serviceArea", e.target.value)}
+            placeholder="e.g. NA / EU"
+          />
+        </div>
+      </Section>
+
+      <Section title="Product Offerings (shown on listing page)">
+        <div>
+          <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 12px", fontFamily: "sans-serif" }}>
+            Add up to 3 products/services displayed in the grid on the listing page.
+          </p>
+          {(form.products || []).map((product: { name: string; description: string; imageUrl?: string }, i: number) => (
+            <div key={i} style={{ background: "#F9FAFB", borderRadius: "10px", padding: "16px", marginBottom: "12px", border: "1px solid #E5E7EB" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+                <span style={{ fontSize: "13px", fontWeight: "700", color: "#374151", fontFamily: "sans-serif" }}>Product {i + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => set("products", (form.products || []).filter((_: unknown, idx: number) => idx !== i))}
+                  style={{ fontSize: "12px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif" }}
+                >
+                  Remove
+                </button>
+              </div>
+              <div style={{ display: "grid", gap: "10px" }}>
+                <input
+                  style={inputStyle}
+                  placeholder="Product name"
+                  value={product.name}
+                  onChange={(e) => {
+                    const updated = [...(form.products || [])];
+                    updated[i] = { ...updated[i], name: e.target.value };
+                    set("products", updated);
+                  }}
+                />
+                <input
+                  style={inputStyle}
+                  placeholder="Short description (1–2 sentences)"
+                  value={product.description}
+                  onChange={(e) => {
+                    const updated = [...(form.products || [])];
+                    updated[i] = { ...updated[i], description: e.target.value };
+                    set("products", updated);
+                  }}
+                />
+                <input
+                  style={inputStyle}
+                  placeholder="Image URL (optional)"
+                  value={product.imageUrl || ""}
+                  onChange={(e) => {
+                    const updated = [...(form.products || [])];
+                    updated[i] = { ...updated[i], imageUrl: e.target.value };
+                    set("products", updated);
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+          {(form.products || []).length < 3 && (
+            <button
+              type="button"
+              onClick={() => set("products", [...(form.products || []), { name: "", description: "", imageUrl: "" }])}
+              style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
+            >
+              + Add Product
+            </button>
+          )}
         </div>
       </Section>
 

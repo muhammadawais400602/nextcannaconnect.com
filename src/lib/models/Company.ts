@@ -14,6 +14,9 @@ export interface ICompany extends Document {
   logoPlaceholder: string;
   logoColor: string;
   bannerImageUrl?: string;
+  bannerCaption?: string;
+  foundedYear?: number;
+  products?: { name: string; description: string; imageUrl?: string }[];
   website?: string;
   phone?: string;
   email?: string;
@@ -66,6 +69,9 @@ const CompanySchema = new Schema<ICompany>(
     logoPlaceholder: { type: String, required: true },
     logoColor: { type: String, default: "#1A4A35" },
     bannerImageUrl: String,
+    bannerCaption: String,
+    foundedYear: Number,
+    products: [{ name: String, description: String, imageUrl: String }],
     website: String,
     phone: String,
     email: String,
