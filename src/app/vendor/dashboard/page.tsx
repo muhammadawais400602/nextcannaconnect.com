@@ -379,6 +379,11 @@ export default function VendorDashboardPage() {
               <div style={{ marginBottom: "14px" }}>
                 <label style={labelStyle}>Banner Image <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— recommended 1200 × 600 px</span></label>
                 <ImageUploader value={form.bannerImageUrl} onChange={(url) => { setField("bannerImageUrl", url); setSaved(false); }} />
+                {form.bannerImageUrl && (
+                  <p style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "6px", wordBreak: "break-all" }}>
+                    Saved URL: <a href={form.bannerImageUrl} target="_blank" rel="noreferrer" style={{ color: "#2563EB" }}>{form.bannerImageUrl}</a>
+                  </p>
+                )}
               </div>
               <div>
                 <label style={labelStyle}>Banner Caption <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional overlay text</span></label>

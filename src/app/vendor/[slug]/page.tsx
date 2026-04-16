@@ -133,6 +133,7 @@ export default async function VendorPage({ params }: Props) {
                   sizes="(max-width: 1100px) 100vw, 770px"
                   style={{ objectFit: "cover" }}
                   priority
+                  unoptimized
                 />
               ) : (
                 <div style={{ width: "100%", height: "100%", background: `linear-gradient(160deg, ${company.logoColor} 0%, #0f1a12 100%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -200,7 +201,7 @@ export default async function VendorPage({ params }: Props) {
                     <div key={product.name} style={{ borderRadius: "10px", overflow: "hidden", border: "1px solid #E5E7EB", background: "white" }}>
                       <div style={{ position: "relative", height: "160px", background: company.logoColor + "33" }}>
                         {product.imageUrl ? (
-                          <Image src={product.imageUrl} alt={product.name} fill sizes="200px" style={{ objectFit: "cover" }} />
+                          <Image src={product.imageUrl} alt={product.name} fill sizes="200px" style={{ objectFit: "cover" }} unoptimized />
                         ) : (
                           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}44, ${company.logoColor}22)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <span className="material-symbols-outlined" style={{ fontSize: "36px", color: company.logoColor, opacity: 0.4 }}>inventory_2</span>
