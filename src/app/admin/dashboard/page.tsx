@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { COMPANIES } from "@/data/companies";
 import { CATEGORIES } from "@/data/categories";
+import SeedDemoButton from "./SeedDemoButton";
 
 const TIER_COLORS: Record<string, string> = {
   featured: "#E8821E",
@@ -78,6 +79,11 @@ export default function DashboardPage() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Seed demo */}
+      <div style={{ marginBottom: "20px" }}>
+        <SeedDemoButton />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "20px" }}>
