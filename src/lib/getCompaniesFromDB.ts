@@ -119,3 +119,15 @@ export async function getCompanyBySlug(slug: string): Promise<CompanyType | unde
     return undefined;
   }
 }
+
+/** Direct DB query — no cache. Use where stale data is unacceptable (e.g. vendor listing page). */
+export async function getCompanyBySlugFresh(slug: string): Promise<CompanyType | undefined> {
+  try {
+    await connectDB();
+    const doc = await Company.findOne({ slug }).select("-__v").lean();
+    return doc ? docToCompany(doc) : undefined;
+  } catch (err) {
+    console.error(`[getCompanyBySlugFresh] Failed for "${slug}":`, err);
+    return undefined;
+  }
+}
