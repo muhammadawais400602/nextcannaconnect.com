@@ -176,3 +176,19 @@ export async function PATCH(
     return NextResponse.json({ error: "Failed to update", detail: String(err) }, { status: 500 });
   }
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await connectDB();
+    const { id } = await params;
+    const deleted = await SignupApplication.findByIdAndDelete(id);
+    if (!deleted) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[signups DELETE]", err);
+    return NextResponse.json({ error: "Failed to delete", detail: String(err) }, { status: 500 });
+  }
+}

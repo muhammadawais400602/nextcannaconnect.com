@@ -42,6 +42,7 @@ export default function SignupsPage() {
   const [error, setError] = useState("");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [filter, setFilter] = useState<"pending" | "approved" | "rejected" | "all">("pending");
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/signups")
@@ -49,6 +50,20 @@ export default function SignupsPage() {
       .then((d) => { setApps(d.applications ?? []); setLoading(false); })
       .catch(() => { setError("Failed to load signups"); setLoading(false); });
   }, []);
+
+  async function deleteApp(id: string) {
+    setActionLoading(id + "delete");
+    try {
+      const res = await fetch(`/api/admin/signups/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Failed");
+      setApps((prev) => prev.filter((a) => a._id !== id));
+      setDeleteConfirm(null);
+    } catch {
+      alert("Failed to delete. Please try again.");
+    } finally {
+      setActionLoading(null);
+    }
+  }
 
   async function updateStatus(id: string, status: "approved" | "rejected") {
     setActionLoading(id + status);
@@ -182,7 +197,7 @@ export default function SignupsPage() {
               </div>
 
               {/* Actions */}
-              <div style={{ display: "flex", gap: "8px" }}>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                 {app.status !== "approved" && (
                   <button
                     onClick={() => updateStatus(app._id, "approved")}
@@ -199,6 +214,31 @@ export default function SignupsPage() {
                     style={{ padding: "7px 16px", background: "white", color: "#DC2626", border: "1px solid #FECACA", borderRadius: "7px", fontSize: "12px", fontWeight: 600, cursor: "pointer", opacity: actionLoading === app._id + "rejected" ? 0.6 : 1, whiteSpace: "nowrap" }}
                   >
                     {actionLoading === app._id + "rejected" ? "…" : "✕ Reject"}
+                  </button>
+                )}
+                {deleteConfirm === app._id ? (
+                  <>
+                    <button
+                      onClick={() => deleteApp(app._id)}
+                      disabled={actionLoading === app._id + "delete"}
+                      style={{ padding: "7px 12px", background: "#DC2626", color: "white", border: "none", borderRadius: "7px", fontSize: "12px", fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+                    >
+                      {actionLoading === app._id + "delete" ? "…" : "Confirm"}
+                    </button>
+                    <button
+                      onClick={() => setDeleteConfirm(null)}
+                      style={{ padding: "7px 10px", background: "none", color: "#6B7280", border: "1px solid #E5E7EB", borderRadius: "7px", fontSize: "12px", cursor: "pointer" }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setDeleteConfirm(app._id)}
+                    style={{ padding: "7px 10px", background: "none", color: "#9CA3AF", border: "1px solid #E5E7EB", borderRadius: "7px", fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}
+                    title="Delete application"
+                  >
+                    🗑
                   </button>
                 )}
               </div>
