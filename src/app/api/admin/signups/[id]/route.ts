@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
+import { revalidateTag } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
 import User from "@/lib/models/User";
@@ -85,6 +86,7 @@ export async function PATCH(
           });
         }
         companyId = company._id;
+        revalidateTag("companies", "max");
       } catch (companyErr) {
         console.error("[signups PATCH] Company creation failed (non-fatal):", companyErr);
       }
