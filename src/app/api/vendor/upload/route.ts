@@ -33,6 +33,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File must be smaller than 5 MB." }, { status: 400 });
     }
 
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json({
+        error: "Blob storage token is missing. In Vercel: Settings → Environment Variables → confirm BLOB_READ_WRITE_TOKEN exists, then redeploy.",
+      }, { status: 500 });
+    }
+
     const ext = file.name.split(".").pop() ?? "jpg";
     const filename = `vendors/${userId}/${Date.now()}.${ext}`;
 
