@@ -57,7 +57,7 @@ export async function PUT(request: NextRequest) {
           ? await Company.findOne({ name: { $regex: `^${user.companyName}$`, $options: "i" } })
           : null);
       if (found) {
-        user.companyId = found._id as typeof user.companyId;
+        user.companyId = found._id as mongoose.Types.ObjectId;
         await User.findByIdAndUpdate(userId, { companyId: found._id });
       }
     }
