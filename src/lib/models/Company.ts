@@ -59,8 +59,8 @@ const CompanySchema = new Schema<ICompany>(
     category: { type: String, required: true, index: true },
     secondaryCategory: String,
     location: {
-      city: { type: String, required: true },
-      state: { type: String, required: true },
+      city: { type: String, default: "" },
+      state: { type: String, default: "" },
     },
     shortDescription: { type: String, required: true },
     fullDescription: String,
