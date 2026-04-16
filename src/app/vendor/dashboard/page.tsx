@@ -1,7 +1,97 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
+
+// ── Image uploader ────────────────────────────────────────────────────────────
+function ImageUploader({
+  value,
+  onChange,
+  hint,
+}: {
+  value: string;
+  onChange: (url: string) => void;
+  hint?: string;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+
+  async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setError("");
+    setUploading(true);
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/vendor/upload", { method: "POST", body: form });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      onChange(data.url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  }
+
+  return (
+    <div>
+      {value ? (
+        <div style={{ position: "relative", marginBottom: "10px" }}>
+          <div style={{ position: "relative", width: "100%", height: "160px", borderRadius: "8px", overflow: "hidden", border: "1px solid #E5E7EB" }}>
+            <Image src={value} alt="Preview" fill style={{ objectFit: "cover" }} unoptimized />
+          </div>
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            style={{ position: "absolute", top: "8px", right: "8px", background: "rgba(0,0,0,0.6)", color: "white", border: "none", borderRadius: "6px", padding: "4px 10px", fontSize: "12px", cursor: "pointer" }}
+          >
+            Remove
+          </button>
+        </div>
+      ) : (
+        <div
+          onClick={() => inputRef.current?.click()}
+          style={{ border: "2px dashed #C6E0D0", borderRadius: "8px", padding: "32px 16px", textAlign: "center", cursor: uploading ? "not-allowed" : "pointer", background: "#F7FBF9", marginBottom: "10px" }}
+        >
+          {uploading ? (
+            <p style={{ color: "#6B7280", fontSize: "13px", margin: 0 }}>Uploading…</p>
+          ) : (
+            <>
+              <p style={{ color: "#1A4A35", fontSize: "13px", fontWeight: 600, margin: "0 0 4px" }}>Click to upload image</p>
+              <p style={{ color: "#9CA3AF", fontSize: "12px", margin: 0 }}>JPG, PNG, WebP — max 5 MB</p>
+            </>
+          )}
+        </div>
+      )}
+      <input ref={inputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={handleFile} style={{ display: "none" }} />
+      {!value && (
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "6px" }}>
+          <div style={{ flex: 1, height: "1px", background: "#E5E7EB" }} />
+          <span style={{ fontSize: "11px", color: "#9CA3AF" }}>or paste a URL</span>
+          <div style={{ flex: 1, height: "1px", background: "#E5E7EB" }} />
+        </div>
+      )}
+      {!value && (
+        <input
+          type="url"
+          placeholder="https://..."
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ width: "100%", marginTop: "8px", padding: "10px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "14px", color: "#111827", background: "white", outline: "none", boxSizing: "border-box" }}
+        />
+      )}
+      {hint && !value && <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "5px" }}>{hint}</p>}
+      {error && <p style={{ fontSize: "12px", color: "#DC2626", marginTop: "5px" }}>{error}</p>}
+    </div>
+  );
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 
 interface Product { name: string; description: string; imageUrl: string }
 interface FormState {
@@ -276,9 +366,8 @@ export default function VendorDashboardPage() {
             <div style={sectionStyle}>
               <h2 style={sectionTitle}>Hero Banner Image</h2>
               <div style={{ marginBottom: "14px" }}>
-                <label style={labelStyle}>Banner Image URL</label>
-                <input style={inputStyle} value={form.bannerImageUrl} onChange={(e) => setField("bannerImageUrl", e.target.value)} placeholder="https://..." type="url" />
-                <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "5px" }}>Paste a direct image link (JPG/PNG). Recommended: 1200 × 600 px.</p>
+                <label style={labelStyle}>Banner Image <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— recommended 1200 × 600 px</span></label>
+                <ImageUploader value={form.bannerImageUrl} onChange={(url) => { setField("bannerImageUrl", url); setSaved(false); }} />
               </div>
               <div>
                 <label style={labelStyle}>Banner Caption <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional overlay text</span></label>
@@ -341,8 +430,8 @@ export default function VendorDashboardPage() {
                     <input style={inputStyle} value={p.description} onChange={(e) => setProduct(i, "description", e.target.value)} placeholder="Short description of this product or service" maxLength={300} />
                   </div>
                   <div>
-                    <label style={labelStyle}>Image URL <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional</span></label>
-                    <input style={inputStyle} value={p.imageUrl} onChange={(e) => setProduct(i, "imageUrl", e.target.value)} placeholder="https://..." type="url" />
+                    <label style={labelStyle}>Image <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional</span></label>
+                    <ImageUploader value={p.imageUrl} onChange={(url) => { setProduct(i, "imageUrl", url); setSaved(false); }} />
                   </div>
                 </div>
               ))}
