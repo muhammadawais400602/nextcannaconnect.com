@@ -5,16 +5,23 @@ import { useState } from "react";
 export default function SeedDemoButton() {
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [urls, setUrls] = useState<{ vendorUrl: string; adminUrl: string } | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   async function handleSeed() {
     setStatus("loading");
+    setErrorMsg("");
     try {
       const res = await fetch("/api/admin/seed-demo", { method: "POST" });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Seed failed");
+      if (!res.ok) {
+        setErrorMsg(data.detail || data.error || `HTTP ${res.status}`);
+        setStatus("error");
+        return;
+      }
       setUrls({ vendorUrl: data.vendorUrl, adminUrl: data.adminUrl });
       setStatus("done");
-    } catch {
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Unknown error");
       setStatus("error");
     }
   }
@@ -68,8 +75,13 @@ export default function SeedDemoButton() {
           opacity: status === "loading" ? 0.7 : 1,
         }}
       >
-        {status === "loading" ? "Creating…" : status === "error" ? "Error — Try Again" : "Insert Demo Company"}
+        {status === "loading" ? "Creating…" : status === "error" ? "Retry" : "Insert Demo Company"}
       </button>
+      {status === "error" && errorMsg && (
+        <div style={{ marginTop: "8px", fontSize: "11px", color: "#DC2626", fontFamily: "monospace", wordBreak: "break-all" }}>
+          {errorMsg}
+        </div>
+      )}
     </div>
   );
 }
