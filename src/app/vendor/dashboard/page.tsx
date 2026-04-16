@@ -297,18 +297,29 @@ export default function VendorDashboardPage() {
 
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "32px 24px" }}>
         {/* Header */}
-        <div style={{ marginBottom: "28px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            <h1 style={{ fontSize: "20px", fontWeight: 700, color: "#0D2818", margin: 0 }}>
-              Welcome back, {vendor?.fullName?.split(" ")[0]}
-            </h1>
-            <span style={{ padding: "3px 12px", borderRadius: "20px", fontSize: "12px", fontWeight: 600, ...tierStyle }}>
-              {TIER_LABELS[vendor?.tier ?? "free"]}
-            </span>
+        <div style={{ marginBottom: "24px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <h1 style={{ fontSize: "20px", fontWeight: 700, color: "#0D2818", margin: 0 }}>
+                Welcome back, {vendor?.fullName?.split(" ")[0]}
+              </h1>
+              <span style={{ padding: "3px 12px", borderRadius: "20px", fontSize: "12px", fontWeight: 600, ...tierStyle }}>
+                {TIER_LABELS[vendor?.tier ?? "free"]}
+              </span>
+            </div>
+            <p style={{ fontSize: "13px", color: "#6B7280", marginTop: "4px" }}>
+              {company?.name ?? vendor?.companyName} · {vendor?.email}
+            </p>
           </div>
-          <p style={{ fontSize: "13px", color: "#6B7280", marginTop: "4px" }}>
-            {company?.name ?? vendor?.companyName} · {vendor?.email}
-          </p>
+          {company && (
+            <Link
+              href={`/vendor/${company.slug}`}
+              target="_blank"
+              style={{ display: "inline-flex", alignItems: "center", gap: "6px", background: "#1A4A35", color: "white", padding: "10px 20px", borderRadius: "9px", fontSize: "14px", fontWeight: 600, textDecoration: "none", whiteSpace: "nowrap" }}
+            >
+              View Live Listing →
+            </Link>
+          )}
         </div>
 
         {!company && (
@@ -455,7 +466,18 @@ export default function VendorDashboardPage() {
               >
                 {saving ? "Saving…" : "Save Changes"}
               </button>
-              {saved && <span style={{ color: "#1A4A35", fontSize: "14px", fontWeight: 600 }}>✓ Changes saved</span>}
+              {saved && (
+                <>
+                  <span style={{ color: "#1A4A35", fontSize: "14px", fontWeight: 600 }}>✓ Changes saved</span>
+                  <Link
+                    href={`/vendor/${company.slug}`}
+                    target="_blank"
+                    style={{ fontSize: "14px", color: "#2563EB", fontWeight: 600, textDecoration: "none" }}
+                  >
+                    View listing →
+                  </Link>
+                </>
+              )}
               {saveError && <span style={{ color: "#DC2626", fontSize: "13px" }}>{saveError}</span>}
             </div>
           </form>
