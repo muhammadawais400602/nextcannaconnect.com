@@ -3,46 +3,164 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-interface VendorInfo {
-  email: string;
-  fullName: string;
-  companyName?: string;
-  tier: string;
+interface Product { name: string; description: string; imageUrl: string }
+interface FormState {
+  shortDescription: string;
+  fullDescription: string;
+  website: string;
+  phone: string;
+  city: string;
+  state: string;
+  bannerImageUrl: string;
+  bannerCaption: string;
+  foundedYear: string;
+  teamSize: string;
+  serviceArea: string;
+  yearsInCannabis: string;
+  serviceTags: string;
+  certifications: string;
+  products: Product[];
 }
 
+interface VendorUser { email: string; fullName: string; companyName?: string; tier: string }
+interface Company { slug: string; name: string; tier: string; location?: { city: string; state: string } }
+
 const TIER_LABELS: Record<string, string> = {
-  free: "Claimed (Free)",
+  free: "Claimed",
   select: "Select",
   elite: "Verified Pro",
 };
-
 const TIER_COLORS: Record<string, { bg: string; color: string }> = {
   free:   { bg: "#F3F4F6", color: "#6B7280" },
   select: { bg: "#EFF6FF", color: "#2563EB" },
   elite:  { bg: "#E8F5EE", color: "#1A4A35" },
 };
 
+const inputStyle: React.CSSProperties = {
+  width: "100%", padding: "10px 12px", border: "1px solid #E5E7EB",
+  borderRadius: "8px", fontSize: "14px", color: "#111827",
+  background: "white", outline: "none", boxSizing: "border-box",
+};
+const labelStyle: React.CSSProperties = {
+  display: "block", fontSize: "11px", fontWeight: 700,
+  color: "#4A5E4A", textTransform: "uppercase", letterSpacing: "0.8px", marginBottom: "5px",
+};
+const sectionStyle: React.CSSProperties = {
+  background: "white", borderRadius: "14px", border: "1px solid #E5E7EB", padding: "24px", marginBottom: "16px",
+};
+const sectionTitle: React.CSSProperties = {
+  fontSize: "14px", fontWeight: 700, color: "#1A4A35", marginBottom: "18px",
+  paddingBottom: "12px", borderBottom: "1px solid #F3F4F6",
+};
+const gridTwo: React.CSSProperties = { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" };
+
+function emptyForm(): FormState {
+  return {
+    shortDescription: "", fullDescription: "", website: "", phone: "",
+    city: "", state: "", bannerImageUrl: "", bannerCaption: "",
+    foundedYear: "", teamSize: "", serviceArea: "", yearsInCannabis: "",
+    serviceTags: "", certifications: "",
+    products: [
+      { name: "", description: "", imageUrl: "" },
+      { name: "", description: "", imageUrl: "" },
+      { name: "", description: "", imageUrl: "" },
+    ],
+  };
+}
+
+function companyToForm(c: Record<string, unknown>): FormState {
+  const loc = (c.location as { city?: string; state?: string }) ?? {};
+  const products = Array.isArray(c.products) ? c.products : [];
+  const filled = products.map((p: { name?: string; description?: string; imageUrl?: string }) => ({
+    name: p.name ?? "", description: p.description ?? "", imageUrl: p.imageUrl ?? "",
+  }));
+  while (filled.length < 3) filled.push({ name: "", description: "", imageUrl: "" });
+
+  return {
+    shortDescription: String(c.shortDescription ?? ""),
+    fullDescription: String(c.fullDescription ?? ""),
+    website: String(c.website ?? ""),
+    phone: String(c.phone ?? ""),
+    city: String(loc.city ?? ""),
+    state: String(loc.state ?? ""),
+    bannerImageUrl: String(c.bannerImageUrl ?? ""),
+    bannerCaption: String(c.bannerCaption ?? ""),
+    foundedYear: c.foundedYear ? String(c.foundedYear) : "",
+    teamSize: String(c.teamSize ?? ""),
+    serviceArea: String(c.serviceArea ?? ""),
+    yearsInCannabis: c.yearsInCannabis ? String(c.yearsInCannabis) : "",
+    serviceTags: Array.isArray(c.serviceTags) ? (c.serviceTags as string[]).join(", ") : "",
+    certifications: Array.isArray(c.certifications) ? (c.certifications as string[]).join(", ") : "",
+    products: filled.slice(0, 6),
+  };
+}
+
 export default function VendorDashboardPage() {
-  const [vendor, setVendor] = useState<VendorInfo | null>(null);
+  const [vendor, setVendor] = useState<VendorUser | null>(null);
+  const [company, setCompany] = useState<Company | null>(null);
+  const [form, setForm] = useState<FormState>(emptyForm());
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
-    fetch("/api/auth/vendor-me")
-      .then((r) => {
-        if (!r.ok) {
-          window.location.href = "/vendor/login";
-          return null;
-        }
-        return r.json();
-      })
-      .then((d) => {
-        if (d) setVendor(d.user);
-        setLoading(false);
-      })
-      .catch(() => {
-        window.location.href = "/vendor/login";
-      });
+    Promise.all([
+      fetch("/api/auth/vendor-me").then((r) => (r.ok ? r.json() : null)),
+      fetch("/api/vendor/company").then((r) => (r.ok ? r.json() : null)),
+    ]).then(([meData, companyData]) => {
+      if (!meData) { window.location.href = "/vendor/login"; return; }
+      setVendor(meData.user);
+      if (companyData?.company) {
+        setCompany(companyData.company as Company);
+        setForm(companyToForm(companyData.company as Record<string, unknown>));
+      }
+      setLoading(false);
+    }).catch(() => { window.location.href = "/vendor/login"; });
   }, []);
+
+  function setField(key: keyof Omit<FormState, "products">, value: string) {
+    setForm((f) => ({ ...f, [key]: value }));
+    setSaved(false);
+  }
+
+  function setProduct(i: number, key: keyof Product, value: string) {
+    setForm((f) => {
+      const products = [...f.products];
+      products[i] = { ...products[i], [key]: value };
+      return { ...f, products };
+    });
+    setSaved(false);
+  }
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setSaving(true);
+    setSaveError("");
+    setSaved(false);
+    try {
+      const payload = {
+        ...form,
+        foundedYear: form.foundedYear ? Number(form.foundedYear) : undefined,
+        yearsInCannabis: form.yearsInCannabis ? Number(form.yearsInCannabis) : undefined,
+        serviceTags: form.serviceTags.split(",").map((s) => s.trim()).filter(Boolean),
+        certifications: form.certifications.split(",").map((s) => s.trim()).filter(Boolean),
+        products: form.products.filter((p) => p.name.trim()),
+      };
+      const res = await fetch("/api/vendor/company", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Save failed");
+      setSaved(true);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  }
 
   async function handleLogout() {
     await fetch("/api/auth/vendor-logout", { method: "POST" });
@@ -62,53 +180,197 @@ export default function VendorDashboardPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#F7F9F7" }}>
       {/* Nav */}
-      <div style={{ background: "white", borderBottom: "1px solid #E5E7EB", padding: "0 24px" }}>
-        <div style={{ maxWidth: "1000px", margin: "0 auto", height: "60px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <Link href="/" style={{ textDecoration: "none", fontSize: "18px", fontWeight: 800, color: "#1A4A35", fontFamily: "serif" }}>
+      <div style={{ background: "white", borderBottom: "1px solid #E5E7EB", padding: "0 24px", position: "sticky", top: 0, zIndex: 10 }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto", height: "58px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <Link href="/" style={{ textDecoration: "none", fontSize: "17px", fontWeight: 800, color: "#1A4A35", fontFamily: "serif" }}>
             NextCanna Connect
           </Link>
-          <button
-            onClick={handleLogout}
-            style={{ background: "none", border: "1px solid #E5E7EB", borderRadius: "7px", padding: "6px 14px", fontSize: "13px", color: "#6B7280", cursor: "pointer" }}
-          >
-            Log out
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {company && (
+              <Link
+                href={`/vendor/${company.slug}`}
+                target="_blank"
+                style={{ fontSize: "13px", color: "#1A4A35", fontWeight: 600, textDecoration: "none", border: "1px solid #C6E0D0", borderRadius: "7px", padding: "5px 12px" }}
+              >
+                View Listing →
+              </Link>
+            )}
+            <button
+              onClick={handleLogout}
+              style={{ background: "none", border: "1px solid #E5E7EB", borderRadius: "7px", padding: "5px 12px", fontSize: "13px", color: "#6B7280", cursor: "pointer" }}
+            >
+              Log out
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "40px 24px" }}>
-        {/* Welcome */}
+      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "32px 24px" }}>
+        {/* Header */}
         <div style={{ marginBottom: "28px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-            <h1 style={{ fontSize: "22px", fontWeight: 700, color: "#0D2818", margin: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            <h1 style={{ fontSize: "20px", fontWeight: 700, color: "#0D2818", margin: 0 }}>
               Welcome back, {vendor?.fullName?.split(" ")[0]}
             </h1>
             <span style={{ padding: "3px 12px", borderRadius: "20px", fontSize: "12px", fontWeight: 600, ...tierStyle }}>
               {TIER_LABELS[vendor?.tier ?? "free"]}
             </span>
           </div>
-          <p style={{ fontSize: "14px", color: "#6B7280", marginTop: "4px" }}>
-            {vendor?.companyName} · {vendor?.email}
+          <p style={{ fontSize: "13px", color: "#6B7280", marginTop: "4px" }}>
+            {company?.name ?? vendor?.companyName} · {vendor?.email}
           </p>
         </div>
 
-        {/* Coming soon card */}
-        <div style={{ background: "white", borderRadius: "16px", border: "1px solid #E5E7EB", padding: "48px", textAlign: "center" }}>
-          <div style={{ fontSize: "48px", marginBottom: "16px" }}>🚀</div>
-          <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#1A4A35", marginBottom: "8px" }}>
-            Your Dashboard is Coming Soon
-          </h2>
-          <p style={{ fontSize: "14px", color: "#6B7280", lineHeight: 1.6, maxWidth: "420px", margin: "0 auto 24px" }}>
-            We&apos;re building tools so you can manage your listing, update your profile, view analytics, and respond to leads — all in one place.
-          </p>
-          <Link
-            href="/"
-            style={{ display: "inline-block", background: "#1A4A35", color: "white", padding: "10px 24px", borderRadius: "8px", fontSize: "14px", fontWeight: 600, textDecoration: "none" }}
-          >
-            View Your Listing →
-          </Link>
-        </div>
+        {!company && (
+          <div style={{ ...sectionStyle, textAlign: "center", padding: "40px" }}>
+            <div style={{ fontSize: "36px", marginBottom: "12px" }}>⏳</div>
+            <h2 style={{ fontSize: "17px", fontWeight: 700, color: "#1A4A35", marginBottom: "8px" }}>Your listing is being set up</h2>
+            <p style={{ fontSize: "14px", color: "#6B7280", lineHeight: 1.6 }}>
+              Your company listing will appear here shortly. If it&apos;s been more than a few minutes,{" "}
+              <a href="mailto:hello@nextcannaconnect.com" style={{ color: "#1A4A35" }}>contact support</a>.
+            </p>
+          </div>
+        )}
+
+        {company && (
+          <form onSubmit={handleSave}>
+            {/* Business Profile */}
+            <div style={sectionStyle}>
+              <h2 style={sectionTitle}>Business Profile</h2>
+              <div style={{ marginBottom: "14px" }}>
+                <label style={labelStyle}>Tagline <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— shown under your name</span></label>
+                <input style={inputStyle} value={form.shortDescription} onChange={(e) => setField("shortDescription", e.target.value)} placeholder="e.g. Premium cannabis equipment manufacturer" maxLength={200} />
+              </div>
+              <div style={{ marginBottom: "14px" }}>
+                <label style={labelStyle}>About Your Business</label>
+                <textarea
+                  style={{ ...inputStyle, minHeight: "120px", resize: "vertical" }}
+                  value={form.fullDescription}
+                  onChange={(e) => setField("fullDescription", e.target.value)}
+                  placeholder="Describe your business, expertise, and what sets you apart…"
+                />
+              </div>
+              <div style={{ ...gridTwo, marginBottom: "14px" }}>
+                <div>
+                  <label style={labelStyle}>Website</label>
+                  <input style={inputStyle} value={form.website} onChange={(e) => setField("website", e.target.value)} placeholder="https://yoursite.com" type="url" />
+                </div>
+                <div>
+                  <label style={labelStyle}>Phone</label>
+                  <input style={inputStyle} value={form.phone} onChange={(e) => setField("phone", e.target.value)} placeholder="+1 (555) 000-0000" />
+                </div>
+              </div>
+              <div style={gridTwo}>
+                <div>
+                  <label style={labelStyle}>City</label>
+                  <input style={inputStyle} value={form.city} onChange={(e) => setField("city", e.target.value)} placeholder="e.g. Denver" />
+                </div>
+                <div>
+                  <label style={labelStyle}>State / Province</label>
+                  <input style={inputStyle} value={form.state} onChange={(e) => setField("state", e.target.value)} placeholder="e.g. Colorado" />
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Banner */}
+            <div style={sectionStyle}>
+              <h2 style={sectionTitle}>Hero Banner Image</h2>
+              <div style={{ marginBottom: "14px" }}>
+                <label style={labelStyle}>Banner Image URL</label>
+                <input style={inputStyle} value={form.bannerImageUrl} onChange={(e) => setField("bannerImageUrl", e.target.value)} placeholder="https://..." type="url" />
+                <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "5px" }}>Paste a direct image link (JPG/PNG). Recommended: 1200 × 600 px.</p>
+              </div>
+              <div>
+                <label style={labelStyle}>Banner Caption <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional overlay text</span></label>
+                <input style={inputStyle} value={form.bannerCaption} onChange={(e) => setField("bannerCaption", e.target.value)} placeholder="e.g. Series-7 Supercritical Fluid Extractor" maxLength={120} />
+              </div>
+            </div>
+
+            {/* Business Details */}
+            <div style={sectionStyle}>
+              <h2 style={sectionTitle}>Business Details</h2>
+              <div style={{ ...gridTwo, marginBottom: "14px" }}>
+                <div>
+                  <label style={labelStyle}>Founded Year</label>
+                  <input style={inputStyle} value={form.foundedYear} onChange={(e) => setField("foundedYear", e.target.value)} placeholder="e.g. 2018" type="number" min="1900" max="2100" />
+                </div>
+                <div>
+                  <label style={labelStyle}>Team Size</label>
+                  <input style={inputStyle} value={form.teamSize} onChange={(e) => setField("teamSize", e.target.value)} placeholder="e.g. 10-50" />
+                </div>
+              </div>
+              <div style={{ ...gridTwo }}>
+                <div>
+                  <label style={labelStyle}>Service Area / Regions</label>
+                  <input style={inputStyle} value={form.serviceArea} onChange={(e) => setField("serviceArea", e.target.value)} placeholder="e.g. NA / EU" />
+                </div>
+                <div>
+                  <label style={labelStyle}>Years in Cannabis</label>
+                  <input style={inputStyle} value={form.yearsInCannabis} onChange={(e) => setField("yearsInCannabis", e.target.value)} placeholder="e.g. 5" type="number" min="0" />
+                </div>
+              </div>
+            </div>
+
+            {/* Services & Certifications */}
+            <div style={sectionStyle}>
+              <h2 style={sectionTitle}>Services &amp; Certifications</h2>
+              <div style={{ marginBottom: "14px" }}>
+                <label style={labelStyle}>Core Services <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— comma-separated</span></label>
+                <input style={inputStyle} value={form.serviceTags} onChange={(e) => setField("serviceTags", e.target.value)} placeholder="e.g. Custom Equipment Design, Facility Workflow, Remote Monitoring" />
+              </div>
+              <div>
+                <label style={labelStyle}>Certifications <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— comma-separated</span></label>
+                <input style={inputStyle} value={form.certifications} onChange={(e) => setField("certifications", e.target.value)} placeholder="e.g. ISO, GMP, CE, UL" />
+              </div>
+            </div>
+
+            {/* Products / Offerings */}
+            <div style={sectionStyle}>
+              <h2 style={sectionTitle}>Products &amp; Offerings <span style={{ fontSize: "12px", color: "#9CA3AF", fontWeight: 400 }}>— up to 6</span></h2>
+              {form.products.map((p, i) => (
+                <div key={i} style={{ marginBottom: i < form.products.length - 1 ? "20px" : 0, paddingBottom: i < form.products.length - 1 ? "20px" : 0, borderBottom: i < form.products.length - 1 ? "1px solid #F3F4F6" : "none" }}>
+                  <div style={{ fontSize: "12px", fontWeight: 700, color: "#9CA3AF", marginBottom: "10px" }}>
+                    PRODUCT / OFFERING {i + 1}
+                  </div>
+                  <div style={{ marginBottom: "10px" }}>
+                    <label style={labelStyle}>Name</label>
+                    <input style={inputStyle} value={p.name} onChange={(e) => setProduct(i, "name", e.target.value)} placeholder="e.g. CO2 Extraction Systems" maxLength={100} />
+                  </div>
+                  <div style={{ marginBottom: "10px" }}>
+                    <label style={labelStyle}>Description</label>
+                    <input style={inputStyle} value={p.description} onChange={(e) => setProduct(i, "description", e.target.value)} placeholder="Short description of this product or service" maxLength={300} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Image URL <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional</span></label>
+                    <input style={inputStyle} value={p.imageUrl} onChange={(e) => setProduct(i, "imageUrl", e.target.value)} placeholder="https://..." type="url" />
+                  </div>
+                </div>
+              ))}
+              {form.products.length < 6 && (
+                <button
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, products: [...f.products, { name: "", description: "", imageUrl: "" }] }))}
+                  style={{ marginTop: "16px", background: "none", border: "1px dashed #C6E0D0", borderRadius: "8px", padding: "8px 16px", fontSize: "13px", color: "#1A4A35", cursor: "pointer", width: "100%" }}
+                >
+                  + Add another product
+                </button>
+              )}
+            </div>
+
+            {/* Save */}
+            <div style={{ display: "flex", alignItems: "center", gap: "14px", paddingBottom: "40px" }}>
+              <button
+                type="submit"
+                disabled={saving}
+                style={{ padding: "13px 32px", background: "#1A4A35", color: "white", border: "none", borderRadius: "9px", fontSize: "15px", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1 }}
+              >
+                {saving ? "Saving…" : "Save Changes"}
+              </button>
+              {saved && <span style={{ color: "#1A4A35", fontSize: "14px", fontWeight: 600 }}>✓ Changes saved</span>}
+              {saveError && <span style={{ color: "#DC2626", fontSize: "13px" }}>{saveError}</span>}
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

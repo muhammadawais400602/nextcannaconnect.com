@@ -3,6 +3,11 @@ import { randomBytes } from "crypto";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
 import User from "@/lib/models/User";
+import Company from "@/lib/models/Company";
+
+function toSlug(str: string): string {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
 
 const TIER_LABELS: Record<string, string> = {
   free: "Claimed (Free)",
@@ -52,7 +57,33 @@ export async function PATCH(
       const token = randomBytes(32).toString("hex");
       const expires = new Date(Date.now() + 72 * 60 * 60 * 1000);
 
-      // Create or update User record
+      // Create Company record if one doesn't exist yet
+      let company = await Company.findOne({ email: app.email });
+      if (!company) {
+        const baseSlug = toSlug(app.companyName) || `company-${Date.now().toString(36)}`;
+        const slugTaken = await Company.findOne({ slug: baseSlug });
+        const slug = slugTaken ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
+        company = await Company.create({
+          slug,
+          name: app.companyName,
+          category: app.category || "consultants-advisors",
+          tier: TIER_MAP[app.tier] ?? "free",
+          location: { city: "", state: app.stateProvince || "" },
+          shortDescription: app.description || `${app.companyName} — cannabis industry professional`,
+          email: app.email,
+          phone: app.phone || "",
+          website: app.website || "",
+          serviceArea: app.serviceArea || "",
+          certifications: app.certifications
+            ? app.certifications.split(",").map((c: string) => c.trim()).filter(Boolean)
+            : [],
+          logoPlaceholder: app.companyName.slice(0, 2).toUpperCase(),
+          logoColor: "#1A4A35",
+          isFeatured: false,
+        });
+      }
+
+      // Create or update User record (linked to company)
       await User.findOneAndUpdate(
         { email: app.email },
         {
@@ -64,6 +95,7 @@ export async function PATCH(
           category: app.category,
           accountType: "vendor",
           tier: TIER_MAP[app.tier] ?? "free",
+          companyId: company._id,
           setupToken: token,
           setupTokenExpires: expires,
           isActive: false,
