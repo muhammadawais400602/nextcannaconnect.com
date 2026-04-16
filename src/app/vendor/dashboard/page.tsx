@@ -28,7 +28,7 @@ function ImageUploader({
       form.append("file", file);
       const res = await fetch("/api/vendor/upload", { method: "POST", body: form });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
+      if (!res.ok) throw new Error(data.error || data.detail || "Upload failed");
       onChange(data.url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");

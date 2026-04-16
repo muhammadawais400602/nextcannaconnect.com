@@ -41,6 +41,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ url: blob.url });
   } catch (err) {
     console.error("[vendor/upload]", err);
-    return NextResponse.json({ error: "Upload failed", detail: String(err) }, { status: 500 });
+    const msg = String(err);
+    const userFacing = msg.includes("BLOB_READ_WRITE_TOKEN") || msg.includes("No token")
+      ? "Blob storage is not connected yet. Go to Vercel → Storage → Create a Blob store, then redeploy."
+      : "Upload failed — please try again.";
+    return NextResponse.json({ error: userFacing, detail: msg }, { status: 500 });
   }
 }
