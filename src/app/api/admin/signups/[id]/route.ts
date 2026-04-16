@@ -57,30 +57,36 @@ export async function PATCH(
       const token = randomBytes(32).toString("hex");
       const expires = new Date(Date.now() + 72 * 60 * 60 * 1000);
 
-      // Create Company record if one doesn't exist yet
-      let company = await Company.findOne({ email: app.email });
-      if (!company) {
-        const baseSlug = toSlug(app.companyName) || `company-${Date.now().toString(36)}`;
-        const slugTaken = await Company.findOne({ slug: baseSlug });
-        const slug = slugTaken ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
-        company = await Company.create({
-          slug,
-          name: app.companyName,
-          category: app.category || "consultants-advisors",
-          tier: TIER_MAP[app.tier] ?? "free",
-          location: { city: "", state: app.stateProvince || "" },
-          shortDescription: app.description || `${app.companyName} — cannabis industry professional`,
-          email: app.email,
-          phone: app.phone || "",
-          website: app.website || "",
-          serviceArea: app.serviceArea || "",
-          certifications: app.certifications
-            ? app.certifications.split(",").map((c: string) => c.trim()).filter(Boolean)
-            : [],
-          logoPlaceholder: app.companyName.slice(0, 2).toUpperCase(),
-          logoColor: "#1A4A35",
-          isFeatured: false,
-        });
+      // Create Company record if one doesn't exist yet (best-effort — never blocks approval)
+      let companyId: unknown = null;
+      try {
+        let company = await Company.findOne({ email: app.email });
+        if (!company) {
+          const baseSlug = toSlug(app.companyName) || `company-${Date.now().toString(36)}`;
+          const slugTaken = await Company.findOne({ slug: baseSlug });
+          const slug = slugTaken ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
+          company = await Company.create({
+            slug,
+            name: app.companyName,
+            category: app.category || "consultants-advisors",
+            tier: TIER_MAP[app.tier] ?? "free",
+            location: { city: "", state: app.stateProvince || "" },
+            shortDescription: app.description || `${app.companyName} — cannabis industry professional`,
+            email: app.email,
+            phone: app.phone || "",
+            website: app.website || "",
+            serviceArea: app.serviceArea || "",
+            certifications: app.certifications
+              ? String(app.certifications).split(",").map((c) => c.trim()).filter(Boolean)
+              : [],
+            logoPlaceholder: app.companyName.slice(0, 2).toUpperCase(),
+            logoColor: "#1A4A35",
+            isFeatured: false,
+          });
+        }
+        companyId = company._id;
+      } catch (companyErr) {
+        console.error("[signups PATCH] Company creation failed (non-fatal):", companyErr);
       }
 
       // Create or update User record (linked to company)
@@ -95,7 +101,7 @@ export async function PATCH(
           category: app.category,
           accountType: "vendor",
           tier: TIER_MAP[app.tier] ?? "free",
-          companyId: company._id,
+          ...(companyId ? { companyId } : {}),
           setupToken: token,
           setupTokenExpires: expires,
           isActive: false,
