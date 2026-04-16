@@ -19,6 +19,9 @@ export default function Navbar() {
     return pathname === href;
   };
 
+  // Vendor dashboard has its own nav
+  if (pathname.startsWith("/vendor/dashboard") || pathname.startsWith("/vendor/login")) return null;
+
   return (
     <nav
       className="fixed top-0 w-full z-50 glass-panel"
