@@ -18,11 +18,22 @@ export async function GET(request: NextRequest) {
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     await connectDB();
-    const user = await User.findById(userId).select("companyId isActive");
+    const user = await User.findById(userId).select("companyId isActive email companyName");
     if (!user?.isActive) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    if (!user.companyId) return NextResponse.json({ company: null });
 
-    const company = await Company.findById(user.companyId);
+    let company = user.companyId ? await Company.findById(user.companyId) : null;
+
+    // Fallback: link company by email or company name for pre-existing accounts
+    if (!company) {
+      company = await Company.findOne({ email: user.email })
+        ?? (user.companyName
+          ? await Company.findOne({ name: { $regex: `^${user.companyName}$`, $options: "i" } })
+          : null);
+      if (company) {
+        await User.findByIdAndUpdate(userId, { companyId: company._id });
+      }
+    }
+
     return NextResponse.json({ company });
   } catch (err) {
     console.error("[vendor/company GET]", err);
@@ -36,8 +47,20 @@ export async function PUT(request: NextRequest) {
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     await connectDB();
-    const user = await User.findById(userId).select("companyId isActive");
+    const user = await User.findById(userId).select("companyId isActive email companyName");
     if (!user?.isActive) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+    // Resolve companyId — link by email/name for accounts approved before auto-linking was added
+    if (!user.companyId) {
+      const found = await Company.findOne({ email: user.email })
+        ?? (user.companyName
+          ? await Company.findOne({ name: { $regex: `^${user.companyName}$`, $options: "i" } })
+          : null);
+      if (found) {
+        user.companyId = found._id as typeof user.companyId;
+        await User.findByIdAndUpdate(userId, { companyId: found._id });
+      }
+    }
     if (!user.companyId) return NextResponse.json({ error: "No company linked to this account" }, { status: 404 });
 
     const body = await request.json();
