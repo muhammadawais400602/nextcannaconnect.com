@@ -272,6 +272,7 @@ export default function OurCategories() {
           flex-shrink: 0;
         }
         .category-card-image {
+          position: relative;
           height: 160px;
           border-radius: 15px 15px 0 0;
           overflow: hidden;
