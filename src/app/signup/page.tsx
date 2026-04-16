@@ -182,7 +182,7 @@ function SignUpForm() {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Submission failed");
+        throw new Error(data.detail || data.error || "Submission failed");
       }
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
