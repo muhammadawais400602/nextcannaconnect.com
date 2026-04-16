@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { CATEGORIES } from "@/data/categories";
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname.startsWith("/vendor/dashboard") || pathname.startsWith("/vendor/login")) return null;
+
   return (
     <footer style={{ backgroundColor: "#003320", color: "rgba(136,185,158,0.7)" }}>
       <div className="mx-auto px-4 md:px-8 pt-14 md:pt-24 pb-12" style={{ maxWidth: "1440px" }}>

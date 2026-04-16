@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
@@ -97,6 +98,7 @@ export async function PUT(request: NextRequest) {
       { new: true }
     );
 
+    revalidateTag("companies", "route");
     return NextResponse.json({ success: true, company });
   } catch (err) {
     console.error("[vendor/company PUT]", err);
