@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getCompanyBySlug, getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
+import { getCompanyBySlugFresh, getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import { getCategoryBySlug } from "@/data/categories";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { Company } from "@/types";
@@ -12,12 +12,12 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export const revalidate = 1800;
+export const dynamic = "force-dynamic";
 export const dynamicParams = true;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const company = await getCompanyBySlug(slug);
+  const company = await getCompanyBySlugFresh(slug);
   if (!company) return {};
   return {
     title: `${company.name} | NextCanna Connect`,
@@ -60,7 +60,7 @@ function SimilarCard({ company }: { company: Company }) {
 
 export default async function VendorPage({ params }: Props) {
   const { slug } = await params;
-  const company = await getCompanyBySlug(slug);
+  const company = await getCompanyBySlugFresh(slug);
   if (!company) notFound();
 
   const category = getCategoryBySlug(company.category);

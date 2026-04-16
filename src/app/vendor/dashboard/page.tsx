@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { CATEGORIES } from "@/data/categories";
 
 // ── Image uploader ────────────────────────────────────────────────────────────
 function ImageUploader({
@@ -95,6 +96,7 @@ function ImageUploader({
 
 interface Product { name: string; description: string; imageUrl: string }
 interface FormState {
+  category: string;
   shortDescription: string;
   fullDescription: string;
   website: string;
@@ -146,7 +148,7 @@ const gridTwo: React.CSSProperties = { display: "grid", gridTemplateColumns: "1f
 
 function emptyForm(): FormState {
   return {
-    shortDescription: "", fullDescription: "", website: "", phone: "",
+    category: "", shortDescription: "", fullDescription: "", website: "", phone: "",
     city: "", state: "", bannerImageUrl: "", bannerCaption: "",
     foundedYear: "", teamSize: "", serviceArea: "", yearsInCannabis: "",
     serviceTags: "", certifications: "",
@@ -167,6 +169,7 @@ function companyToForm(c: Record<string, unknown>): FormState {
   while (filled.length < 3) filled.push({ name: "", description: "", imageUrl: "" });
 
   return {
+    category: String(c.category ?? ""),
     shortDescription: String(c.shortDescription ?? ""),
     fullDescription: String(c.fullDescription ?? ""),
     website: String(c.website ?? ""),
@@ -338,6 +341,19 @@ export default function VendorDashboardPage() {
             {/* Business Profile */}
             <div style={sectionStyle}>
               <h2 style={sectionTitle}>Business Profile</h2>
+              <div style={{ marginBottom: "14px" }}>
+                <label style={labelStyle}>Category <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— which directory your listing appears in</span></label>
+                <select
+                  style={{ ...inputStyle, appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", paddingRight: "32px", cursor: "pointer" }}
+                  value={form.category}
+                  onChange={(e) => setField("category", e.target.value)}
+                >
+                  <option value="">— Select a category —</option>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat.slug} value={cat.slug}>{cat.label}</option>
+                  ))}
+                </select>
+              </div>
               <div style={{ marginBottom: "14px" }}>
                 <label style={labelStyle}>Tagline <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— shown under your name</span></label>
                 <input style={inputStyle} value={form.shortDescription} onChange={(e) => setField("shortDescription", e.target.value)} placeholder="e.g. Premium cannabis equipment manufacturer" maxLength={200} />

@@ -68,12 +68,21 @@ export async function PUT(request: NextRequest) {
 
     // Vendors can edit content fields only — not slug, tier, category, or isFeatured
     const update: Record<string, unknown> = {};
+    const VALID_CATEGORIES = [
+      "cultivation-growing", "manufacturers-suppliers", "extraction-processing",
+      "consultants-advisors", "marketing-branding-packaging", "retail-dispensary",
+      "transportation-logistics", "testing-science", "compliance-legal",
+      "technology-software", "real-estate-construction", "finance-insurance",
+    ];
     const allowed = [
       "shortDescription", "fullDescription", "website", "phone",
       "bannerImageUrl", "bannerCaption",
       "foundedYear", "teamSize", "serviceArea", "yearsInCannabis",
       "pricingModel", "availability", "hourlyRate", "bio",
     ];
+    if (body.category && VALID_CATEGORIES.includes(body.category)) {
+      update.category = body.category;
+    }
     for (const key of allowed) {
       if (body[key] !== undefined) update[key] = body[key];
     }
@@ -100,6 +109,7 @@ export async function PUT(request: NextRequest) {
 
     revalidateTag("companies", "max");
     if (company?.slug) revalidatePath(`/vendor/${company.slug}`);
+    if (company?.category) revalidatePath(`/directory/${company.category}`);
     return NextResponse.json({ success: true, company });
   } catch (err) {
     console.error("[vendor/company PUT]", err);

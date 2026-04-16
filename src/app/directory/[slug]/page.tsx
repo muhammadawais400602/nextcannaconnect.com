@@ -5,7 +5,7 @@ import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import DirectoryHero from "@/components/directory/DirectoryHero";
 import DirectoryContent from "@/components/directory/DirectoryContent";
 
-export const revalidate = 1800; // revalidate every 30 minutes
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -21,9 +21,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export async function generateStaticParams() {
-  return CATEGORIES.map((cat) => ({ slug: cat.slug }));
-}
 
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
