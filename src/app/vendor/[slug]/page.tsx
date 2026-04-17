@@ -74,10 +74,11 @@ export default async function VendorPage({ params }: Props) {
 
   // Stats row
   const stats = [
-    { label: "Founded",       value: company.foundedYear?.toString() },
-    { label: "Employees",     value: company.teamSize },
-    { label: "Certification", value: certs[0] },
-    { label: "Regions",       value: company.serviceArea },
+    { label: "Founded",          value: company.foundedYear?.toString() },
+    { label: "Employees",        value: company.teamSize },
+    { label: "Certification",    value: certs[0] },
+    { label: "Regions",          value: company.serviceArea },
+    { label: "Years in Cannabis", value: company.yearsInCannabis?.toString() },
   ].filter(s => s.value);
 
   return (
