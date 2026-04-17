@@ -6,11 +6,11 @@ import { useRef, useEffect } from "react";
 import type { Company } from "@/types";
 
 const TIER_LABELS: Record<string, string> = {
-  elite: "Verified",
-  featured: "Verified",
-  select: "Select",
-  claimed: "Select",
-  free: "Claimed",
+  elite:    "Verified Pro",
+  featured: "Verified Pro",
+  select:   "Select",
+  claimed:  "Select",
+  free:     "Unclaimed",
 };
 
 export default function FeaturedVendors({ companies }: { companies: Company[] }) {

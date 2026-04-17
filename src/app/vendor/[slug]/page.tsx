@@ -131,11 +131,11 @@ export default async function VendorPage({ params }: Props) {
                   </h1>
                   {(() => {
                     const BADGE: Record<string, { label: string; bg: string; color: string }> = {
-                      featured: { label: "Verified Pro",      bg: "rgba(26,74,53,0.85)",    color: "#6ee7b7" },
-                      elite:    { label: "Verified Pro",      bg: "rgba(26,74,53,0.85)",    color: "#6ee7b7" },
-                      select:   { label: "Select Member",     bg: "rgba(29,78,216,0.85)",   color: "#bfdbfe" },
-                      claimed:  { label: "Claimed Listing",   bg: "rgba(109,40,217,0.85)",  color: "#ddd6fe" },
-                      free:     { label: "Unclaimed Listing", bg: "rgba(0,0,0,0.5)",        color: "#D1D5DB" },
+                      featured: { label: "Verified Pro", bg: "rgba(26,74,53,0.85)",  color: "#6ee7b7" },
+                      elite:    { label: "Verified Pro", bg: "rgba(26,74,53,0.85)",  color: "#6ee7b7" },
+                      select:   { label: "Select",       bg: "rgba(45,110,82,0.85)", color: "#d1fae5" },
+                      claimed:  { label: "Select",       bg: "rgba(45,110,82,0.85)", color: "#d1fae5" },
+                      free:     { label: "Unclaimed",    bg: "rgba(0,0,0,0.5)",      color: "#D1D5DB" },
                     };
                     const b = BADGE[company.tier] ?? BADGE.free;
                     return (

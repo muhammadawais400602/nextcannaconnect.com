@@ -11,10 +11,9 @@ interface FiltersPanelProps {
 }
 
 const VERIFICATION_OPTIONS = [
-  { id: "verified", label: "Verified Partner" },
-  { id: "certified", label: "Certified Member" },
-  { id: "claimed", label: "Claimed Listing" },
-  { id: "unclaimed", label: "Claimed Listing" },
+  { id: "verified-pro", label: "Verified Pro" },
+  { id: "select",       label: "Select" },
+  { id: "unclaimed",    label: "Unclaimed" },
 ];
 
 function toggle(arr: string[], value: string): string[] {

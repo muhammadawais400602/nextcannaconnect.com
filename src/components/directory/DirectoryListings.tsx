@@ -15,10 +15,9 @@ const SORT_OPTIONS = [
 
 // Maps filter checkbox IDs to the tiers they represent
 const TIER_MAP: Record<string, string[]> = {
-  verified: ["featured", "elite"],
-  certified: ["select"],
-  claimed: ["claimed"],
-  unclaimed: ["free"],
+  "verified-pro": ["featured", "elite"],
+  select:         ["claimed", "select"],
+  unclaimed:      ["free"],
 };
 
 interface Props {
