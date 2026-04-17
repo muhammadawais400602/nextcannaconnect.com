@@ -94,6 +94,9 @@ function ImageUploader({
 // ─────────────────────────────────────────────────────────────────────────────
 
 
+const US_STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming","District of Columbia"];
+const CA_PROVINCES = ["Alberta","British Columbia","Manitoba","New Brunswick","Newfoundland and Labrador","Northwest Territories","Nova Scotia","Nunavut","Ontario","Prince Edward Island","Quebec","Saskatchewan","Yukon"];
+
 interface Product { name: string; description: string; imageUrl: string }
 interface FormState {
   category: string;
@@ -101,8 +104,10 @@ interface FormState {
   fullDescription: string;
   website: string;
   phone: string;
+  address: string;
   city: string;
   state: string;
+  zip: string;
   bannerImageUrl: string;
   bannerCaption: string;
   foundedYear: string;
@@ -149,7 +154,7 @@ const gridTwo: React.CSSProperties = { display: "grid", gridTemplateColumns: "1f
 function emptyForm(): FormState {
   return {
     category: "", shortDescription: "", fullDescription: "", website: "", phone: "",
-    city: "", state: "", bannerImageUrl: "", bannerCaption: "",
+    address: "", city: "", state: "", zip: "", bannerImageUrl: "", bannerCaption: "",
     foundedYear: "", teamSize: "", serviceArea: "", yearsInCannabis: "",
     serviceTags: "", certifications: "",
     products: [
@@ -161,7 +166,7 @@ function emptyForm(): FormState {
 }
 
 function companyToForm(c: Record<string, unknown>): FormState {
-  const loc = (c.location as { city?: string; state?: string }) ?? {};
+  const loc = (c.location as { address?: string; city?: string; state?: string; zip?: string }) ?? {};
   const products = Array.isArray(c.products) ? c.products : [];
   const filled = products.map((p: { name?: string; description?: string; imageUrl?: string }) => ({
     name: p.name ?? "", description: p.description ?? "", imageUrl: p.imageUrl ?? "",
@@ -174,8 +179,10 @@ function companyToForm(c: Record<string, unknown>): FormState {
     fullDescription: String(c.fullDescription ?? ""),
     website: String(c.website ?? ""),
     phone: String(c.phone ?? ""),
+    address: String(loc.address ?? ""),
     city: String(loc.city ?? ""),
     state: String(loc.state ?? ""),
+    zip: String(loc.zip ?? ""),
     bannerImageUrl: String(c.bannerImageUrl ?? ""),
     bannerCaption: String(c.bannerCaption ?? ""),
     foundedYear: c.foundedYear ? String(c.foundedYear) : "",
@@ -239,6 +246,8 @@ export default function VendorDashboardPage() {
         serviceTags: form.serviceTags.split(",").map((s) => s.trim()).filter(Boolean),
         certifications: form.certifications.split(",").map((s) => s.trim()).filter(Boolean),
         products: form.products.filter((p) => p.name.trim()),
+        address: form.address,
+        zip: form.zip,
       };
       const res = await fetch("/api/vendor/company", {
         method: "PUT",
@@ -377,15 +386,35 @@ export default function VendorDashboardPage() {
                   <input style={inputStyle} value={form.phone} onChange={(e) => setField("phone", e.target.value)} placeholder="+1 (555) 000-0000" />
                 </div>
               </div>
-              <div style={gridTwo}>
+              <div style={{ marginBottom: "14px" }}>
+                <label style={labelStyle}>Street Address <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional, used for the map pin</span></label>
+                <input style={inputStyle} value={form.address} onChange={(e) => setField("address", e.target.value)} placeholder="e.g. 123 Cannabis Blvd, Suite 400" />
+              </div>
+              <div style={{ ...gridTwo, marginBottom: "14px" }}>
                 <div>
                   <label style={labelStyle}>City</label>
                   <input style={inputStyle} value={form.city} onChange={(e) => setField("city", e.target.value)} placeholder="e.g. Denver" />
                 </div>
                 <div>
-                  <label style={labelStyle}>State / Province</label>
-                  <input style={inputStyle} value={form.state} onChange={(e) => setField("state", e.target.value)} placeholder="e.g. Colorado" />
+                  <label style={labelStyle}>ZIP / Postal Code</label>
+                  <input style={inputStyle} value={form.zip} onChange={(e) => setField("zip", e.target.value)} placeholder="e.g. 80202" />
                 </div>
+              </div>
+              <div>
+                <label style={labelStyle}>State / Province</label>
+                <select
+                  style={{ ...inputStyle, appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", paddingRight: "32px", cursor: "pointer" }}
+                  value={form.state}
+                  onChange={(e) => setField("state", e.target.value)}
+                >
+                  <option value="">— Select state / province —</option>
+                  <optgroup label="United States">
+                    {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+                  </optgroup>
+                  <optgroup label="Canada">
+                    {CA_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
+                  </optgroup>
+                </select>
               </div>
             </div>
 

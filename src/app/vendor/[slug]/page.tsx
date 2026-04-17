@@ -259,21 +259,34 @@ export default async function VendorPage({ params }: Props) {
               </div>
             )}
 
-            {/* Location map placeholder */}
-            <div style={{ background: "#1a2e22", borderRadius: "12px", overflow: "hidden", border: "1px solid #E5E7EB", height: "160px", position: "relative" }}>
-              {/* Grid pattern */}
-              <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
-              {/* Pin */}
-              <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", display: "flex", flexDirection: "column", alignItems: "center", gap: "6px" }}>
-                <div style={{ width: "12px", height: "12px", borderRadius: "50%", background: "#E8821E", boxShadow: "0 0 0 4px rgba(232,130,30,0.2)" }} />
-                <span style={{ background: "white", padding: "4px 10px", borderRadius: "6px", fontSize: "11px", fontWeight: "700", color: "#111827", whiteSpace: "nowrap" }}>
-                  {company.name.split(" ")[0].toUpperCase()} HQ
-                </span>
-                <span style={{ fontSize: "11px", color: "rgba(255,255,255,0.5)" }}>
-                  {company.location.city}, {company.location.state}
-                </span>
-              </div>
-            </div>
+            {/* Location map */}
+            {(() => {
+              const parts = [
+                company.location.address,
+                company.location.city,
+                company.location.state,
+                company.location.zip,
+              ].filter(Boolean);
+              const hasLocation = parts.length > 0;
+              const query = encodeURIComponent(parts.join(", "));
+              return hasLocation ? (
+                <div style={{ borderRadius: "12px", overflow: "hidden", border: "1px solid #E5E7EB", height: "220px" }}>
+                  <iframe
+                    title={`${company.name} location`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, display: "block" }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://maps.google.com/maps?q=${query}&output=embed&zoom=14`}
+                  />
+                </div>
+              ) : (
+                <div style={{ background: "#F9FAFB", borderRadius: "12px", border: "1px solid #E5E7EB", height: "100px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: "13px", color: "#9CA3AF" }}>No location set</span>
+                </div>
+              );
+            })()}
 
           </div>
         </div>

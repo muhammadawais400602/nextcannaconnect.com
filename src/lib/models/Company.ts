@@ -6,7 +6,7 @@ export interface ICompany extends Document {
   tier: "free" | "claimed" | "select" | "elite" | "featured";
   category: string;
   secondaryCategory?: string;
-  location: { city: string; state: string };
+  location: { address?: string; city: string; state: string; zip?: string };
   shortDescription: string;
   fullDescription?: string;
   serviceTags: string[];
@@ -59,8 +59,10 @@ const CompanySchema = new Schema<ICompany>(
     category: { type: String, required: true, index: true },
     secondaryCategory: String,
     location: {
+      address: { type: String, default: "" },
       city: { type: String, default: "" },
       state: { type: String, default: "" },
+      zip: { type: String, default: "" },
     },
     shortDescription: { type: String, required: true },
     fullDescription: String,
