@@ -25,13 +25,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-const TIER_BADGE: Record<string, { label: string; bg: string; color: string }> = {
-  featured:  { label: "Verified Pro",       bg: "rgba(26,74,53,0.1)",  color: "#003320" },
-  elite:     { label: "Verified Pro",       bg: "rgba(26,74,53,0.1)",  color: "#003320" },
-  select:    { label: "Select Member",      bg: "rgba(37,99,235,0.08)", color: "#1d4ed8" },
-  claimed:   { label: "Claimed Listing",    bg: "rgba(124,58,237,0.08)", color: "#6d28d9" },
-  free:      { label: "Unclaimed Listing",  bg: "#F3F4F6",              color: "#6B7280" },
-};
 
 function SimilarCard({ company }: { company: Company }) {
   return (
@@ -67,7 +60,6 @@ export default async function VendorPage({ params }: Props) {
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
-  const badge = TIER_BADGE[company.tier] ?? TIER_BADGE.free;
   const certs = company.certifications ?? company.credentials ?? [];
   const services = company.serviceTags ?? [];
   const products = company.products ?? [];
@@ -97,29 +89,6 @@ export default async function VendorPage({ params }: Props) {
 
       {/* Main */}
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 24px 80px" }}>
-
-        {/* Header */}
-        <div style={{ marginBottom: "28px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
-            <h1 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: "800", color: "#111827", letterSpacing: "-0.5px", margin: 0, fontFamily: "'Inter', sans-serif" }}>
-              {company.name}
-            </h1>
-            <span style={{ display: "inline-block", fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", textTransform: "uppercase", padding: "4px 10px", borderRadius: "20px", background: badge.bg, color: badge.color }}>
-              {badge.label}
-            </span>
-            {category && (
-              <span style={{ fontSize: "12px", fontWeight: "600", color: "#6B7280", background: "#F3F4F6", padding: "4px 10px", borderRadius: "20px" }}>
-                {category.label}
-              </span>
-            )}
-            {(company.location.city || company.location.state) && (
-              <span style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "13px", color: "#6B7280" }}>
-                <MapPin size={13} style={{ color: "#9CA3AF" }} />
-                {[company.location.city, company.location.state].filter(Boolean).join(", ")}
-              </span>
-            )}
-          </div>
-        </div>
 
         {/* Two-column grid */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "28px", alignItems: "flex-start" }}>
