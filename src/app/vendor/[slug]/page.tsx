@@ -100,7 +100,7 @@ export default async function VendorPage({ params }: Props) {
 
         {/* Header */}
         <div style={{ marginBottom: "28px" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
             <h1 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: "800", color: "#111827", letterSpacing: "-0.5px", margin: 0, fontFamily: "'Inter', sans-serif" }}>
               {company.name}
             </h1>
@@ -112,13 +112,13 @@ export default async function VendorPage({ params }: Props) {
                 {category.label}
               </span>
             )}
+            {(company.location.city || company.location.state) && (
+              <span style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "13px", color: "#6B7280" }}>
+                <MapPin size={13} style={{ color: "#9CA3AF" }} />
+                {[company.location.city, company.location.state].filter(Boolean).join(", ")}
+              </span>
+            )}
           </div>
-          {(company.location.city || company.location.state) && (
-            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", color: "#6B7280" }}>
-              <MapPin size={14} style={{ color: "#9CA3AF" }} />
-              {[company.location.city, company.location.state].filter(Boolean).join(", ")}
-            </div>
-          )}
         </div>
 
         {/* Two-column grid */}
