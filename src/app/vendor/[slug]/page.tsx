@@ -100,22 +100,25 @@ export default async function VendorPage({ params }: Props) {
 
         {/* Header */}
         <div style={{ marginBottom: "28px" }}>
-          <span style={{ display: "inline-block", fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", textTransform: "uppercase", padding: "4px 10px", borderRadius: "20px", background: badge.bg, color: badge.color, marginBottom: "14px" }}>
-            {badge.label}
-          </span>
-          <h1 style={{ fontSize: "clamp(28px, 4vw, 40px)", fontWeight: "800", color: "#111827", letterSpacing: "-0.5px", marginBottom: "10px", fontFamily: "'Inter', sans-serif" }}>
-            {company.name}
-          </h1>
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "20px", fontSize: "14px", color: "#6B7280" }}>
-            <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#9CA3AF" }}>category</span>
-              {company.shortDescription}
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
+            <h1 style={{ fontSize: "clamp(24px, 4vw, 36px)", fontWeight: "800", color: "#111827", letterSpacing: "-0.5px", margin: 0, fontFamily: "'Inter', sans-serif" }}>
+              {company.name}
+            </h1>
+            <span style={{ display: "inline-block", fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", textTransform: "uppercase", padding: "4px 10px", borderRadius: "20px", background: badge.bg, color: badge.color }}>
+              {badge.label}
             </span>
-            <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-              <MapPin size={14} style={{ color: "#9CA3AF" }} />
-              {company.location.city}, {company.location.state}
-            </span>
+            {category && (
+              <span style={{ fontSize: "12px", fontWeight: "600", color: "#6B7280", background: "#F3F4F6", padding: "4px 10px", borderRadius: "20px" }}>
+                {category.label}
+              </span>
+            )}
           </div>
+          {(company.location.city || company.location.state) && (
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "14px", color: "#6B7280" }}>
+              <MapPin size={14} style={{ color: "#9CA3AF" }} />
+              {[company.location.city, company.location.state].filter(Boolean).join(", ")}
+            </div>
+          )}
         </div>
 
         {/* Two-column grid */}
