@@ -22,6 +22,7 @@ export interface ICompany extends Document {
   email?: string;
   linkedinUrl?: string;
   instagramUrl?: string;
+  youtubeUrl?: string;
   // Template 1 — Products & Equipment
   productLines?: string[];
   minOrderQty?: string;
@@ -81,6 +82,7 @@ const CompanySchema = new Schema<ICompany>(
     email: String,
     linkedinUrl: String,
     instagramUrl: String,
+    youtubeUrl: String,
     productLines: [String],
     minOrderQty: String,
     leadTime: String,
