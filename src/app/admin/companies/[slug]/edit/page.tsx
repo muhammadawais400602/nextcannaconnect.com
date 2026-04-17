@@ -1,27 +1,21 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import CompanyForm from "../../_CompanyForm";
-import { COMPANIES } from "@/data/companies";
+import { connectDB } from "@/lib/mongodb";
+import Company from "@/lib/models/Company";
 
 export default async function EditCompanyPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  // Fetch from static data (falls through to DB in production)
-  const staticCompany = COMPANIES.find((c) => c.slug === slug);
-  if (!staticCompany) notFound();
+  await connectDB();
+  const doc = await Company.findOne({ slug }).lean();
+  if (!doc) notFound();
 
-  // Try to get live DB version
-  let company = staticCompany;
-  try {
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
-    const res = await fetch(`${baseUrl}/api/admin/companies/${slug}`, { cache: "no-store" });
-    if (res.ok) {
-      const data = await res.json();
-      company = data.company;
-    }
-  } catch {
-    // Use static data fallback
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const company: Record<string, any> = {
+    ...doc,
+    id: String((doc as any)._id),
+  };
 
   return (
     <div>
