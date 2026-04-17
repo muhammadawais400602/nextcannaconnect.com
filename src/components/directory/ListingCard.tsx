@@ -144,7 +144,7 @@ export default function ListingCard({ company }: Props) {
       {/* Left image */}
       <div
         style={{
-          width: "160px",
+          width: "220px",
           flexShrink: 0,
           background: `linear-gradient(135deg, ${company.logoColor} 0%, ${company.bannerColor ?? company.logoColor}dd 100%)`,
           display: "flex",
@@ -161,7 +161,7 @@ export default function ListingCard({ company }: Props) {
             src={company.bannerImageUrl}
             alt={company.name}
             fill
-            sizes="160px"
+            sizes="220px"
             style={{ objectFit: "cover" }}
             unoptimized
           />
