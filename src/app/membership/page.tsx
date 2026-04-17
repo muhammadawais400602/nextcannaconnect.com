@@ -7,16 +7,17 @@ import { Check, X } from "lucide-react";
 export const metadata: Metadata = {
   title: "Membership Plans | NextCanna Connect",
   description:
-    "Choose the right membership tier for your cannabis business. Free, Claimed, Select, and Elite plans available.",
+    "Choose the right membership tier for your cannabis business. Unclaimed, Select, and Verified Pro plans available.",
 };
 
 const TIERS = [
   {
-    name: "Free",
+    name: "Unclaimed",
     price: "$0",
     period: "/mo",
     badge: null,
     badgeBg: null,
+    badgeColor: null,
     highlight: false,
     pill: null,
     description: "Get your business listed in our directory at no cost.",
@@ -24,9 +25,8 @@ const TIERS = [
     ctaHref: "/signup?tier=free",
     features: [
       { label: "Standard directory listing", included: true },
-      { label: "Name, category & location visible", included: true },
+      { label: "Business name & location visible", included: true },
       { label: "Contact information", included: false },
-      { label: "Lead form", included: false },
       { label: "Full company page", included: false },
       { label: "Tier badge", included: false },
       { label: "RFP Bid Board access", included: false },
@@ -35,73 +35,47 @@ const TIERS = [
     leadPrice: null,
   },
   {
-    name: "Claimed",
-    price: "$4.99",
-    period: "/mo",
-    badge: "CLAIMED",
-    badgeBg: "#F9C31A",
-    badgeColor: "#1A2E1A",
-    highlight: false,
-    pill: null,
-    description: "Claim your listing and start receiving leads from interested buyers.",
-    cta: "Get Claimed",
-    ctaHref: "/signup?tier=claimed",
-    features: [
-      { label: "Standard directory listing", included: true },
-      { label: "Contact info unlocked on lead", included: true },
-      { label: "Lead auto-submitted to company", included: true },
-      { label: "Yellow CLAIMED badge", included: true },
-      { label: "Full company page", included: false },
-      { label: "RFP Bid Board access", included: false },
-      { label: "Calendar booking", included: false },
-      { label: "Priority search placement", included: false },
-    ],
-    leadPrice: "$20 per lead",
-  },
-  {
     name: "Select",
     price: "$49.99",
     period: "/mo",
-    badge: "SELECT SEAL",
-    badgeBg: "#5CB85C",
-    badgeColor: "white",
+    badge: "SELECT",
+    badgeBg: "rgba(45,110,82,0.12)",
+    badgeColor: "#2d6e52",
     highlight: false,
     pill: null,
-    description: "A full company profile with the NextCanna Select Seal and reduced lead pricing.",
+    description: "A full company profile with the NextCanna Select badge and reduced lead pricing.",
     cta: "Get Select",
     ctaHref: "/signup?tier=select",
     features: [
       { label: "Full company page", included: true },
-      { label: "NextCanna Select Seal badge", included: true },
+      { label: "NextCanna Select badge", included: true },
       { label: "RFP Bid Board access", included: true },
       { label: "Enhanced directory card", included: true },
       { label: "Contact info on profile", included: true },
       { label: "Calendar booking", included: false },
       { label: "Priority search placement", included: false },
-      { label: "Full vetting & Verified badge", included: false },
     ],
     leadPrice: "$9.99 per lead",
   },
   {
-    name: "Elite",
+    name: "Verified Pro",
     price: "$99",
     period: "/mo",
-    badge: "VERIFIED ✓",
-    badgeBg: "#1A4A35",
-    badgeColor: "#F9C31A",
+    badge: "VERIFIED PRO",
+    badgeBg: "rgba(26,74,53,0.12)",
+    badgeColor: "#1A4A35",
     highlight: true,
     pill: "MOST POPULAR",
     description: "The highest tier — full vetting, premium placement, and real-time calendar sync.",
-    cta: "Get Elite",
+    cta: "Get Verified Pro",
     ctaHref: "/signup?tier=elite",
     features: [
       { label: "Premium company page", included: true },
-      { label: "NextCanna Verified badge (full vetting)", included: true },
+      { label: "Verified Pro badge (full vetting)", included: true },
       { label: "Priority search placement", included: true },
       { label: "Real-time calendar sync", included: true },
       { label: "RFP Bid Board access", included: true },
       { label: "Google Reviews integration", included: true },
-      { label: "All contact info visible", included: true },
       { label: "Dedicated account support", included: true },
     ],
     leadPrice: "$25 per lead",
@@ -109,15 +83,15 @@ const TIERS = [
 ];
 
 const COMPARISON = [
-  { feature: "Directory Listing", free: true, claimed: true, select: true, elite: true },
-  { feature: "Tier Badge", free: false, claimed: "CLAIMED", select: "SELECT SEAL", elite: "VERIFIED ✓" },
-  { feature: "Contact Info", free: false, claimed: "On lead", select: true, elite: true },
-  { feature: "Full Company Page", free: false, claimed: false, select: true, elite: true },
-  { feature: "Lead Price", free: "—", claimed: "$20/lead", select: "$9.99/lead", elite: "$25/lead" },
-  { feature: "RFP Bid Board", free: false, claimed: false, select: true, elite: true },
-  { feature: "Calendar Booking", free: false, claimed: false, select: false, elite: true },
-  { feature: "Priority Placement", free: false, claimed: false, select: false, elite: true },
-  { feature: "Vetting Required", free: false, claimed: false, select: false, elite: true },
+  { feature: "Directory Listing",     unclaimed: true,   select: true,         verifiedPro: true },
+  { feature: "Tier Badge",            unclaimed: false,  select: "SELECT",     verifiedPro: "VERIFIED PRO" },
+  { feature: "Contact Info",          unclaimed: false,  select: true,         verifiedPro: true },
+  { feature: "Full Company Page",     unclaimed: false,  select: true,         verifiedPro: true },
+  { feature: "Lead Price",            unclaimed: "—",    select: "$9.99/lead", verifiedPro: "$25/lead" },
+  { feature: "RFP Bid Board",         unclaimed: false,  select: true,         verifiedPro: true },
+  { feature: "Calendar Booking",      unclaimed: false,  select: false,        verifiedPro: true },
+  { feature: "Priority Placement",    unclaimed: false,  select: false,        verifiedPro: true },
+  { feature: "Vetting Required",      unclaimed: false,  select: false,        verifiedPro: true },
 ];
 
 function Cell({ value }: { value: boolean | string }) {
@@ -150,8 +124,8 @@ export default function MembershipPage() {
 
       {/* Tier cards */}
       <div className="py-16 px-8" style={{ backgroundColor: "#F7F9F7" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
-          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}>
             {TIERS.map((tier) => (
               <div
                 key={tier.name}
@@ -234,7 +208,7 @@ export default function MembershipPage() {
 
       {/* Comparison table */}
       <div className="py-16 px-8" style={{ backgroundColor: "white" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           <h2 className="font-bold text-center mb-10" style={{ fontSize: "26px", color: "#1A4A35", fontWeight: 700 }}>
             Full Feature Comparison
           </h2>
@@ -246,7 +220,7 @@ export default function MembershipPage() {
                   <th className="px-5 py-4 text-left" style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
                     Feature
                   </th>
-                  {["Free", "Claimed", "Select", "Elite"].map((t) => (
+                  {["Unclaimed", "Select", "Verified Pro"].map((t) => (
                     <th key={t} className="px-4 py-4 text-center" style={{ fontSize: "13px", color: "white", fontWeight: 700 }}>
                       {t}
                     </th>
@@ -259,10 +233,9 @@ export default function MembershipPage() {
                     <td className="px-5 py-3" style={{ fontSize: "13px", color: "#1A2E1A", fontWeight: 500 }}>
                       {row.feature}
                     </td>
-                    <td className="px-4 py-3 text-center"><Cell value={row.free} /></td>
-                    <td className="px-4 py-3 text-center"><Cell value={row.claimed} /></td>
+                    <td className="px-4 py-3 text-center"><Cell value={row.unclaimed} /></td>
                     <td className="px-4 py-3 text-center"><Cell value={row.select} /></td>
-                    <td className="px-4 py-3 text-center"><Cell value={row.elite} /></td>
+                    <td className="px-4 py-3 text-center"><Cell value={row.verifiedPro} /></td>
                   </tr>
                 ))}
               </tbody>

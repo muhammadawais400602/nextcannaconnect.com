@@ -4,13 +4,10 @@ import { Company } from "@/types";
 
 function getBadge(company: Company): { label: string; color: string; bg: string } | null {
   if (company.tier === "elite" || company.tier === "featured") {
-    return { label: "Verified Partner", color: "#1a4a35", bg: "rgba(26,74,53,0.1)" };
+    return { label: "Verified Pro", color: "#1a4a35", bg: "rgba(26,74,53,0.1)" };
   }
-  if (company.tier === "select") {
-    return { label: "Certified Member", color: "#2d6e52", bg: "rgba(45,110,82,0.1)" };
-  }
-  if (company.tier === "claimed") {
-    return { label: "Claimed Listing", color: "#6B7280", bg: "#F3F4F6" };
+  if (company.tier === "select" || company.tier === "claimed") {
+    return { label: "Select", color: "#2d6e52", bg: "rgba(45,110,82,0.1)" };
   }
   return null;
 }
