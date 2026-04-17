@@ -187,6 +187,29 @@ export default async function VendorPage({ params }: Props) {
               ))}
             </div>
 
+            {/* YouTube Video */}
+            {company.youtubeUrl && (() => {
+              const ytMatch = company.youtubeUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
+              const videoId = ytMatch?.[1];
+              if (!videoId) return null;
+              return (
+                <div style={{ marginBottom: "40px" }}>
+                  <h2 style={{ fontSize: "20px", fontWeight: "800", color: "#111827", marginBottom: "16px", fontFamily: "'Inter', sans-serif" }}>
+                    Watch Our Video
+                  </h2>
+                  <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, borderRadius: "12px", overflow: "hidden", border: "1px solid #E5E7EB" }}>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${videoId}`}
+                      title="Company video"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                    />
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Product Offerings */}
             {products.length > 0 && (
               <div style={{ marginBottom: "40px" }}>

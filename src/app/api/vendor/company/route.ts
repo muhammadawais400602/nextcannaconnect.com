@@ -79,7 +79,7 @@ export async function PUT(request: NextRequest) {
       "bannerImageUrl", "bannerCaption",
       "foundedYear", "teamSize", "serviceArea", "yearsInCannabis",
       "pricingModel", "availability", "hourlyRate", "bio",
-      "linkedinUrl", "instagramUrl",
+      "linkedinUrl", "instagramUrl", "youtubeUrl",
     ];
     if (body.category && VALID_CATEGORIES.includes(body.category)) {
       update.category = body.category;

@@ -106,6 +106,7 @@ interface FormState {
   phone: string;
   linkedinUrl: string;
   instagramUrl: string;
+  youtubeUrl: string;
   address: string;
   city: string;
   state: string;
@@ -156,7 +157,7 @@ const gridTwo: React.CSSProperties = { display: "grid", gridTemplateColumns: "1f
 function emptyForm(): FormState {
   return {
     category: "", shortDescription: "", fullDescription: "", website: "", phone: "",
-    linkedinUrl: "", instagramUrl: "",
+    linkedinUrl: "", instagramUrl: "", youtubeUrl: "",
     address: "", city: "", state: "", zip: "", bannerImageUrl: "", bannerCaption: "",
     foundedYear: "", teamSize: "", serviceArea: "", yearsInCannabis: "",
     serviceTags: "", certifications: "",
@@ -184,6 +185,7 @@ function companyToForm(c: Record<string, unknown>): FormState {
     phone: String(c.phone ?? ""),
     linkedinUrl: String(c.linkedinUrl ?? ""),
     instagramUrl: String(c.instagramUrl ?? ""),
+    youtubeUrl: String(c.youtubeUrl ?? ""),
     address: String(loc.address ?? ""),
     city: String(loc.city ?? ""),
     state: String(loc.state ?? ""),
@@ -425,6 +427,16 @@ export default function VendorDashboardPage() {
                   value={form.fullDescription}
                   onChange={(e) => setField("fullDescription", e.target.value)}
                   placeholder="Describe your business, expertise, and what sets you apart…"
+                />
+              </div>
+              <div style={{ marginBottom: "14px" }}>
+                <label style={labelStyle}>YouTube Video URL <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— shown below your overview on the listing page</span></label>
+                <input
+                  style={inputStyle}
+                  value={form.youtubeUrl}
+                  onChange={(e) => setField("youtubeUrl", e.target.value)}
+                  placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                  type="url"
                 />
               </div>
               <div style={{ ...gridTwo, marginBottom: "14px" }}>
