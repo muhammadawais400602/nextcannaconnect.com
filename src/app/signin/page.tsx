@@ -6,10 +6,27 @@ import Link from "next/link";
 export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Auth logic goes here
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/vendor-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Invalid email or password");
+      window.location.href = "/vendor/dashboard";
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sign in failed");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -153,9 +170,13 @@ export default function SignInPage() {
             />
           </div>
 
+          {error && (
+            <p style={{ color: "#DC2626", fontSize: "13px", marginBottom: "16px", textAlign: "center" }}>{error}</p>
+          )}
           {/* Submit */}
           <button
             type="submit"
+            disabled={loading}
             style={{
               width: "100%",
               padding: "16px",
@@ -167,13 +188,14 @@ export default function SignInPage() {
               fontSize: "14px",
               fontWeight: 600,
               letterSpacing: "0.02em",
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.7 : 1,
               transition: "background-color 0.2s",
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#1a4a35"; }}
+            onMouseEnter={(e) => { if (!loading) e.currentTarget.style.backgroundColor = "#1a4a35"; }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#003320"; }}
           >
-            Sign In to your Account
+            {loading ? "Signing in…" : "Sign In to your Account"}
           </button>
         </form>
 
