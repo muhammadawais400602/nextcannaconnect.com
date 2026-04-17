@@ -3,13 +3,20 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { CATEGORIES } from "@/data/categories";
 
-const TIERS = ["", "featured", "elite", "select", "claimed", "free"];
+const TIERS = [
+  { value: "free",   label: "Unclaimed" },
+  { value: "select", label: "Select" },
+  { value: "elite",  label: "Verified Pro" },
+];
 
+const TIER_LABEL: Record<string, string> = {
+  free: "Unclaimed", claimed: "Select", select: "Select", elite: "Verified Pro", featured: "Verified Pro",
+};
 const TIER_COLORS: Record<string, string> = {
-  featured: "#E8821E", elite: "#1A4A35", select: "#2563EB", claimed: "#7C3AED", free: "#6B7280",
+  free: "#6B7280", claimed: "#2d6e52", select: "#2d6e52", elite: "#1A4A35", featured: "#1A4A35",
 };
 const TIER_BG: Record<string, string> = {
-  featured: "#FEF3E2", elite: "#E8F5EE", select: "#EFF6FF", claimed: "#F5F3FF", free: "#F9FAFB",
+  free: "#F3F4F6", claimed: "rgba(45,110,82,0.1)", select: "rgba(45,110,82,0.1)", elite: "rgba(26,74,53,0.1)", featured: "rgba(26,74,53,0.1)",
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -124,10 +131,8 @@ export default function CompaniesPage() {
           }}
         >
           <option value="">All Tiers</option>
-          {TIERS.filter(Boolean).map((t) => (
-            <option key={t} value={t} style={{ textTransform: "capitalize" }}>
-              {t.charAt(0).toUpperCase() + t.slice(1)}
-            </option>
+          {TIERS.map((t) => (
+            <option key={t.value} value={t.value}>{t.label}</option>
           ))}
         </select>
         <select
@@ -223,7 +228,7 @@ export default function CompaniesPage() {
                         padding: "3px 10px", borderRadius: "20px", fontFamily: "sans-serif",
                       }}
                     >
-                      {c.tier}
+                      {TIER_LABEL[c.tier] ?? c.tier}
                     </span>
                   </td>
                   <td style={{ padding: "14px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>

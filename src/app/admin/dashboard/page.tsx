@@ -4,19 +4,19 @@ import { CATEGORIES } from "@/data/categories";
 import SeedDemoButton from "./SeedDemoButton";
 
 const TIER_COLORS: Record<string, string> = {
-  featured: "#E8821E",
-  elite: "#1A4A35",
-  select: "#2563EB",
-  claimed: "#7C3AED",
+  featured: "#1A4A35", elite: "#1A4A35",
+  select: "#2d6e52",   claimed: "#2d6e52",
   free: "#6B7280",
 };
 
 const TIER_BG: Record<string, string> = {
-  featured: "#FEF3E2",
-  elite: "#E8F5EE",
-  select: "#EFF6FF",
-  claimed: "#F5F3FF",
-  free: "#F9FAFB",
+  featured: "rgba(26,74,53,0.1)", elite: "rgba(26,74,53,0.1)",
+  select: "rgba(45,110,82,0.1)",  claimed: "rgba(45,110,82,0.1)",
+  free: "#F3F4F6",
+};
+
+const TIER_LABEL: Record<string, string> = {
+  free: "Unclaimed", claimed: "Select", select: "Select", elite: "Verified Pro", featured: "Verified Pro",
 };
 
 function tierCounts() {
@@ -197,7 +197,7 @@ export default function DashboardPage() {
                         fontFamily: "sans-serif",
                       }}
                     >
-                      {c.tier}
+                      {TIER_LABEL[c.tier] ?? c.tier}
                     </span>
                   </td>
                 </tr>
@@ -230,7 +230,7 @@ export default function DashboardPage() {
                     fontFamily: "sans-serif",
                   }}
                 >
-                  {tier}
+                  {TIER_LABEL[tier] ?? tier}
                 </span>
                 <span style={{ fontSize: "13px", fontWeight: "700", color: "#111827", fontFamily: "sans-serif" }}>
                   {count}
