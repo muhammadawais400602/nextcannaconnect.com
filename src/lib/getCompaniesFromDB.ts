@@ -27,6 +27,8 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     website: doc.website,
     phone: doc.phone,
     email: doc.email,
+    linkedinUrl: doc.linkedinUrl,
+    instagramUrl: doc.instagramUrl,
     productLines: doc.productLines,
     minOrderQty: doc.minOrderQty,
     leadTime: doc.leadTime,

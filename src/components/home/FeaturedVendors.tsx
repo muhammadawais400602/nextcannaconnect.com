@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRef, useEffect } from "react";
 import type { Company } from "@/types";
 
@@ -162,16 +163,27 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
                       backgroundImage: `linear-gradient(135deg, ${company.logoColor} 0%, rgba(0,51,32,0.8) 100%)`,
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: "48px",
-                        fontWeight: 800,
-                        color: "rgba(255,255,255,0.25)",
-                        fontFamily: "'Noto Serif', serif",
-                      }}
-                    >
-                      {company.logoPlaceholder}
-                    </span>
+                    {company.bannerImageUrl ? (
+                      <Image
+                        src={company.bannerImageUrl}
+                        alt={company.name}
+                        fill
+                        sizes="280px"
+                        style={{ objectFit: "cover" }}
+                        unoptimized
+                      />
+                    ) : (
+                      <span
+                        style={{
+                          fontSize: "48px",
+                          fontWeight: 800,
+                          color: "rgba(255,255,255,0.25)",
+                          fontFamily: "'Noto Serif', serif",
+                        }}
+                      >
+                        {company.logoPlaceholder}
+                      </span>
+                    )}
                   </div>
                   <div className="absolute top-3 left-3">
                     <span

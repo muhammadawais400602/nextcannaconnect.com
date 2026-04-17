@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Company } from "@/types";
 
 function getBadge(company: Company): { label: string; color: string; bg: string } | null {
@@ -151,21 +152,33 @@ export default function ListingCard({ company }: Props) {
           justifyContent: "center",
           minHeight: "200px",
           position: "relative",
+          overflow: "hidden",
         }}
         className="listing-card-image"
       >
-        <span
-          style={{
-            fontFamily: "'Noto Serif', serif",
-            fontSize: "36px",
-            fontStyle: "italic",
-            color: "rgba(255,255,255,0.3)",
-            fontWeight: 700,
-            userSelect: "none",
-          }}
-        >
-          {company.logoPlaceholder}
-        </span>
+        {company.bannerImageUrl ? (
+          <Image
+            src={company.bannerImageUrl}
+            alt={company.name}
+            fill
+            sizes="160px"
+            style={{ objectFit: "cover" }}
+            unoptimized
+          />
+        ) : (
+          <span
+            style={{
+              fontFamily: "'Noto Serif', serif",
+              fontSize: "36px",
+              fontStyle: "italic",
+              color: "rgba(255,255,255,0.3)",
+              fontWeight: 700,
+              userSelect: "none",
+            }}
+          >
+            {company.logoPlaceholder}
+          </span>
+        )}
       </div>
 
       {/* Right content */}
