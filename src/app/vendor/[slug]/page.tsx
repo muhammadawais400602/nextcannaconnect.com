@@ -116,19 +116,47 @@ export default async function VendorPage({ params }: Props) {
                 </div>
               )}
               {/* Dark gradient at bottom */}
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 55%)" }} />
-              {/* Caption overlay */}
-              {company.bannerCaption && (
-                <div style={{ position: "absolute", bottom: "20px", left: "20px" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 60%)" }} />
+              {/* Name / badge / location overlay */}
+              <div style={{ position: "absolute", bottom: "20px", left: "20px", right: "20px" }}>
+                {company.bannerCaption && (
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
                     <div style={{ width: "3px", height: "14px", background: "#E8821E", borderRadius: "2px" }} />
-                    <span style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.15em", color: "rgba(255,255,255,0.7)", textTransform: "uppercase" }}>Featured Installation</span>
+                    <span style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.15em", color: "rgba(255,255,255,0.7)", textTransform: "uppercase" }}>{company.bannerCaption}</span>
                   </div>
-                  <p style={{ fontSize: "14px", fontStyle: "italic", color: "white", fontFamily: "'Noto Serif', serif", margin: 0 }}>
-                    {company.bannerCaption}
-                  </p>
+                )}
+                <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px" }}>
+                  <h1 style={{ fontSize: "clamp(22px, 3.5vw, 32px)", fontWeight: "800", color: "white", letterSpacing: "-0.5px", margin: 0, fontFamily: "'Inter', sans-serif", textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}>
+                    {company.name}
+                  </h1>
+                  {(() => {
+                    const BADGE: Record<string, { label: string; bg: string; color: string }> = {
+                      featured: { label: "Verified Pro",      bg: "rgba(26,74,53,0.85)",    color: "#6ee7b7" },
+                      elite:    { label: "Verified Pro",      bg: "rgba(26,74,53,0.85)",    color: "#6ee7b7" },
+                      select:   { label: "Select Member",     bg: "rgba(29,78,216,0.85)",   color: "#bfdbfe" },
+                      claimed:  { label: "Claimed Listing",   bg: "rgba(109,40,217,0.85)",  color: "#ddd6fe" },
+                      free:     { label: "Unclaimed Listing", bg: "rgba(0,0,0,0.5)",        color: "#D1D5DB" },
+                    };
+                    const b = BADGE[company.tier] ?? BADGE.free;
+                    return (
+                      <span style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.1em", textTransform: "uppercase", padding: "4px 10px", borderRadius: "20px", background: b.bg, color: b.color, backdropFilter: "blur(4px)" }}>
+                        {b.label}
+                      </span>
+                    );
+                  })()}
+                  {category && (
+                    <span style={{ fontSize: "12px", fontWeight: "600", color: "rgba(255,255,255,0.8)", background: "rgba(255,255,255,0.12)", padding: "4px 10px", borderRadius: "20px", backdropFilter: "blur(4px)" }}>
+                      {category.label}
+                    </span>
+                  )}
+                  {(company.location.city || company.location.state) && (
+                    <span style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "12px", color: "rgba(255,255,255,0.75)" }}>
+                      <MapPin size={12} />
+                      {[company.location.city, company.location.state].filter(Boolean).join(", ")}
+                    </span>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Stats row */}
