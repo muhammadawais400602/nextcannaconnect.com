@@ -203,6 +203,9 @@ export default function VendorDashboardPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [editingName, setEditingName] = useState(false);
+  const [nameValue, setNameValue] = useState("");
+  const [nameSaving, setNameSaving] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -211,6 +214,7 @@ export default function VendorDashboardPage() {
     ]).then(([meData, companyData]) => {
       if (!meData) { window.location.href = "/vendor/login"; return; }
       setVendor(meData.user);
+      setNameValue(meData.user?.fullName ?? "");
       if (companyData?.company) {
         setCompany(companyData.company as Company);
         setForm(companyToForm(companyData.company as Record<string, unknown>));
@@ -264,6 +268,24 @@ export default function VendorDashboardPage() {
     }
   }
 
+  async function saveName() {
+    if (!nameValue.trim()) return;
+    setNameSaving(true);
+    try {
+      const res = await fetch("/api/vendor/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fullName: nameValue.trim() }),
+      });
+      if (res.ok) {
+        setVendor((v) => v ? { ...v, fullName: nameValue.trim() } : v);
+        setEditingName(false);
+      }
+    } finally {
+      setNameSaving(false);
+    }
+  }
+
   async function handleLogout() {
     await fetch("/api/auth/vendor-logout", { method: "POST" });
     window.location.href = "/vendor/login";
@@ -312,9 +334,33 @@ export default function VendorDashboardPage() {
         <div style={{ marginBottom: "24px", display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-              <h1 style={{ fontSize: "20px", fontWeight: 700, color: "#0D2818", margin: 0 }}>
-                Welcome back, {vendor?.fullName?.split(" ")[0]}
-              </h1>
+              {editingName ? (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <input
+                    autoFocus
+                    value={nameValue}
+                    onChange={(e) => setNameValue(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") saveName(); if (e.key === "Escape") setEditingName(false); }}
+                    style={{ fontSize: "18px", fontWeight: 700, color: "#0D2818", border: "1px solid #C6E0D0", borderRadius: "6px", padding: "3px 8px", outline: "none", background: "white" }}
+                  />
+                  <button onClick={saveName} disabled={nameSaving} style={{ fontSize: "12px", fontWeight: 600, color: "white", background: "#1A4A35", border: "none", borderRadius: "6px", padding: "4px 10px", cursor: "pointer" }}>
+                    {nameSaving ? "…" : "Save"}
+                  </button>
+                  <button onClick={() => setEditingName(false)} style={{ fontSize: "12px", color: "#9CA3AF", background: "none", border: "none", cursor: "pointer" }}>Cancel</button>
+                </div>
+              ) : (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <h1 style={{ fontSize: "20px", fontWeight: 700, color: "#0D2818", margin: 0 }}>
+                    Welcome back, {vendor?.fullName?.split(" ")[0]}
+                  </h1>
+                  <button
+                    onClick={() => { setNameValue(vendor?.fullName ?? ""); setEditingName(true); }}
+                    style={{ fontSize: "11px", color: "#9CA3AF", background: "none", border: "1px solid #E5E7EB", borderRadius: "5px", padding: "2px 8px", cursor: "pointer" }}
+                  >
+                    Edit name
+                  </button>
+                </div>
+              )}
               <span style={{ padding: "3px 12px", borderRadius: "20px", fontSize: "12px", fontWeight: 600, ...tierStyle }}>
                 {TIER_LABELS[vendor?.tier ?? "free"]}
               </span>
