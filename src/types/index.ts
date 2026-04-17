@@ -31,7 +31,7 @@ export interface Company {
   tier: Tier;
   category: CategorySlug;
   secondaryCategory?: CategorySlug;
-  location: { city: string; state: string };
+  location: { address?: string; city: string; state: string; zip?: string };
   shortDescription: string;
   fullDescription?: string;
   serviceTags: string[];

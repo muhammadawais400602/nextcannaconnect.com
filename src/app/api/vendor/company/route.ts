@@ -86,10 +86,12 @@ export async function PUT(request: NextRequest) {
     for (const key of allowed) {
       if (body[key] !== undefined) update[key] = body[key];
     }
-    if (body.city !== undefined || body.state !== undefined) {
+    if (body.city !== undefined || body.state !== undefined || body.address !== undefined || body.zip !== undefined) {
       const existing = await Company.findById(user.companyId).select("location");
+      if (body.address !== undefined) update["location.address"] = body.address;
       update["location.city"] = body.city ?? existing?.location?.city ?? "";
       update["location.state"] = body.state ?? existing?.location?.state ?? "";
+      if (body.zip !== undefined) update["location.zip"] = body.zip;
     }
     if (Array.isArray(body.serviceTags)) update.serviceTags = body.serviceTags;
     if (Array.isArray(body.certifications)) update.certifications = body.certifications;
