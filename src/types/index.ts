@@ -44,6 +44,8 @@ export interface Company {
   website?: string;
   phone?: string;
   email?: string;
+  linkedinUrl?: string;
+  instagramUrl?: string;
   // Products & Equipment
   productLines?: string[];
   products?: { name: string; description: string; imageUrl?: string }[];

@@ -104,6 +104,8 @@ interface FormState {
   fullDescription: string;
   website: string;
   phone: string;
+  linkedinUrl: string;
+  instagramUrl: string;
   address: string;
   city: string;
   state: string;
@@ -154,6 +156,7 @@ const gridTwo: React.CSSProperties = { display: "grid", gridTemplateColumns: "1f
 function emptyForm(): FormState {
   return {
     category: "", shortDescription: "", fullDescription: "", website: "", phone: "",
+    linkedinUrl: "", instagramUrl: "",
     address: "", city: "", state: "", zip: "", bannerImageUrl: "", bannerCaption: "",
     foundedYear: "", teamSize: "", serviceArea: "", yearsInCannabis: "",
     serviceTags: "", certifications: "",
@@ -179,6 +182,8 @@ function companyToForm(c: Record<string, unknown>): FormState {
     fullDescription: String(c.fullDescription ?? ""),
     website: String(c.website ?? ""),
     phone: String(c.phone ?? ""),
+    linkedinUrl: String(c.linkedinUrl ?? ""),
+    instagramUrl: String(c.instagramUrl ?? ""),
     address: String(loc.address ?? ""),
     city: String(loc.city ?? ""),
     state: String(loc.state ?? ""),
@@ -430,6 +435,16 @@ export default function VendorDashboardPage() {
                 <div>
                   <label style={labelStyle}>Phone</label>
                   <input style={inputStyle} value={form.phone} onChange={(e) => setField("phone", e.target.value)} placeholder="+1 (555) 000-0000" />
+                </div>
+              </div>
+              <div style={{ ...gridTwo, marginBottom: "14px" }}>
+                <div>
+                  <label style={labelStyle}>LinkedIn URL</label>
+                  <input style={inputStyle} value={form.linkedinUrl} onChange={(e) => setField("linkedinUrl", e.target.value)} placeholder="https://linkedin.com/company/..." type="url" />
+                </div>
+                <div>
+                  <label style={labelStyle}>Instagram URL</label>
+                  <input style={inputStyle} value={form.instagramUrl} onChange={(e) => setField("instagramUrl", e.target.value)} placeholder="https://instagram.com/..." type="url" />
                 </div>
               </div>
               <div style={{ marginBottom: "14px" }}>
