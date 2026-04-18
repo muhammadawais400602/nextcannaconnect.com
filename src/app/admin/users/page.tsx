@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIER_COLORS: Record<string, string> = {
   elite: "#1A4A35", select: "#2563EB", claimed: "#7C3AED", free: "#6B7280",
@@ -145,19 +146,15 @@ export default function UsersPage() {
                     {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"}
                   </td>
                   <td style={{ padding: "14px 20px" }}>
-                    <select
+                    <CustomSelect
                       value={u.tier}
                       onChange={(e) => handleTierChange(u._id, e.target.value)}
-                      style={{
-                        padding: "5px 8px", border: "1px solid #D1D5DB", borderRadius: "6px",
-                        fontSize: "12px", fontFamily: "sans-serif", outline: "none",
-                        color: "#374151", background: "white", cursor: "pointer",
-                      }}
+                      style={{ fontSize: "12px", padding: "6px 28px 6px 10px" }}
                     >
                       {["free", "claimed", "select", "elite"].map((t) => (
                         <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
                       ))}
-                    </select>
+                    </CustomSelect>
                   </td>
                 </tr>
               ))}

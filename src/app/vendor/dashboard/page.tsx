@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { CATEGORIES } from "@/data/categories";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 // ── Image uploader ────────────────────────────────────────────────────────────
 function ImageUploader({
@@ -475,16 +476,12 @@ export default function VendorDashboardPage() {
               <h2 style={sectionTitle}>Business Profile</h2>
               <div style={{ marginBottom: "14px" }}>
                 <label style={labelStyle}>Category <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— which directory your listing appears in</span></label>
-                <select
-                  style={{ ...inputStyle, appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", paddingRight: "32px", cursor: "pointer" }}
-                  value={form.category}
-                  onChange={(e) => setField("category", e.target.value)}
-                >
+                <CustomSelect value={form.category} onChange={(e) => setField("category", e.target.value)}>
                   <option value="">— Select a category —</option>
                   {CATEGORIES.map((cat) => (
                     <option key={cat.slug} value={cat.slug}>{cat.label}</option>
                   ))}
-                </select>
+                </CustomSelect>
               </div>
               {isVerifiedPro ? (
                 <div style={{ marginBottom: "14px" }}>
@@ -560,11 +557,7 @@ export default function VendorDashboardPage() {
               </div>
               <div>
                 <label style={labelStyle}>State / Province</label>
-                <select
-                  style={{ ...inputStyle, appearance: "none", backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E\")", backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", paddingRight: "32px", cursor: "pointer" }}
-                  value={form.state}
-                  onChange={(e) => setField("state", e.target.value)}
-                >
+                <CustomSelect value={form.state} onChange={(e) => setField("state", e.target.value)}>
                   <option value="">— Select state / province —</option>
                   <optgroup label="United States">
                     {US_STATES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -572,7 +565,7 @@ export default function VendorDashboardPage() {
                   <optgroup label="Canada">
                     {CA_PROVINCES.map((p) => <option key={p} value={p}>{p}</option>)}
                   </optgroup>
-                </select>
+                </CustomSelect>
               </div>
             </div>
 

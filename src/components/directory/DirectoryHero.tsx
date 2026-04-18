@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 const US_STATES = [
   "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
@@ -134,27 +135,18 @@ export default function DirectoryHero() {
             >
               location_on
             </span>
-            <select
+            <CustomSelect
+              ghost
               value={state}
               onChange={(e) => setState(e.target.value)}
-              style={{
-                flex: 1,
-                border: "none",
-                outline: "none",
-                fontSize: "13px",
-                color: state ? "#111827" : "#9CA3AF",
-                fontFamily: "'Inter', sans-serif",
-                backgroundColor: "transparent",
-                cursor: "pointer",
-                appearance: "none",
-                minWidth: 0,
-              }}
+              wrapperStyle={{ flex: 1, minWidth: 0 }}
+              style={{ color: state ? "#111827" : "#9CA3AF", fontSize: "13px" }}
             >
               <option value="">All States</option>
               {US_STATES.map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
-            </select>
+            </CustomSelect>
           </div>
 
           {/* Browse button */}
