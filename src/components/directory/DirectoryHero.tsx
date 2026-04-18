@@ -24,7 +24,7 @@ export default function DirectoryHero() {
     if (state) params.set("state", state);
     if (query) params.set("q", query);
     const qs = params.toString();
-    router.push(`/directory/all${qs ? `?${qs}` : ""}`);
+    router.push(`/directory${qs ? `?${qs}` : ""}`);
   }
 
   return (
