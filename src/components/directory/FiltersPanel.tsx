@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { CATEGORIES, Category } from "@/data/categories";
+import { CATEGORIES } from "@/data/categories";
+import { Category } from "@/types";
 
 interface FiltersPanelProps {
   category: Category | null;
@@ -43,7 +44,7 @@ export default function FiltersPanel({
   const router = useRouter();
 
   const serviceOptions = category?.description
-    ? category.description.split(",").slice(0, 4).map((item) => item.trim().split(" ").slice(0, 2).join(" "))
+    ? category.description.split(",").slice(0, 4).map((item: string) => item.trim().split(" ").slice(0, 2).join(" "))
     : [];
 
   const hasFilters = verificationFilters.length > 0 || serviceFilters.length > 0;
@@ -146,7 +147,7 @@ export default function FiltersPanel({
           <div style={{ marginBottom: "28px" }}>
             <p style={labelStyle}>Service Vertical</p>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {serviceOptions.map((label) => (
+              {serviceOptions.map((label: string) => (
                 <label
                   key={label}
                   style={{
