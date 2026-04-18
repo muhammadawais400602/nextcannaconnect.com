@@ -72,43 +72,30 @@ export default function FiltersPanel({
       {/* Category */}
       <div style={{ marginBottom: "28px" }}>
         <p style={labelStyle}>Category</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <button
-            onClick={() => onCategoryChange(null)}
-            style={{
-              textAlign: "left",
-              background: selectedCategory === null ? "rgba(0,51,32,0.08)" : "none",
-              border: "none",
-              borderRadius: "6px",
-              padding: "6px 10px",
-              fontSize: "13px",
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: selectedCategory === null ? 700 : 400,
-              color: selectedCategory === null ? "#003320" : "#374151",
-              cursor: "pointer",
-            }}
-          >
-            All Categories
-          </button>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.slug}
-              onClick={() => onCategoryChange(cat.slug)}
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {([{ slug: null, label: "All Categories" }, ...CATEGORIES.map((c) => ({ slug: c.slug as string | null, label: c.shortLabel }))] as { slug: string | null; label: string }[]).map(({ slug, label }) => (
+            <label
+              key={slug ?? "all"}
               style={{
-                textAlign: "left",
-                background: selectedCategory === cat.slug ? "rgba(0,51,32,0.08)" : "none",
-                border: "none",
-                borderRadius: "6px",
-                padding: "6px 10px",
-                fontSize: "13px",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: selectedCategory === cat.slug ? 700 : 400,
-                color: selectedCategory === cat.slug ? "#003320" : "#374151",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
                 cursor: "pointer",
+                fontSize: "13px",
+                color: selectedCategory === slug ? "#003320" : "#374151",
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: selectedCategory === slug ? 600 : 400,
               }}
             >
-              {cat.shortLabel}
-            </button>
+              <input
+                type="radio"
+                name="directory-category"
+                checked={selectedCategory === slug}
+                onChange={() => onCategoryChange(slug)}
+                style={{ width: "15px", height: "15px", accentColor: "#003320", cursor: "pointer", flexShrink: 0 }}
+              />
+              {label}
+            </label>
           ))}
         </div>
       </div>
