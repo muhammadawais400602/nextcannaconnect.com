@@ -1,9 +1,11 @@
 "use client";
 
-import { Category } from "@/types";
+import { useRouter } from "next/navigation";
+import { CATEGORIES, Category } from "@/data/categories";
 
 interface FiltersPanelProps {
-  category: Category;
+  category: Category | null;
+  activeSlug: string;
   verificationFilters: string[];
   onVerificationChange: (filters: string[]) => void;
   serviceFilters: string[];
@@ -20,17 +22,31 @@ function toggle(arr: string[], value: string): string[] {
   return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
 }
 
+const labelStyle: React.CSSProperties = {
+  fontSize: "10px",
+  fontWeight: 700,
+  letterSpacing: "0.18em",
+  textTransform: "uppercase",
+  color: "rgba(65,73,67,0.5)",
+  marginBottom: "14px",
+  fontFamily: "'Inter', sans-serif",
+};
+
 export default function FiltersPanel({
   category,
+  activeSlug,
   verificationFilters,
   onVerificationChange,
   serviceFilters,
   onServiceChange,
 }: FiltersPanelProps) {
-  const serviceOptions = category.description
-    .split(",")
-    .slice(0, 4)
-    .map((item) => item.trim().split(" ").slice(0, 2).join(" "));
+  const router = useRouter();
+
+  const serviceOptions = category?.description
+    ? category.description.split(",").slice(0, 4).map((item) => item.trim().split(" ").slice(0, 2).join(" "))
+    : [];
+
+  const hasFilters = verificationFilters.length > 0 || serviceFilters.length > 0;
 
   return (
     <div className="sticky" style={{ top: "100px" }}>
@@ -48,21 +64,55 @@ export default function FiltersPanel({
         Refine Results
       </h3>
 
+      {/* Category */}
+      <div style={{ marginBottom: "28px" }}>
+        <p style={labelStyle}>Category</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+          <button
+            onClick={() => router.push("/directory/all")}
+            style={{
+              textAlign: "left",
+              background: activeSlug === "all" ? "rgba(0,51,32,0.08)" : "none",
+              border: "none",
+              borderRadius: "6px",
+              padding: "6px 10px",
+              fontSize: "13px",
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: activeSlug === "all" ? 700 : 400,
+              color: activeSlug === "all" ? "#003320" : "#374151",
+              cursor: "pointer",
+            }}
+          >
+            All Categories
+          </button>
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.slug}
+              onClick={() => router.push(`/directory/${cat.slug}`)}
+              style={{
+                textAlign: "left",
+                background: activeSlug === cat.slug ? "rgba(0,51,32,0.08)" : "none",
+                border: "none",
+                borderRadius: "6px",
+                padding: "6px 10px",
+                fontSize: "13px",
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: activeSlug === cat.slug ? 700 : 400,
+                color: activeSlug === cat.slug ? "#003320" : "#374151",
+                cursor: "pointer",
+              }}
+            >
+              {cat.shortLabel}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ height: "1px", backgroundColor: "#e5e7eb", marginBottom: "28px" }} />
+
       {/* Verification Status */}
       <div style={{ marginBottom: "28px" }}>
-        <p
-          style={{
-            fontSize: "10px",
-            fontWeight: 700,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "rgba(65,73,67,0.5)",
-            marginBottom: "14px",
-            fontFamily: "'Inter', sans-serif",
-          }}
-        >
-          Verification Status
-        </p>
+        <p style={labelStyle}>Verification Status</p>
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {VERIFICATION_OPTIONS.map((opt) => (
             <label
@@ -81,13 +131,7 @@ export default function FiltersPanel({
                 type="checkbox"
                 checked={verificationFilters.includes(opt.id)}
                 onChange={() => onVerificationChange(toggle(verificationFilters, opt.id))}
-                style={{
-                  width: "15px",
-                  height: "15px",
-                  accentColor: "#003320",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                }}
+                style={{ width: "15px", height: "15px", accentColor: "#003320", cursor: "pointer", flexShrink: 0 }}
               />
               {opt.label}
             </label>
@@ -95,58 +139,42 @@ export default function FiltersPanel({
         </div>
       </div>
 
-      {/* Divider */}
-      <div style={{ height: "1px", backgroundColor: "#e5e7eb", marginBottom: "28px" }} />
-
-      {/* Service Vertical */}
-      <div style={{ marginBottom: "28px" }}>
-        <p
-          style={{
-            fontSize: "10px",
-            fontWeight: 700,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-            color: "rgba(65,73,67,0.5)",
-            marginBottom: "14px",
-            fontFamily: "'Inter', sans-serif",
-          }}
-        >
-          Service Vertical
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          {serviceOptions.map((label) => (
-            <label
-              key={label}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-                cursor: "pointer",
-                fontSize: "13px",
-                color: "#374151",
-                fontFamily: "'Inter', sans-serif",
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={serviceFilters.includes(label)}
-                onChange={() => onServiceChange(toggle(serviceFilters, label))}
-                style={{
-                  width: "15px",
-                  height: "15px",
-                  accentColor: "#003320",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                }}
-              />
-              {label}
-            </label>
-          ))}
-        </div>
-      </div>
+      {/* Service Vertical — only shown when a specific category is active */}
+      {serviceOptions.length > 0 && (
+        <>
+          <div style={{ height: "1px", backgroundColor: "#e5e7eb", marginBottom: "28px" }} />
+          <div style={{ marginBottom: "28px" }}>
+            <p style={labelStyle}>Service Vertical</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+              {serviceOptions.map((label) => (
+                <label
+                  key={label}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    cursor: "pointer",
+                    fontSize: "13px",
+                    color: "#374151",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={serviceFilters.includes(label)}
+                    onChange={() => onServiceChange(toggle(serviceFilters, label))}
+                    style={{ width: "15px", height: "15px", accentColor: "#003320", cursor: "pointer", flexShrink: 0 }}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Clear All */}
-      {(verificationFilters.length > 0 || serviceFilters.length > 0) && (
+      {hasFilters && (
         <button
           onClick={() => { onVerificationChange([]); onServiceChange([]); }}
           style={{

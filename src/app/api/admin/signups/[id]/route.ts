@@ -63,9 +63,12 @@ export async function PATCH(
       try {
         let company = await Company.findOne({ email: app.email });
         if (!company) {
-          const baseSlug = toSlug(app.companyName) || `company-${Date.now().toString(36)}`;
-          const slugTaken = await Company.findOne({ slug: baseSlug });
-          const slug = slugTaken ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
+          const baseSlug = toSlug(app.companyName) || "company";
+          let slug = baseSlug;
+          let suffix = 2;
+          while (await Company.findOne({ slug }).select("_id").lean()) {
+            slug = `${baseSlug}-${suffix++}`;
+          }
           company = await Company.create({
             slug,
             name: app.companyName,
