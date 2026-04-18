@@ -60,18 +60,20 @@ export default async function VendorPage({ params }: Props) {
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
+  const isVerifiedPro = ["elite", "featured"].includes(company.tier);
+
   const certs = company.certifications ?? company.credentials ?? [];
   const services = company.serviceTags ?? [];
   const products = company.products ?? [];
 
-  // Stats row
+  // Stats row — Certification stat only shown for Verified Pro
   const stats = [
-    { label: "Founded",          value: company.foundedYear?.toString() },
-    { label: "Employees",        value: company.teamSize },
-    { label: "Certification",    value: certs[0] },
-    { label: "Regions",          value: company.serviceArea },
-    { label: "Years in Cannabis", value: company.yearsInCannabis?.toString() },
-  ].filter(s => s.value);
+    { label: "Founded",           value: company.foundedYear?.toString() },
+    { label: "Employees",         value: company.teamSize },
+    isVerifiedPro ? { label: "Certification", value: certs[0] } : null,
+    { label: "Regions",           value: company.serviceArea },
+    { label: "Years in Cannabis",  value: company.yearsInCannabis?.toString() },
+  ].filter((s): s is { label: string; value: string } => !!s?.value);
 
   return (
     <div style={{ backgroundColor: "#fbf9f8", minHeight: "100vh" }}>
@@ -184,8 +186,8 @@ export default async function VendorPage({ params }: Props) {
               ))}
             </div>
 
-            {/* YouTube Video */}
-            {company.youtubeUrl && (() => {
+            {/* YouTube Video — Verified Pro only */}
+            {isVerifiedPro && company.youtubeUrl && (() => {
               const ytMatch = company.youtubeUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/);
               const videoId = ytMatch?.[1];
               if (!videoId) return null;
@@ -207,8 +209,8 @@ export default async function VendorPage({ params }: Props) {
               );
             })()}
 
-            {/* Product Offerings */}
-            {products.length > 0 && (
+            {/* Product Offerings — Verified Pro only */}
+            {isVerifiedPro && products.length > 0 && (
               <div style={{ marginBottom: "40px" }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
                   <h2 style={{ fontSize: "20px", fontWeight: "800", color: "#111827", fontFamily: "'Inter', sans-serif" }}>
@@ -250,8 +252,8 @@ export default async function VendorPage({ params }: Props) {
             {/* Contact form */}
             <ContactForm companyName={company.name} serviceTags={services} />
 
-            {/* Certifications */}
-            {certs.length > 0 && (
+            {/* Certifications — Verified Pro only */}
+            {isVerifiedPro && certs.length > 0 && (
               <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", border: "1px solid #E5E7EB", marginBottom: "16px" }}>
                 <div style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", color: "#9CA3AF", textTransform: "uppercase", marginBottom: "14px" }}>
                   Certifications & Compliance
@@ -312,8 +314,8 @@ export default async function VendorPage({ params }: Props) {
               );
             })()}
 
-            {/* Social links */}
-            {(company.linkedinUrl || company.instagramUrl) && (
+            {/* Social links — Verified Pro only */}
+            {isVerifiedPro && (company.linkedinUrl || company.instagramUrl) && (
               <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", border: "1px solid #E5E7EB", marginTop: "16px" }}>
                 <div style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", color: "#9CA3AF", textTransform: "uppercase", marginBottom: "14px" }}>
                   Follow Us

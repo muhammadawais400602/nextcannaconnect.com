@@ -3,7 +3,14 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CATEGORIES } from "@/data/categories";
 
-const TIERS = ["free", "claimed", "select", "elite", "featured"];
+const TIERS = [
+  { value: "free",  label: "Unclaimed" },
+  { value: "select", label: "Select" },
+  { value: "elite", label: "Verified Pro" },
+];
+const TIER_LABEL: Record<string, string> = {
+  free: "Unclaimed", claimed: "Select", select: "Select", elite: "Verified Pro", featured: "Verified Pro",
+};
 const LOGO_COLORS = ["#1A4A35", "#2563EB", "#7C3AED", "#E8821E", "#0D2818", "#047857", "#DC2626"];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -219,12 +226,16 @@ export default function CompanyForm({ initial, mode }: Props) {
           <div>
             <label style={labelStyle}>Tier *</label>
             <select
-              style={{ ...inputStyle, background: "white" }} value={form.tier}
+              style={{ ...inputStyle, background: "white" }}
+              value={["claimed", "featured"].includes(form.tier) ? (form.tier === "featured" ? "elite" : "select") : form.tier}
               onChange={(e) => set("tier", e.target.value)}
             >
               {TIERS.map((t) => (
-                <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                <option key={t.value} value={t.value}>{t.label}</option>
               ))}
+              {["claimed", "featured"].includes(form.tier) && (
+                <option value={form.tier} style={{ display: "none" }}>{TIER_LABEL[form.tier]}</option>
+              )}
             </select>
           </div>
           <div>

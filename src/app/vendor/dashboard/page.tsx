@@ -93,6 +93,23 @@ function ImageUploader({
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
+function UpgradePrompt() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", background: "rgba(26,74,53,0.05)", border: "1px dashed #C6E0D0", borderRadius: "8px", padding: "12px 16px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <span style={{ fontSize: "16px" }}>🔒</span>
+        <div>
+          <p style={{ fontSize: "12px", fontWeight: 700, color: "#1A4A35", margin: 0 }}>Verified Pro Feature</p>
+          <p style={{ fontSize: "11px", color: "#6B7280", margin: 0 }}>Upgrade to unlock this field on your listing</p>
+        </div>
+      </div>
+      <a href="/membership" style={{ fontSize: "11px", fontWeight: 700, color: "white", background: "#1A4A35", textDecoration: "none", padding: "6px 14px", borderRadius: "6px", whiteSpace: "nowrap" }}>
+        Upgrade →
+      </a>
+    </div>
+  );
+}
+
 
 const US_STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming","District of Columbia"];
 const CA_PROVINCES = ["Alberta","British Columbia","Manitoba","New Brunswick","Newfoundland and Labrador","Northwest Territories","Nova Scotia","Nunavut","Ontario","Prince Edward Island","Quebec","Saskatchewan","Yukon"];
@@ -311,6 +328,7 @@ export default function VendorDashboardPage() {
   }
 
   const tierStyle = TIER_COLORS[vendor?.tier ?? "free"];
+  const isVerifiedPro = ["elite", "featured"].includes(company?.tier ?? "");
 
   return (
     <div style={{ minHeight: "100vh", background: "#F7F9F7" }}>
@@ -433,16 +451,17 @@ export default function VendorDashboardPage() {
                   placeholder="Describe your business, expertise, and what sets you apart…"
                 />
               </div>
-              <div style={{ marginBottom: "14px" }}>
-                <label style={labelStyle}>YouTube Video URL <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— shown below your overview on the listing page</span></label>
-                <input
-                  style={inputStyle}
-                  value={form.youtubeUrl}
-                  onChange={(e) => setField("youtubeUrl", e.target.value)}
-                  placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
-                  type="url"
-                />
-              </div>
+              {isVerifiedPro ? (
+                <div style={{ marginBottom: "14px" }}>
+                  <label style={labelStyle}>YouTube Video URL <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— shown below your overview on the listing page</span></label>
+                  <input style={inputStyle} value={form.youtubeUrl} onChange={(e) => setField("youtubeUrl", e.target.value)} placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." type="url" />
+                </div>
+              ) : (
+                <div style={{ marginBottom: "14px" }}>
+                  <label style={labelStyle}>YouTube Video</label>
+                  <UpgradePrompt />
+                </div>
+              )}
               <div style={{ ...gridTwo, marginBottom: "14px" }}>
                 <div>
                   <label style={labelStyle}>Website</label>
@@ -453,16 +472,23 @@ export default function VendorDashboardPage() {
                   <input style={inputStyle} value={form.phone} onChange={(e) => setField("phone", e.target.value)} placeholder="+1 (555) 000-0000" />
                 </div>
               </div>
-              <div style={{ ...gridTwo, marginBottom: "14px" }}>
-                <div>
-                  <label style={labelStyle}>LinkedIn URL</label>
-                  <input style={inputStyle} value={form.linkedinUrl} onChange={(e) => setField("linkedinUrl", e.target.value)} placeholder="https://linkedin.com/company/..." type="url" />
+              {isVerifiedPro ? (
+                <div style={{ ...gridTwo, marginBottom: "14px" }}>
+                  <div>
+                    <label style={labelStyle}>LinkedIn URL</label>
+                    <input style={inputStyle} value={form.linkedinUrl} onChange={(e) => setField("linkedinUrl", e.target.value)} placeholder="https://linkedin.com/company/..." type="url" />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Instagram URL</label>
+                    <input style={inputStyle} value={form.instagramUrl} onChange={(e) => setField("instagramUrl", e.target.value)} placeholder="https://instagram.com/..." type="url" />
+                  </div>
                 </div>
-                <div>
-                  <label style={labelStyle}>Instagram URL</label>
-                  <input style={inputStyle} value={form.instagramUrl} onChange={(e) => setField("instagramUrl", e.target.value)} placeholder="https://instagram.com/..." type="url" />
+              ) : (
+                <div style={{ marginBottom: "14px" }}>
+                  <label style={labelStyle}>LinkedIn &amp; Instagram</label>
+                  <UpgradePrompt />
                 </div>
-              </div>
+              )}
               <div style={{ marginBottom: "14px" }}>
                 <label style={labelStyle}>Street Address <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— optional, used for the map pin</span></label>
                 <input style={inputStyle} value={form.address} onChange={(e) => setField("address", e.target.value)} placeholder="e.g. 123 Cannabis Blvd, Suite 400" />
@@ -545,15 +571,24 @@ export default function VendorDashboardPage() {
                 <label style={labelStyle}>Core Services <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— comma-separated</span></label>
                 <input style={inputStyle} value={form.serviceTags} onChange={(e) => setField("serviceTags", e.target.value)} placeholder="e.g. Custom Equipment Design, Facility Workflow, Remote Monitoring" />
               </div>
-              <div>
-                <label style={labelStyle}>Certifications <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— comma-separated</span></label>
-                <input style={inputStyle} value={form.certifications} onChange={(e) => setField("certifications", e.target.value)} placeholder="e.g. ISO, GMP, CE, UL" />
-              </div>
+              {isVerifiedPro ? (
+                <div>
+                  <label style={labelStyle}>Certifications <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— comma-separated</span></label>
+                  <input style={inputStyle} value={form.certifications} onChange={(e) => setField("certifications", e.target.value)} placeholder="e.g. ISO, GMP, CE, UL" />
+                </div>
+              ) : (
+                <div>
+                  <label style={labelStyle}>Certifications</label>
+                  <UpgradePrompt />
+                </div>
+              )}
             </div>
 
-            {/* Products / Offerings */}
+            {/* Products / Offerings — Verified Pro only */}
             <div style={sectionStyle}>
               <h2 style={sectionTitle}>Products &amp; Offerings <span style={{ fontSize: "12px", color: "#9CA3AF", fontWeight: 400 }}>— up to 6</span></h2>
+              {!isVerifiedPro && <UpgradePrompt />}
+              {isVerifiedPro && (<>
               {form.products.map((p, i) => (
                 <div key={i} style={{ marginBottom: i < form.products.length - 1 ? "20px" : 0, paddingBottom: i < form.products.length - 1 ? "20px" : 0, borderBottom: i < form.products.length - 1 ? "1px solid #F3F4F6" : "none" }}>
                   <div style={{ fontSize: "12px", fontWeight: 700, color: "#9CA3AF", marginBottom: "10px" }}>
@@ -582,6 +617,7 @@ export default function VendorDashboardPage() {
                   + Add another product
                 </button>
               )}
+              </>)}
             </div>
 
             {/* Save */}
