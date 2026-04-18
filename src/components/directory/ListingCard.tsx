@@ -125,16 +125,19 @@ export default function ListingCard({ company }: Props) {
     );
   }
 
+  const isVerifiedPro = company.tier === "elite" || company.tier === "featured";
+
   return (
     <div
       style={{
         backgroundColor: "white",
-        border: "1px solid #e5e7eb",
+        border: isVerifiedPro ? "1px solid rgba(26,74,53,0.3)" : "1px solid #e5e7eb",
         borderRadius: "16px",
         marginBottom: "16px",
         overflow: "hidden",
         display: "flex",
         flexDirection: "row",
+        boxShadow: isVerifiedPro ? "0 2px 12px rgba(26,74,53,0.08)" : "none",
       }}
       className="directory-listing-card"
     >
@@ -192,6 +195,11 @@ export default function ListingCard({ company }: Props) {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+            {isVerifiedPro && (
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "9px", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "#1a4a35", background: "rgba(26,74,53,0.07)", padding: "3px 8px", borderRadius: "4px", fontFamily: "'Inter', sans-serif" }}>
+                ★ Priority Listing
+              </span>
+            )}
             {badge && (
               <span
                 style={{
