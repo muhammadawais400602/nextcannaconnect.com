@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CATEGORIES } from "@/data/categories";
 
 const US_STATES = [
   "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
@@ -15,18 +14,17 @@ const US_STATES = [
   "Wisconsin","Wyoming",
 ];
 
-export default function DirectoryHero({ activeSlug }: { activeSlug: string }) {
+export default function DirectoryHero() {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [state, setState] = useState("");
-  const [category, setCategory] = useState(activeSlug);
 
   function handleBrowse() {
     const params = new URLSearchParams();
     if (state) params.set("state", state);
     if (query) params.set("q", query);
     const qs = params.toString();
-    router.push(`/directory/${category}${qs ? `?${qs}` : ""}`);
+    router.push(`/directory/all${qs ? `?${qs}` : ""}`);
   }
 
   return (
@@ -155,46 +153,6 @@ export default function DirectoryHero({ activeSlug }: { activeSlug: string }) {
               <option value="">All States</option>
               {US_STATES.map((s) => (
                 <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Service / category dropdown */}
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "14px 16px",
-              borderRight: "1px solid #e5e7eb",
-              minWidth: 0,
-            }}
-          >
-            <span
-              className="material-symbols-outlined"
-              style={{ fontSize: "18px", color: "#9CA3AF", flexShrink: 0 }}
-            >
-              category
-            </span>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              style={{
-                flex: 1,
-                border: "none",
-                outline: "none",
-                fontSize: "13px",
-                color: "#111827",
-                fontFamily: "'Inter', sans-serif",
-                backgroundColor: "transparent",
-                cursor: "pointer",
-                appearance: "none",
-                minWidth: 0,
-              }}
-            >
-              {CATEGORIES.map((cat) => (
-                <option key={cat.slug} value={cat.slug}>{cat.shortLabel}</option>
               ))}
             </select>
           </div>

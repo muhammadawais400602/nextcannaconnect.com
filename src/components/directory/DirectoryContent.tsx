@@ -8,11 +8,12 @@ import FiltersPanel from "@/components/directory/FiltersPanel";
 import DirectoryListings from "@/components/directory/DirectoryListings";
 
 interface Props {
-  category: Category;
+  category: Category | null;
+  activeSlug: string;
   companies: Company[];
 }
 
-export default function DirectoryContent({ category, companies }: Props) {
+export default function DirectoryContent({ category, activeSlug, companies }: Props) {
   const [verificationFilters, setVerificationFilters] = useState<string[]>([]);
   const [serviceFilters, setServiceFilters] = useState<string[]>([]);
 
@@ -22,6 +23,7 @@ export default function DirectoryContent({ category, companies }: Props) {
       <div className="hidden lg:block" style={{ width: "220px", flexShrink: 0 }}>
         <FiltersPanel
           category={category}
+          activeSlug={activeSlug}
           verificationFilters={verificationFilters}
           onVerificationChange={setVerificationFilters}
           serviceFilters={serviceFilters}
@@ -40,7 +42,7 @@ export default function DirectoryContent({ category, companies }: Props) {
         >
           <DirectoryListings
             companies={companies}
-            categoryShortLabel={category.shortLabel}
+            categoryShortLabel={category?.shortLabel ?? "All Categories"}
             verificationFilters={verificationFilters}
             serviceFilters={serviceFilters}
           />
