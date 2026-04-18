@@ -9,7 +9,6 @@ import { getCategoryBySlug } from "@/data/categories";
 const PAGE_SIZE = 20;
 
 const SORT_OPTIONS = [
-  { value: "score", label: "Partner Score" },
   { value: "rating", label: "Rating" },
   { value: "name", label: "Name (A–Z)" },
 ];
@@ -36,7 +35,7 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
 
   const [query, setQuery] = useState(initialQuery);
   const [stateFilter, setStateFilter] = useState(initialState);
-  const [sort, setSort] = useState("score");
+  const [sort, setSort] = useState("rating");
   const [page, setPage] = useState(1);
 
   useEffect(() => { setPage(1); }, [query, stateFilter, sort, verificationFilters, serviceFilters, categoryFilter]);
@@ -70,19 +69,10 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
       return true;
     });
 
-    if (sort === "rating") {
-      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-    } else if (sort === "name") {
+    if (sort === "name") {
       list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     } else {
-      // score: tier priority then rating
-      const tierOrder: Record<string, number> = { featured: 0, elite: 1, select: 2, claimed: 3, free: 4 };
-      list = [...list].sort((a, b) => {
-        const ta = tierOrder[a.tier] ?? 5;
-        const tb = tierOrder[b.tier] ?? 5;
-        if (ta !== tb) return ta - tb;
-        return (b.rating ?? 0) - (a.rating ?? 0);
-      });
+      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
     }
 
     return list;
