@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import ListingCard from "@/components/directory/ListingCard";
 import { Company } from "@/types";
+import { getCategoryBySlug } from "@/data/categories";
 
 const PAGE_SIZE = 20;
 
@@ -22,12 +23,13 @@ const TIER_MAP: Record<string, string[]> = {
 
 interface Props {
   companies: Company[];
-  categoryShortLabel: string;
+  categoryFilter: string | null;
   verificationFilters: string[];
   serviceFilters: string[];
 }
 
-export default function DirectoryListings({ companies, categoryShortLabel, verificationFilters, serviceFilters }: Props) {
+export default function DirectoryListings({ companies, categoryFilter, verificationFilters, serviceFilters }: Props) {
+  const categoryShortLabel = categoryFilter ? (getCategoryBySlug(categoryFilter)?.shortLabel ?? "Partners") : "All Categories";
   const searchParams = useSearchParams();
   const initialState = searchParams.get("state") ?? "";
   const initialQuery = searchParams.get("q") ?? "";
@@ -37,7 +39,7 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
   const [sort, setSort] = useState("score");
   const [page, setPage] = useState(1);
 
-  useEffect(() => { setPage(1); }, [query, stateFilter, sort, verificationFilters, serviceFilters]);
+  useEffect(() => { setPage(1); }, [query, stateFilter, sort, verificationFilters, serviceFilters, categoryFilter]);
 
   const filtered = useMemo(() => {
     // Build allowed tiers from verification checkboxes
@@ -47,6 +49,7 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
         : null; // null = no filter applied
 
     let list = companies.filter((c) => {
+      if (categoryFilter && c.category !== categoryFilter) return false;
       if (stateFilter && c.location.state !== stateFilter) return false;
       if (allowedTiers && !allowedTiers.includes(c.tier)) return false;
       if (serviceFilters.length > 0) {
@@ -83,7 +86,7 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
     }
 
     return list;
-  }, [companies, query, stateFilter, sort, verificationFilters, serviceFilters]);
+  }, [companies, query, stateFilter, sort, verificationFilters, serviceFilters, categoryFilter]);
 
   const paid = filtered.filter((c) => c.tier !== "free");
   const free = filtered.filter((c) => c.tier === "free");

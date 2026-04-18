@@ -1,55 +1,12 @@
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import { CATEGORIES, getCategoryBySlug } from "@/data/categories";
-import { getCompaniesByCategory, getAllCompaniesFresh } from "@/lib/getCompaniesFromDB";
-import DirectoryHero from "@/components/directory/DirectoryHero";
-import DirectoryContent from "@/components/directory/DirectoryContent";
-
-export const dynamic = "force-dynamic";
+import { redirect } from "next/navigation";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  if (slug === "all") {
-    return { title: "All Categories | NextCanna Connect Directory" };
-  }
-  const category = getCategoryBySlug(slug);
-  if (!category) return {};
-  return {
-    title: `${category.label} | NextCanna Connect Directory`,
-    description: category.description,
-  };
-}
-
+// All category-specific URLs redirect to the unified directory page.
+// Category filtering is handled client-side in the sidebar.
 export default async function CategoryPage({ params }: Props) {
-  const { slug } = await params;
-
-  if (slug !== "all") {
-    const category = getCategoryBySlug(slug);
-    if (!category) notFound();
-  }
-
-  const category = slug === "all" ? null : getCategoryBySlug(slug)!;
-  const companies = slug === "all"
-    ? await getAllCompaniesFresh()
-    : await getCompaniesByCategory(slug);
-
-  return (
-    <>
-      <DirectoryHero />
-
-      <div style={{ backgroundColor: "#f6f3f2", minHeight: "60vh" }}>
-        <div className="mx-auto px-4 md:px-8 py-10" style={{ maxWidth: "1440px" }}>
-          <DirectoryContent
-            category={category}
-            activeSlug={slug}
-            companies={companies}
-          />
-        </div>
-      </div>
-    </>
-  );
+  await params; // consume params to avoid Next.js warning
+  redirect("/directory");
 }

@@ -2,28 +2,30 @@
 
 import { useState } from "react";
 import { Suspense } from "react";
-import { Category } from "@/types";
 import { Company } from "@/types";
 import FiltersPanel from "@/components/directory/FiltersPanel";
 import DirectoryListings from "@/components/directory/DirectoryListings";
 
 interface Props {
-  category: Category | null;
-  activeSlug: string;
   companies: Company[];
 }
 
-export default function DirectoryContent({ category, activeSlug, companies }: Props) {
+export default function DirectoryContent({ companies }: Props) {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [verificationFilters, setVerificationFilters] = useState<string[]>([]);
   const [serviceFilters, setServiceFilters] = useState<string[]>([]);
 
+  function handleCategoryChange(slug: string | null) {
+    setSelectedCategory(slug);
+    setServiceFilters([]);
+  }
+
   return (
     <div style={{ display: "flex", gap: "40px", alignItems: "flex-start" }}>
-      {/* Sidebar */}
       <div className="hidden lg:block" style={{ width: "220px", flexShrink: 0 }}>
         <FiltersPanel
-          category={category}
-          activeSlug={activeSlug}
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
           verificationFilters={verificationFilters}
           onVerificationChange={setVerificationFilters}
           serviceFilters={serviceFilters}
@@ -31,7 +33,6 @@ export default function DirectoryContent({ category, activeSlug, companies }: Pr
         />
       </div>
 
-      {/* Listings */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <Suspense
           fallback={
@@ -42,7 +43,7 @@ export default function DirectoryContent({ category, activeSlug, companies }: Pr
         >
           <DirectoryListings
             companies={companies}
-            categoryShortLabel={category?.shortLabel ?? "All Categories"}
+            categoryFilter={selectedCategory}
             verificationFilters={verificationFilters}
             serviceFilters={serviceFilters}
           />
