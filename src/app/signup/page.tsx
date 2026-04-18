@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import SectionDivider from "@/components/ui/SectionDivider";
 import { CATEGORIES } from "@/data/categories";
 import { Check, X } from "lucide-react";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIERS = [
   {
@@ -266,9 +267,11 @@ function SignUpForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label style={labelStyle}>State / Province</label>
-              <select value={basicForm.stateProvince}
+              <CustomSelect
+                value={basicForm.stateProvince}
                 onChange={(e) => setBasicForm({ ...basicForm, stateProvince: e.target.value })}
-                style={{ ...inputStyle, color: basicForm.stateProvince ? "#003320" : "#9CA3AF" }}>
+                style={{ color: basicForm.stateProvince ? "#003320" : "#9CA3AF" }}
+              >
                 <option value="">Select State / Province</option>
                 <optgroup label="United States">
                   <option value="all-us">All States (USA)</option>
@@ -282,16 +285,16 @@ function SignUpForm() {
                     <option key={p} value={p}>{p}</option>
                   ))}
                 </optgroup>
-              </select>
+              </CustomSelect>
             </div>
             <div>
               <label style={labelStyle}>Business Category</label>
-              <select value={basicForm.category} onChange={(e) => setBasicForm({ ...basicForm, category: e.target.value })} style={inputStyle}>
+              <CustomSelect value={basicForm.category} onChange={(e) => setBasicForm({ ...basicForm, category: e.target.value })}>
                 <option value="">Select a category...</option>
                 {CATEGORIES.map((cat) => (
                   <option key={cat.slug} value={cat.slug}>{cat.label}</option>
                 ))}
-              </select>
+              </CustomSelect>
             </div>
           </div>
 

@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { CATEGORIES } from "@/data/categories";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIERS = [
   { value: "free",   label: "Unclaimed" },
@@ -121,34 +122,18 @@ export default function CompaniesPage() {
             outline: "none", color: "#111827",
           }}
         />
-        <select
-          value={tier}
-          onChange={(e) => setTier(e.target.value)}
-          style={{
-            padding: "8px 12px", border: "1px solid #D1D5DB", borderRadius: "8px",
-            fontSize: "14px", fontFamily: "sans-serif", outline: "none",
-            color: "#374151", background: "white",
-          }}
-        >
+        <CustomSelect value={tier} onChange={(e) => setTier(e.target.value)} wrapperStyle={{ minWidth: "140px" }}>
           <option value="">All Tiers</option>
           {TIERS.map((t) => (
             <option key={t.value} value={t.value}>{t.label}</option>
           ))}
-        </select>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          style={{
-            padding: "8px 12px", border: "1px solid #D1D5DB", borderRadius: "8px",
-            fontSize: "14px", fontFamily: "sans-serif", outline: "none",
-            color: "#374151", background: "white",
-          }}
-        >
+        </CustomSelect>
+        <CustomSelect value={category} onChange={(e) => setCategory(e.target.value)} wrapperStyle={{ minWidth: "160px" }}>
           <option value="">All Categories</option>
           {CATEGORIES.map((c) => (
             <option key={c.slug} value={c.slug}>{c.shortLabel}</option>
           ))}
-        </select>
+        </CustomSelect>
       </div>
 
       {/* Table */}
