@@ -234,6 +234,9 @@ export default function VendorDashboardPage() {
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState("");
   const [nameSaving, setNameSaving] = useState(false);
+  const [editingCompanyName, setEditingCompanyName] = useState(false);
+  const [companyNameValue, setCompanyNameValue] = useState("");
+  const [companyNameSaving, setCompanyNameSaving] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -246,6 +249,7 @@ export default function VendorDashboardPage() {
       if (companyData?.company) {
         setCompany(companyData.company as Company);
         setForm(companyToForm(companyData.company as Record<string, unknown>));
+        setCompanyNameValue(companyData.company.name ?? "");
       }
       setLoading(false);
     }).catch(() => { window.location.href = "/vendor/login"; });
@@ -311,6 +315,24 @@ export default function VendorDashboardPage() {
       }
     } finally {
       setNameSaving(false);
+    }
+  }
+
+  async function saveCompanyName() {
+    if (!companyNameValue.trim()) return;
+    setCompanyNameSaving(true);
+    try {
+      const res = await fetch("/api/vendor/company", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: companyNameValue.trim() }),
+      });
+      if (res.ok) {
+        setCompany((c) => c ? { ...c, name: companyNameValue.trim() } : c);
+        setEditingCompanyName(false);
+      }
+    } finally {
+      setCompanyNameSaving(false);
     }
   }
 
@@ -394,9 +416,35 @@ export default function VendorDashboardPage() {
                 {TIER_LABELS[vendor?.tier ?? "free"]}
               </span>
             </div>
-            <p style={{ fontSize: "13px", color: "#6B7280", marginTop: "4px" }}>
-              {company?.name ?? vendor?.companyName} · {vendor?.email}
-            </p>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginTop: "4px", flexWrap: "wrap" }}>
+              {company && (editingCompanyName ? (
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <input
+                    autoFocus
+                    value={companyNameValue}
+                    onChange={(e) => setCompanyNameValue(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === "Enter") saveCompanyName(); if (e.key === "Escape") setEditingCompanyName(false); }}
+                    style={{ fontSize: "13px", fontWeight: 600, color: "#0D2818", border: "1px solid #C6E0D0", borderRadius: "6px", padding: "2px 8px", outline: "none", background: "white" }}
+                  />
+                  <button onClick={saveCompanyName} disabled={companyNameSaving} style={{ fontSize: "11px", fontWeight: 600, color: "white", background: "#1A4A35", border: "none", borderRadius: "6px", padding: "3px 8px", cursor: "pointer" }}>
+                    {companyNameSaving ? "…" : "Save"}
+                  </button>
+                  <button onClick={() => setEditingCompanyName(false)} style={{ fontSize: "11px", color: "#9CA3AF", background: "none", border: "none", cursor: "pointer" }}>Cancel</button>
+                </div>
+              ) : (
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span style={{ fontSize: "13px", color: "#6B7280", fontWeight: 600 }}>{company.name}</span>
+                  <button
+                    onClick={() => { setCompanyNameValue(company.name); setEditingCompanyName(true); }}
+                    style={{ fontSize: "11px", color: "#9CA3AF", background: "none", border: "1px solid #E5E7EB", borderRadius: "5px", padding: "1px 7px", cursor: "pointer" }}
+                  >
+                    Edit
+                  </button>
+                </div>
+              ))}
+              <span style={{ fontSize: "13px", color: "#9CA3AF" }}>·</span>
+              <span style={{ fontSize: "13px", color: "#6B7280" }}>{vendor?.email}</span>
+            </div>
           </div>
           {company && (
             <Link
@@ -438,10 +486,17 @@ export default function VendorDashboardPage() {
                   ))}
                 </select>
               </div>
-              <div style={{ marginBottom: "14px" }}>
-                <label style={labelStyle}>Tagline <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— shown under your name</span></label>
-                <input style={inputStyle} value={form.shortDescription} onChange={(e) => setField("shortDescription", e.target.value)} placeholder="e.g. Premium cannabis equipment manufacturer" maxLength={200} />
-              </div>
+              {isVerifiedPro ? (
+                <div style={{ marginBottom: "14px" }}>
+                  <label style={labelStyle}>Tagline <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>— shown under your name</span></label>
+                  <input style={inputStyle} value={form.shortDescription} onChange={(e) => setField("shortDescription", e.target.value)} placeholder="e.g. Premium cannabis equipment manufacturer" maxLength={200} />
+                </div>
+              ) : (
+                <div style={{ marginBottom: "14px" }}>
+                  <label style={labelStyle}>Tagline</label>
+                  <UpgradePrompt />
+                </div>
+              )}
               <div style={{ marginBottom: "14px" }}>
                 <label style={labelStyle}>About Your Business</label>
                 <textarea
