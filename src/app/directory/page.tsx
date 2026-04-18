@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
 export default function DirectoryPage() {
-  redirect("/directory/cultivation-growing");
+  redirect("/directory/all");
 }

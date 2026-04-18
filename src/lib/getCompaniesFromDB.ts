@@ -123,6 +123,19 @@ export async function getCompanyBySlug(slug: string): Promise<CompanyType | unde
   }
 }
 
+export async function getAllCompaniesFresh(): Promise<CompanyType[]> {
+  try {
+    await connectDB();
+    const docs = await Company.find({}).select("-__v").lean();
+    return docs
+      .map(docToCompany)
+      .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
+  } catch (err) {
+    console.error("[getAllCompaniesFresh] Failed:", err);
+    return [];
+  }
+}
+
 /** Direct DB query — no cache. Use where stale data is unacceptable (e.g. vendor listing page). */
 export async function getCompanyBySlugFresh(slug: string): Promise<CompanyType | undefined> {
   try {
