@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { CATEGORIES, Category } from "@/data/categories";
+import { CATEGORIES } from "@/data/categories";
+import type { Category } from "@/types";
 
 interface FiltersPanelProps {
   category: Category | null;
