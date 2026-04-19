@@ -136,38 +136,8 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
           </h2>
         </div>
 
-        {/* Sort + search */}
+        {/* Sort */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-          {/* Search input */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "9px 14px",
-              backgroundColor: "white",
-              border: "1px solid #e5e7eb",
-              borderRadius: "10px",
-            }}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#9CA3AF" }}>search</span>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={`Search ${categoryShortLabel}…`}
-              style={{
-                border: "none",
-                outline: "none",
-                fontSize: "13px",
-                color: "#111827",
-                fontFamily: "'Inter', sans-serif",
-                backgroundColor: "transparent",
-                width: "160px",
-              }}
-            />
-          </div>
-
           {/* Sort */}
           <div
             style={{
@@ -254,8 +224,10 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
         </div>
       )}
 
-      {/* Paid listings */}
-      {pagedPaid.map((c) => <ListingCard key={c.id} company={c} />)}
+      {/* Paid listings — 2-column grid */}
+      <div className="listings-grid">
+        {pagedPaid.map((c) => <ListingCard key={c.id} company={c} />)}
+      </div>
 
       {/* Unclaimed separator */}
       {pagedFree.length > 0 && (
@@ -284,9 +256,24 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
             </span>
             <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e7eb" }} />
           </div>
-          {pagedFree.map((c) => <ListingCard key={c.id} company={c} />)}
+          <div className="listings-grid">
+            {pagedFree.map((c) => <ListingCard key={c.id} company={c} />)}
+          </div>
         </>
       )}
+
+      <style>{`
+        .listings-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+        }
+        @media (max-width: 900px) {
+          .listings-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
 
       {/* Pagination */}
       {totalPages > 1 && (
