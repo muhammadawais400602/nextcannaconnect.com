@@ -15,7 +15,11 @@ const TIER_LABELS: Record<string, string> = {
 };
 
 export default function FeaturedVendors({ companies }: { companies: Company[] }) {
-  const loopedCompanies = [...companies, ...companies];
+  // Repeat until we have at least 8 cards total so the marquee always looks full.
+  // Must stay symmetric (first half = second half) for the scroll-reset to work.
+  const setsNeeded = companies.length > 0 ? Math.max(1, Math.ceil(4 / companies.length)) : 1;
+  const half = Array.from({ length: setsNeeded }, () => companies).flat();
+  const loopedCompanies = [...half, ...half];
 
   const [headerRef, headerInView] = useInView();
   const trackRef = useRef<HTMLDivElement>(null);
