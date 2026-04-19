@@ -15,7 +15,12 @@ const TIER_LABELS: Record<string, string> = {
 };
 
 export default function FeaturedVendors({ companies }: { companies: Company[] }) {
-  const loopedCompanies = [...companies, ...companies];
+  // Repeat until we have at least 8 cards total so the marquee looks full.
+  // First half = second half so translateX(-50%) loops seamlessly.
+  const setsNeeded = companies.length > 0 ? Math.max(1, Math.ceil(4 / companies.length)) : 1;
+  const half = Array.from({ length: setsNeeded }, () => companies).flat();
+  const loopedCompanies = [...half, ...half];
+
   const [paused, setPaused] = useState(false);
   const [headerRef, headerInView] = useInView();
 
