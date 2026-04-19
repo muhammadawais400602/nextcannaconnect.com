@@ -95,6 +95,7 @@ export default function CustomDropdown({
       style={{ position: "relative", ...wrapperStyle }}
       onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
     >
+      <style>{`@keyframes dropdownFadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}`}</style>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -145,11 +146,12 @@ export default function CustomDropdown({
             backgroundColor: "white",
             border: "1px solid #e5e7eb",
             borderRadius: "12px",
-            boxShadow: "0 12px 32px rgba(0,0,0,0.13)",
+            boxShadow: "0 16px 40px rgba(0,0,0,0.14)",
             zIndex: 1000,
             maxHeight: "300px",
             overflowY: "auto",
             padding: "6px",
+            animation: "dropdownFadeIn 0.12s ease",
           }}
         >
           {items.map((item, i) =>
