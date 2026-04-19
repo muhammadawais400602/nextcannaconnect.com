@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRef, useEffect } from "react";
+import { useInView } from "@/hooks/useInView";
 import type { Company } from "@/types";
 
 const TIER_LABELS: Record<string, string> = {
@@ -16,6 +17,7 @@ const TIER_LABELS: Record<string, string> = {
 export default function FeaturedVendors({ companies }: { companies: Company[] }) {
   const loopedCompanies = [...companies, ...companies];
 
+  const [headerRef, headerInView] = useInView();
   const trackRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const isPaused = useRef(false);
@@ -37,7 +39,19 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
       animRef.current = requestAnimationFrame(tick);
     };
     animRef.current = requestAnimationFrame(tick);
-    return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") {
+        if (animRef.current) cancelAnimationFrame(animRef.current);
+        animRef.current = requestAnimationFrame(tick);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
   }, []);
 
   const onMouseDown = (e: React.MouseEvent) => {
@@ -81,13 +95,22 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
   };
 
   const onTouchEnd = () => { isDragging.current = false; };
+  const onTouchCancel = () => { isDragging.current = false; };
 
   return (
     <section className="py-10 md:py-16 px-4 md:px-8" style={{ backgroundColor: "#fbf9f8" }}>
       <div style={{ maxWidth: "1440px", margin: "0 auto" }}>
 
         {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+        <div
+          ref={headerRef as React.RefObject<HTMLDivElement>}
+          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12"
+          style={{
+            opacity: headerInView ? 1 : 0,
+            transform: headerInView ? "translateY(0)" : "translateY(20px)",
+            transition: "opacity 0.55s cubic-bezier(0.22,1,0.36,1), transform 0.55s cubic-bezier(0.22,1,0.36,1)",
+          }}
+        >
           <div>
             <h2
               style={{
@@ -132,6 +155,7 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
+            onTouchCancel={onTouchCancel}
           >
             {loopedCompanies.map((company, i) => (
               <Link

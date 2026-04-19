@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export interface FlatOption {
   value: string;
@@ -36,6 +36,7 @@ export default function CustomDropdown({
   triggerStyle,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
   const ref = useRef<HTMLDivElement>(null);
 
   const selectedLabel = (() => {
@@ -50,6 +51,17 @@ export default function CustomDropdown({
     return null;
   })();
 
+  const updatePanelPosition = useCallback(() => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    setPanelStyle({
+      position: "fixed",
+      top: rect.bottom + 6,
+      left: rect.left,
+      minWidth: Math.max(rect.width, 220),
+    });
+  }, []);
+
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -57,6 +69,18 @@ export default function CustomDropdown({
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (open) {
+      updatePanelPosition();
+      window.addEventListener("scroll", updatePanelPosition, true);
+      window.addEventListener("resize", updatePanelPosition);
+      return () => {
+        window.removeEventListener("scroll", updatePanelPosition, true);
+        window.removeEventListener("resize", updatePanelPosition);
+      };
+    }
+  }, [open, updatePanelPosition]);
 
   const optionBtn = (opt: FlatOption) => (
     <button
@@ -139,15 +163,12 @@ export default function CustomDropdown({
       {open && (
         <div
           style={{
-            position: "absolute",
-            top: "calc(100% + 10px)",
-            left: 0,
-            minWidth: "220px",
+            ...panelStyle,
             backgroundColor: "white",
             border: "1px solid #e5e7eb",
             borderRadius: "12px",
             boxShadow: "0 16px 40px rgba(0,0,0,0.14)",
-            zIndex: 1000,
+            zIndex: 9999,
             maxHeight: "300px",
             overflowY: "auto",
             padding: "6px",

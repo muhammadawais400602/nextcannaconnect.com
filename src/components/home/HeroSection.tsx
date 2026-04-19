@@ -32,7 +32,6 @@ export default function HeroSection() {
         display: "flex",
         alignItems: "center",
         paddingTop: "80px",
-        overflow: "hidden",
         backgroundColor: "#eeeae3",
       }}
     >

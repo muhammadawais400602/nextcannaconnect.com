@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+function isValidSession(request: NextRequest): boolean {
+  const session = request.cookies.get("admin_session");
+  return !!session?.value?.startsWith("nc-admin:");
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -8,16 +13,20 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Protect all /admin routes
+  // Protect all /admin page routes
   if (pathname.startsWith("/admin")) {
-    const session = request.cookies.get("admin_session");
-    if (!session?.value) {
+    if (!isValidSession(request)) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
-    // Verify token format (set by auth API)
-    if (!session.value.startsWith("nc-admin:")) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
+    return NextResponse.next();
+  }
+
+  // Protect all /api/admin/* routes
+  if (pathname.startsWith("/api/admin")) {
+    if (!isValidSession(request)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    return NextResponse.next();
   }
 
   return NextResponse.next();
