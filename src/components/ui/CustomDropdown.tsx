@@ -36,8 +36,8 @@ export default function CustomDropdown({
   triggerStyle,
 }: Props) {
   const [open, setOpen] = useState(false);
-  const [panelStyle, setPanelStyle] = useState<React.CSSProperties>({});
-  const ref = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   const selectedLabel = (() => {
     for (const item of items) {
@@ -51,48 +51,41 @@ export default function CustomDropdown({
     return null;
   })();
 
-  const updatePanelPosition = useCallback(() => {
-    if (!ref.current) return;
-    const rect = ref.current.getBoundingClientRect();
-    setPanelStyle({
-      position: "fixed",
-      top: rect.bottom + 6,
-      left: rect.left,
-      minWidth: Math.max(rect.width, 220),
-    });
+  const updatePos = useCallback(() => {
+    if (triggerRef.current) {
+      const r = triggerRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 8, left: r.left, width: r.width });
+    }
   }, []);
 
+  function handleToggle() {
+    updatePos();
+    setOpen((o) => !o);
+  }
+
   useEffect(() => {
+    if (!open) return;
     function onClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) setOpen(false);
     }
+    function onScroll() { updatePos(); }
     document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, []);
-
-  useEffect(() => {
-    if (open) {
-      updatePanelPosition();
-      window.addEventListener("scroll", updatePanelPosition, true);
-      window.addEventListener("resize", updatePanelPosition);
-      return () => {
-        window.removeEventListener("scroll", updatePanelPosition, true);
-        window.removeEventListener("resize", updatePanelPosition);
-      };
-    }
-  }, [open, updatePanelPosition]);
+    window.addEventListener("scroll", onScroll, true);
+    window.addEventListener("resize", updatePos);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      window.removeEventListener("scroll", onScroll, true);
+      window.removeEventListener("resize", updatePos);
+    };
+  }, [open, updatePos]);
 
   const optionBtn = (opt: FlatOption) => (
     <button
       key={opt.value}
       type="button"
       onClick={() => { onChange(opt.value); setOpen(false); }}
-      onMouseEnter={(e) => {
-        if (value !== opt.value) e.currentTarget.style.background = "#f3f4f6";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.background = value === opt.value ? "rgba(0,51,32,0.07)" : "transparent";
-      }}
+      onMouseEnter={(e) => { if (value !== opt.value) e.currentTarget.style.background = "#f3f4f6"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.background = value === opt.value ? "rgba(0,51,32,0.07)" : "transparent"; }}
       style={{
         display: "block",
         width: "100%",
@@ -115,14 +108,13 @@ export default function CustomDropdown({
 
   return (
     <div
-      ref={ref}
+      ref={triggerRef}
       style={{ position: "relative", ...wrapperStyle }}
       onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
     >
-      <style>{`@keyframes dropdownFadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}`}</style>
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={handleToggle}
         style={{
           width: "100%",
           display: "flex",
@@ -144,17 +136,8 @@ export default function CustomDropdown({
         <span style={{ flex: 1, textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {selectedLabel ?? placeholder}
         </span>
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-          style={{
-            flexShrink: 0,
-            color: "#9CA3AF",
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-            transition: "transform 0.2s",
-          }}
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+          style={{ flexShrink: 0, color: "#9CA3AF", transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}
         >
           <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
@@ -163,33 +146,24 @@ export default function CustomDropdown({
       {open && (
         <div
           style={{
-            ...panelStyle,
+            position: "fixed",
+            top: pos.top,
+            left: pos.left,
+            minWidth: Math.max(pos.width, 220),
             backgroundColor: "white",
             border: "1px solid #e5e7eb",
             borderRadius: "12px",
             boxShadow: "0 16px 40px rgba(0,0,0,0.14)",
-            zIndex: 9999,
+            zIndex: 99999,
             maxHeight: "300px",
             overflowY: "auto",
             padding: "6px",
-            animation: "dropdownFadeIn 0.12s ease",
           }}
         >
           {items.map((item, i) =>
             isGroup(item) ? (
               <div key={i}>
-                <p
-                  style={{
-                    fontSize: "10px",
-                    fontWeight: 700,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    color: "#9CA3AF",
-                    padding: "8px 12px 4px",
-                    fontFamily: "'Inter', sans-serif",
-                    margin: 0,
-                  }}
-                >
+                <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9CA3AF", padding: "8px 12px 4px", fontFamily: "'Inter', sans-serif", margin: 0 }}>
                   {item.groupLabel}
                 </p>
                 {item.options.map(optionBtn)}
