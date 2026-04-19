@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import ListingCard from "@/components/directory/ListingCard";
 import { Company } from "@/types";
 import { getCategoryBySlug } from "@/data/categories";
-import CustomSelect from "@/components/ui/CustomSelect";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const PAGE_SIZE = 20;
 
@@ -185,16 +185,13 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
             >
               Sort by:
             </span>
-            <CustomSelect
-              ghost
+            <CustomDropdown
               value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              style={{ fontWeight: 600, color: "#111827", fontSize: "13px" }}
-            >
-              {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </CustomSelect>
+              onChange={setSort}
+              wrapperStyle={{ minWidth: "100px" }}
+              triggerStyle={{ fontWeight: 600, color: "#111827", fontSize: "13px" }}
+              items={SORT_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+            />
           </div>
         </div>
       </div>

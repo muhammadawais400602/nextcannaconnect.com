@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import CustomSelect from "@/components/ui/CustomSelect";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const US_STATES = [
   "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
@@ -135,18 +135,14 @@ export default function DirectoryHero() {
             >
               location_on
             </span>
-            <CustomSelect
-              ghost
+            <CustomDropdown
               value={state}
-              onChange={(e) => setState(e.target.value)}
+              onChange={setState}
+              placeholder="All States"
               wrapperStyle={{ flex: 1, minWidth: 0 }}
-              style={{ color: state ? "#111827" : "#9CA3AF", fontSize: "13px" }}
-            >
-              <option value="">All States</option>
-              {US_STATES.map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </CustomSelect>
+              triggerStyle={{ color: state ? "#111827" : "#9CA3AF", fontSize: "13px" }}
+              items={US_STATES.map((s) => ({ value: s, label: s }))}
+            />
           </div>
 
           {/* Browse button */}
