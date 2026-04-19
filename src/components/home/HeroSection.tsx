@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CATEGORIES } from "@/data/categories";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const US_STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
 const CA_PROVINCES = ["Alberta","British Columbia","Manitoba","New Brunswick","Newfoundland and Labrador","Northwest Territories","Nova Scotia","Nunavut","Ontario","Prince Edward Island","Quebec","Saskatchewan","Yukon"];
@@ -158,36 +159,14 @@ export default function HeroSection() {
               >
                 category
               </span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: category ? "#003320" : "#717973",
-                    fontFamily: "'Inter', sans-serif",
-                    cursor: "pointer",
-                    appearance: "none",
-                    padding: 0,
-                  }}
-                >
-                  <option value="">Select Service</option>
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat.slug} value={cat.slug}>{cat.label}</option>
-                  ))}
-                </select>
-              </div>
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "18px", color: "#9CA3AF", flexShrink: 0 }}
-              >
-                expand_more
-              </span>
+              <CustomDropdown
+                value={category}
+                onChange={setCategory}
+                placeholder="Select Service"
+                wrapperStyle={{ flex: 1, minWidth: 0 }}
+                triggerStyle={{ color: category ? "#003320" : "#717973" }}
+                items={CATEGORIES.map((cat) => ({ value: cat.slug, label: cat.label }))}
+              />
             </div>
 
             {/* State dropdown */}
@@ -210,45 +189,17 @@ export default function HeroSection() {
               >
                 location_on
               </span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <select
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    outline: "none",
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    color: state ? "#003320" : "#717973",
-                    fontFamily: "'Inter', sans-serif",
-                    cursor: "pointer",
-                    appearance: "none",
-                    padding: 0,
-                  }}
-                >
-                  <option value="">Select State / Province</option>
-                  <optgroup label="United States">
-                    <option value="all-us">All States (USA)</option>
-                    {US_STATES.map((s) => (
-                      <option key={s} value={s}>{s}</option>
-                    ))}
-                  </optgroup>
-                  <optgroup label="Canada">
-                    <option value="all-ca">All Provinces (Canada)</option>
-                    {CA_PROVINCES.map((p) => (
-                      <option key={p} value={p}>{p}</option>
-                    ))}
-                  </optgroup>
-                </select>
-              </div>
-              <span
-                className="material-symbols-outlined"
-                style={{ fontSize: "18px", color: "#9CA3AF", flexShrink: 0 }}
-              >
-                expand_more
-              </span>
+              <CustomDropdown
+                value={state}
+                onChange={setState}
+                placeholder="Select State / Province"
+                wrapperStyle={{ flex: 1, minWidth: 0 }}
+                triggerStyle={{ color: state ? "#003320" : "#717973" }}
+                items={[
+                  { groupLabel: "United States", options: [{ value: "all-us", label: "All States (USA)" }, ...US_STATES.map((s) => ({ value: s, label: s }))] },
+                  { groupLabel: "Canada", options: [{ value: "all-ca", label: "All Provinces (Canada)" }, ...CA_PROVINCES.map((p) => ({ value: p, label: p }))] },
+                ]}
+              />
             </div>
 
             {/* Browse button */}
