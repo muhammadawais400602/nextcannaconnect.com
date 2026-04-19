@@ -73,9 +73,9 @@ const fetchCompaniesByCategory = unstable_cache(
 const fetchFeaturedCompanies = unstable_cache(
   async (): Promise<CompanyType[]> => {
     await connectDB();
-    const docs = await Company.find({ tier: { $in: ["featured", "elite", "select"] } })
-      .sort({ tier: 1 })
-      .limit(8)
+    const docs = await Company.find({ tier: { $in: ["select", "claimed"] } })
+      .sort({ createdAt: -1 })
+      .limit(20)
       .select("-__v")
       .lean();
     return docs.map(docToCompany);
