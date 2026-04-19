@@ -4,11 +4,12 @@ import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import ListingCard from "@/components/directory/ListingCard";
 import { Company } from "@/types";
+import { getCategoryBySlug } from "@/data/categories";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const PAGE_SIZE = 20;
 
 const SORT_OPTIONS = [
-  { value: "score", label: "Partner Score" },
   { value: "rating", label: "Rating" },
   { value: "name", label: "Name (A–Z)" },
 ];
@@ -22,22 +23,25 @@ const TIER_MAP: Record<string, string[]> = {
 
 interface Props {
   companies: Company[];
-  categoryShortLabel: string;
+  categoryFilter: string | null;
   verificationFilters: string[];
   serviceFilters: string[];
+  onMobileFiltersOpen?: () => void;
+  activeFilterCount?: number;
 }
 
-export default function DirectoryListings({ companies, categoryShortLabel, verificationFilters, serviceFilters }: Props) {
+export default function DirectoryListings({ companies, categoryFilter, verificationFilters, serviceFilters, onMobileFiltersOpen, activeFilterCount = 0 }: Props) {
+  const categoryShortLabel = categoryFilter ? (getCategoryBySlug(categoryFilter)?.shortLabel ?? "Partners") : "All Categories";
   const searchParams = useSearchParams();
   const initialState = searchParams.get("state") ?? "";
   const initialQuery = searchParams.get("q") ?? "";
 
   const [query, setQuery] = useState(initialQuery);
   const [stateFilter, setStateFilter] = useState(initialState);
-  const [sort, setSort] = useState("score");
+  const [sort, setSort] = useState("rating");
   const [page, setPage] = useState(1);
 
-  useEffect(() => { setPage(1); }, [query, stateFilter, sort, verificationFilters, serviceFilters]);
+  useEffect(() => { setPage(1); }, [query, stateFilter, sort, verificationFilters, serviceFilters, categoryFilter]);
 
   const filtered = useMemo(() => {
     // Build allowed tiers from verification checkboxes
@@ -47,6 +51,7 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
         : null; // null = no filter applied
 
     let list = companies.filter((c) => {
+      if (categoryFilter && c.category !== categoryFilter) return false;
       if (stateFilter && c.location.state !== stateFilter) return false;
       if (allowedTiers && !allowedTiers.includes(c.tier)) return false;
       if (serviceFilters.length > 0) {
@@ -67,23 +72,14 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
       return true;
     });
 
-    if (sort === "rating") {
-      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
-    } else if (sort === "name") {
+    if (sort === "name") {
       list = [...list].sort((a, b) => a.name.localeCompare(b.name));
     } else {
-      // score: tier priority then rating
-      const tierOrder: Record<string, number> = { featured: 0, elite: 1, select: 2, claimed: 3, free: 4 };
-      list = [...list].sort((a, b) => {
-        const ta = tierOrder[a.tier] ?? 5;
-        const tb = tierOrder[b.tier] ?? 5;
-        if (ta !== tb) return ta - tb;
-        return (b.rating ?? 0) - (a.rating ?? 0);
-      });
+      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
     }
 
     return list;
-  }, [companies, query, stateFilter, sort, verificationFilters, serviceFilters]);
+  }, [companies, query, stateFilter, sort, verificationFilters, serviceFilters, categoryFilter]);
 
   const paid = filtered.filter((c) => c.tier !== "free");
   const free = filtered.filter((c) => c.tier === "free");
@@ -136,8 +132,48 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
           </h2>
         </div>
 
-        {/* Sort */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+        {/* Filters + sort row */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          {/* Mobile: Filters button */}
+          {onMobileFiltersOpen && (
+            <button
+              onClick={onMobileFiltersOpen}
+              className="dir-filters-btn-mobile"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "7px",
+                padding: "9px 14px",
+                backgroundColor: "white",
+                border: "1px solid #e5e7eb",
+                borderRadius: "10px",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "#111827",
+                fontFamily: "'Inter', sans-serif",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>tune</span>
+              Filters
+              {activeFilterCount > 0 && (
+                <span
+                  style={{
+                    backgroundColor: "#003320",
+                    color: "white",
+                    borderRadius: "9999px",
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    padding: "2px 6px",
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          )}
           {/* Sort */}
           <div
             style={{
@@ -161,27 +197,24 @@ export default function DirectoryListings({ companies, categoryShortLabel, verif
             >
               Sort by:
             </span>
-            <select
+            <CustomDropdown
               value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              style={{
-                border: "none",
-                outline: "none",
-                fontSize: "13px",
-                fontWeight: 600,
-                color: "#111827",
-                fontFamily: "'Inter', sans-serif",
-                backgroundColor: "transparent",
-                cursor: "pointer",
-                appearance: "none",
-              }}
-            >
-              {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
+              onChange={setSort}
+              wrapperStyle={{ minWidth: "100px" }}
+              triggerStyle={{ fontWeight: 600, color: "#111827", fontSize: "13px" }}
+              items={SORT_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+            />
           </div>
         </div>
+
+        <style>{`
+          @media (min-width: 1024px) {
+            .dir-filters-btn-mobile { display: none !important; }
+          }
+          @media (max-width: 1023px) {
+            .dir-search-desktop { display: none !important; }
+          }
+        `}</style>
       </div>
 
       {/* No results */}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const US_STATES = [
   "Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut",
@@ -24,7 +25,7 @@ export default function DirectoryHero() {
     if (state) params.set("state", state);
     if (query) params.set("q", query);
     const qs = params.toString();
-    router.push(`/directory/all${qs ? `?${qs}` : ""}`);
+    router.push(`/directory${qs ? `?${qs}` : ""}`);
   }
 
   return (
@@ -134,27 +135,14 @@ export default function DirectoryHero() {
             >
               location_on
             </span>
-            <select
+            <CustomDropdown
               value={state}
-              onChange={(e) => setState(e.target.value)}
-              style={{
-                flex: 1,
-                border: "none",
-                outline: "none",
-                fontSize: "13px",
-                color: state ? "#111827" : "#9CA3AF",
-                fontFamily: "'Inter', sans-serif",
-                backgroundColor: "transparent",
-                cursor: "pointer",
-                appearance: "none",
-                minWidth: 0,
-              }}
-            >
-              <option value="">All States</option>
-              {US_STATES.map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </select>
+              onChange={setState}
+              placeholder="All States"
+              wrapperStyle={{ flex: 1, minWidth: 0 }}
+              triggerStyle={{ color: state ? "#111827" : "#9CA3AF", fontSize: "13px" }}
+              items={US_STATES.map((s) => ({ value: s, label: s }))}
+            />
           </div>
 
           {/* Browse button */}

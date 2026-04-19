@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CATEGORIES } from "@/data/categories";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIERS = [
   { value: "free",  label: "Unclaimed" },
@@ -225,8 +226,7 @@ export default function CompanyForm({ initial, mode }: Props) {
         <Row>
           <div>
             <label style={labelStyle}>Tier *</label>
-            <select
-              style={{ ...inputStyle, background: "white" }}
+            <CustomSelect
               value={["claimed", "featured"].includes(form.tier) ? (form.tier === "featured" ? "elite" : "select") : form.tier}
               onChange={(e) => set("tier", e.target.value)}
             >
@@ -236,18 +236,15 @@ export default function CompanyForm({ initial, mode }: Props) {
               {["claimed", "featured"].includes(form.tier) && (
                 <option value={form.tier} style={{ display: "none" }}>{TIER_LABEL[form.tier]}</option>
               )}
-            </select>
+            </CustomSelect>
           </div>
           <div>
             <label style={labelStyle}>Category *</label>
-            <select
-              style={{ ...inputStyle, background: "white" }} value={form.category}
-              onChange={(e) => set("category", e.target.value)}
-            >
+            <CustomSelect value={form.category} onChange={(e) => set("category", e.target.value)}>
               {CATEGORIES.map((c) => (
                 <option key={c.slug} value={c.slug}>{c.label}</option>
               ))}
-            </select>
+            </CustomSelect>
           </div>
         </Row>
         <div>

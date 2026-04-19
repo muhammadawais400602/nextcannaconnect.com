@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 interface Props {
   companyName: string;
@@ -80,16 +81,16 @@ export default function ContactForm({ companyName, serviceTags }: Props) {
             <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }}>
               Service Needed
             </label>
-            <select
+            <CustomSelect
               value={form.service}
               onChange={(e) => setForm((f) => ({ ...f, service: e.target.value }))}
-              style={{ width: "100%", padding: "10px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "14px", outline: "none", background: "white", color: "#111827", boxSizing: "border-box" }}
+              style={{ fontSize: "14px" }}
             >
               <option value="">Select a service...</option>
               {serviceTags.map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
-            </select>
+            </CustomSelect>
           </div>
         )}
         <button

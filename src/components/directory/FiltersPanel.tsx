@@ -1,12 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { CATEGORIES } from "@/data/categories";
-import type { Category } from "@/types";
+import { CATEGORIES, getCategoryBySlug } from "@/data/categories";
 
 interface FiltersPanelProps {
-  category: Category | null;
-  activeSlug: string;
+  selectedCategory: string | null;
+  onCategoryChange: (slug: string | null) => void;
   verificationFilters: string[];
   onVerificationChange: (filters: string[]) => void;
   serviceFilters: string[];
@@ -34,20 +32,26 @@ const labelStyle: React.CSSProperties = {
 };
 
 export default function FiltersPanel({
-  category,
-  activeSlug,
+  selectedCategory,
+  onCategoryChange,
   verificationFilters,
   onVerificationChange,
   serviceFilters,
   onServiceChange,
 }: FiltersPanelProps) {
-  const router = useRouter();
+  const activeCat = selectedCategory ? getCategoryBySlug(selectedCategory) : null;
 
-  const serviceOptions = category?.description
-    ? category.description.split(",").slice(0, 4).map((item) => item.trim().split(" ").slice(0, 2).join(" "))
+  const serviceOptions: string[] = activeCat?.description
+    ? activeCat.description.split(",").slice(0, 4).map((item: string) => item.trim().split(" ").slice(0, 2).join(" "))
     : [];
 
-  const hasFilters = verificationFilters.length > 0 || serviceFilters.length > 0;
+  const hasFilters = verificationFilters.length > 0 || serviceFilters.length > 0 || selectedCategory !== null;
+
+  function clearAll() {
+    onCategoryChange(null);
+    onVerificationChange([]);
+    onServiceChange([]);
+  }
 
   return (
     <div className="sticky" style={{ top: "100px" }}>
@@ -68,43 +72,30 @@ export default function FiltersPanel({
       {/* Category */}
       <div style={{ marginBottom: "28px" }}>
         <p style={labelStyle}>Category</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-          <button
-            onClick={() => router.push("/directory/all")}
-            style={{
-              textAlign: "left",
-              background: activeSlug === "all" ? "rgba(0,51,32,0.08)" : "none",
-              border: "none",
-              borderRadius: "6px",
-              padding: "6px 10px",
-              fontSize: "13px",
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: activeSlug === "all" ? 700 : 400,
-              color: activeSlug === "all" ? "#003320" : "#374151",
-              cursor: "pointer",
-            }}
-          >
-            All Categories
-          </button>
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.slug}
-              onClick={() => router.push(`/directory/${cat.slug}`)}
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {([{ slug: null, label: "All Categories" }, ...CATEGORIES.map((c) => ({ slug: c.slug as string | null, label: c.shortLabel }))] as { slug: string | null; label: string }[]).map(({ slug, label }) => (
+            <label
+              key={slug ?? "all"}
               style={{
-                textAlign: "left",
-                background: activeSlug === cat.slug ? "rgba(0,51,32,0.08)" : "none",
-                border: "none",
-                borderRadius: "6px",
-                padding: "6px 10px",
-                fontSize: "13px",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: activeSlug === cat.slug ? 700 : 400,
-                color: activeSlug === cat.slug ? "#003320" : "#374151",
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
                 cursor: "pointer",
+                fontSize: "13px",
+                color: selectedCategory === slug ? "#003320" : "#374151",
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: selectedCategory === slug ? 600 : 400,
               }}
             >
-              {cat.shortLabel}
-            </button>
+              <input
+                type="radio"
+                name="directory-category"
+                checked={selectedCategory === slug}
+                onChange={() => onCategoryChange(slug)}
+                style={{ width: "15px", height: "15px", accentColor: "#003320", cursor: "pointer", flexShrink: 0 }}
+              />
+              {label}
+            </label>
           ))}
         </div>
       </div>
@@ -140,14 +131,14 @@ export default function FiltersPanel({
         </div>
       </div>
 
-      {/* Service Vertical — only shown when a specific category is active */}
+      {/* Service Vertical — only shown when a category is selected */}
       {serviceOptions.length > 0 && (
         <>
           <div style={{ height: "1px", backgroundColor: "#e5e7eb", marginBottom: "28px" }} />
           <div style={{ marginBottom: "28px" }}>
             <p style={labelStyle}>Service Vertical</p>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {serviceOptions.map((label) => (
+              {serviceOptions.map((label: string) => (
                 <label
                   key={label}
                   style={{
@@ -177,7 +168,7 @@ export default function FiltersPanel({
       {/* Clear All */}
       {hasFilters && (
         <button
-          onClick={() => { onVerificationChange([]); onServiceChange([]); }}
+          onClick={clearAll}
           style={{
             fontSize: "12px",
             fontWeight: 600,
