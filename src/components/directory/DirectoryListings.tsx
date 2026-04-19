@@ -26,9 +26,11 @@ interface Props {
   categoryFilter: string | null;
   verificationFilters: string[];
   serviceFilters: string[];
+  onMobileFiltersOpen?: () => void;
+  activeFilterCount?: number;
 }
 
-export default function DirectoryListings({ companies, categoryFilter, verificationFilters, serviceFilters }: Props) {
+export default function DirectoryListings({ companies, categoryFilter, verificationFilters, serviceFilters, onMobileFiltersOpen, activeFilterCount = 0 }: Props) {
   const categoryShortLabel = categoryFilter ? (getCategoryBySlug(categoryFilter)?.shortLabel ?? "Partners") : "All Categories";
   const searchParams = useSearchParams();
   const initialState = searchParams.get("state") ?? "";
@@ -130,10 +132,49 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
           </h2>
         </div>
 
-        {/* Sort + search */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-          {/* Search input */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          {/* Mobile: Filters button (replaces search) */}
+          {onMobileFiltersOpen && (
+            <button
+              onClick={onMobileFiltersOpen}
+              className="dir-filters-btn-mobile"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "7px",
+                padding: "9px 14px",
+                backgroundColor: "white",
+                border: "1px solid #e5e7eb",
+                borderRadius: "10px",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "#111827",
+                fontFamily: "'Inter', sans-serif",
+                cursor: "pointer",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>tune</span>
+              Filters
+              {activeFilterCount > 0 && (
+                <span style={{
+                  backgroundColor: "#003320",
+                  color: "white",
+                  borderRadius: "9999px",
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  padding: "2px 6px",
+                  lineHeight: 1.4,
+                }}>
+                  {activeFilterCount}
+                </span>
+              )}
+            </button>
+          )}
+
+          {/* Desktop: Search input */}
           <div
+            className="dir-search-desktop"
             style={{
               display: "flex",
               alignItems: "center",
@@ -174,15 +215,7 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
               borderRadius: "10px",
             }}
           >
-            <span
-              style={{
-                fontSize: "12px",
-                color: "#6B7280",
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: 600,
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span style={{ fontSize: "12px", color: "#6B7280", fontFamily: "'Inter', sans-serif", fontWeight: 600, whiteSpace: "nowrap" }}>
               Sort by:
             </span>
             <CustomDropdown
@@ -194,6 +227,11 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
             />
           </div>
         </div>
+
+        <style>{`
+          @media (min-width: 1024px) { .dir-filters-btn-mobile { display: none !important; } }
+          @media (max-width: 1023px) { .dir-search-desktop { display: none !important; } }
+        `}</style>
       </div>
 
       {/* No results */}
