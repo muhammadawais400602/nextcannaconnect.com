@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRef, useEffect } from "react";
+import { useState } from "react";
 import { useInView } from "@/hooks/useInView";
 import type { Company } from "@/types";
 
@@ -16,86 +16,8 @@ const TIER_LABELS: Record<string, string> = {
 
 export default function FeaturedVendors({ companies }: { companies: Company[] }) {
   const loopedCompanies = [...companies, ...companies];
-
+  const [paused, setPaused] = useState(false);
   const [headerRef, headerInView] = useInView();
-  const trackRef = useRef<HTMLDivElement>(null);
-  const isDragging = useRef(false);
-  const isPaused = useRef(false);
-  const startX = useRef(0);
-  const startScrollLeft = useRef(0);
-  const animRef = useRef<number>(0);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const tick = () => {
-      if (!isDragging.current && !isPaused.current) {
-        track.scrollLeft += 0.6;
-        if (track.scrollLeft >= track.scrollWidth / 2) {
-          track.scrollLeft = 0;
-        }
-      }
-      animRef.current = requestAnimationFrame(tick);
-    };
-    animRef.current = requestAnimationFrame(tick);
-
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") {
-        if (animRef.current) cancelAnimationFrame(animRef.current);
-        animRef.current = requestAnimationFrame(tick);
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-
-    return () => {
-      if (animRef.current) cancelAnimationFrame(animRef.current);
-      document.removeEventListener("visibilitychange", onVisibility);
-    };
-  }, []);
-
-  const onMouseDown = (e: React.MouseEvent) => {
-    const track = trackRef.current;
-    if (!track) return;
-    isDragging.current = true;
-    startX.current = e.pageX - track.getBoundingClientRect().left;
-    startScrollLeft.current = track.scrollLeft;
-    track.style.cursor = "grabbing";
-    track.style.userSelect = "none";
-  };
-
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current || !trackRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - trackRef.current.getBoundingClientRect().left;
-    const walk = (x - startX.current) * 1.5;
-    trackRef.current.scrollLeft = startScrollLeft.current - walk;
-  };
-
-  const onMouseUp = () => {
-    isDragging.current = false;
-    if (trackRef.current) {
-      trackRef.current.style.cursor = "grab";
-      trackRef.current.style.userSelect = "";
-    }
-  };
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    const track = trackRef.current;
-    if (!track) return;
-    isDragging.current = true;
-    startX.current = e.touches[0].pageX;
-    startScrollLeft.current = track.scrollLeft;
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging.current || !trackRef.current) return;
-    const walk = startX.current - e.touches[0].pageX;
-    trackRef.current.scrollLeft = startScrollLeft.current + walk;
-  };
-
-  const onTouchEnd = () => { isDragging.current = false; };
-  const onTouchCancel = () => { isDragging.current = false; };
 
   return (
     <section className="py-10 md:py-16 px-4 md:px-8" style={{ backgroundColor: "#fbf9f8" }}>
@@ -130,7 +52,11 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
         </div>
 
         {/* Scrollable marquee */}
-        <div style={{ position: "relative" }}>
+        <div
+          style={{ position: "relative", overflow: "hidden" }}
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           {/* Fade edges */}
           <div style={{
             position: "absolute", left: 0, top: 0, bottom: 0, width: "60px", zIndex: 2,
@@ -144,18 +70,8 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
           }} />
 
           <div
-            ref={trackRef}
-            className="featured-scroll-track"
-            onMouseDown={onMouseDown}
-            onMouseMove={onMouseMove}
-            onMouseUp={onMouseUp}
-            onMouseLeave={onMouseUp}
-            onMouseEnter={() => { isPaused.current = true; }}
-            onMouseOut={() => { if (!isDragging.current) isPaused.current = false; }}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
-            onTouchCancel={onTouchCancel}
+            className="featured-marquee-track"
+            style={{ animationPlayState: paused ? "paused" : "running" }}
           >
             {loopedCompanies.map((company, i) => (
               <Link
@@ -175,7 +91,6 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.boxShadow = "0 1px 4px rgba(0,51,32,0.04)";
                 }}
-                onClick={(e) => { if (isDragging.current) e.preventDefault(); }}
                 draggable={false}
               >
                 {/* Image / color block */}
@@ -272,20 +187,17 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
       </div>
 
       <style>{`
-        .featured-scroll-track {
+        @keyframes marqueeScroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .featured-marquee-track {
           display: flex;
           gap: 20px;
-          overflow-x: scroll;
-          overflow-y: hidden;
-          scroll-behavior: auto;
+          width: max-content;
           padding-bottom: 8px;
-          cursor: grab;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-        .featured-scroll-track::-webkit-scrollbar {
-          display: none;
+          animation: marqueeScroll 35s linear infinite;
+          will-change: transform;
         }
         .featured-card {
           width: 260px;

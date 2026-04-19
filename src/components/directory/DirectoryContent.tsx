@@ -26,51 +26,6 @@ export default function DirectoryContent({ companies }: Props) {
 
   return (
     <>
-      {/* Mobile filter toggle button */}
-      <div
-        className="lg:hidden"
-        style={{ marginBottom: "16px", display: "flex", justifyContent: "flex-end" }}
-      >
-        <button
-          onClick={() => setMobileFiltersOpen(true)}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-            backgroundColor: "white",
-            border: "1px solid #e5e7eb",
-            borderRadius: "10px",
-            padding: "10px 16px",
-            fontSize: "13px",
-            fontWeight: 600,
-            color: "#111827",
-            fontFamily: "'Inter', sans-serif",
-            cursor: "pointer",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
-          }}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#003320" }}>
-            tune
-          </span>
-          Filters
-          {activeFilterCount > 0 && (
-            <span
-              style={{
-                backgroundColor: "#003320",
-                color: "white",
-                borderRadius: "9999px",
-                fontSize: "10px",
-                fontWeight: 700,
-                padding: "2px 7px",
-                lineHeight: 1.4,
-              }}
-            >
-              {activeFilterCount}
-            </span>
-          )}
-        </button>
-      </div>
-
       {/* Mobile filter drawer overlay */}
       {mobileFiltersOpen && (
         <div
@@ -85,7 +40,7 @@ export default function DirectoryContent({ companies }: Props) {
         />
       )}
 
-      {/* Mobile filter drawer panel */}
+      {/* Mobile filter drawer panel — flex column so button never overlaps */}
       <div
         className="mobile-filter-drawer"
         style={{
@@ -97,22 +52,32 @@ export default function DirectoryContent({ companies }: Props) {
           maxWidth: "85vw",
           backgroundColor: "white",
           zIndex: 101,
-          overflowY: "auto",
-          padding: "24px 20px",
+          display: "flex",
+          flexDirection: "column",
           transform: mobileFiltersOpen ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.28s cubic-bezier(0.4,0,0.2,1)",
           boxShadow: mobileFiltersOpen ? "4px 0 24px rgba(0,0,0,0.15)" : "none",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
+        {/* Drawer header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: "18px 20px 14px",
+            flexShrink: 0,
+            borderBottom: "1px solid #f3f4f6",
+          }}
+        >
           <span
             style={{
               fontFamily: "'Inter', sans-serif",
-              fontSize: "14px",
+              fontSize: "13px",
               fontWeight: 700,
               color: "#111827",
               textTransform: "uppercase",
-              letterSpacing: "0.08em",
+              letterSpacing: "0.1em",
             }}
           >
             Filters
@@ -133,16 +98,27 @@ export default function DirectoryContent({ companies }: Props) {
           </button>
         </div>
 
-        <FiltersPanel
-          selectedCategory={selectedCategory}
-          onCategoryChange={(slug) => { handleCategoryChange(slug); }}
-          verificationFilters={verificationFilters}
-          onVerificationChange={setVerificationFilters}
-          serviceFilters={serviceFilters}
-          onServiceChange={setServiceFilters}
-        />
+        {/* Scrollable filters area */}
+        <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
+          <FiltersPanel
+            selectedCategory={selectedCategory}
+            onCategoryChange={handleCategoryChange}
+            verificationFilters={verificationFilters}
+            onVerificationChange={setVerificationFilters}
+            serviceFilters={serviceFilters}
+            onServiceChange={setServiceFilters}
+          />
+        </div>
 
-        <div style={{ marginTop: "32px" }}>
+        {/* Sticky footer button */}
+        <div
+          style={{
+            padding: "12px 20px 16px",
+            flexShrink: 0,
+            borderTop: "1px solid #f3f4f6",
+            backgroundColor: "white",
+          }}
+        >
           <button
             onClick={() => setMobileFiltersOpen(false)}
             style={{
@@ -190,6 +166,8 @@ export default function DirectoryContent({ companies }: Props) {
               categoryFilter={selectedCategory}
               verificationFilters={verificationFilters}
               serviceFilters={serviceFilters}
+              onMobileFiltersOpen={() => setMobileFiltersOpen(true)}
+              activeFilterCount={activeFilterCount}
             />
           </Suspense>
         </div>
