@@ -2,23 +2,8 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CATEGORIES } from "@/data/categories";
-
-const CATEGORY_ICONS: Record<string, string> = {
-  "cultivation-growing": "potted_plant",
-  "manufacturers-suppliers": "inventory_2",
-  "extraction-processing": "science",
-  "consultants-advisors": "groups",
-  "marketing-branding-packaging": "campaign",
-  "retail-dispensary": "storefront",
-  "transportation-logistics": "local_shipping",
-  "testing-science": "biotech",
-  "compliance-legal": "gavel",
-  "technology-software": "laptop_mac",
-  "real-estate-construction": "domain",
-  "finance-insurance": "account_balance",
-};
 
 const CATEGORY_IMAGES: Record<string, string> = {
   "cultivation-growing": "/cannabis growth and cultivation.jpg",
@@ -36,7 +21,6 @@ const CATEGORY_IMAGES: Record<string, string> = {
 };
 
 const CATEGORIES_DISPLAY = CATEGORIES.map((cat) => ({
-  icon: CATEGORY_ICONS[cat.slug] ?? "category",
   image: CATEGORY_IMAGES[cat.slug] ?? null,
   title: cat.label,
   description: cat.description,
@@ -47,6 +31,22 @@ const LOOPED = [...CATEGORIES_DISPLAY, ...CATEGORIES_DISPLAY];
 
 export default function OurCategories() {
   const [paused, setPaused] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
+
+  useEffect(() => {
+    // Reset paused on every mount (handles Next.js router cache restoring paused=true)
+    setPaused(false);
+
+    // Handle iOS Safari bfcache restoration — CSS animations freeze after restore
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        setPaused(false);
+        setAnimKey((k) => k + 1);
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   return (
     <section
@@ -102,6 +102,7 @@ export default function OurCategories() {
         }} />
 
         <div
+          key={animKey}
           className="categories-marquee-track"
           style={{ animationPlayState: paused ? "paused" : "running" }}
         >
@@ -172,59 +173,6 @@ export default function OurCategories() {
           ))}
         </div>
       </div>
-
-      <style>{`
-        @keyframes categoriesScroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .categories-marquee-track {
-          display: flex;
-          gap: 20px;
-          width: max-content;
-          padding: 8px 32px 16px;
-          animation: categoriesScroll 45s linear infinite;
-          will-change: transform;
-        }
-        .category-card {
-          width: 260px;
-          min-width: 260px;
-          background: white;
-          border: 1px solid rgba(192,201,193,0.35);
-          border-radius: 16px;
-          padding: 24px;
-          display: flex;
-          flex-direction: column;
-          transition: box-shadow 0.3s ease, border-color 0.3s ease;
-          flex-shrink: 0;
-        }
-        .category-card-image {
-          position: relative;
-          height: 160px;
-          border-radius: 15px 15px 0 0;
-          overflow: hidden;
-          margin: -24px -24px 20px -24px;
-          flex-shrink: 0;
-          background-color: #1a4a35;
-        }
-        .category-card:hover {
-          box-shadow: 0 8px 32px rgba(0,51,32,0.1);
-          border-color: rgba(0,51,32,0.2);
-        }
-        @media (max-width: 480px) {
-          .category-card {
-            width: 220px;
-            min-width: 220px;
-            padding: 20px;
-          }
-          .category-card-image {
-            margin: -20px -20px 20px -20px;
-          }
-          .cat-fade-edge {
-            width: 32px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
