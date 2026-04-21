@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useInView } from "@/hooks/useInView";
 import type { Company } from "@/types";
 
@@ -22,7 +22,23 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
   const loopedCompanies = [...half, ...half];
 
   const [paused, setPaused] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
   const [headerRef, headerInView] = useInView();
+
+  useEffect(() => {
+    // Reset paused on every mount (handles Next.js router cache restoring paused=true)
+    setPaused(false);
+
+    // Handle iOS Safari bfcache restoration — CSS animations freeze after restore
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        setPaused(false);
+        setAnimKey((k) => k + 1);
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   return (
     <section className="py-10 md:py-16 px-4 md:px-8" style={{ backgroundColor: "#fbf9f8" }}>
@@ -75,6 +91,7 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
           }} />
 
           <div
+            key={animKey}
             className="featured-marquee-track"
             style={{ animationPlayState: paused ? "paused" : "running" }}
           >
@@ -190,31 +207,6 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
           </div>
         </div>
       </div>
-
-      <style>{`
-        @keyframes marqueeScroll {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .featured-marquee-track {
-          display: flex;
-          gap: 20px;
-          width: max-content;
-          padding-bottom: 8px;
-          animation: marqueeScroll 35s linear infinite;
-          will-change: transform;
-        }
-        .featured-card {
-          width: 260px;
-          min-width: 260px;
-        }
-        @media (max-width: 480px) {
-          .featured-card {
-            width: 220px;
-            min-width: 220px;
-          }
-        }
-      `}</style>
     </section>
   );
 }
