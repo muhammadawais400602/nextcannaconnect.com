@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export const metadata: Metadata = {
-  title: "Welcome to NextCanna Connect",
-  description: "Your subscription is confirmed. Your listing will be live within 1–2 business days.",
-};
+function SuccessContent() {
+  const searchParams = useSearchParams();
+  const isDemo = searchParams.get("demo") === "true";
 
-export default function SignupSuccessPage() {
   return (
     <div
       style={{
@@ -30,6 +31,25 @@ export default function SignupSuccessPage() {
           color: "white",
         }}
       >
+        {/* Demo mode banner */}
+        {isDemo && (
+          <div
+            style={{
+              backgroundColor: "rgba(247,148,29,0.2)",
+              border: "1px solid rgba(247,148,29,0.5)",
+              borderRadius: "8px",
+              padding: "10px 16px",
+              marginBottom: "28px",
+              fontSize: "12px",
+              color: "#F7941D",
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+            }}
+          >
+            DEMO MODE — No real payment was charged
+          </div>
+        )}
+
         {/* Checkmark */}
         <div
           style={{
@@ -67,10 +87,10 @@ export default function SignupSuccessPage() {
             marginBottom: "32px",
           }}
         >
-          Your payment was confirmed and your application is under review.
-          We&apos;ll have your listing live within{" "}
-          <strong style={{ color: "white" }}>1–2 business days</strong>.
-          Check your inbox for a confirmation email.
+          {isDemo
+            ? "This was a demo run — the signup flow worked end-to-end. Connect a real Stripe key to charge subscriptions."
+            : <>Your payment was confirmed and your application is under review. We&apos;ll have your listing live within{" "}<strong style={{ color: "white" }}>1–2 business days</strong>. Check your inbox for a confirmation email.</>
+          }
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -105,5 +125,13 @@ export default function SignupSuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignupSuccessPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: "100vh", backgroundColor: "#F7F9F7" }} />}>
+      <SuccessContent />
+    </Suspense>
   );
 }

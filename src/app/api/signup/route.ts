@@ -14,9 +14,11 @@ const TIER_PRICES: Record<string, { unit_amount: number; name: string }> = {
   elite:  { unit_amount: 9900, name: "NextCanna Verified Pro — $99/mo" },
 };
 
+const isDemoMode = !process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === "demo";
+
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
+  if (!key || key === "demo") throw new Error("Stripe not configured");
   return new Stripe(key);
 }
 
@@ -58,10 +60,17 @@ export async function POST(request: NextRequest) {
       paymentStatus: isPaid ? "awaiting_payment" : "not_required",
     });
 
-    // Paid tiers → create Stripe Checkout session
+    // Paid tiers → create Stripe Checkout session (or demo redirect)
     if (isPaid) {
-      const priceInfo = TIER_PRICES[tier];
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+
+      // Demo mode: skip Stripe, redirect straight to success page
+      if (isDemoMode) {
+        await SignupApplication.findByIdAndUpdate(app._id, { paymentStatus: "paid" });
+        return NextResponse.json({ checkoutUrl: `${appUrl}/signup/success?demo=true` });
+      }
+
+      const priceInfo = TIER_PRICES[tier];
       const stripe = getStripe();
 
       const session = await stripe.checkout.sessions.create({
