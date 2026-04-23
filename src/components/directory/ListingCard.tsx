@@ -4,7 +4,7 @@ import { Company } from "@/types";
 
 function getBadge(company: Company): { label: string; color: string; bg: string } | null {
   if (company.tier === "elite" || company.tier === "featured") {
-    return { label: "Verified Pro", color: "#1a4a35", bg: "rgba(26,74,53,0.1)" };
+    return { label: "Verified Pro", color: "#92400E", bg: "rgba(217,119,6,0.12)" };
   }
   if (company.tier === "select" || company.tier === "claimed") {
     return { label: "Select", color: "#2d6e52", bg: "rgba(45,110,82,0.1)" };
@@ -70,7 +70,6 @@ export default function ListingCard({ company }: Props) {
           border: "1px solid #e5e7eb",
           borderRadius: "16px",
           padding: "20px 24px",
-          marginBottom: "12px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -131,26 +130,28 @@ export default function ListingCard({ company }: Props) {
     <div
       style={{
         backgroundColor: "white",
-        border: isVerifiedPro ? "1px solid rgba(26,74,53,0.3)" : "1px solid #e5e7eb",
+        borderTop: isVerifiedPro ? "3px solid #D97706" : "1px solid #e5e7eb",
+        borderRight: isVerifiedPro ? "1px solid rgba(217,119,6,0.2)" : "1px solid #e5e7eb",
+        borderBottom: isVerifiedPro ? "1px solid rgba(217,119,6,0.2)" : "1px solid #e5e7eb",
+        borderLeft: isVerifiedPro ? "1px solid rgba(217,119,6,0.2)" : "1px solid #e5e7eb",
         borderRadius: "16px",
-        marginBottom: "16px",
         overflow: "hidden",
         display: "flex",
         flexDirection: "row",
-        boxShadow: isVerifiedPro ? "0 2px 12px rgba(26,74,53,0.08)" : "none",
+        boxShadow: isVerifiedPro ? "0 4px 20px rgba(217,119,6,0.08)" : "none",
       }}
       className="directory-listing-card"
     >
       {/* Left image */}
       <div
         style={{
-          width: "220px",
+          width: "160px",
           flexShrink: 0,
           background: `linear-gradient(135deg, ${company.logoColor} 0%, ${company.bannerColor ?? company.logoColor}dd 100%)`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          minHeight: "200px",
+          minHeight: "160px",
           position: "relative",
           overflow: "hidden",
         }}
@@ -196,7 +197,7 @@ export default function ListingCard({ company }: Props) {
         >
           <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
             {isVerifiedPro && (
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "9px", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "#1a4a35", background: "rgba(26,74,53,0.07)", padding: "3px 8px", borderRadius: "4px", fontFamily: "'Inter', sans-serif" }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "9px", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "#92400E", background: "rgba(217,119,6,0.1)", padding: "3px 8px", borderRadius: "4px", fontFamily: "'Inter', sans-serif" }}>
                 ★ Priority Listing
               </span>
             )}
@@ -294,7 +295,7 @@ export default function ListingCard({ company }: Props) {
         <div
           style={{
             display: "flex",
-            gap: "32px",
+            gap: "20px",
             flexWrap: "wrap",
             paddingTop: "14px",
             borderTop: "1px solid #f3f4f6",
