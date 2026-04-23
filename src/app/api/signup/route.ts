@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import Stripe from "stripe";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
 
@@ -8,32 +9,30 @@ const TIER_LABELS: Record<string, string> = {
   elite: "Verified Pro — $99/mo",
 };
 
-async function sendEmail(payload: {
-  to: string;
-  subject: string;
-  html: string;
-}) {
+const TIER_PRICES: Record<string, { unit_amount: number; name: string }> = {
+  select: { unit_amount: 4999, name: "NextCanna Select — $49.99/mo" },
+  elite:  { unit_amount: 9900, name: "NextCanna Verified Pro — $99/mo" },
+};
+
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
+  return new Stripe(key);
+}
+
+async function sendEmail(payload: { to: string; subject: string; html: string }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM_EMAIL || "NextCanna Connect <noreply@nextcannaconnect.com>";
-
   if (!apiKey) {
     console.warn("[signup] RESEND_API_KEY not set — skipping email");
     return;
   }
-
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({ from, ...payload }),
   });
-
-  if (!res.ok) {
-    const err = await res.text();
-    console.error("[signup] Resend error:", err);
-  }
+  if (!res.ok) console.error("[signup] Resend error:", await res.text());
 }
 
 export async function POST(request: NextRequest) {
@@ -49,17 +48,56 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const isPaid = tier === "select" || tier === "elite";
+
     // Save application
     const app = await SignupApplication.create({
       fullName, companyName, email, phone, stateProvince, category,
       tier, website, description, publicPhone, serviceArea,
       certifications, socialLink, contactName,
+      paymentStatus: isPaid ? "awaiting_payment" : "not_required",
     });
 
+    // Paid tiers → create Stripe Checkout session
+    if (isPaid) {
+      const priceInfo = TIER_PRICES[tier];
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const stripe = getStripe();
+
+      const session = await stripe.checkout.sessions.create({
+        mode: "subscription",
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              recurring: { interval: "month" },
+              product_data: { name: priceInfo.name },
+              unit_amount: priceInfo.unit_amount,
+            },
+            quantity: 1,
+          },
+        ],
+        customer_email: email,
+        metadata: {
+          applicationId: String(app._id),
+          tier,
+          companyName,
+          fullName,
+        },
+        success_url: `${appUrl}/signup/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${appUrl}/signup?tier=${tier}`,
+      });
+
+      // Store the session ID
+      await SignupApplication.findByIdAndUpdate(app._id, { stripeSessionId: session.id });
+
+      return NextResponse.json({ checkoutUrl: session.url });
+    }
+
+    // Free tier — send confirmation emails
     const tierLabel = TIER_LABELS[tier] ?? tier;
     const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
 
-    // 1. Confirmation email → applicant
     await sendEmail({
       to: email,
       subject: "You're on the list — NextCanna Connect",
@@ -85,7 +123,7 @@ export async function POST(request: NextRequest) {
               </table>
             </div>
             <p style="line-height:1.6;color:#4A5E4A">
-              If you have any questions in the meantime, reply to this email or contact us at
+              If you have any questions, contact us at
               <a href="mailto:hello@nextcannaconnect.com" style="color:#1A4A35">hello@nextcannaconnect.com</a>.
             </p>
             <p style="color:#4A5E4A">— The NextCanna Connect Team</p>
@@ -94,7 +132,6 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    // 2. Notification email → admin
     if (adminEmail) {
       await sendEmail({
         to: adminEmail,

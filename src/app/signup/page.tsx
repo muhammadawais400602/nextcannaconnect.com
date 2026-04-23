@@ -185,6 +185,11 @@ function SignUpForm() {
         const data = await res.json();
         throw new Error(data.detail || data.error || "Submission failed");
       }
+      const data = await res.json();
+      if (data.checkoutUrl) {
+        window.location.href = data.checkoutUrl;
+        return;
+      }
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
@@ -393,7 +398,7 @@ function SignUpForm() {
             className="btn-primary justify-center"
             style={{ flex: 2, padding: "13px", fontSize: "15px", opacity: (selectedTier && !submitting) ? 1 : 0.5, cursor: (selectedTier && !submitting) ? "pointer" : "default" }}
           >
-            {submitting ? "Submitting…" : "Continue →"}
+            {submitting ? "Processing…" : "Continue →"}
           </button>
         </div>
         {submitError && <p style={{ textAlign: "center", color: "#DC2626", fontSize: "13px", marginTop: "8px" }}>{submitError}</p>}
@@ -483,7 +488,10 @@ function SignUpForm() {
             ← Back
           </button>
           <button type="submit" disabled={submitting} className="btn-primary justify-center" style={{ flex: 1, padding: "14px", fontSize: "15px", opacity: submitting ? 0.7 : 1, cursor: submitting ? "not-allowed" : "pointer" }}>
-            {submitting ? "Submitting…" : "Complete Registration →"}
+              {submitting
+              ? "Processing…"
+              : (selectedTier === "free" ? "Complete Registration →" : "Proceed to Payment →")
+            }
           </button>
         </div>
         {submitError && <p style={{ textAlign: "center", color: "#DC2626", fontSize: "13px", marginTop: "8px" }}>{submitError}</p>}
