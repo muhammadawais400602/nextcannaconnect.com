@@ -11,7 +11,7 @@ const GOLD = "#C8922A";
 
 export default function AboutPage() {
   return (
-    <div style={{ fontFamily: "'Inter', sans-serif", backgroundColor: "#fbf9f8", color: "#1b1c1c", paddingTop: "100px" }}>
+    <div style={{ fontFamily: "'Inter', sans-serif", backgroundColor: "#fbf9f8", color: "#1b1c1c", paddingTop: "70px" }}>
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section
