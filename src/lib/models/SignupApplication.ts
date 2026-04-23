@@ -17,6 +17,8 @@ export interface ISignupApplication extends Document {
   socialLink?: string;
   contactName?: string;
   status: "pending" | "approved" | "rejected";
+  paymentStatus: "not_required" | "awaiting_payment" | "paid";
+  stripeSessionId?: string;
   createdAt: Date;
 }
 
@@ -36,7 +38,9 @@ const SignupApplicationSchema = new Schema<ISignupApplication>(
     certifications: String,
     socialLink:    String,
     contactName:   String,
-    status:        { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
+    status:          { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
+    paymentStatus:   { type: String, enum: ["not_required", "awaiting_payment", "paid"], default: "not_required" },
+    stripeSessionId: String,
   },
   { timestamps: true }
 );
