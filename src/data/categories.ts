@@ -39,7 +39,7 @@ export const CATEGORIES: Category[] = [
   {
     slug: "retail-dispensary",
     label: "Retail & Dispensary",
-    shortLabel: "Retail",
+    shortLabel: "Retail & Dispensary",
     description: "Dispensary operations, point-of-sale systems, retail design, and customer experience solutions.",
     template: "services-agencies",
   },
