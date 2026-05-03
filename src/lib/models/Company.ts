@@ -23,6 +23,10 @@ export interface ICompany extends Document {
   linkedinUrl?: string;
   instagramUrl?: string;
   youtubeUrl?: string;
+  facebookUrl?: string;
+  twitterUrl?: string;
+  yelpUrl?: string;
+  leaflyUrl?: string;
   // Template 1 — Products & Equipment
   productLines?: string[];
   minOrderQty?: string;
@@ -83,6 +87,10 @@ const CompanySchema = new Schema<ICompany>(
     linkedinUrl: String,
     instagramUrl: String,
     youtubeUrl: String,
+    facebookUrl: String,
+    twitterUrl: String,
+    yelpUrl: String,
+    leaflyUrl: String,
     productLines: [String],
     minOrderQty: String,
     leadTime: String,

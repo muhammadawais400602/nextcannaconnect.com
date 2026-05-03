@@ -47,6 +47,10 @@ export interface Company {
   linkedinUrl?: string;
   instagramUrl?: string;
   youtubeUrl?: string;
+  facebookUrl?: string;
+  twitterUrl?: string;
+  yelpUrl?: string;
+  leaflyUrl?: string;
   // Products & Equipment
   productLines?: string[];
   products?: { name: string; description: string; imageUrl?: string }[];
