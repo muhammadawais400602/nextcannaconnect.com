@@ -10,7 +10,7 @@ const TIERS = [
   { value: "elite", label: "Verified Pro" },
 ];
 const TIER_LABEL: Record<string, string> = {
-  free: "Unclaimed", claimed: "Select", select: "Select", elite: "Verified Pro", featured: "Verified Pro",
+  free: "Unclaimed", select: "Select", elite: "Verified Pro",
 };
 const LOGO_COLORS = ["#1A4A35", "#2563EB", "#7C3AED", "#E8821E", "#0D2818", "#047857", "#DC2626"];
 
@@ -227,15 +227,12 @@ export default function CompanyForm({ initial, mode }: Props) {
           <div>
             <label style={labelStyle}>Tier *</label>
             <CustomSelect
-              value={["claimed", "featured"].includes(form.tier) ? (form.tier === "featured" ? "elite" : "select") : form.tier}
+              value={form.tier}
               onChange={(e) => set("tier", e.target.value)}
             >
               {TIERS.map((t) => (
                 <option key={t.value} value={t.value}>{t.label}</option>
               ))}
-              {["claimed", "featured"].includes(form.tier) && (
-                <option value={form.tier} style={{ display: "none" }}>{TIER_LABEL[form.tier]}</option>
-              )}
             </CustomSelect>
           </div>
           <div>

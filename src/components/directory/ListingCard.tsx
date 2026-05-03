@@ -3,10 +3,10 @@ import Image from "next/image";
 import { Company } from "@/types";
 
 function getBadge(company: Company): { label: string; color: string; bg: string } | null {
-  if (company.tier === "elite" || company.tier === "featured") {
+  if (company.tier === "elite") {
     return { label: "Verified Pro", color: "#92400E", bg: "rgba(217,119,6,0.12)" };
   }
-  if (company.tier === "select" || company.tier === "claimed") {
+  if (company.tier === "select") {
     return { label: "Select", color: "#2d6e52", bg: "rgba(45,110,82,0.1)" };
   }
   return null;
@@ -124,7 +124,7 @@ export default function ListingCard({ company }: Props) {
     );
   }
 
-  const isVerifiedPro = company.tier === "elite" || company.tier === "featured";
+  const isVerifiedPro = company.tier === "elite";
 
   return (
     <div

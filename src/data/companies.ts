@@ -7,11 +7,9 @@ export function getCompaniesByCategory(categorySlug: string): Company[] {
     (c) => c.category === categorySlug || c.secondaryCategory === categorySlug
   ).sort((a, b) => {
     const order: Record<string, number> = {
-      featured: 0,
-      elite: 1,
-      select: 2,
-      claimed: 3,
-      free: 4,
+      elite: 0,
+      select: 1,
+      free: 2,
     };
     return order[a.tier] - order[b.tier];
   });
@@ -23,6 +21,6 @@ export function getCompanyBySlug(slug: string): Company | undefined {
 
 export function getFeaturedCompanies(): Company[] {
   return COMPANIES.filter((c) =>
-    c.tier === "elite" || c.tier === "featured" || c.tier === "select"
+    c.tier === "elite" || c.tier === "select"
   ).slice(0, 8);
 }

@@ -60,7 +60,7 @@ export default async function VendorPage({ params }: Props) {
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
-  const isVerifiedPro = ["elite", "featured"].includes(company.tier);
+  const isVerifiedPro = company.tier === "elite";
 
   const certs = company.certifications ?? company.credentials ?? [];
   const services = company.serviceTags ?? [];

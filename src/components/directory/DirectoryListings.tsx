@@ -16,8 +16,8 @@ const SORT_OPTIONS = [
 
 // Maps filter checkbox IDs to the tiers they represent
 const TIER_MAP: Record<string, string[]> = {
-  "verified-pro": ["featured", "elite"],
-  select:         ["claimed", "select"],
+  "verified-pro": ["elite"],
+  select:         ["select"],
   unclaimed:      ["free"],
 };
 
@@ -285,7 +285,7 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
                 fontFamily: "'Inter', sans-serif",
               }}
             >
-              Claimed Listings
+              Unclaimed Listings
             </span>
             <div style={{ flex: 1, height: "1px", backgroundColor: "#e5e7eb" }} />
           </div>

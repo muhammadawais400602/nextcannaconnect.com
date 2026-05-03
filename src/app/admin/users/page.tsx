@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIER_COLORS: Record<string, string> = {
-  elite: "#1A4A35", select: "#2563EB", claimed: "#7C3AED", free: "#6B7280",
+  elite: "#1A4A35", select: "#2563EB", free: "#6B7280",
 };
 const TIER_BG: Record<string, string> = {
-  elite: "#E8F5EE", select: "#EFF6FF", claimed: "#F5F3FF", free: "#F9FAFB",
+  elite: "#E8F5EE", select: "#EFF6FF", free: "#F9FAFB",
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -151,8 +151,8 @@ export default function UsersPage() {
                       onChange={(e) => handleTierChange(u._id, e.target.value)}
                       style={{ fontSize: "12px", padding: "6px 28px 6px 10px" }}
                     >
-                      {["free", "claimed", "select", "elite"].map((t) => (
-                        <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                      {[{ v: "free", l: "Unclaimed" }, { v: "select", l: "Select" }, { v: "elite", l: "Verified Pro" }].map(({ v, l }) => (
+                        <option key={v} value={v}>{l}</option>
                       ))}
                     </CustomSelect>
                   </td>

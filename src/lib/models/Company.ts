@@ -3,7 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface ICompany extends Document {
   slug: string;
   name: string;
-  tier: "free" | "claimed" | "select" | "elite" | "featured";
+  tier: "free" | "select" | "elite";
   category: string;
   secondaryCategory?: string;
   location: { address?: string; city: string; state: string; zip?: string };
@@ -56,7 +56,7 @@ const CompanySchema = new Schema<ICompany>(
     name: { type: String, required: true },
     tier: {
       type: String,
-      enum: ["free", "claimed", "select", "elite", "featured"],
+      enum: ["free", "select", "elite"],
       default: "free",
     },
     category: { type: String, required: true, index: true },

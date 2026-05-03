@@ -1,26 +1,25 @@
 import Link from "next/link";
 import { COMPANIES } from "@/data/companies";
 import { CATEGORIES } from "@/data/categories";
-import SeedDemoButton from "./SeedDemoButton";
 
 const TIER_COLORS: Record<string, string> = {
-  featured: "#1A4A35", elite: "#1A4A35",
-  select: "#2d6e52",   claimed: "#2d6e52",
+  elite: "#1A4A35",
+  select: "#2d6e52",
   free: "#6B7280",
 };
 
 const TIER_BG: Record<string, string> = {
-  featured: "rgba(26,74,53,0.1)", elite: "rgba(26,74,53,0.1)",
-  select: "rgba(45,110,82,0.1)",  claimed: "rgba(45,110,82,0.1)",
+  elite: "rgba(26,74,53,0.1)",
+  select: "rgba(45,110,82,0.1)",
   free: "#F3F4F6",
 };
 
 const TIER_LABEL: Record<string, string> = {
-  free: "Unclaimed", claimed: "Select", select: "Select", elite: "Verified Pro", featured: "Verified Pro",
+  free: "Unclaimed", select: "Select", elite: "Verified Pro",
 };
 
 function tierCounts() {
-  const counts: Record<string, number> = { featured: 0, elite: 0, select: 0, claimed: 0, free: 0 };
+  const counts: Record<string, number> = { elite: 0, select: 0, free: 0 };
   COMPANIES.forEach((c) => { counts[c.tier] = (counts[c.tier] || 0) + 1; });
   return counts;
 }
@@ -38,9 +37,9 @@ export default function DashboardPage() {
 
   const stats = [
     { label: "Total Listings", value: COMPANIES.length, sub: "All tiers", color: "#1A4A35", bg: "#E8F5EE" },
-    { label: "Paid Listings", value: (tiers.featured || 0) + (tiers.elite || 0) + (tiers.select || 0), sub: "Featured + Elite + Select", color: "#E8821E", bg: "#FEF3E2" },
+    { label: "Paid Listings", value: (tiers.elite || 0) + (tiers.select || 0), sub: "Verified Pro + Select", color: "#E8821E", bg: "#FEF3E2" },
     { label: "Categories", value: CATEGORIES.length, sub: "Industry verticals", color: "#2563EB", bg: "#EFF6FF" },
-    { label: "Free Listings", value: (tiers.free || 0) + (tiers.claimed || 0), sub: "Free + Claimed", color: "#6B7280", bg: "#F3F4F6" },
+    { label: "Unclaimed", value: tiers.free || 0, sub: "Free tier listings", color: "#6B7280", bg: "#F3F4F6" },
   ];
 
   return (
@@ -79,11 +78,6 @@ export default function DashboardPage() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Seed demo */}
-      <div style={{ marginBottom: "20px" }}>
-        <SeedDemoButton />
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "20px" }}>

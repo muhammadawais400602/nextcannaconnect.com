@@ -10,7 +10,7 @@ export interface ILead extends Document {
   senderState?: string;
   servicesInterested: string[];
   message?: string;
-  tier: "claimed" | "select" | "elite";
+  tier: "select" | "elite";
   leadFee: number; // in cents
   charged: boolean;
   createdAt: Date;
@@ -27,7 +27,7 @@ const LeadSchema = new Schema<ILead>(
     senderState: String,
     servicesInterested: [String],
     message: String,
-    tier: { type: String, enum: ["claimed", "select", "elite"], required: true },
+    tier: { type: String, enum: ["select", "elite"], required: true },
     leadFee: { type: Number, required: true }, // 2000 = $20.00
     charged: { type: Boolean, default: false },
   },
