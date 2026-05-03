@@ -1,0 +1,622 @@
+[
+  {
+    "id": 1,
+    "company_name": "Callie's Cannabis Shoppe (RiNo)",
+    "leafly_url": "https://www.leafly.com/dispensary-info/botanico5210",
+    "city": "Denver",
+    "state": "CO",
+    "short_description": "Family-owned, independently operated dispensary with personalized service and a huge selection.",
+    "branding": {
+      "logo_image_url": "https://leafly-public.imgix.net/dispensary/photos/gallery54026/LLtADp41RAjLH9PGKHGQ_Leafly-20Main-Nov.jpg",
+      "banner_image_url": "https://leafly-public.imgix.net/dispensary/photos/gallery54026/LLtADp41RAjLH9PGKHGQ_Leafly-20Main-Nov.jpg",
+      "logo_initials": "CC",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "303-297-2273",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "Welcome to Callie's Cannabis Shoppe, a family owned and independently operated dispensary. We are committed to consistently providing the highest quality cannabis products and excellent service. At Callie's, we offer a wide variety of flower, edibles, concentrates, and topicals. Our goal is to create an unparalleled buying experience and help each customer select products based on their individual needs. Come and share our passion! Please note that all prices on our menu are pre-tax."
+    },
+    "stats": {
+      "leafly_member_since": 2014,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Denver Metro, CO",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Veteran Discount"],
+    "leafly_list_awards": ["2024 Leafly List Winner"],
+    "core_services_tags": ["Recreational", "Pickup", "Same-day Pickup"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Wide variety of premium cannabis flower",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Wax, badder, live resin and more",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Chocolates, gummies, infused products",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/botanico5210"
+    },
+    "states_served": ["Colorado"],
+    "address": "3054 Larimer St., Denver, CO",
+    "rating": 4.9,
+    "review_count": 770
+  },
+  {
+    "id": 2,
+    "company_name": "The Green Solution - Wewatta St. @ Union Station",
+    "leafly_url": "https://www.leafly.com/dispensary-info/the-green-solution4afc",
+    "city": "Denver",
+    "state": "CO",
+    "short_description": "Colorado's most-awarded dispensary, conveniently located downtown near Coors Field and Union Station.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "TGS",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "720-990-9723",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "Batter up! If you're headed to a Rockies game at Coors Field, stop in at Colorado's favorite dispensary — now in downtown Denver. The Green Solution® is one of the most-awarded dispensaries in Colorado offering a large selection of marijuana, marijuana-infused products, and accessories. We oversee quality from growth to production to offer the highest-quality cannabis at competitive pricing, backed by a full 30-day exchange policy. The Green Solution has earned over 50 awards for product excellence, compliance, and innovation in the Cannabis industry."
+    },
+    "stats": {
+      "leafly_member_since": 2013,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Denver Metro, Aurora, Lakewood, Littleton, Northglenn, Westminster, Trinidad, Silver Plume, CO",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Veteran Discount"],
+    "leafly_list_awards": [],
+    "core_services_tags": ["Recreational", "Pickup", "Pickup under 30 mins"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Award-winning cannabis flower including NectarBee house strains",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "NectarBee concentrates including wax, shatter, live resin",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "NectarBee edibles plus wide vendor selection",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/the-green-solution4afc"
+    },
+    "states_served": ["Colorado"],
+    "address": "1995 Wewatta Street, Denver, CO",
+    "rating": 4.6,
+    "review_count": 110
+  },
+  {
+    "id": 3,
+    "company_name": "Life Flower Dispensary",
+    "leafly_url": "https://www.leafly.com/dispensary-info/life-flower-dispensary",
+    "city": "Glendale",
+    "state": "CO",
+    "short_description": "Award-winning medical & recreational dispensary delivering high-quality cannabis with 120+ concentrate strains.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "LF",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "720-389-7442",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "Life Flower Dispensary is proud to deliver high-quality cannabis products across Denver and Glendale, Colorado. We carry over 120 strains of concentrates from several local brands. Our goal is to provide quality service, a comfortable atmosphere, and top-quality product choices for every budget. Our staff is highly trained. We place great importance on carrying organic options whenever possible. Open 8am until midnight every day!"
+    },
+    "stats": {
+      "leafly_member_since": 2014,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Denver, Glendale, CO",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Veteran Discount"],
+    "leafly_list_awards": ["2025 Leafly List Winner"],
+    "core_services_tags": ["Medical", "Recreational", "Pickup"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Organic cannabis flower options in multiple strains",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "120+ strains of concentrates from local Colorado brands",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Full spectrum of edibles including gummies, chocolates, and drinks",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/life-flower-dispensary"
+    },
+    "states_served": ["Colorado"],
+    "address": "4966 Leetsdale Drive, Glendale, CO",
+    "rating": 4.7,
+    "review_count": 173
+  },
+  {
+    "id": 4,
+    "company_name": "The Bakeréé - Belltown",
+    "leafly_url": "https://www.leafly.com/dispensary-info/the-baker-belltown",
+    "city": "Seattle",
+    "state": "WA",
+    "short_description": "Seattle's eclectic medical & recreational boutique dispensary with a wide, expertly curated product selection.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "TB",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "(206) 466-2936",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "A boutique cannabis store located at 222 Wall St in Seattle's Belltown neighborhood. Staff known for personalized recommendations and in-depth product knowledge across a wide selection. Open daily from 8am to 11:45pm."
+    },
+    "stats": {
+      "leafly_member_since": 2018,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Seattle, WA",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Woman Owned", "Veteran Discount"],
+    "leafly_list_awards": [],
+    "core_services_tags": ["Medical", "Recreational", "Pickup"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Curated selection of premium Washington-grown cannabis flower",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Hash, live rosin, RSO and more",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Gummies, chocolates, and infused beverages",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/the-baker-belltown"
+    },
+    "states_served": ["Washington"],
+    "address": "222 Wall St, Seattle, WA",
+    "rating": 4.2,
+    "review_count": 12
+  },
+  {
+    "id": 5,
+    "company_name": "Zen Leaf - West Loop",
+    "leafly_url": "https://www.leafly.com/dispensary-info/zen-leaf-west-loop",
+    "city": "Chicago",
+    "state": "IL",
+    "short_description": "Adult-use recreational cannabis dispensary dedicated to community health, education, and top-quality products.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "ZL",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "6189000936",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "Zen Leaf is an adult recreational cannabis dispensary located in Chicago (West Loop), IL. We are dedicated to serving the local community and providing our customers with a better quality of life through access to cannabis. At Zen Leaf, we strive to improve the health of our patients by sharing the science behind cannabis and a dedication to providing our patients with top quality products, strains, edibles, and educational materials."
+    },
+    "stats": {
+      "leafly_member_since": 2021,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Chicago, IL",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Veteran Discount"],
+    "leafly_list_awards": ["2024 Leafly List Winner"],
+    "core_services_tags": ["Recreational", "Pickup"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Premium Illinois-licensed cannabis flower",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Live resin, badder, shatter from top Illinois brands",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Gummies, mints, chocolates and more",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/zen-leaf-west-loop"
+    },
+    "states_served": ["Illinois"],
+    "address": "222 S Halsted St., Chicago, IL",
+    "rating": 4.3,
+    "review_count": 23
+  },
+  {
+    "id": 6,
+    "company_name": "ZION",
+    "leafly_url": "https://www.leafly.com/dispensary-info/zion-cannabis",
+    "city": "Portland",
+    "state": "OR",
+    "short_description": "Portland's premier clean cannabis dispensary with rigorous pesticide screening and detailed terpene profiling.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "ZN",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "971-255-1758",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "Welcome to Zion! The cleanest cannabis and concentrates in ALL of Portland, every time. 15% OFF flower for medical patients all the time, every time. Our Portland cannabis dispensary is perfectly nestled in the southwest corner of downtown between Portland State University and OHSU. We're a one-stop-shop for all of your cannabis needs, open from 10am-9:55pm 7 days a week offering a variety of high quality edibles, flower, and concentrates to the OMMP and recreational communities. Rigorous pesticide screening and detailed terpene profiling means you get the safest and highest quality medical grade cannabis in Oregon. 10% Discount for Current and Former Military, Healthcare workers, and Seniors!"
+    },
+    "stats": {
+      "leafly_member_since": 2015,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Portland, OR",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Veteran Discount"],
+    "leafly_list_awards": [],
+    "core_services_tags": ["Medical", "Recreational", "Pickup", "Delivery", "Medical Delivery"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Pesticide-screened, terpene-profiled premium Oregon flower",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Live resin, rosin, hash, and cured resin from local Oregon brands",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Gummies, chocolates, and infused treats",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/zion-cannabis"
+    },
+    "states_served": ["Oregon"],
+    "address": "2331 Southwest 5th Avenue, Portland, OR",
+    "rating": 4.8,
+    "review_count": 139
+  },
+  {
+    "id": 7,
+    "company_name": "The Mint Cannabis - Paradise Rd",
+    "leafly_url": "https://www.leafly.com/dispensary-info/the-mint-cannabis-paradise-rd",
+    "city": "Las Vegas",
+    "state": "NV",
+    "short_description": "Open 24/7 recreational dispensary carrying high-quality flower, pre-rolls, concentrates, edibles, and topicals with daily specials.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "TM",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "702-389-8556",
+      "email": null
+    },
+    "about": {
+      "full_description": "The Mint Cannabis carry high-quality marijuana products including flower, pre-rolls, concentrates, edibles, and topicals. SPECIALS and DISCOUNTS are offered, and some specials include daily deals, vendor/brand promotion days, swag bag giveaways, and a patient rewards system!"
+    },
+    "stats": {
+      "leafly_member_since": 2024,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Las Vegas, NV",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Arab/Middle Eastern Owned", "Latinx Owned", "Veteran Owned", "Veteran Discount"],
+    "leafly_list_awards": [],
+    "core_services_tags": ["Recreational", "Pickup", "Pickup under 30 mins", "Open 24 Hours"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "High-quality cannabis flower including premium brands like STIIIZY and Good Green",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Live rosin badder, live resin, and more from Nature's Chemistry and Pressure Extracts",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Gummies, chocolates, and infused treats from STIIIZY, Incredibles, and more",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/the-mint-cannabis-paradise-rd"
+    },
+    "states_served": ["Nevada"],
+    "address": "4503 Paradise Rd, Las Vegas, NV",
+    "rating": 5.0,
+    "review_count": 3
+  },
+  {
+    "id": 8,
+    "company_name": "The Heritage Club - Boston Recreational Weed Dispensary",
+    "leafly_url": "https://www.leafly.com/dispensary-info/the-heritage-club",
+    "city": "Charlestown",
+    "state": "MA",
+    "short_description": "Purpose-driven, Black- and woman-owned cannabis dispensary focused on quality, education, and community impact.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "THC",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "(617) 440-2762",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "The Heritage Club is a purpose-driven cannabis dispensary offering a thoughtfully curated selection of cannabis flower, concentrates, vapes, edibles, CBD products, pre-rolls, extracts, and accessories. Our focus is on quality, education, and responsible consumption. Located in Charlestown, Massachusetts, serving the greater Boston area including Somerville, Cambridge, Arlington, Everett, Medford, Back Bay, North End, Chelsea, Newton, and the TD Garden area. We hire formerly incarcerated and legacy operators, and carry LGBTQIA+, BIPOC, and women-owned brands."
+    },
+    "stats": {
+      "leafly_member_since": 2022,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Boston, Somerville, Cambridge, Arlington, Everett, Medford, Chelsea, Newton, MA",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Black Owned", "Woman Owned", "Veteran Discount"],
+    "leafly_list_awards": [],
+    "core_services_tags": ["Recreational", "Pickup"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Premium Massachusetts-grown cannabis flower including house brand Heritage Club strains",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Bubble hash, badder, cured resin, tinctures",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Live resin gummies, rosin gummies, chocolates from MA-licensed brands",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/the-heritage-club"
+    },
+    "states_served": ["Massachusetts"],
+    "address": "116 Cambridge Street, Rear Building, Charlestown, MA",
+    "rating": 5.0,
+    "review_count": 4
+  },
+  {
+    "id": 9,
+    "company_name": "Story Cannabis - McDowell Rd",
+    "leafly_url": "https://www.leafly.com/dispensary-info/story-cannabis-mcdowell",
+    "city": "Phoenix",
+    "state": "AZ",
+    "short_description": "One of Phoenix's most popular dispensaries — medical & recreational with over 11,000 reviews and a loyalty club.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "SC",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "Available on listing page",
+      "phone": "6026693917",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "Story Cannabis McDowell is at 2439 W McDowell Rd at the corner of McDowell and N 25th Avenue in Phoenix, with easy access from I-17 and I-10. Serving recreational and medical customers with flower, pre-rolls, vapes, concentrates, edibles, and wellness products. Highlights: 22% Veterans Discount; 25% off first visit; Story Cannabis Club loyalty program; knowledgeable budtenders; ATM on-site; online ordering for quick pickup."
+    },
+    "stats": {
+      "leafly_member_since": 2013,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "Phoenix, AZ",
+      "years_in_cannabis": null
+    },
+    "certifications": ["AZ Licensed", "Veteran Discount"],
+    "leafly_list_awards": ["2024 Leafly List Winner"],
+    "core_services_tags": ["Medical", "Recreational", "Pickup", "Pickup under 30 mins"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Premium Arizona flower from brands like Grow Sciences, Fade Co., and 22Red",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Badder, shatter, live sugar, live budder from top AZ concentrate brands",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Gummies, chocolates, rosin edibles from Sublime, Smokiez, TRU Infusion and more",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/story-cannabis-mcdowell"
+    },
+    "states_served": ["Arizona"],
+    "address": "2439 West Mcdowell Road, Phoenix, AZ",
+    "rating": 4.7,
+    "review_count": 11600
+  },
+  {
+    "id": 10,
+    "company_name": "The Travel Agency: A Cannabis Store (Union Square)",
+    "leafly_url": "https://www.leafly.com/dispensary-info/union-square-travel-agency",
+    "city": "New York",
+    "state": "NY",
+    "short_description": "NYC's purpose-driven recreational dispensary directing profits to The Doe Fund and hiring formerly incarcerated individuals.",
+    "branding": {
+      "logo_image_url": null,
+      "banner_image_url": null,
+      "logo_initials": "TA",
+      "logo_color": null
+    },
+    "contact": {
+      "website": "https://thetravelagency.co",
+      "phone": "646-777-7420",
+      "email": "Available via send-an-email on listing"
+    },
+    "about": {
+      "full_description": "The Travel Agency is your premiere destination for cannabis in New York City. We are a purpose-driven business with stores owned by those who have experienced cannabis-related injustices. Our Union Square dispensary directs over half of profits to The Doe Fund, which provides transitional and permanent housing, employment and support services to people who have experienced homelessness and incarceration. We also hire formerly incarcerated and legacy operators, and carry LGBTQIA+, BIPOC, and women-owned brands."
+    },
+    "stats": {
+      "leafly_member_since": 2023,
+      "founded_year": null,
+      "team_size": null,
+      "regions_served": "New York City, NY",
+      "years_in_cannabis": null
+    },
+    "certifications": ["Social Equity Ownership"],
+    "leafly_list_awards": [],
+    "core_services_tags": ["Recreational", "Pickup", "Delivery"],
+    "product_offerings": [
+      {
+        "name": "Flower",
+        "description": "Premium NY-licensed cannabis flower from Grassroots Cannabis and Good Green",
+        "image_url": null
+      },
+      {
+        "name": "Concentrates",
+        "description": "Live rosin, live resin, cured resin, and tinctures from RYTHM, Jaunty, and more",
+        "image_url": null
+      },
+      {
+        "name": "Edibles",
+        "description": "Chocolates, gummies, and infused treats from Incredibles, Kiva, Wana, and more",
+        "image_url": null
+      }
+    ],
+    "social_links": {
+      "instagram": null,
+      "facebook": null,
+      "twitter": null,
+      "linkedin": null,
+      "youtube": null,
+      "yelp": null,
+      "leafly": "https://www.leafly.com/dispensary-info/union-square-travel-agency"
+    },
+    "states_served": ["New York"],
+    "address": "835 Broadway, New York, NY",
+    "rating": 4.6,
+    "review_count": 19
+  }
+]
