@@ -290,7 +290,7 @@ export default function ListingCard({ company }: Props) {
           {company.location.city}, {company.location.state}
         </p>
 
-        {/* Description */}
+        {/* Description — 1 line on directory, full text on listing page */}
         <p
           style={{
             fontSize: "13px",
@@ -298,6 +298,10 @@ export default function ListingCard({ company }: Props) {
             lineHeight: 1.65,
             marginBottom: "16px",
             fontFamily: "'Inter', sans-serif",
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: "vertical" as const,
           }}
         >
           {company.shortDescription}
