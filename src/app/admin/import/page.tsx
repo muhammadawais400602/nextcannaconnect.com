@@ -2,12 +2,25 @@
 
 import { useState, useRef, useCallback } from "react";
 
-type ImportResult = { imported: number; skipped: number; total: number };
+type ImportResult = { imported: number; skipped: number; total: number; tier: string };
 type CleanupResult = { companiesDeleted: number; usersDeleted: number; signupsDeleted: number };
+
+const TIERS = [
+  { value: "free",   label: "Unclaimed (Free)" },
+  { value: "select", label: "Select" },
+  { value: "elite",  label: "Verified Pro" },
+];
+
+const TIER_COLORS: Record<string, string> = {
+  free:   "#6B7280",
+  select: "#2d6e52",
+  elite:  "#D97706",
+};
 
 export default function ImportPage() {
   // ── Import state ─────────────────────────────────────────────────────────
   const [file, setFile]               = useState<File | null>(null);
+  const [tier, setTier]               = useState<"free" | "select" | "elite">("free");
   const [dragging, setDragging]       = useState(false);
   const [importing, setImporting]     = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
@@ -52,6 +65,7 @@ export default function ImportPage() {
 
     const form = new FormData();
     form.append("file", file);
+    form.append("tier", tier);
 
     try {
       const res  = await fetch("/api/admin/import", { method: "POST", body: form });
@@ -95,6 +109,8 @@ export default function ImportPage() {
     marginBottom: "24px",
   };
 
+  const tierLabel = TIERS.find((t) => t.value === tier)?.label ?? "Unclaimed";
+
   return (
     <div style={{ maxWidth: "760px" }}>
       {/* Header */}
@@ -103,7 +119,7 @@ export default function ImportPage() {
           Data Import
         </h1>
         <p style={{ fontSize: "14px", color: "#6B7280", marginTop: "4px" }}>
-          Upload your dispensary JSON file to populate the directory with Unclaimed listings.
+          Upload a dispensary JSON file. Supports both the bulk (1700+) format and the Leafly-style nested format.
         </p>
       </div>
 
@@ -113,10 +129,38 @@ export default function ImportPage() {
           📂 Import Dispensaries
         </h2>
         <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 24px" }}>
-          All entries will be added as <strong>Unclaimed</strong> listings under the{" "}
-          <strong>Retail &amp; Dispensary</strong> category. Safe to re-upload — duplicates
-          are updated, not doubled.
+          Choose a tier, upload your JSON file, and all entries will be added under{" "}
+          <strong>Retail &amp; Dispensary</strong>. Safe to re-upload — duplicates are updated, not doubled.
         </p>
+
+        {/* Tier selector */}
+        <div style={{ marginBottom: "20px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "8px" }}>
+            Import as Tier
+          </label>
+          <div style={{ display: "flex", gap: "10px" }}>
+            {TIERS.map((t) => (
+              <button
+                key={t.value}
+                type="button"
+                onClick={() => setTier(t.value as "free" | "select" | "elite")}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "8px",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  border: tier === t.value ? `2px solid ${TIER_COLORS[t.value]}` : "2px solid #E5E7EB",
+                  background: tier === t.value ? `${TIER_COLORS[t.value]}18` : "white",
+                  color: tier === t.value ? TIER_COLORS[t.value] : "#6B7280",
+                  transition: "all 0.15s",
+                }}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {/* Drop zone */}
         <div
@@ -174,7 +218,7 @@ export default function ImportPage() {
           style={{
             width: "100%",
             padding: "14px",
-            background: !file || importing ? "#D1D5DB" : "#1A4A35",
+            background: !file || importing ? "#D1D5DB" : TIER_COLORS[tier],
             color: "white",
             border: "none",
             borderRadius: "10px",
@@ -184,7 +228,7 @@ export default function ImportPage() {
             transition: "background 0.2s",
           }}
         >
-          {importing ? "Importing… please wait" : "Import Dispensaries →"}
+          {importing ? "Importing… please wait" : `Import as ${tierLabel} →`}
         </button>
 
         {/* Progress hint */}
@@ -204,8 +248,11 @@ export default function ImportPage() {
         {/* Success */}
         {importResult && (
           <div style={{ marginTop: "16px", padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px" }}>
-            <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 12px" }}>
+            <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 4px" }}>
               ✅ Import complete!
+            </p>
+            <p style={{ fontSize: "13px", color: "#166534", margin: "0 0 14px" }}>
+              Added as <strong>{TIERS.find((t) => t.value === importResult.tier)?.label ?? importResult.tier}</strong> under Retail &amp; Dispensary.
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
               {[
@@ -223,8 +270,7 @@ export default function ImportPage() {
               Listings are now live at{" "}
               <a href="/directory" target="_blank" style={{ color: "#15803D", fontWeight: 600 }}>
                 /directory
-              </a>{" "}
-              under the Unclaimed filter.
+              </a>
             </p>
           </div>
         )}

@@ -33,35 +33,141 @@ function makeShortDesc(entry: Record<string, string>): string {
   return `${name} — licensed cannabis dispensary.`;
 }
 
+// Strip markdown link format: [email@x.com](mailto:email@x.com) → email@x.com
+function cleanEmail(raw: string | null | undefined): string {
+  if (!raw) return "";
+  const match = raw.match(/\[([^\]]+)\]\(mailto:[^)]+\)/);
+  return match ? match[1].trim() : raw.trim();
+}
+
+// Detect if entry is the Leafly-style nested format
+function isLeaflyEntry(entry: Record<string, unknown>): boolean {
+  return "company_name" in entry;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildLeaflyDoc(entry: Record<string, any>, index: number, slug: string, tier: string, now: Date): Record<string, unknown> {
+  const branding   = entry.branding        || {};
+  const contact    = entry.contact         || {};
+  const social     = entry.social_links    || {};
+  const stats      = entry.profile_stats   || {};
+
+  const name = (entry.company_name || "").trim();
+
+  const doc: Record<string, unknown> = {
+    slug,
+    name,
+    tier,
+    category:         "retail-dispensary",
+    location: {
+      address: (entry.address || "").trim(),
+      city:    (entry.city    || "").trim(),
+      state:   (entry.state   || "").trim(),
+      zip:     "",
+    },
+    shortDescription:  (entry.short_description || "").trim() || `${name} — licensed cannabis dispensary.`,
+    logoPlaceholder:   (branding.logo_initials || initials(name)).toUpperCase().substring(0, 2),
+    logoColor:         branding.logo_color || LOGO_COLORS[index % LOGO_COLORS.length],
+    serviceTags:       Array.isArray(entry.service_tags) ? entry.service_tags : ["Dispensary", "Cannabis Retail"],
+    isFeatured:        false,
+    updatedAt:         now,
+  };
+
+  if (entry.full_description?.trim())      doc.fullDescription = entry.full_description.trim();
+  if (contact.website?.trim())             doc.website         = contact.website.trim();
+  if (contact.phone?.trim())               doc.phone           = contact.phone.trim();
+  const email = cleanEmail(contact.email);
+  if (email)                               doc.email           = email;
+  if (social.instagram?.trim())            doc.instagramUrl    = social.instagram.trim();
+  if (social.facebook?.trim())             doc.facebookUrl     = social.facebook.trim();
+  if (social.twitter?.trim())              doc.twitterUrl      = social.twitter.trim();
+  if (social.yelp?.trim())                 doc.yelpUrl         = social.yelp.trim();
+  if (social.leafly?.trim())               doc.leaflyUrl       = social.leafly.trim();
+  if (stats.founded_year)                  doc.foundedYear     = Number(stats.founded_year);
+  if (Array.isArray(entry.states_served) && entry.states_served.length)
+                                           doc.statesServed    = entry.states_served;
+  if (Array.isArray(entry.certifications) && entry.certifications.length)
+                                           doc.certifications  = entry.certifications;
+  if (entry.leafly_rating)                 doc.rating          = Number(entry.leafly_rating);
+  if (entry.leafly_reviews)                doc.reviewCount     = Number(entry.leafly_reviews);
+
+  return doc;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildStandardDoc(entry: Record<string, any>, index: number, slug: string, tier: string, now: Date): Record<string, unknown> {
+  const name      = (entry.name || "").trim();
+  const logoUrl   = (entry.logo_url      || "").trim();
+  const bannerUrl = (entry.featured_image || logoUrl).trim();
+
+  const doc: Record<string, unknown> = {
+    slug,
+    name,
+    tier,
+    category:         "retail-dispensary",
+    location: {
+      address: (entry.address_street || "").trim(),
+      city:    (entry.address_city   || "").trim(),
+      state:   (entry.address_state  || "").trim(),
+      zip:     (entry.address_zip    || "").trim(),
+    },
+    shortDescription: makeShortDesc(entry),
+    logoPlaceholder:  initials(name),
+    logoColor:        LOGO_COLORS[index % LOGO_COLORS.length],
+    serviceTags:      ["Dispensary", "Cannabis Retail"],
+    isFeatured:       false,
+    updatedAt:        now,
+  };
+
+  if (entry.description?.trim())           doc.fullDescription = entry.description.trim();
+  if (logoUrl)                             doc.logoUrl         = logoUrl;
+  if (bannerUrl)                           doc.bannerImageUrl  = bannerUrl;
+  if (entry.phone?.trim())                 doc.phone           = entry.phone.trim();
+  if (entry.email?.trim())                 doc.email           = entry.email.trim();
+  if (entry.website?.trim())               doc.website         = entry.website.trim();
+  if (entry.social_instagram?.trim())      doc.instagramUrl    = entry.social_instagram.trim();
+  if (entry.social_facebook?.trim())       doc.facebookUrl     = entry.social_facebook.trim();
+  if (entry.social_twitter?.trim())        doc.twitterUrl      = entry.social_twitter.trim();
+  if (entry.social_yelp?.trim())           doc.yelpUrl         = entry.social_yelp.trim();
+  if (entry.leafly_url?.trim())            doc.leaflyUrl       = entry.leafly_url.trim();
+
+  return doc;
+}
+
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
+    const tier = (formData.get("tier") as string | null) || "free";
 
     if (!file) {
       return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
     }
 
+    if (!["free", "select", "elite"].includes(tier)) {
+      return NextResponse.json({ error: "Invalid tier." }, { status: 400 });
+    }
+
     const text = await file.text();
-    let data: Record<string, string>[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let data: Record<string, any>[];
 
     try {
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed)) {
         data = parsed;
       } else {
-        // Handle { dispensaries: [...] } or similar wrapper
         const val = Object.values(parsed).find((v) => Array.isArray(v));
         if (!val) throw new Error("No array found in JSON");
-        data = val as Record<string, string>[];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        data = val as Record<string, any>[];
       }
     } catch {
       return NextResponse.json({ error: "Invalid JSON file." }, { status: 400 });
     }
 
-    // Pre-load existing slugs so we can deduplicate within the file too
     const existingSlugs = new Set(
       (await Company.find({}, { slug: 1, _id: 0 }).lean()).map((d) => (d as { slug: string }).slug)
     );
@@ -73,11 +179,14 @@ export async function POST(request: NextRequest) {
 
     for (let i = 0; i < data.length; i++) {
       const entry = data[i];
-      const name = (entry.name || "").trim();
+      const leafly = isLeaflyEntry(entry);
+      const rawName = leafly ? entry.company_name : entry.name;
+      const name = (rawName || "").trim();
       if (!name) { skipped++; continue; }
 
-      // Generate unique slug
-      const base = slugify(name);
+      // Use provided slug if available, otherwise generate from name
+      const rawSlug = (entry.slug || "").trim();
+      const base = rawSlug ? slugify(rawSlug) : slugify(name);
       let slug = base;
       let suffix = 2;
       while (usedSlugs.has(slug) && !existingSlugs.has(slug)) {
@@ -85,39 +194,9 @@ export async function POST(request: NextRequest) {
       }
       usedSlugs.add(slug);
 
-      const logoUrl   = (entry.logo_url      || "").trim();
-      const bannerUrl = (entry.featured_image || logoUrl).trim();
-
-      const doc: Record<string, unknown> = {
-        slug,
-        name,
-        tier:             "free",
-        category:         "retail-dispensary",
-        location: {
-          address: (entry.address_street || "").trim(),
-          city:    (entry.address_city   || "").trim(),
-          state:   (entry.address_state  || "").trim(),
-          zip:     (entry.address_zip    || "").trim(),
-        },
-        shortDescription: makeShortDesc(entry),
-        logoPlaceholder:  initials(name),
-        logoColor:        LOGO_COLORS[i % LOGO_COLORS.length],
-        serviceTags:      ["Dispensary", "Cannabis Retail"],
-        isFeatured:       false,
-        updatedAt:        now,
-      };
-
-      if (entry.description?.trim())  doc.fullDescription = entry.description.trim();
-      if (logoUrl)                     doc.logoUrl         = logoUrl;
-      if (bannerUrl)                   doc.bannerImageUrl  = bannerUrl;
-      if (entry.phone?.trim())         doc.phone           = entry.phone.trim();
-      if (entry.email?.trim())         doc.email           = entry.email.trim();
-      if (entry.website?.trim())       doc.website         = entry.website.trim();
-      if (entry.social_instagram?.trim()) doc.instagramUrl = entry.social_instagram.trim();
-      if (entry.social_facebook?.trim())  doc.facebookUrl  = entry.social_facebook.trim();
-      if (entry.social_twitter?.trim())   doc.twitterUrl   = entry.social_twitter.trim();
-      if (entry.social_yelp?.trim())      doc.yelpUrl      = entry.social_yelp.trim();
-      if (entry.leafly_url?.trim())       doc.leaflyUrl    = entry.leafly_url.trim();
+      const doc = leafly
+        ? buildLeaflyDoc(entry, i, slug, tier, now)
+        : buildStandardDoc(entry, i, slug, tier, now);
 
       ops.push({
         updateOne: {
@@ -132,7 +211,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No valid entries found in the file." }, { status: 400 });
     }
 
-    // Process in batches of 100
     const BATCH = 100;
     for (let i = 0; i < ops.length; i += BATCH) {
       await Company.bulkWrite(ops.slice(i, i + BATCH), { ordered: false });
@@ -143,6 +221,7 @@ export async function POST(request: NextRequest) {
       imported: ops.length,
       skipped,
       total: data.length,
+      tier,
     });
   } catch (err) {
     console.error("[import]", err);
