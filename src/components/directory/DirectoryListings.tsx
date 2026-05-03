@@ -72,10 +72,18 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
       return true;
     });
 
+    const TIER_ORDER: Record<string, number> = { elite: 0, select: 1, free: 2 };
+
     if (sort === "name") {
-      list = [...list].sort((a, b) => a.name.localeCompare(b.name));
+      list = [...list].sort((a, b) => {
+        const td = (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9);
+        return td !== 0 ? td : a.name.localeCompare(b.name);
+      });
     } else {
-      list = [...list].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+      list = [...list].sort((a, b) => {
+        const td = (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9);
+        return td !== 0 ? td : (b.rating ?? 0) - (a.rating ?? 0);
+      });
     }
 
     return list;
