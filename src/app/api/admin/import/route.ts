@@ -45,6 +45,84 @@ function isLeaflyEntry(entry: Record<string, unknown>): boolean {
   return "company_name" in entry;
 }
 
+// Detect the structured Verified Pro format (has about.full_description, stats.*, core_services_tags)
+function isStructuredEntry(entry: Record<string, unknown>): boolean {
+  return "company_name" in entry && typeof entry.about === "object" && entry.about !== null;
+}
+
+// Placeholder strings to ignore
+function isPlaceholder(val: string | null | undefined): boolean {
+  if (!val) return true;
+  const lower = val.toLowerCase();
+  return lower.includes("available on listing") || lower.includes("available via");
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildStructuredDoc(entry: Record<string, any>, index: number, slug: string, tier: string, now: Date): Record<string, unknown> {
+  const branding  = entry.branding     || {};
+  const contact   = entry.contact      || {};
+  const social    = entry.social_links || {};
+  const stats     = entry.stats        || {};
+  const about     = entry.about        || {};
+
+  const name = (entry.company_name || "").trim();
+
+  const doc: Record<string, unknown> = {
+    slug,
+    name,
+    tier,
+    category:        "retail-dispensary",
+    location: {
+      address: (entry.address || "").trim(),
+      city:    (entry.city    || "").trim(),
+      state:   (entry.state   || "").trim(),
+      zip:     "",
+    },
+    shortDescription: (entry.short_description || "").trim() || `${name} — licensed cannabis dispensary.`,
+    logoPlaceholder:  (branding.logo_initials || initials(name)).toUpperCase().substring(0, 2),
+    logoColor:        branding.logo_color || LOGO_COLORS[index % LOGO_COLORS.length],
+    serviceTags:      Array.isArray(entry.core_services_tags) ? entry.core_services_tags : ["Dispensary", "Cannabis Retail"],
+    isFeatured:       false,
+    updatedAt:        now,
+  };
+
+  const fullDesc = (about.full_description || "").trim();
+  if (fullDesc)                              doc.fullDescription = fullDesc;
+  if (branding.logo_image_url?.trim())       doc.logoUrl         = branding.logo_image_url.trim();
+  if (branding.banner_image_url?.trim())     doc.bannerImageUrl  = branding.banner_image_url.trim();
+  if (!isPlaceholder(contact.website))       doc.website         = contact.website?.trim();
+  if (contact.phone?.trim())                 doc.phone           = contact.phone.trim();
+  const email = cleanEmail(contact.email);
+  if (email && !isPlaceholder(email))        doc.email           = email;
+  if (social.instagram?.trim())              doc.instagramUrl    = social.instagram.trim();
+  if (social.facebook?.trim())               doc.facebookUrl     = social.facebook.trim();
+  if (social.twitter?.trim())                doc.twitterUrl      = social.twitter.trim();
+  if (social.linkedin?.trim())               doc.linkedinUrl     = social.linkedin.trim();
+  if (social.youtube?.trim())                doc.youtubeUrl      = social.youtube.trim();
+  if (social.yelp?.trim())                   doc.yelpUrl         = social.yelp.trim();
+  if (social.leafly?.trim())                 doc.leaflyUrl       = social.leafly.trim();
+  if (entry.leafly_url?.trim())              doc.leaflyUrl       = entry.leafly_url.trim();
+  if (stats.founded_year)                    doc.foundedYear     = Number(stats.founded_year);
+  if (stats.team_size)                       doc.teamSize        = String(stats.team_size);
+  if (stats.regions_served?.trim())          doc.serviceArea     = stats.regions_served.trim();
+  if (stats.years_in_cannabis)               doc.yearsInCannabis = Number(stats.years_in_cannabis);
+  if (Array.isArray(entry.states_served) && entry.states_served.length)
+                                             doc.statesServed    = entry.states_served;
+  if (Array.isArray(entry.certifications) && entry.certifications.length)
+                                             doc.certifications  = entry.certifications;
+  if (entry.rating)                          doc.rating          = Number(entry.rating);
+  if (entry.review_count)                    doc.reviewCount     = Number(entry.review_count);
+  if (Array.isArray(entry.product_offerings) && entry.product_offerings.length) {
+    doc.products = entry.product_offerings.map((p: { name: string; description: string; image_url?: string }) => ({
+      name:        p.name,
+      description: p.description,
+      imageUrl:    p.image_url || undefined,
+    }));
+  }
+
+  return doc;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildLeaflyDoc(entry: Record<string, any>, index: number, slug: string, tier: string, now: Date): Record<string, unknown> {
   const branding   = entry.branding        || {};
@@ -181,8 +259,9 @@ export async function POST(request: NextRequest) {
 
     for (let i = 0; i < data.length; i++) {
       const entry = data[i];
-      const leafly = isLeaflyEntry(entry);
-      const rawName = leafly ? entry.company_name : entry.name;
+      const structured = isStructuredEntry(entry);
+      const leafly = !structured && isLeaflyEntry(entry);
+      const rawName = (structured || leafly) ? entry.company_name : entry.name;
       const name = (rawName || "").trim();
       if (!name) { skipped++; continue; }
 
@@ -196,7 +275,9 @@ export async function POST(request: NextRequest) {
       }
       usedSlugs.add(slug);
 
-      const doc = leafly
+      const doc = structured
+        ? buildStructuredDoc(entry, i, slug, tier, now)
+        : leafly
         ? buildLeaflyDoc(entry, i, slug, tier, now)
         : buildStandardDoc(entry, i, slug, tier, now);
 
