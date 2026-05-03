@@ -74,6 +74,8 @@ function buildLeaflyDoc(entry: Record<string, any>, index: number, slug: string,
   };
 
   if (entry.full_description?.trim())      doc.fullDescription = entry.full_description.trim();
+  if (branding.logo_image_url?.trim())     doc.logoUrl         = branding.logo_image_url.trim();
+  if (branding.banner_image_url?.trim())   doc.bannerImageUrl  = branding.banner_image_url.trim();
   if (contact.website?.trim())             doc.website         = contact.website.trim();
   if (contact.phone?.trim())               doc.phone           = contact.phone.trim();
   const email = cleanEmail(contact.email);
