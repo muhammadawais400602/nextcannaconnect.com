@@ -25,7 +25,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       { slug },
       {
         ...body,
-        isFeatured: body.tier === "featured" || body.tier === "elite",
+        isFeatured: body.tier === "elite",
       },
       { new: true, runValidators: true }
     ).lean();

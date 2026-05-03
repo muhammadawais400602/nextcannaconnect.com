@@ -7,7 +7,7 @@ export interface IUser extends Document {
   phone?: string;
   stateProvince?: string;
   accountType: "vendor" | "buyer";
-  tier: "free" | "claimed" | "select" | "elite";
+  tier: "free" | "select" | "elite";
   category?: string;
   companyId?: mongoose.Types.ObjectId;
   stripeCustomerId?: string;
@@ -29,7 +29,7 @@ const UserSchema = new Schema<IUser>(
     phone: String,
     stateProvince: String,
     accountType: { type: String, enum: ["vendor", "buyer"], default: "vendor" },
-    tier: { type: String, enum: ["free", "claimed", "select", "elite"], default: "free" },
+    tier: { type: String, enum: ["free", "select", "elite"], default: "free" },
     category: String,
     companyId: { type: Schema.Types.ObjectId, ref: "Company" },
     stripeCustomerId: String,

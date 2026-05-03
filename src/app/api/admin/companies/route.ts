@@ -8,7 +8,7 @@ async function seedIfEmpty() {
   if (count === 0) {
     const docs = COMPANIES.map(({ id, bannerColor, ...rest }) => ({
       ...rest,
-      isFeatured: rest.tier === "featured" || rest.tier === "elite",
+      isFeatured: rest.tier === "elite",
     }));
     await Company.insertMany(docs);
   }
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       ...body,
       logoPlaceholder: body.logoPlaceholder || body.name.substring(0, 2).toUpperCase(),
       logoColor: body.logoColor || "#1A4A35",
-      isFeatured: body.tier === "featured" || body.tier === "elite",
+      isFeatured: body.tier === "elite",
     });
 
     return NextResponse.json({ company }, { status: 201 });

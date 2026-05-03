@@ -16,7 +16,7 @@ const TIER_LABELS: Record<string, string> = {
   elite: "Verified Pro — $99/mo",
 };
 
-const TIER_MAP: Record<string, "free" | "claimed" | "select" | "elite"> = {
+const TIER_MAP: Record<string, "free" | "select" | "elite"> = {
   free: "free",
   select: "select",
   elite: "elite",

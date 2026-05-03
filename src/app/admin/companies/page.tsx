@@ -11,13 +11,13 @@ const TIERS = [
 ];
 
 const TIER_LABEL: Record<string, string> = {
-  free: "Unclaimed", claimed: "Select", select: "Select", elite: "Verified Pro", featured: "Verified Pro",
+  free: "Unclaimed", select: "Select", elite: "Verified Pro",
 };
 const TIER_COLORS: Record<string, string> = {
-  free: "#6B7280", claimed: "#2d6e52", select: "#2d6e52", elite: "#1A4A35", featured: "#1A4A35",
+  free: "#6B7280", select: "#2d6e52", elite: "#1A4A35",
 };
 const TIER_BG: Record<string, string> = {
-  free: "#F3F4F6", claimed: "rgba(45,110,82,0.1)", select: "rgba(45,110,82,0.1)", elite: "rgba(26,74,53,0.1)", featured: "rgba(26,74,53,0.1)",
+  free: "#F3F4F6", select: "rgba(45,110,82,0.1)", elite: "rgba(26,74,53,0.1)",
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

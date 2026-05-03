@@ -7,11 +7,9 @@ import { useInView } from "@/hooks/useInView";
 import type { Company } from "@/types";
 
 const TIER_LABELS: Record<string, string> = {
-  elite:    "Verified Pro",
-  featured: "Verified Pro",
-  select:   "Select",
-  claimed:  "Select",
-  free:     "Unclaimed",
+  elite:  "Verified Pro",
+  select: "Select",
+  free:   "Unclaimed",
 };
 
 export default function FeaturedVendors({ companies }: { companies: Company[] }) {

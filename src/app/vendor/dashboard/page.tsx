@@ -144,18 +144,14 @@ interface VendorUser { email: string; fullName: string; companyName?: string; ti
 interface Company { slug: string; name: string; tier: string; location?: { city: string; state: string } }
 
 const TIER_LABELS: Record<string, string> = {
-  free:     "Unclaimed",
-  claimed:  "Select",
-  select:   "Select",
-  elite:    "Verified Pro",
-  featured: "Verified Pro",
+  free:   "Unclaimed",
+  select: "Select",
+  elite:  "Verified Pro",
 };
 const TIER_COLORS: Record<string, { bg: string; color: string }> = {
-  free:     { bg: "#F3F4F6",             color: "#6B7280" },
-  claimed:  { bg: "rgba(45,110,82,0.1)", color: "#2d6e52" },
-  select:   { bg: "rgba(45,110,82,0.1)", color: "#2d6e52" },
-  elite:    { bg: "rgba(26,74,53,0.1)",  color: "#1A4A35" },
-  featured: { bg: "rgba(26,74,53,0.1)",  color: "#1A4A35" },
+  free:   { bg: "#F3F4F6",             color: "#6B7280" },
+  select: { bg: "rgba(45,110,82,0.1)", color: "#2d6e52" },
+  elite:  { bg: "rgba(26,74,53,0.1)",  color: "#1A4A35" },
 };
 
 const inputStyle: React.CSSProperties = {
@@ -351,7 +347,7 @@ export default function VendorDashboardPage() {
   }
 
   const tierStyle = TIER_COLORS[vendor?.tier ?? "free"];
-  const isVerifiedPro = ["elite", "featured"].includes(company?.tier ?? "");
+  const isVerifiedPro = company?.tier === "elite";
 
   return (
     <div style={{ minHeight: "100vh", background: "#F7F9F7" }}>

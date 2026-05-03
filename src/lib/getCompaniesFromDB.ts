@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import Company, { ICompany } from "@/lib/models/Company";
 import type { Company as CompanyType } from "@/types";
 
-const TIER_ORDER: Record<string, number> = { featured: 0, elite: 1, select: 2, claimed: 3, free: 4 };
+const TIER_ORDER: Record<string, number> = { elite: 0, select: 1, free: 2 };
 
 function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
   return {
@@ -73,7 +73,7 @@ const fetchCompaniesByCategory = unstable_cache(
 const fetchFeaturedCompanies = unstable_cache(
   async (): Promise<CompanyType[]> => {
     await connectDB();
-    const docs = await Company.find({ tier: { $in: ["select", "claimed"] } })
+    const docs = await Company.find({ tier: "select" })
       .sort({ createdAt: -1 })
       .limit(20)
       .select("-__v")

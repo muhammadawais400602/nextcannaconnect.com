@@ -1,4 +1,4 @@
-export type Tier = "free" | "claimed" | "select" | "elite" | "featured";
+export type Tier = "free" | "select" | "elite";
 
 export type CategorySlug =
   | "cultivation-growing"
