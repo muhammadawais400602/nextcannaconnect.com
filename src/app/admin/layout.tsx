@@ -4,11 +4,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogOut, ExternalLink } from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "▦" },
-  { href: "/admin/companies", label: "Companies", icon: "🏢" },
-  { href: "/admin/users", label: "Users", icon: "👥" },
-  { href: "/admin/leads", label: "Leads", icon: "📋" },
-  { href: "/admin/signups", label: "Signups", icon: "📝" },
+  { href: "/admin/dashboard", label: "Dashboard",  icon: "▦"  },
+  { href: "/admin/companies", label: "Companies",  icon: "🏢" },
+  { href: "/admin/users",     label: "Users",      icon: "👥" },
+  { href: "/admin/leads",     label: "Leads",      icon: "📋" },
+  { href: "/admin/signups",   label: "Signups",    icon: "📝" },
+  { href: "/admin/import",    label: "Import Data", icon: "📥" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
