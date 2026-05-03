@@ -37,6 +37,7 @@ export interface Company {
   serviceTags: string[];
   logoPlaceholder: string;
   logoColor: string;
+  logoUrl?: string;
   bannerColor?: string;
   bannerImageUrl?: string;
   bannerCaption?: string;       // "Series-7 Supercritical Fluid Extractor"
