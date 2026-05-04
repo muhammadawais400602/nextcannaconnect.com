@@ -226,24 +226,6 @@ export default function ListingCard({ company }: Props) {
                 {badge.label}
               </span>
             )}
-            {company.rating && (
-              <span
-                style={{
-                  fontSize: "12px",
-                  color: "#6B7280",
-                  fontFamily: "'Inter', sans-serif",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                }}
-              >
-                <span style={{ color: "#F59E0B" }}>★</span>
-                {company.rating}
-                {company.reviewCount && (
-                  <span style={{ color: "#9CA3AF" }}>({company.reviewCount} reviews)</span>
-                )}
-              </span>
-            )}
           </div>
 
         </div>
