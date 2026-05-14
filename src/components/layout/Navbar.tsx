@@ -221,7 +221,7 @@ export default function Navbar() {
     return pathname === href;
   };
 
-  if (pathname.startsWith("/vendor/dashboard") || pathname.startsWith("/vendor/login")) return null;
+  if (pathname.startsWith("/vendor/dashboard") || pathname.startsWith("/vendor/login") || pathname.startsWith("/admin")) return null;
 
   return (
     <nav
