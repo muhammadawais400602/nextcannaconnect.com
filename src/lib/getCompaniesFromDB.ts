@@ -19,7 +19,7 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     serviceTags: doc.serviceTags ?? [],
     logoPlaceholder: doc.logoPlaceholder!,
     logoColor: doc.logoColor ?? "#1A4A35",
-    bannerColor: doc.bannerImageUrl,
+    logoUrl: doc.logoUrl,
     bannerImageUrl: doc.bannerImageUrl,
     bannerCaption: doc.bannerCaption,
     foundedYear: doc.foundedYear,

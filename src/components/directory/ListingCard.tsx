@@ -91,9 +91,21 @@ export default function ListingCard({ company }: Props) {
               fontWeight: 700,
               color: "#9CA3AF",
               flexShrink: 0,
+              overflow: "hidden",
             }}
           >
-            {company.logoPlaceholder}
+            {company.logoUrl ? (
+              <Image
+                src={company.logoUrl}
+                alt={company.name}
+                width={40}
+                height={40}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
+                unoptimized
+              />
+            ) : (
+              company.logoPlaceholder
+            )}
           </div>
           <div>
             <p style={{ fontSize: "14px", fontWeight: 600, color: "#6B7280", fontFamily: "'Inter', sans-serif" }}>
@@ -260,7 +272,7 @@ export default function ListingCard({ company }: Props) {
           {company.location.city}, {company.location.state}
         </p>
 
-        {/* Description */}
+        {/* Description — 1 line on directory, full text on listing page */}
         <p
           style={{
             fontSize: "13px",
@@ -268,6 +280,10 @@ export default function ListingCard({ company }: Props) {
             lineHeight: 1.65,
             marginBottom: "16px",
             fontFamily: "'Inter', sans-serif",
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitLineClamp: 1,
+            WebkitBoxOrient: "vertical" as const,
           }}
         >
           {company.shortDescription}

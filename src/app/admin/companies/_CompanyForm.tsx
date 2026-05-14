@@ -133,7 +133,7 @@ export default function CompanyForm({ initial, mode }: Props) {
     shortDescription: "", fullDescription: "",
     location: { city: "", state: "" },
     website: "", phone: "", email: "",
-    logoPlaceholder: "", logoColor: "#1A4A35",
+    logoPlaceholder: "", logoColor: "#1A4A35", logoUrl: "",
     bannerImageUrl: "", bannerCaption: "", foundedYear: "",
     serviceTags: [], certifications: [], statesServed: [],
     productLines: [], specialtyAreas: [], credentials: [],
@@ -415,9 +415,30 @@ export default function CompanyForm({ initial, mode }: Props) {
       </Section>
 
       <Section title="Branding">
+        <div>
+          <label style={labelStyle}>Logo Image URL</label>
+          <input
+            style={inputStyle}
+            value={form.logoUrl || ""}
+            onChange={(e) => set("logoUrl", e.target.value)}
+            placeholder="https://... (logo image — shown instead of initials when provided)"
+          />
+          {form.logoUrl && (
+            <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "10px" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={form.logoUrl}
+                alt="Logo preview"
+                style={{ width: "48px", height: "48px", borderRadius: "8px", objectFit: "cover", border: "1px solid #E5E7EB" }}
+                onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
+              />
+              <span style={{ fontSize: "12px", color: "#6B7280", fontFamily: "sans-serif" }}>Preview</span>
+            </div>
+          )}
+        </div>
         <Row>
           <div>
-            <label style={labelStyle}>Logo Initials (2 chars)</label>
+            <label style={labelStyle}>Logo Initials (2 chars, used when no image)</label>
             <input
               style={{ ...inputStyle, maxWidth: "100px", textTransform: "uppercase" }}
               maxLength={2} value={form.logoPlaceholder || ""}
