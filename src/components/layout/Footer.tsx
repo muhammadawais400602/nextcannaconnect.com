@@ -6,7 +6,7 @@ import { CATEGORIES } from "@/data/categories";
 
 export default function Footer() {
   const pathname = usePathname();
-  if (pathname.startsWith("/vendor/dashboard") || pathname.startsWith("/vendor/login")) return null;
+  if (pathname.startsWith("/vendor/dashboard") || pathname.startsWith("/vendor/login") || pathname.startsWith("/admin")) return null;
 
   return (
     <footer style={{ backgroundColor: "#003320", color: "rgba(136,185,158,0.7)" }}>
