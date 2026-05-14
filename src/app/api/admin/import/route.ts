@@ -66,7 +66,7 @@ function cleanBusinessName(raw: string, entry: Record<string, any>): string {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isScrapedEntry(e: Record<string, any>): boolean {
-  return "business_name" in e;
+  return "business_name" in e || "brand_name" in e;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -83,9 +83,10 @@ function isLeaflyEntry(e: Record<string, any>): boolean {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildScrapedDoc(entry: Record<string, any>, index: number, slug: string, tier: string, category: string, now: Date): Record<string, unknown> {
-  const name = cleanBusinessName(entry.business_name, entry);
+  const rawName = entry.business_name || entry.brand_name || "";
+  const name = cleanBusinessName(rawName, entry);
 
-  const about1 = (entry.about_para_1 || "").trim();
+  const about1 = (entry.about_para_1 || entry.about || "").trim();
   const about2 = (entry.about_para_2 || "").trim();
   const fullDesc = [about1, about2].filter(Boolean).join("\n\n");
   const shortDesc = about1 ? about1.substring(0, 200) : `${name} — cannabis industry partner.`;
@@ -331,7 +332,7 @@ export async function POST(request: NextRequest) {
       const leafly    = !scraped && !structured && isLeaflyEntry(entry);
 
       const rawName = scraped
-        ? cleanBusinessName(entry.business_name, entry)
+        ? cleanBusinessName(entry.business_name || entry.brand_name, entry)
         : (structured || leafly) ? entry.company_name : entry.name;
       const name = (rawName || "").trim();
       if (!name) { skipped++; continue; }
