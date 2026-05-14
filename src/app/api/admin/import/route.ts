@@ -2,14 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Company from "@/lib/models/Company";
 
+const VALID_TIERS     = ["free", "select", "elite"];
+const VALID_CATEGORIES = [
+  "retail-dispensary", "cultivation-growing", "manufacturers-suppliers",
+  "extraction-processing", "consultants-advisors", "marketing-branding-packaging",
+  "transportation-logistics", "testing-science", "compliance-legal",
+  "technology-software", "real-estate-construction", "finance-insurance",
+];
+
+const LOGO_COLORS = [
+  "#1A4A35", "#2d6e52", "#4A5E4A", "#3d5a3e",
+  "#2e5540", "#3a5c45", "#445e42", "#1e6b45",
+];
+
+const PLACEHOLDER_PHRASES = ["available on listing", "available via"];
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
 function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
+  return text.toLowerCase().trim()
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "") || "dispensary";
+    .replace(/^-|-$/g, "") || "listing";
 }
 
 function initials(name: string): string {
@@ -18,70 +33,127 @@ function initials(name: string): string {
   return name.substring(0, 2).toUpperCase();
 }
 
-const LOGO_COLORS = [
-  "#1A4A35", "#2d6e52", "#4A5E4A", "#3d5a3e",
-  "#2e5540", "#3a5c45", "#445e42", "#1e6b45",
-];
-
-function makeShortDesc(entry: Record<string, string>): string {
-  const desc = (entry.description || "").trim();
-  if (desc) return desc.substring(0, 200);
-  const name  = (entry.name  || "Cannabis Dispensary").trim();
-  const city  = (entry.address_city  || "").trim();
-  const state = (entry.address_state || "").trim();
-  if (city && state) return `${name} is a cannabis dispensary located in ${city}, ${state}.`;
-  return `${name} — licensed cannabis dispensary.`;
-}
-
-// Strip markdown link format: [email@x.com](mailto:email@x.com) → email@x.com
-function cleanEmail(raw: string | null | undefined): string {
-  if (!raw) return "";
-  const match = raw.match(/\[([^\]]+)\]\(mailto:[^)]+\)/);
-  return match ? match[1].trim() : raw.trim();
-}
-
-// Detect if entry is the Leafly-style nested format
-function isLeaflyEntry(entry: Record<string, unknown>): boolean {
-  return "company_name" in entry;
-}
-
-// Detect the structured Verified Pro format (has about.full_description, stats.*, core_services_tags)
-function isStructuredEntry(entry: Record<string, unknown>): boolean {
-  return "company_name" in entry && typeof entry.about === "object" && entry.about !== null;
-}
-
-// Placeholder strings to ignore
 function isPlaceholder(val: string | null | undefined): boolean {
   if (!val) return true;
   const lower = val.toLowerCase();
-  return lower.includes("available on listing") || lower.includes("available via");
+  return PLACEHOLDER_PHRASES.some((p) => lower.includes(p));
+}
+
+function cleanEmail(raw: string | null | undefined): string {
+  if (!raw) return "";
+  const m = raw.match(/\[([^\]]+)\]\(mailto:[^)]+\)/);
+  return m ? m[1].trim() : raw.trim();
+}
+
+// Clean scraped page titles: "Foo | Bar" → shortest part, "Home - Foo" → "Foo"
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function cleanBusinessName(raw: string, entry: Record<string, any>): string {
+  let name = (raw || "").trim();
+  if (name.includes(" | ")) {
+    name = name.split(" | ").sort((a, b) => a.length - b.length)[0].trim();
+  }
+  name = name.replace(/^home\s*[-–]\s*/i, "").trim();
+  if (/^home$/i.test(name) || name.length < 3) {
+    try {
+      const host = new URL(entry.website || "").hostname.replace(/^www\./, "");
+      name = host.split(".")[0].replace(/-/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase());
+    } catch { name = ""; }
+  }
+  return name;
+}
+
+// ── Format detectors ──────────────────────────────────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isScrapedEntry(e: Record<string, any>): boolean {
+  return "business_name" in e;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildStructuredDoc(entry: Record<string, any>, index: number, slug: string, tier: string, now: Date): Record<string, unknown> {
-  const branding  = entry.branding     || {};
-  const contact   = entry.contact      || {};
-  const social    = entry.social_links || {};
-  const stats     = entry.stats        || {};
-  const about     = entry.about        || {};
+function isStructuredEntry(e: Record<string, any>): boolean {
+  return "company_name" in e && typeof e.about === "object" && e.about !== null;
+}
 
-  const name = (entry.company_name || "").trim();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isLeaflyEntry(e: Record<string, any>): boolean {
+  return "company_name" in e;
+}
+
+// ── Document builders ─────────────────────────────────────────────────────────
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildScrapedDoc(entry: Record<string, any>, index: number, slug: string, tier: string, category: string, now: Date): Record<string, unknown> {
+  const name = cleanBusinessName(entry.business_name, entry);
+
+  const about1 = (entry.about_para_1 || "").trim();
+  const about2 = (entry.about_para_2 || "").trim();
+  const fullDesc = [about1, about2].filter(Boolean).join("\n\n");
+  const shortDesc = about1 ? about1.substring(0, 200) : `${name} — cannabis industry partner.`;
+
+  // Parse city/state out of address string if city/state fields are empty
+  let address = (entry.address || "").trim();
+  let city    = (entry.city    || "").trim();
+  let state   = (entry.state   || "").trim();
+  let zip     = (entry.zip     || "").trim();
+
+  // address field sometimes contains "street\ncity, STATE zip"
+  if (!city && address.includes("\n")) {
+    const parts = address.split("\n");
+    address = parts[0].trim();
+    const cityLine = parts[1]?.trim() || "";
+    const m = cityLine.match(/^(.+),\s*([A-Z]{2})\s*(\d{5})?/);
+    if (m) { city = m[1].trim(); state = m[2]; zip = m[3] || ""; }
+  }
 
   const doc: Record<string, unknown> = {
     slug,
     name,
     tier,
-    category:        "retail-dispensary",
+    category,
+    location: { address, city, state, zip },
+    shortDescription: shortDesc,
+    logoPlaceholder:  initials(name),
+    logoColor:        LOGO_COLORS[index % LOGO_COLORS.length],
+    serviceTags:      ["Cannabis Industry"],
+    isFeatured:       false,
+    updatedAt:        now,
+  };
+
+  if (fullDesc)                           doc.fullDescription = fullDesc;
+  if ((entry.logo_url         || "").trim()) doc.logoUrl       = entry.logo_url.trim();
+  if ((entry.featured_image_url || "").trim()) doc.bannerImageUrl = entry.featured_image_url.trim();
+  if ((entry.website || "").trim())       doc.website         = entry.website.trim();
+  if ((entry.phone   || "").trim())       doc.phone           = entry.phone.trim();
+  if ((entry.email   || "").trim() && !isPlaceholder(entry.email)) doc.email = entry.email.trim();
+  if ((entry.instagram   || "").trim())   doc.instagramUrl    = entry.instagram.trim();
+  if ((entry.facebook    || "").trim())   doc.facebookUrl     = entry.facebook.trim();
+  if ((entry.twitter_x   || "").trim())   doc.twitterUrl      = entry.twitter_x.trim();
+  if ((entry.linkedin    || "").trim())   doc.linkedinUrl     = entry.linkedin.trim();
+
+  return doc;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildStructuredDoc(entry: Record<string, any>, index: number, slug: string, tier: string, category: string, now: Date): Record<string, unknown> {
+  const branding = entry.branding     || {};
+  const contact  = entry.contact      || {};
+  const social   = entry.social_links || {};
+  const stats    = entry.stats        || {};
+  const about    = entry.about        || {};
+  const name     = (entry.company_name || "").trim();
+
+  const doc: Record<string, unknown> = {
+    slug, name, tier, category,
     location: {
       address: (entry.address || "").trim(),
       city:    (entry.city    || "").trim(),
       state:   (entry.state   || "").trim(),
       zip:     "",
     },
-    shortDescription: (entry.short_description || "").trim() || `${name} — licensed cannabis dispensary.`,
+    shortDescription: (entry.short_description || "").trim() || `${name} — cannabis industry partner.`,
     logoPlaceholder:  (branding.logo_initials || initials(name)).toUpperCase().substring(0, 2),
     logoColor:        branding.logo_color || LOGO_COLORS[index % LOGO_COLORS.length],
-    serviceTags:      Array.isArray(entry.core_services_tags) ? entry.core_services_tags : ["Dispensary", "Cannabis Retail"],
+    serviceTags:      Array.isArray(entry.core_services_tags) ? entry.core_services_tags : ["Cannabis Industry"],
     isFeatured:       false,
     updatedAt:        now,
   };
@@ -114,89 +186,85 @@ function buildStructuredDoc(entry: Record<string, any>, index: number, slug: str
   if (entry.review_count)                    doc.reviewCount     = Number(entry.review_count);
   if (Array.isArray(entry.product_offerings) && entry.product_offerings.length) {
     doc.products = entry.product_offerings.map((p: { name: string; description: string; image_url?: string }) => ({
-      name:        p.name,
-      description: p.description,
-      imageUrl:    p.image_url || undefined,
+      name: p.name, description: p.description, imageUrl: p.image_url || undefined,
     }));
   }
-
   return doc;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildLeaflyDoc(entry: Record<string, any>, index: number, slug: string, tier: string, now: Date): Record<string, unknown> {
-  const branding   = entry.branding        || {};
-  const contact    = entry.contact         || {};
-  const social     = entry.social_links    || {};
-  const stats      = entry.profile_stats   || {};
-
-  const name = (entry.company_name || "").trim();
+function buildLeaflyDoc(entry: Record<string, any>, index: number, slug: string, tier: string, category: string, now: Date): Record<string, unknown> {
+  const branding = entry.branding        || {};
+  const contact  = entry.contact         || {};
+  const social   = entry.social_links    || {};
+  const stats    = entry.profile_stats   || {};
+  const name     = (entry.company_name   || "").trim();
 
   const doc: Record<string, unknown> = {
-    slug,
-    name,
-    tier,
-    category:         "retail-dispensary",
+    slug, name, tier, category,
     location: {
       address: (entry.address || "").trim(),
       city:    (entry.city    || "").trim(),
       state:   (entry.state   || "").trim(),
       zip:     "",
     },
-    shortDescription:  (entry.short_description || "").trim() || `${name} — licensed cannabis dispensary.`,
-    logoPlaceholder:   (branding.logo_initials || initials(name)).toUpperCase().substring(0, 2),
-    logoColor:         branding.logo_color || LOGO_COLORS[index % LOGO_COLORS.length],
-    serviceTags:       Array.isArray(entry.service_tags) ? entry.service_tags : ["Dispensary", "Cannabis Retail"],
-    isFeatured:        false,
-    updatedAt:         now,
+    shortDescription: (entry.short_description || "").trim() || `${name} — cannabis industry partner.`,
+    logoPlaceholder:  (branding.logo_initials || initials(name)).toUpperCase().substring(0, 2),
+    logoColor:        branding.logo_color || LOGO_COLORS[index % LOGO_COLORS.length],
+    serviceTags:      Array.isArray(entry.service_tags) ? entry.service_tags : ["Cannabis Industry"],
+    isFeatured:       false,
+    updatedAt:        now,
   };
 
-  if (entry.full_description?.trim())      doc.fullDescription = entry.full_description.trim();
-  if (branding.logo_image_url?.trim())     doc.logoUrl         = branding.logo_image_url.trim();
-  if (branding.banner_image_url?.trim())   doc.bannerImageUrl  = branding.banner_image_url.trim();
-  if (contact.website?.trim())             doc.website         = contact.website.trim();
-  if (contact.phone?.trim())               doc.phone           = contact.phone.trim();
+  if (entry.full_description?.trim())    doc.fullDescription = entry.full_description.trim();
+  if (branding.logo_image_url?.trim())   doc.logoUrl         = branding.logo_image_url.trim();
+  if (branding.banner_image_url?.trim()) doc.bannerImageUrl  = branding.banner_image_url.trim();
+  if (contact.website?.trim())           doc.website         = contact.website.trim();
+  if (contact.phone?.trim())             doc.phone           = contact.phone.trim();
   const email = cleanEmail(contact.email);
-  if (email)                               doc.email           = email;
-  if (social.instagram?.trim())            doc.instagramUrl    = social.instagram.trim();
-  if (social.facebook?.trim())             doc.facebookUrl     = social.facebook.trim();
-  if (social.twitter?.trim())              doc.twitterUrl      = social.twitter.trim();
-  if (social.yelp?.trim())                 doc.yelpUrl         = social.yelp.trim();
-  if (social.leafly?.trim())               doc.leaflyUrl       = social.leafly.trim();
-  if (stats.founded_year)                  doc.foundedYear     = Number(stats.founded_year);
+  if (email)                             doc.email           = email;
+  if (social.instagram?.trim())          doc.instagramUrl    = social.instagram.trim();
+  if (social.facebook?.trim())           doc.facebookUrl     = social.facebook.trim();
+  if (social.twitter?.trim())            doc.twitterUrl      = social.twitter.trim();
+  if (social.yelp?.trim())               doc.yelpUrl         = social.yelp.trim();
+  if (social.leafly?.trim())             doc.leaflyUrl       = social.leafly.trim();
+  if (stats.founded_year)                doc.foundedYear     = Number(stats.founded_year);
   if (Array.isArray(entry.states_served) && entry.states_served.length)
-                                           doc.statesServed    = entry.states_served;
+                                         doc.statesServed    = entry.states_served;
   if (Array.isArray(entry.certifications) && entry.certifications.length)
-                                           doc.certifications  = entry.certifications;
-  if (entry.leafly_rating)                 doc.rating          = Number(entry.leafly_rating);
-  if (entry.leafly_reviews)                doc.reviewCount     = Number(entry.leafly_reviews);
-
+                                         doc.certifications  = entry.certifications;
+  if (entry.leafly_rating)               doc.rating          = Number(entry.leafly_rating);
+  if (entry.leafly_reviews)              doc.reviewCount     = Number(entry.leafly_reviews);
   return doc;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildStandardDoc(entry: Record<string, any>, index: number, slug: string, tier: string, now: Date): Record<string, unknown> {
+function buildStandardDoc(entry: Record<string, any>, index: number, slug: string, tier: string, category: string, now: Date): Record<string, unknown> {
   const name      = (entry.name || "").trim();
   const logoUrl   = (entry.logo_url      || "").trim();
   const bannerUrl = (entry.featured_image || logoUrl).trim();
 
   const doc: Record<string, unknown> = {
-    slug,
-    name,
-    tier,
-    category:         "retail-dispensary",
+    slug, name, tier, category,
     location: {
       address: (entry.address_street || "").trim(),
       city:    (entry.address_city   || "").trim(),
       state:   (entry.address_state  || "").trim(),
       zip:     (entry.address_zip    || "").trim(),
     },
-    shortDescription: makeShortDesc(entry),
-    logoPlaceholder:  initials(name),
-    logoColor:        LOGO_COLORS[index % LOGO_COLORS.length],
-    serviceTags:      ["Dispensary", "Cannabis Retail"],
-    isFeatured:       false,
-    updatedAt:        now,
+    shortDescription: (() => {
+      const desc = (entry.description || "").trim();
+      if (desc) return desc.substring(0, 200);
+      const city  = (entry.address_city  || "").trim();
+      const state = (entry.address_state || "").trim();
+      if (city && state) return `${name} is located in ${city}, ${state}.`;
+      return `${name} — cannabis industry partner.`;
+    })(),
+    logoPlaceholder: initials(name),
+    logoColor:       LOGO_COLORS[index % LOGO_COLORS.length],
+    serviceTags:     ["Cannabis Industry"],
+    isFeatured:      false,
+    updatedAt:       now,
   };
 
   if (entry.description?.trim())           doc.fullDescription = entry.description.trim();
@@ -210,27 +278,26 @@ function buildStandardDoc(entry: Record<string, any>, index: number, slug: strin
   if (entry.social_twitter?.trim())        doc.twitterUrl      = entry.social_twitter.trim();
   if (entry.social_yelp?.trim())           doc.yelpUrl         = entry.social_yelp.trim();
   if (entry.leafly_url?.trim())            doc.leaflyUrl       = entry.leafly_url.trim();
-
   return doc;
 }
+
+// ── Route handler ─────────────────────────────────────────────────────────────
 
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
     const formData = await request.formData();
-    const file = formData.get("file") as File | null;
-    const tier = (formData.get("tier") as string | null) || "free";
+    const file     = formData.get("file") as File | null;
+    const tier     = (formData.get("tier")     as string | null) || "free";
+    const category = (formData.get("category") as string | null) || "retail-dispensary";
 
-    if (!file) {
-      return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
-    }
+    if (!file) return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
+    if (!VALID_TIERS.includes(tier)) return NextResponse.json({ error: "Invalid tier." }, { status: 400 });
+    if (!VALID_CATEGORIES.includes(category)) return NextResponse.json({ error: "Invalid category." }, { status: 400 });
 
-    if (!["free", "select", "elite"].includes(tier)) {
-      return NextResponse.json({ error: "Invalid tier." }, { status: 400 });
-    }
-
-    const text = await file.text();
+    // Replace bare NaN (from Python/pandas exports) with null before parsing
+    const text    = (await file.text()).replace(/:\s*NaN\b/g, ": null");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let data: Record<string, any>[];
 
@@ -253,33 +320,36 @@ export async function POST(request: NextRequest) {
     );
     const usedSlugs = new Set(existingSlugs);
 
-    const ops = [];
+    const ops  = [];
     let skipped = 0;
-    const now = new Date();
+    const now  = new Date();
 
     for (let i = 0; i < data.length; i++) {
-      const entry = data[i];
-      const structured = isStructuredEntry(entry);
-      const leafly = !structured && isLeaflyEntry(entry);
-      const rawName = (structured || leafly) ? entry.company_name : entry.name;
+      const entry     = data[i];
+      const scraped   = isScrapedEntry(entry);
+      const structured = !scraped && isStructuredEntry(entry);
+      const leafly    = !scraped && !structured && isLeaflyEntry(entry);
+
+      const rawName = scraped
+        ? cleanBusinessName(entry.business_name, entry)
+        : (structured || leafly) ? entry.company_name : entry.name;
       const name = (rawName || "").trim();
       if (!name) { skipped++; continue; }
 
-      // Use provided slug if available, otherwise generate from name
       const rawSlug = (entry.slug || "").trim();
-      const base = rawSlug ? slugify(rawSlug) : slugify(name);
-      let slug = base;
-      let suffix = 2;
-      while (usedSlugs.has(slug) && !existingSlugs.has(slug)) {
-        slug = `${base}-${suffix++}`;
-      }
+      const base    = rawSlug ? slugify(rawSlug) : slugify(name);
+      let slug      = base;
+      let suffix    = 2;
+      while (usedSlugs.has(slug) && !existingSlugs.has(slug)) slug = `${base}-${suffix++}`;
       usedSlugs.add(slug);
 
-      const doc = structured
-        ? buildStructuredDoc(entry, i, slug, tier, now)
+      const doc = scraped
+        ? buildScrapedDoc(entry, i, slug, tier, category, now)
+        : structured
+        ? buildStructuredDoc(entry, i, slug, tier, category, now)
         : leafly
-        ? buildLeaflyDoc(entry, i, slug, tier, now)
-        : buildStandardDoc(entry, i, slug, tier, now);
+        ? buildLeaflyDoc(entry, i, slug, tier, category, now)
+        : buildStandardDoc(entry, i, slug, tier, category, now);
 
       ops.push({
         updateOne: {
@@ -299,13 +369,7 @@ export async function POST(request: NextRequest) {
       await Company.bulkWrite(ops.slice(i, i + BATCH), { ordered: false });
     }
 
-    return NextResponse.json({
-      success: true,
-      imported: ops.length,
-      skipped,
-      total: data.length,
-      tier,
-    });
+    return NextResponse.json({ success: true, imported: ops.length, skipped, total: data.length, tier, category });
   } catch (err) {
     console.error("[import]", err);
     return NextResponse.json({ error: "Import failed. Please try again." }, { status: 500 });

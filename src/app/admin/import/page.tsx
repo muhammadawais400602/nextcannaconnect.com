@@ -6,32 +6,42 @@ type ImportResult = { imported: number; skipped: number; total: number; tier: st
 type CleanupResult = { companiesDeleted: number; usersDeleted: number; signupsDeleted: number };
 
 const TIERS = [
-  { value: "free",   label: "Unclaimed (Free)" },
-  { value: "select", label: "Select" },
-  { value: "elite",  label: "Verified Pro" },
+  { value: "free",   label: "Unclaimed",    color: "#6B7280", bg: "rgba(107,114,128,0.08)" },
+  { value: "select", label: "Select",       color: "#2d6e52", bg: "rgba(45,110,82,0.1)"    },
+  { value: "elite",  label: "Verified Pro", color: "#92400E", bg: "rgba(217,119,6,0.1)"    },
 ];
 
-const TIER_COLORS: Record<string, string> = {
-  free:   "#6B7280",
-  select: "#2d6e52",
-  elite:  "#D97706",
-};
+const CATEGORIES = [
+  { value: "retail-dispensary",           label: "Retail & Dispensary" },
+  { value: "cultivation-growing",         label: "Cultivation & Growing" },
+  { value: "manufacturers-suppliers",     label: "Manufacturers & Suppliers" },
+  { value: "extraction-processing",       label: "Extraction & Processing" },
+  { value: "consultants-advisors",        label: "Consultants & Advisors" },
+  { value: "marketing-branding-packaging",label: "Marketing, Branding & Packaging" },
+  { value: "transportation-logistics",    label: "Transportation & Logistics" },
+  { value: "testing-science",             label: "Testing & Science" },
+  { value: "compliance-legal",            label: "Compliance & Legal" },
+  { value: "technology-software",         label: "Technology & Software" },
+  { value: "real-estate-construction",    label: "Real Estate & Construction" },
+  { value: "finance-insurance",           label: "Finance & Insurance" },
+];
 
 export default function ImportPage() {
   // ── Import state ─────────────────────────────────────────────────────────
-  const [file, setFile]               = useState<File | null>(null);
-  const [tier, setTier]               = useState<"free" | "select" | "elite">("free");
-  const [dragging, setDragging]       = useState(false);
-  const [importing, setImporting]     = useState(false);
+  const [file, setFile]                 = useState<File | null>(null);
+  const [tier, setTier]                 = useState("free");
+  const [category, setCategory]         = useState("retail-dispensary");
+  const [dragging, setDragging]         = useState(false);
+  const [importing, setImporting]       = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
-  const [importError, setImportError] = useState("");
-  const fileInputRef                  = useRef<HTMLInputElement>(null);
+  const [importError, setImportError]   = useState("");
+  const fileInputRef                    = useRef<HTMLInputElement>(null);
 
   // ── Cleanup state ─────────────────────────────────────────────────────────
-  const [cleaning, setCleaning]         = useState(false);
+  const [cleaning, setCleaning]           = useState(false);
   const [cleanupResult, setCleanupResult] = useState<CleanupResult | null>(null);
-  const [cleanupError, setCleanupError] = useState("");
-  const [confirmClean, setConfirmClean] = useState(false);
+  const [cleanupError, setCleanupError]   = useState("");
+  const [confirmClean, setConfirmClean]   = useState(false);
 
   // ── Drag & drop ───────────────────────────────────────────────────────────
   const onDrop = useCallback((e: React.DragEvent) => {
@@ -66,6 +76,7 @@ export default function ImportPage() {
     const form = new FormData();
     form.append("file", file);
     form.append("tier", tier);
+    form.append("category", category);
 
     try {
       const res  = await fetch("/api/admin/import", { method: "POST", body: form });
@@ -86,7 +97,6 @@ export default function ImportPage() {
     setCleaning(true);
     setCleanupError("");
     setCleanupResult(null);
-
     try {
       const res  = await fetch("/api/admin/cleanup", { method: "POST" });
       const data = await res.json();
@@ -100,7 +110,6 @@ export default function ImportPage() {
     }
   }
 
-  // ── Styles ────────────────────────────────────────────────────────────────
   const card: React.CSSProperties = {
     background: "white",
     borderRadius: "16px",
@@ -109,7 +118,7 @@ export default function ImportPage() {
     marginBottom: "24px",
   };
 
-  const tierLabel = TIERS.find((t) => t.value === tier)?.label ?? "Unclaimed";
+  const selectedTier = TIERS.find((t) => t.value === tier)!;
 
   return (
     <div style={{ maxWidth: "760px" }}>
@@ -119,40 +128,35 @@ export default function ImportPage() {
           Data Import
         </h1>
         <p style={{ fontSize: "14px", color: "#6B7280", marginTop: "4px" }}>
-          Upload a dispensary JSON file. Supports both the bulk (1700+) format and the Leafly-style nested format.
+          Upload a JSON file to bulk-import listings into any category and tier.
         </p>
       </div>
 
       {/* ── Import Card ─────────────────────────────────────────────────── */}
       <div style={card}>
-        <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
-          📂 Import Dispensaries
+        <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 20px" }}>
+          📂 Import Listings
         </h2>
-        <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 24px" }}>
-          Choose a tier, upload your JSON file, and all entries will be added under{" "}
-          <strong>Retail &amp; Dispensary</strong>. Safe to re-upload — duplicates are updated, not doubled.
-        </p>
 
         {/* Tier selector */}
         <div style={{ marginBottom: "20px" }}>
-          <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "#374151", marginBottom: "8px" }}>
-            Import as Tier
-          </label>
-          <div style={{ display: "flex", gap: "10px" }}>
+          <p style={{ fontSize: "12px", fontWeight: 700, color: "#374151", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "8px" }}>
+            Tier
+          </p>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
             {TIERS.map((t) => (
               <button
                 key={t.value}
-                type="button"
-                onClick={() => setTier(t.value as "free" | "select" | "elite")}
+                onClick={() => setTier(t.value)}
                 style={{
                   padding: "8px 16px",
                   borderRadius: "8px",
+                  border: `1.5px solid ${tier === t.value ? t.color : "#E5E7EB"}`,
+                  background: tier === t.value ? t.bg : "white",
+                  color: tier === t.value ? t.color : "#6B7280",
                   fontSize: "13px",
-                  fontWeight: 600,
+                  fontWeight: tier === t.value ? 700 : 500,
                   cursor: "pointer",
-                  border: tier === t.value ? `2px solid ${TIER_COLORS[t.value]}` : "2px solid #E5E7EB",
-                  background: tier === t.value ? `${TIER_COLORS[t.value]}18` : "white",
-                  color: tier === t.value ? TIER_COLORS[t.value] : "#6B7280",
                   transition: "all 0.15s",
                 }}
               >
@@ -160,6 +164,32 @@ export default function ImportPage() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Category selector */}
+        <div style={{ marginBottom: "24px" }}>
+          <p style={{ fontSize: "12px", fontWeight: 700, color: "#374151", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "8px" }}>
+            Category
+          </p>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            style={{
+              width: "100%",
+              padding: "10px 14px",
+              borderRadius: "8px",
+              border: "1.5px solid #E5E7EB",
+              fontSize: "14px",
+              color: "#111827",
+              background: "white",
+              cursor: "pointer",
+              outline: "none",
+            }}
+          >
+            {CATEGORIES.map((c) => (
+              <option key={c.value} value={c.value}>{c.label}</option>
+            ))}
+          </select>
         </div>
 
         {/* Drop zone */}
@@ -179,37 +209,21 @@ export default function ImportPage() {
             marginBottom: "16px",
           }}
         >
-          <div style={{ fontSize: "36px", marginBottom: "12px" }}>
-            {file ? "✅" : "📁"}
-          </div>
+          <div style={{ fontSize: "36px", marginBottom: "12px" }}>{file ? "✅" : "📁"}</div>
           {file ? (
             <>
-              <p style={{ fontSize: "15px", fontWeight: 600, color: "#111827", margin: "0 0 4px" }}>
-                {file.name}
-              </p>
-              <p style={{ fontSize: "13px", color: "#6B7280", margin: 0 }}>
-                {(file.size / 1024).toFixed(1)} KB — click to change
-              </p>
+              <p style={{ fontSize: "15px", fontWeight: 600, color: "#111827", margin: "0 0 4px" }}>{file.name}</p>
+              <p style={{ fontSize: "13px", color: "#6B7280", margin: 0 }}>{(file.size / 1024).toFixed(1)} KB — click to change</p>
             </>
           ) : (
             <>
-              <p style={{ fontSize: "15px", fontWeight: 600, color: "#374151", margin: "0 0 4px" }}>
-                Drag &amp; drop your JSON file here
-              </p>
-              <p style={{ fontSize: "13px", color: "#9CA3AF", margin: 0 }}>
-                or click to browse your computer
-              </p>
+              <p style={{ fontSize: "15px", fontWeight: 600, color: "#374151", margin: "0 0 4px" }}>Drag &amp; drop your JSON file here</p>
+              <p style={{ fontSize: "13px", color: "#9CA3AF", margin: 0 }}>or click to browse your computer</p>
             </>
           )}
         </div>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json,application/json"
-          onChange={onFileChange}
-          style={{ display: "none" }}
-        />
+        <input ref={fileInputRef} type="file" accept=".json,application/json" onChange={onFileChange} style={{ display: "none" }} />
 
         {/* Import button */}
         <button
@@ -218,7 +232,7 @@ export default function ImportPage() {
           style={{
             width: "100%",
             padding: "14px",
-            background: !file || importing ? "#D1D5DB" : TIER_COLORS[tier],
+            background: !file || importing ? "#D1D5DB" : "#1A4A35",
             color: "white",
             border: "none",
             borderRadius: "10px",
@@ -228,32 +242,26 @@ export default function ImportPage() {
             transition: "background 0.2s",
           }}
         >
-          {importing ? "Importing… please wait" : `Import as ${tierLabel} →`}
+          {importing
+            ? "Importing… please wait"
+            : `Import as ${selectedTier.label} · ${CATEGORIES.find((c) => c.value === category)?.label} →`}
         </button>
 
-        {/* Progress hint */}
         {importing && (
           <p style={{ textAlign: "center", fontSize: "13px", color: "#6B7280", marginTop: "10px" }}>
             This may take a few seconds for large files…
           </p>
         )}
 
-        {/* Error */}
         {importError && (
           <div style={{ marginTop: "16px", padding: "14px 16px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", color: "#DC2626", fontSize: "14px" }}>
             ❌ {importError}
           </div>
         )}
 
-        {/* Success */}
         {importResult && (
           <div style={{ marginTop: "16px", padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px" }}>
-            <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 4px" }}>
-              ✅ Import complete!
-            </p>
-            <p style={{ fontSize: "13px", color: "#166534", margin: "0 0 14px" }}>
-              Added as <strong>{TIERS.find((t) => t.value === importResult.tier)?.label ?? importResult.tier}</strong> under Retail &amp; Dispensary.
-            </p>
+            <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 12px" }}>✅ Import complete!</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
               {[
                 { label: "Total in file", value: importResult.total },
@@ -268,9 +276,7 @@ export default function ImportPage() {
             </div>
             <p style={{ fontSize: "13px", color: "#166534", marginTop: "14px", marginBottom: 0 }}>
               Listings are now live at{" "}
-              <a href="/directory" target="_blank" style={{ color: "#15803D", fontWeight: 600 }}>
-                /directory
-              </a>
+              <a href="/directory" target="_blank" style={{ color: "#15803D", fontWeight: 600 }}>/directory</a>.
             </p>
           </div>
         )}
@@ -278,19 +284,14 @@ export default function ImportPage() {
 
       {/* ── Cleanup Card ─────────────────────────────────────────────────── */}
       <div style={{ ...card, borderTop: "3px solid #EF4444" }}>
-        <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
-          🧹 Clean Up Test Accounts
-        </h2>
+        <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>🧹 Clean Up Test Accounts</h2>
         <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 20px" }}>
-          Removes all free-tier (unclaimed) vendor accounts, their linked companies, and
-          any rejected signup applications. Use this to wipe test data before going live.
+          Removes all free-tier (unclaimed) vendor accounts, their linked companies, and any rejected signup applications.
         </p>
 
         {cleanupResult ? (
           <div style={{ padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px" }}>
-            <p style={{ fontSize: "15px", fontWeight: 700, color: "#15803D", margin: "0 0 10px" }}>
-              ✅ Cleanup complete!
-            </p>
+            <p style={{ fontSize: "15px", fontWeight: 700, color: "#15803D", margin: "0 0 10px" }}>✅ Cleanup complete!</p>
             <p style={{ fontSize: "13px", color: "#374151", margin: 0 }}>
               Removed <strong>{cleanupResult.usersDeleted}</strong> user(s),{" "}
               <strong>{cleanupResult.companiesDeleted}</strong> company/companies, and{" "}
@@ -299,30 +300,18 @@ export default function ImportPage() {
           </div>
         ) : confirmClean ? (
           <div style={{ padding: "20px", background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: "10px" }}>
-            <p style={{ fontSize: "14px", fontWeight: 600, color: "#92400E", margin: "0 0 16px" }}>
-              ⚠️ Are you sure? This cannot be undone.
-            </p>
+            <p style={{ fontSize: "14px", fontWeight: 600, color: "#92400E", margin: "0 0 16px" }}>⚠️ Are you sure? This cannot be undone.</p>
             <div style={{ display: "flex", gap: "10px" }}>
-              <button
-                onClick={handleCleanup}
-                disabled={cleaning}
-                style={{ flex: 1, padding: "11px", background: "#EF4444", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: cleaning ? "not-allowed" : "pointer" }}
-              >
+              <button onClick={handleCleanup} disabled={cleaning} style={{ flex: 1, padding: "11px", background: "#EF4444", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: cleaning ? "not-allowed" : "pointer" }}>
                 {cleaning ? "Cleaning…" : "Yes, delete test data"}
               </button>
-              <button
-                onClick={() => setConfirmClean(false)}
-                style={{ flex: 1, padding: "11px", background: "white", color: "#374151", border: "1px solid #D1D5DB", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}
-              >
+              <button onClick={() => setConfirmClean(false)} style={{ flex: 1, padding: "11px", background: "white", color: "#374151", border: "1px solid #D1D5DB", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}>
                 Cancel
               </button>
             </div>
           </div>
         ) : (
-          <button
-            onClick={() => setConfirmClean(true)}
-            style={{ padding: "11px 24px", background: "rgba(239,68,68,0.08)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}
-          >
+          <button onClick={() => setConfirmClean(true)} style={{ padding: "11px 24px", background: "rgba(239,68,68,0.08)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>
             Clean Up Test Data
           </button>
         )}
