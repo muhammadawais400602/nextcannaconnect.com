@@ -296,6 +296,8 @@ export async function POST(request: NextRequest) {
     if (!file) return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
     if (!VALID_TIERS.includes(tier)) return NextResponse.json({ error: "Invalid tier." }, { status: 400 });
     if (!VALID_CATEGORIES.includes(category)) return NextResponse.json({ error: "Invalid category." }, { status: 400 });
+    const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
+    if (file.size > MAX_FILE_BYTES) return NextResponse.json({ error: "File too large. Maximum size is 10 MB." }, { status: 413 });
 
     // Replace bare NaN (from Python/pandas exports) with null before parsing
     const text    = (await file.text()).replace(/:\s*NaN\b/g, ": null");

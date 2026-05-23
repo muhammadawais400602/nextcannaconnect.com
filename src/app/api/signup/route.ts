@@ -159,6 +159,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[signup] Error:", err);
-    return NextResponse.json({ error: "Failed to submit application", detail: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Failed to submit application." }, { status: 500 });
   }
 }

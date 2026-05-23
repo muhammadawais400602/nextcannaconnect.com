@@ -4,11 +4,14 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import Company from "@/lib/models/Company";
+import { verifyVendorToken } from "@/lib/session";
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 async function getVendorUserId(request: NextRequest): Promise<string | null> {
-  const session = request.cookies.get("vendor_session")?.value;
-  if (!session || !session.startsWith("nc-vendor:")) return null;
-  const userId = session.split(":")[1];
+  const userId = verifyVendorToken(request.cookies.get("vendor_session")?.value);
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) return null;
   return userId;
 }
@@ -24,11 +27,10 @@ export async function GET(request: NextRequest) {
 
     let company = user.companyId ? await Company.findById(user.companyId) : null;
 
-    // Fallback: link company by email or company name for pre-existing accounts
     if (!company) {
       company = await Company.findOne({ email: user.email })
         ?? (user.companyName
-          ? await Company.findOne({ name: { $regex: `^${user.companyName}$`, $options: "i" } })
+          ? await Company.findOne({ name: { $regex: `^${escapeRegex(user.companyName)}$`, $options: "i" } })
           : null);
       if (company) {
         await User.findByIdAndUpdate(userId, { companyId: company._id });
@@ -51,11 +53,10 @@ export async function PUT(request: NextRequest) {
     const user = await User.findById(userId).select("companyId isActive email companyName");
     if (!user?.isActive) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // Resolve companyId — link by email/name for accounts approved before auto-linking was added
     if (!user.companyId) {
       const found = await Company.findOne({ email: user.email })
         ?? (user.companyName
-          ? await Company.findOne({ name: { $regex: `^${user.companyName}$`, $options: "i" } })
+          ? await Company.findOne({ name: { $regex: `^${escapeRegex(user.companyName)}$`, $options: "i" } })
           : null);
       if (found) {
         user.companyId = found._id as mongoose.Types.ObjectId;
@@ -66,7 +67,6 @@ export async function PUT(request: NextRequest) {
 
     const body = await request.json();
 
-    // Vendors can edit content fields only — not slug, tier, category, or isFeatured
     const update: Record<string, unknown> = {};
     const VALID_CATEGORIES = [
       "cultivation-growing", "manufacturers-suppliers", "extraction-processing",
@@ -94,8 +94,12 @@ export async function PUT(request: NextRequest) {
       update["location.state"] = body.state ?? existing?.location?.state ?? "";
       if (body.zip !== undefined) update["location.zip"] = body.zip;
     }
-    if (Array.isArray(body.serviceTags)) update.serviceTags = body.serviceTags;
-    if (Array.isArray(body.certifications)) update.certifications = body.certifications;
+    if (Array.isArray(body.serviceTags)) {
+      update.serviceTags = body.serviceTags.slice(0, 20).map((t: unknown) => String(t).slice(0, 100));
+    }
+    if (Array.isArray(body.certifications)) {
+      update.certifications = body.certifications.slice(0, 20).map((t: unknown) => String(t).slice(0, 100));
+    }
     if (Array.isArray(body.products)) {
       update.products = body.products.slice(0, 6).map((p: { name?: string; description?: string; imageUrl?: string }) => ({
         name: String(p.name ?? "").slice(0, 100),
@@ -116,6 +120,6 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ success: true, company });
   } catch (err) {
     console.error("[vendor/company PUT]", err);
-    return NextResponse.json({ error: "Server error", detail: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

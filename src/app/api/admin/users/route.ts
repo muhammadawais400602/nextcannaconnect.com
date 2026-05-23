@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     const users = await User.find(filter)
       .sort({ createdAt: -1 })
-      .select("-__v")
+      .select("-__v -passwordHash -setupToken -setupTokenExpires")
       .lean();
 
     return NextResponse.json({ users, total: users.length });
@@ -26,11 +26,18 @@ export async function GET(request: NextRequest) {
   }
 }
 
+const VALID_TIERS = ["free", "select", "elite"];
+
 export async function PATCH(request: NextRequest) {
   try {
     await connectDB();
     const { id, tier } = await request.json();
-    const user = await User.findByIdAndUpdate(id, { tier }, { new: true }).lean();
+    if (!VALID_TIERS.includes(tier)) {
+      return NextResponse.json({ error: "Invalid tier." }, { status: 400 });
+    }
+    const user = await User.findByIdAndUpdate(id, { tier }, { new: true })
+      .select("-__v -passwordHash -setupToken -setupTokenExpires")
+      .lean();
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
     return NextResponse.json({ user });
   } catch (err) {

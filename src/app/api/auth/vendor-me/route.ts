@@ -2,17 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import mongoose from "mongoose";
+import { verifyVendorToken } from "@/lib/session";
 
 export async function GET(request: NextRequest) {
   try {
-    const session = request.cookies.get("vendor_session")?.value;
-    if (!session || !session.startsWith("nc-vendor:")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const parts = session.split(":");
-    const userId = parts[1];
-
+    const userId = verifyVendorToken(request.cookies.get("vendor_session")?.value);
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
