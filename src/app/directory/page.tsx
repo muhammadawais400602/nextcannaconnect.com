@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getAllCompaniesFresh } from "@/lib/getCompaniesFromDB";
 import DirectoryHero from "@/components/directory/DirectoryHero";
 import DirectoryContent from "@/components/directory/DirectoryContent";
@@ -17,7 +18,9 @@ export default async function DirectoryPage() {
       <DirectoryHero />
       <div style={{ backgroundColor: "#f6f3f2", minHeight: "60vh" }}>
         <div className="mx-auto px-4 md:px-8 py-10" style={{ maxWidth: "1440px" }}>
-          <DirectoryContent companies={companies} />
+          <Suspense fallback={null}>
+            <DirectoryContent companies={companies} />
+          </Suspense>
         </div>
       </div>
     </>

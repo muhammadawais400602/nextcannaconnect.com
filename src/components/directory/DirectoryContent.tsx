@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Company } from "@/types";
 import FiltersPanel from "@/components/directory/FiltersPanel";
 import DirectoryListings from "@/components/directory/DirectoryListings";
@@ -11,7 +12,10 @@ interface Props {
 }
 
 export default function DirectoryContent({ companies }: Props) {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    searchParams.get("category")
+  );
   const [verificationFilters, setVerificationFilters] = useState<string[]>([]);
   const [serviceFilters, setServiceFilters] = useState<string[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
