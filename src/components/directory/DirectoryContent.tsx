@@ -2,27 +2,25 @@
 
 import { useState } from "react";
 import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Company } from "@/types";
 import FiltersPanel from "@/components/directory/FiltersPanel";
 import DirectoryListings from "@/components/directory/DirectoryListings";
 
 interface Props {
   companies: Company[];
+  initialCategory: string | null;
 }
 
-export default function DirectoryContent({ companies }: Props) {
-  const searchParams = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    searchParams.get("category")
-  );
+export default function DirectoryContent({ companies, initialCategory }: Props) {
+  const router = useRouter();
+  const [selectedCategory] = useState<string | null>(initialCategory);
   const [verificationFilters, setVerificationFilters] = useState<string[]>([]);
   const [serviceFilters, setServiceFilters] = useState<string[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   function handleCategoryChange(slug: string | null) {
-    setSelectedCategory(slug);
-    setServiceFilters([]);
+    router.push(slug ? `/directory?category=${slug}` : "/directory");
   }
 
   const activeFilterCount =
