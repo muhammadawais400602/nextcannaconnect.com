@@ -12,7 +12,12 @@ export const metadata: Metadata = {
   description: "Browse verified cultivators, extractors, and logistics partners across North America.",
 };
 
-export default function DirectoryPage() {
+interface Props {
+  searchParams: Promise<{ category?: string }>;
+}
+
+export default async function DirectoryPage({ searchParams }: Props) {
+  const { category } = await searchParams;
   return (
     <>
       <ScrollToTop />
@@ -20,7 +25,7 @@ export default function DirectoryPage() {
       <div style={{ backgroundColor: "#f6f3f2", minHeight: "60vh" }}>
         <div className="mx-auto px-4 md:px-8 py-10" style={{ maxWidth: "1440px" }}>
           <Suspense fallback={<DirectoryLoadingSkeleton />}>
-            <DirectoryLoader />
+            <DirectoryLoader category={category ?? null} />
           </Suspense>
         </div>
       </div>
