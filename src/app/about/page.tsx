@@ -144,10 +144,7 @@ export default function AboutPage() {
                 than it should be.
               </blockquote>
 
-              <p style={{ color: "#414943", lineHeight: 1.75 }}>
-                And a special thanks to{" "}
-                <strong>Mike and the United team</strong>. You&apos;ve been great partners from day one.
-              </p>
+
             </div>
           </div>
         </div>
@@ -253,31 +250,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── Special Thanks Banner ─────────────────────────────── */}
-      <section style={{ backgroundColor: "#003320", padding: "36px 32px" }}>
-        <div
-          style={{
-            maxWidth: "1180px", margin: "0 auto",
-            display: "flex", alignItems: "center", gap: "20px",
-          }}
-        >
-          <span style={{ fontSize: "22px", flexShrink: 0, color: GOLD }}>♥</span>
-          <p
-            style={{
-              fontStyle: "italic",
-              color: "rgba(255,255,255,0.82)",
-              lineHeight: 1.7, fontSize: "15px", margin: 0,
-            }}
-          >
-            A special thank you to{" "}
-            <strong style={{ fontStyle: "normal", color: "white" }}>
-              Mike and the United team
-            </strong>{" "}
-            — you&apos;ve been exceptional partners from day one. Your support has been
-            instrumental in making NextCanna Connect what it is today.
-          </p>
-        </div>
-      </section>
 
       {/* ── CTA ──────────────────────────────────────────────── */}
       <section style={{ padding: "100px 32px", textAlign: "center", backgroundColor: "#fbf9f8" }}>
