@@ -123,6 +123,34 @@ export async function getCompanyBySlug(slug: string): Promise<CompanyType | unde
   }
 }
 
+// Fields needed for listing cards + sidebar filters — excludes heavy detail-only fields
+const LISTING_FIELDS =
+  "slug name tier category secondaryCategory location shortDescription " +
+  "logoPlaceholder logoColor logoUrl bannerImageUrl " +
+  "serviceTags statesServed serviceArea minOrderQty certifications yearsInCannabis leadTime " +
+  "rating reviewCount";
+
+const fetchAllCompanies = unstable_cache(
+  async (): Promise<CompanyType[]> => {
+    await connectDB();
+    const docs = await Company.find({}).select(LISTING_FIELDS).lean();
+    return docs
+      .map(docToCompany)
+      .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
+  },
+  ["all-companies"],
+  { revalidate: 300, tags: ["companies"] }
+);
+
+export async function getAllCompanies(): Promise<CompanyType[]> {
+  try {
+    return await fetchAllCompanies();
+  } catch (err) {
+    console.error("[getAllCompanies] Failed:", err);
+    return [];
+  }
+}
+
 export async function getAllCompaniesFresh(): Promise<CompanyType[]> {
   try {
     await connectDB();
