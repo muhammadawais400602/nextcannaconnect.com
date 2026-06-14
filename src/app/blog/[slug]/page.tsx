@@ -13,6 +13,7 @@ import {
   readingTime,
   stripHtml,
 } from "@/lib/wordpress";
+import ShareButton from "@/components/blog/ShareButton";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -127,13 +128,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* ── Share bar ── */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "32px", marginTop: "32px", borderTop: "1px solid #e5e7eb", flexWrap: "wrap", gap: "12px" }}>
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <button
-                    onClick={() => typeof navigator !== "undefined" && navigator.share?.({ title: post.title.rendered, url: window.location.href })}
-                    style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "12px", fontWeight: 600, color: "#374151", fontFamily: "'Inter', sans-serif", background: "white", border: "1px solid #e5e7eb", borderRadius: "8px", padding: "8px 16px", cursor: "pointer" }}
-                  >
-                    <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>share</span>
-                    Share
-                  </button>
+                  <ShareButton title={post.title.rendered} />
                 </div>
                 <Link href="/blog" style={{ fontSize: "12px", fontWeight: 600, color: "#003320", fontFamily: "'Inter', sans-serif", textDecoration: "none" }}>
                   ← Back to Blog

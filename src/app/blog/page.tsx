@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
+import NewsletterForm from "@/components/blog/NewsletterForm";
 import {
   getPosts,
   getCategories,
@@ -325,10 +326,7 @@ export default async function BlogPage({ searchParams }: Props) {
                 const cats = getPostCategories(post);
                 return (
                   <Link key={post.id} href={`/blog/${post.slug}`} style={{ textDecoration: "none", display: "block" }}>
-                    <article style={{ backgroundColor: "white", borderRadius: "16px", overflow: "hidden", border: "1px solid #e5e7eb", height: "100%", display: "flex", flexDirection: "column", transition: "box-shadow 0.2s" }}
-                      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.08)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "none")}
-                    >
+                    <article className="blog-card" style={{ backgroundColor: "white", borderRadius: "16px", overflow: "hidden", border: "1px solid #e5e7eb", height: "100%", display: "flex", flexDirection: "column" }}>
                       {/* Image */}
                       <div style={{ position: "relative", height: "200px", backgroundColor: "#f3f4f6", flexShrink: 0 }}>
                         {img ? (
@@ -415,44 +413,7 @@ export default async function BlogPage({ searchParams }: Props) {
             <p style={{ fontSize: "15px", color: "rgba(136,185,158,0.8)", lineHeight: 1.65, fontFamily: "'Inter', sans-serif", marginBottom: "32px", maxWidth: "460px", margin: "0 auto 32px" }}>
               Join 20,000+ industry professionals receiving our weekly briefing on essential cannabis business developments.
             </p>
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              style={{ display: "flex", gap: "12px", maxWidth: "440px", margin: "0 auto", flexWrap: "wrap", justifyContent: "center" }}
-            >
-              <input
-                type="email"
-                placeholder="professional@company.com"
-                style={{
-                  flex: 1,
-                  minWidth: "220px",
-                  padding: "12px 16px",
-                  borderRadius: "8px",
-                  border: "1px solid rgba(136,185,158,0.3)",
-                  backgroundColor: "rgba(255,255,255,0.07)",
-                  color: "white",
-                  fontSize: "13px",
-                  fontFamily: "'Inter', sans-serif",
-                  outline: "none",
-                }}
-              />
-              <button
-                type="submit"
-                style={{
-                  padding: "12px 24px",
-                  backgroundColor: "white",
-                  color: "#003320",
-                  border: "none",
-                  borderRadius: "8px",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  letterSpacing: "0.05em",
-                  fontFamily: "'Inter', sans-serif",
-                  cursor: "pointer",
-                }}
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm />
             <p style={{ fontSize: "11px", color: "rgba(136,185,158,0.5)", fontFamily: "'Inter', sans-serif", marginTop: "14px" }}>
               No spam. Only high-value intelligence. Unsubscribe at any time.
             </p>
@@ -461,6 +422,8 @@ export default async function BlogPage({ searchParams }: Props) {
       </div>
 
       <style>{`
+        .blog-card { transition: box-shadow 0.2s; }
+        .blog-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
         @media (max-width: 768px) {
           .featured-post-grid { grid-template-columns: 1fr !important; }
           .blog-grid { grid-template-columns: 1fr !important; }
