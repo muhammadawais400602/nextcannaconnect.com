@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description:
     "Find and connect with verified cannabis manufacturers, consultants, suppliers, and service providers across 12 industry categories.",
   keywords: "cannabis marketplace, cannabis directory, cannabis manufacturers, cannabis consultants, cannabis suppliers",
+  verification: {
+    google: "O_FEgDygtJCPaz2oReiIc1Qq9SMZNnivXVwhBzh2nm8",
+  },
 };
 
 export default function RootLayout({
