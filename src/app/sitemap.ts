@@ -23,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // ── Category pages ────────────────────────────────────────────
   const categoryPages: MetadataRoute.Sitemap = CATEGORIES.map((cat) => ({
-    url: `${BASE_URL}/directory?category=${cat.slug}`,
+    url: `${BASE_URL}/directory/${cat.slug}`,
     lastModified: new Date(),
     changeFrequency: "daily" as const,
     priority: 0.8,
