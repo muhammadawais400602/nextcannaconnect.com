@@ -23,12 +23,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
-
-    // Notify admin
-    if (adminEmail) {
-      await sendEmail({
-        to: adminEmail,
+    // Notify team
+    await sendEmail({
+        to: "help@nextcannaconnect.com",
         subject: `Contact form: ${subject} — ${name}`,
         html: `
           <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
@@ -42,7 +39,6 @@ export async function POST(request: NextRequest) {
           </div>
         `,
       });
-    }
 
     // Auto-reply to sender
     await sendEmail({
