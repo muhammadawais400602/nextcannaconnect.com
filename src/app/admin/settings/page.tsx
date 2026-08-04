@@ -19,7 +19,8 @@ function DangerCard({
   description: string;
   scope: Scope;
 }) {
-  const [phase, setPhase] = useState<"idle" | "confirm" | "loading" | "done">("idle");
+  const [phase, setPhase] = useState<"idle" | "confirm" | "done">("idle");
+  const [loading, setLoading] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [result, setResult] = useState<DeleteResult | null>(null);
   const [error, setError] = useState("");
@@ -30,7 +31,7 @@ function DangerCard({
       return;
     }
     setError("");
-    setPhase("loading");
+    setLoading(true);
     try {
       const res = await fetch("/api/admin/reset", {
         method: "POST",
@@ -47,7 +48,8 @@ function DangerCard({
       }
     } catch {
       setError("Network error. Please try again.");
-      setPhase("confirm");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -131,7 +133,7 @@ function DangerCard({
           <div style={{ display: "flex", gap: "8px" }}>
             <button
               onClick={handleDelete}
-              disabled={phase === "loading"}
+              disabled={loading}
               style={{
                 padding: "9px 18px",
                 background: "#DC2626",
@@ -143,7 +145,7 @@ function DangerCard({
                 cursor: "pointer",
               }}
             >
-              {phase === "loading" ? "Deleting…" : "Confirm Delete"}
+              {loading ? "Deleting…" : "Confirm Delete"}
             </button>
             <button
               onClick={() => { setPhase("idle"); setConfirmText(""); setError(""); }}
