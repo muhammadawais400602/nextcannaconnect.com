@@ -48,6 +48,15 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     bio: doc.bio,
     rating: doc.rating,
     reviewCount: doc.reviewCount,
+    licenseNumber: doc.licenseNumber,
+    licenseType: doc.licenseType,
+    delivery: doc.delivery,
+    hours: doc.hours,
+    insuranceOnFile: doc.insuranceOnFile,
+    metrcIntegrated: doc.metrcIntegrated,
+    verifiedDate: doc.verifiedDate,
+    locationsCount: doc.locationsCount,
+    faqs: doc.faqs,
   };
 }
 

@@ -7,6 +7,7 @@ import { getCategoryBySlug } from "@/data/categories";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { Company } from "@/types";
 import ContactForm from "./ContactForm";
+import RetailProfile from "@/components/vendor/retail/RetailProfile";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -58,6 +59,11 @@ export default async function VendorPage({ params }: Props) {
   const category = getCategoryBySlug(company.category);
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
+
+  // Retail & Dispensary uses its own dedicated profile template
+  if (company.category === "retail-dispensary") {
+    return <RetailProfile company={company} similar={similar} />;
+  }
 
   const isVerifiedPro = company.tier === "elite";
 

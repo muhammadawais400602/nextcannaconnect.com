@@ -74,4 +74,14 @@ export interface Company {
   bio?: string;
   rating?: number;
   reviewCount?: number;
+  // Retail & Dispensary
+  licenseNumber?: string;
+  licenseType?: string;       // "Rec + Medical" | "Recreational" | "Medical Only"
+  delivery?: string;          // "Yes" | "No" | "Only"
+  hours?: string;             // "9AM - 10PM"
+  insuranceOnFile?: boolean;
+  metrcIntegrated?: boolean;
+  verifiedDate?: string;      // "Oct 2025"
+  locationsCount?: number;
+  faqs?: { question: string; answer: string }[];
 }

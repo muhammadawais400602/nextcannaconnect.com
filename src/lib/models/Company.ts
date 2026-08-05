@@ -48,6 +48,16 @@ export interface ICompany extends Document {
   bio?: string;
   rating?: number;
   reviewCount?: number;
+  // Template 4 — Retail & Dispensary
+  licenseNumber?: string;
+  licenseType?: string;      // "Rec + Medical" | "Recreational" | "Medical Only"
+  delivery?: string;         // "Yes" | "No" | "Only"
+  hours?: string;            // "9AM - 10PM"
+  insuranceOnFile?: boolean;
+  metrcIntegrated?: boolean;
+  verifiedDate?: string;     // "Oct 2025"
+  locationsCount?: number;
+  faqs?: { question: string; answer: string }[];
   isFeatured: boolean;
   featuredExpiresAt?: Date;
   createdAt: Date;
@@ -109,6 +119,15 @@ const CompanySchema = new Schema<ICompany>(
     bio: String,
     rating: Number,
     reviewCount: Number,
+    licenseNumber: String,
+    licenseType: String,
+    delivery: String,
+    hours: String,
+    insuranceOnFile: Boolean,
+    metrcIntegrated: Boolean,
+    verifiedDate: String,
+    locationsCount: Number,
+    faqs: [{ question: String, answer: String }],
     isFeatured: { type: Boolean, default: false },
     featuredExpiresAt: Date,
   },

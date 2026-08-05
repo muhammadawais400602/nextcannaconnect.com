@@ -142,6 +142,9 @@ export default function CompanyForm({ initial, mode }: Props) {
     minOrderQty: "", leadTime: "", serviceArea: "",
     yearsExperience: "", hourlyRate: "", availability: "", bio: "",
     rating: "", reviewCount: "",
+    licenseNumber: "", licenseType: "", delivery: "", hours: "",
+    insuranceOnFile: false, metrcIntegrated: false, verifiedDate: "",
+    locationsCount: "", faqs: [],
     ...initial,
   });
 
@@ -165,6 +168,8 @@ export default function CompanyForm({ initial, mode }: Props) {
       yearsExperience: form.yearsExperience ? Number(form.yearsExperience) : undefined,
       rating: form.rating ? Number(form.rating) : undefined,
       reviewCount: form.reviewCount ? Number(form.reviewCount) : undefined,
+      locationsCount: form.locationsCount ? Number(form.locationsCount) : undefined,
+      faqs: (form.faqs || []).filter((f: { question: string; answer: string }) => f.question?.trim()),
     };
 
     const url = mode === "edit" ? `/api/admin/companies/${initial?.slug}` : "/api/admin/companies";
@@ -537,6 +542,120 @@ export default function CompanyForm({ initial, mode }: Props) {
         <div>
           <label style={labelStyle}>Bio</label>
           <textarea style={{ ...inputStyle, minHeight: "100px", resize: "vertical" }} value={form.bio || ""} onChange={(e) => set("bio", e.target.value)} />
+        </div>
+      </Section>
+
+      <Section title="Retail & Dispensary (Template 4)">
+        <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 4px", fontFamily: "sans-serif" }}>
+          These fields power the Retail &amp; Dispensary listing cards and profile page. Only used when Category is set to “Retail &amp; Dispensary”.
+        </p>
+        <Row>
+          <div>
+            <label style={labelStyle}>License Number</label>
+            <input style={inputStyle} value={form.licenseNumber || ""} onChange={(e) => set("licenseNumber", e.target.value)} placeholder="e.g. 403-01234" />
+          </div>
+          <div>
+            <label style={labelStyle}>License Type</label>
+            <CustomSelect value={form.licenseType || ""} onChange={(e) => set("licenseType", e.target.value)}>
+              <option value="">Select…</option>
+              <option value="Rec + Medical">Rec + Medical</option>
+              <option value="Recreational">Recreational</option>
+              <option value="Medical Only">Medical Only</option>
+            </CustomSelect>
+          </div>
+        </Row>
+        <Row>
+          <div>
+            <label style={labelStyle}>Delivery</label>
+            <CustomSelect value={form.delivery || ""} onChange={(e) => set("delivery", e.target.value)}>
+              <option value="">Select…</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="Only">Delivery Only</option>
+            </CustomSelect>
+          </div>
+          <div>
+            <label style={labelStyle}>Hours</label>
+            <input style={inputStyle} value={form.hours || ""} onChange={(e) => set("hours", e.target.value)} placeholder="e.g. 9AM - 10PM" />
+          </div>
+        </Row>
+        <Row>
+          <div>
+            <label style={labelStyle}>Verified Date (badge text)</label>
+            <input style={inputStyle} value={form.verifiedDate || ""} onChange={(e) => set("verifiedDate", e.target.value)} placeholder="e.g. Oct 2025" />
+          </div>
+          <div>
+            <label style={labelStyle}># of Locations</label>
+            <input style={inputStyle} type="number" min="0" value={form.locationsCount || ""} onChange={(e) => set("locationsCount", e.target.value)} placeholder="e.g. 3" />
+          </div>
+        </Row>
+        <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#374151", fontFamily: "sans-serif" }}>
+            <input type="checkbox" checked={!!form.insuranceOnFile} onChange={(e) => set("insuranceOnFile", e.target.checked)} style={{ width: "16px", height: "16px", accentColor: "#1A4A35" }} />
+            Insurance on File
+          </label>
+          <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#374151", fontFamily: "sans-serif" }}>
+            <input type="checkbox" checked={!!form.metrcIntegrated} onChange={(e) => set("metrcIntegrated", e.target.checked)} style={{ width: "16px", height: "16px", accentColor: "#1A4A35" }} />
+            Metrc Integrated
+          </label>
+        </div>
+        <Row>
+          <div>
+            <label style={labelStyle}>Rating (0–5)</label>
+            <input style={inputStyle} type="number" min="0" max="5" step="0.1" value={form.rating || ""} onChange={(e) => set("rating", e.target.value)} placeholder="e.g. 4.8" />
+          </div>
+          <div>
+            <label style={labelStyle}>Review Count</label>
+            <input style={inputStyle} type="number" min="0" value={form.reviewCount || ""} onChange={(e) => set("reviewCount", e.target.value)} placeholder="e.g. 124" />
+          </div>
+        </Row>
+
+        {/* FAQs */}
+        <div>
+          <label style={labelStyle}>FAQs (shown on listing page)</label>
+          {(form.faqs || []).map((faq: { question: string; answer: string }, i: number) => (
+            <div key={i} style={{ background: "#F9FAFB", borderRadius: "10px", padding: "16px", marginBottom: "12px", border: "1px solid #E5E7EB" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "13px", fontWeight: "700", color: "#374151", fontFamily: "sans-serif" }}>FAQ {i + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => set("faqs", (form.faqs || []).filter((_: unknown, idx: number) => idx !== i))}
+                  style={{ fontSize: "12px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif" }}
+                >
+                  Remove
+                </button>
+              </div>
+              <div style={{ display: "grid", gap: "10px" }}>
+                <input
+                  style={inputStyle}
+                  placeholder="Question"
+                  value={faq.question}
+                  onChange={(e) => {
+                    const updated = [...(form.faqs || [])];
+                    updated[i] = { ...updated[i], question: e.target.value };
+                    set("faqs", updated);
+                  }}
+                />
+                <textarea
+                  style={{ ...inputStyle, minHeight: "70px", resize: "vertical" }}
+                  placeholder="Answer"
+                  value={faq.answer}
+                  onChange={(e) => {
+                    const updated = [...(form.faqs || [])];
+                    updated[i] = { ...updated[i], answer: e.target.value };
+                    set("faqs", updated);
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => set("faqs", [...(form.faqs || []), { question: "", answer: "" }])}
+            style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
+          >
+            + Add FAQ
+          </button>
         </div>
       </Section>
 
