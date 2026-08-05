@@ -79,6 +79,11 @@ export interface ICompany extends Document {
   sampleIntakeHours?: string;
   accreditations?: string[]; // trust badges: A2LA Accredited, DCC Licensed (CA)
   capabilities?: { name: string; description: string; method: string }[];
+  // Template 7 — Technology & Software
+  certTable?: { standard: string; status: string; lastAudit: string }[];
+  securityFeatures?: string[]; // AES-256 Encryption, SAML SSO Support, RBAC Controls
+  screenshots?: string[];      // product screenshot image URLs
+  features?: string[];         // platform feature bullets
   isFeatured: boolean;
   featuredExpiresAt?: Date;
   createdAt: Date;
@@ -168,6 +173,10 @@ const CompanySchema = new Schema<ICompany>(
     sampleIntakeHours: String,
     accreditations: [String],
     capabilities: [{ name: String, description: String, method: String }],
+    certTable: [{ standard: String, status: String, lastAudit: String }],
+    securityFeatures: [String],
+    screenshots: [String],
+    features: [String],
     isFeatured: { type: Boolean, default: false },
     featuredExpiresAt: Date,
   },

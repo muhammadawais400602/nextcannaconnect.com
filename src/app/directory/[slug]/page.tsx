@@ -4,13 +4,14 @@ import { getCategoryBySlug } from "@/data/categories";
 import RetailCategoryPage from "@/components/directory/retail/RetailCategoryPage";
 import TransportCategoryPage from "@/components/directory/transport/TransportCategoryPage";
 import TestingCategoryPage from "@/components/directory/testing/TestingCategoryPage";
+import TechCategoryPage from "@/components/directory/tech/TechCategoryPage";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 // Categories that have their own dedicated template page
-const CUSTOM_TEMPLATE_SLUGS = new Set(["retail-dispensary", "transportation-logistics", "testing-science"]);
+const CUSTOM_TEMPLATE_SLUGS = new Set(["retail-dispensary", "transportation-logistics", "testing-science", "technology-software"]);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -35,6 +36,10 @@ export default async function CategoryPage({ params }: Props) {
 
   if (slug === "testing-science") {
     return <TestingCategoryPage />;
+  }
+
+  if (slug === "technology-software") {
+    return <TechCategoryPage />;
   }
 
   // All other categories still use the shared directory filter view

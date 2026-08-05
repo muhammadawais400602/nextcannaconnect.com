@@ -76,6 +76,10 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     sampleIntakeHours: doc.sampleIntakeHours,
     accreditations: doc.accreditations,
     capabilities: doc.capabilities,
+    certTable: doc.certTable,
+    securityFeatures: doc.securityFeatures,
+    screenshots: doc.screenshots,
+    features: doc.features,
   };
 }
 

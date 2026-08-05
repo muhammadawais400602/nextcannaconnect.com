@@ -150,6 +150,7 @@ export default function CompanyForm({ initial, mode }: Props) {
     accreditation: "", turnaroundTime: "", panelCount: "", licenseStatus: "",
     facilitySize: "", samplesTested: "", sampleTypes: "", rushService: "",
     sampleIntakeHours: "", accreditations: [], capabilities: [],
+    certTable: [], securityFeatures: [], screenshots: [], features: [],
     ...initial,
   });
 
@@ -179,6 +180,7 @@ export default function CompanyForm({ initial, mode }: Props) {
       statesActive: form.statesActive ? Number(form.statesActive) : undefined,
       licensesTable: (form.licensesTable || []).filter((l: { type: string }) => l.type?.trim()),
       capabilities: (form.capabilities || []).filter((c: { name: string }) => c.name?.trim()),
+      certTable: (form.certTable || []).filter((c: { standard: string }) => c.standard?.trim()),
     };
 
     const url = mode === "edit" ? `/api/admin/companies/${initial?.slug}` : "/api/admin/companies";
@@ -831,6 +833,48 @@ export default function CompanyForm({ initial, mode }: Props) {
             style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
           >
             + Add Capability
+          </button>
+        </div>
+      </Section>
+
+      <Section title="Technology & Software (Template 7)">
+        <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 4px", fontFamily: "sans-serif" }}>
+          Powers the Technology &amp; Software vendor cards and profile page. Only used when Category is set to “Technology &amp; Software”. Note: the <strong>Accreditation</strong> field (Template 6) doubles as the certification badge (e.g. “SOC 2 Type II Certified”), <strong>Service Tags</strong> are the integration chips (Metrc, BioTrack…), and <strong>Pricing Model</strong> (Template 2) shows in the Vendor Snapshot.
+        </p>
+        <TagInput label="Security Features (AES-256 Encryption, SAML SSO, RBAC…)" value={form.securityFeatures || []} onChange={(v) => set("securityFeatures", v)} />
+        <TagInput label="Feature Bullets (shown on Features tab)" value={form.features || []} onChange={(v) => set("features", v)} />
+        <TagInput label="Screenshot Image URLs (shown on Overview)" value={form.screenshots || []} onChange={(v) => set("screenshots", v)} />
+
+        {/* Certifications table */}
+        <div>
+          <label style={labelStyle}>Certifications &amp; Security table (profile)</label>
+          {(form.certTable || []).map((cert: { standard: string; status: string; lastAudit: string }, i: number) => (
+            <div key={i} style={{ background: "#F9FAFB", borderRadius: "10px", padding: "16px", marginBottom: "12px", border: "1px solid #E5E7EB" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "13px", fontWeight: "700", color: "#374151", fontFamily: "sans-serif" }}>Certification {i + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => set("certTable", (form.certTable || []).filter((_: unknown, idx: number) => idx !== i))}
+                  style={{ fontSize: "12px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif" }}
+                >
+                  Remove
+                </button>
+              </div>
+              <div style={{ display: "grid", gap: "10px" }}>
+                <input style={inputStyle} placeholder="Standard (e.g. SOC 2 Type II)" value={cert.standard} onChange={(e) => { const u = [...(form.certTable || [])]; u[i] = { ...u[i], standard: e.target.value }; set("certTable", u); }} />
+                <Row>
+                  <input style={inputStyle} placeholder="Status (e.g. Maintained)" value={cert.status || ""} onChange={(e) => { const u = [...(form.certTable || [])]; u[i] = { ...u[i], status: e.target.value }; set("certTable", u); }} />
+                  <input style={inputStyle} placeholder="Last Audit (e.g. Oct 2023)" value={cert.lastAudit || ""} onChange={(e) => { const u = [...(form.certTable || [])]; u[i] = { ...u[i], lastAudit: e.target.value }; set("certTable", u); }} />
+                </Row>
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => set("certTable", [...(form.certTable || []), { standard: "", status: "", lastAudit: "" }])}
+            style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
+          >
+            + Add Certification
           </button>
         </div>
       </Section>

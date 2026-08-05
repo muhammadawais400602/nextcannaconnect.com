@@ -105,4 +105,9 @@ export interface Company {
   sampleIntakeHours?: string;
   accreditations?: string[];  // trust badges
   capabilities?: { name: string; description: string; method: string }[];
+  // Technology & Software
+  certTable?: { standard: string; status: string; lastAudit: string }[];
+  securityFeatures?: string[];
+  screenshots?: string[];
+  features?: string[];
 }

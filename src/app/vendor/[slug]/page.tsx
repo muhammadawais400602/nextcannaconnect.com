@@ -10,6 +10,7 @@ import ContactForm from "./ContactForm";
 import RetailProfile from "@/components/vendor/retail/RetailProfile";
 import TransportProfile from "@/components/vendor/transport/TransportProfile";
 import TestingProfile from "@/components/vendor/testing/TestingProfile";
+import TechProfile from "@/components/vendor/tech/TechProfile";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -75,6 +76,11 @@ export default async function VendorPage({ params }: Props) {
   // Testing & Science uses its own dedicated profile template
   if (company.category === "testing-science") {
     return <TestingProfile company={company} />;
+  }
+
+  // Technology & Software uses its own dedicated profile template
+  if (company.category === "technology-software") {
+    return <TechProfile company={company} />;
   }
 
   const isVerifiedPro = company.tier === "elite";
