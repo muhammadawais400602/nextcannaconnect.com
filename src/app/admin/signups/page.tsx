@@ -14,6 +14,7 @@ interface SignupApp {
   website?: string;
   description?: string;
   serviceArea?: string;
+  categoryDetails?: Record<string, string>;
   status: "pending" | "approved" | "rejected";
   createdAt: string;
 }
@@ -189,6 +190,15 @@ export default function SignupsPage() {
                   {app.phone ? ` · ${app.phone}` : ""}
                 </div>
                 {app.stateProvince && <div style={{ fontSize: "11px", color: "#9CA3AF", marginTop: "2px" }}>{app.stateProvince}</div>}
+                {app.categoryDetails && Object.entries(app.categoryDetails).filter(([, v]) => v).length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "8px" }}>
+                    {Object.entries(app.categoryDetails).filter(([, v]) => v).map(([k, v]) => (
+                      <span key={k} style={{ fontSize: "10px", color: "#374151", background: "#F3F4F6", borderRadius: "6px", padding: "3px 8px" }}>
+                        <span style={{ color: "#9CA3AF" }}>{k}:</span> {v}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Date */}

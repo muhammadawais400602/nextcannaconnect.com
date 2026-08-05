@@ -16,6 +16,7 @@ export interface ISignupApplication extends Document {
   certifications?: string;
   socialLink?: string;
   contactName?: string;
+  categoryDetails?: Record<string, string>;
   status: "pending" | "approved" | "rejected";
   paymentStatus: "not_required" | "awaiting_payment" | "paid";
   stripeSessionId?: string;
@@ -38,6 +39,7 @@ const SignupApplicationSchema = new Schema<ISignupApplication>(
     certifications: String,
     socialLink:    String,
     contactName:   String,
+    categoryDetails: { type: Schema.Types.Mixed, default: {} },
     status:          { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
     paymentStatus:   { type: String, enum: ["not_required", "awaiting_payment", "paid"], default: "not_required" },
     stripeSessionId: String,

@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     const { fullName, companyName, email, phone, stateProvince, category,
             tier, website, description, publicPhone, serviceArea,
-            certifications, socialLink, contactName } = body;
+            certifications, socialLink, contactName, categoryDetails } = body;
 
     if (!fullName || !companyName || !email || !tier) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
       fullName, companyName, email, phone, stateProvince, category,
       tier, website, description, publicPhone, serviceArea,
       certifications, socialLink, contactName,
+      categoryDetails: categoryDetails && typeof categoryDetails === "object" ? categoryDetails : {},
       paymentStatus: isPaid ? "awaiting_payment" : "not_required",
     });
 
@@ -149,6 +150,12 @@ export async function POST(request: NextRequest) {
               <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Category</td><td style="padding:8px">${category || "—"}</td></tr>
               ${website ? `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Website</td><td style="padding:8px">${website}</td></tr>` : ""}
               ${description ? `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Description</td><td style="padding:8px">${description}</td></tr>` : ""}
+              ${categoryDetails && typeof categoryDetails === "object"
+                ? Object.entries(categoryDetails)
+                    .filter(([, v]) => v)
+                    .map(([k, v]) => `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">${k}</td><td style="padding:8px">${v}</td></tr>`)
+                    .join("")
+                : ""}
             </table>
             <p style="margin-top:16px;font-size:13px;color:#6B7280">Application ID: ${app._id}</p>
           </div>

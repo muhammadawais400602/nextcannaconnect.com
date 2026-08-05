@@ -69,6 +69,46 @@ const TIERS = [
   },
 ];
 
+// Category-specific fields shown in Step 3, keyed by category slug.
+// The label is used both as the field caption and the key stored on the application.
+interface CatField {
+  label: string;
+  type?: "text" | "select";
+  options?: string[];
+  placeholder?: string;
+}
+
+const CATEGORY_FIELDS: Record<string, CatField[]> = {
+  "retail-dispensary": [
+    { label: "License Number", placeholder: "e.g. 403-01234" },
+    { label: "License Type", type: "select", options: ["Rec + Medical", "Recreational", "Medical Only"] },
+    { label: "Delivery", type: "select", options: ["Yes", "No", "Delivery Only"] },
+    { label: "Hours", placeholder: "e.g. 9AM - 10PM" },
+  ],
+  "transportation-logistics": [
+    { label: "Number of Vehicles", placeholder: "e.g. 24" },
+    { label: "Transport Type", type: "select", options: ["Temp Controlled", "Dry Goods", "Armored", "Refrigerated"] },
+    { label: "Loads per Month", placeholder: "e.g. 480+" },
+    { label: "Cargo Insurance", placeholder: "e.g. $5M Cargo Coverage" },
+  ],
+  "testing-science": [
+    { label: "Accreditation", placeholder: "e.g. ISO/IEC 17025" },
+    { label: "Turnaround Time", placeholder: "e.g. 48 Hours" },
+    { label: "Sample Types", placeholder: "e.g. Flower, Oil, Edibles" },
+    { label: "Test Panels", placeholder: "e.g. 11 Categories" },
+  ],
+  "technology-software": [
+    { label: "Certification", placeholder: "e.g. SOC 2 Type II" },
+    { label: "Integrations", placeholder: "e.g. Metrc, BioTrack, QuickBooks" },
+    { label: "Pricing Model", placeholder: "e.g. Per Location/Seat" },
+  ],
+  "real-estate-construction": [
+    { label: "Projects Completed", placeholder: "e.g. 120+" },
+    { label: "Credential Headline", placeholder: "e.g. Credentialed in 5 States" },
+    { label: "Service Focus", placeholder: "e.g. Architecture, HVAC, General Contracting" },
+  ],
+};
+
 const inputStyle = {
   width: "100%",
   padding: "10px 14px",
@@ -162,6 +202,9 @@ function SignUpForm() {
     contactName: "",
   });
 
+  const [categoryDetails, setCategoryDetails] = useState<Record<string, string>>({});
+  const categoryFields = CATEGORY_FIELDS[basicForm.category] ?? [];
+
   function handleBasicSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStep(2);
@@ -211,7 +254,7 @@ function SignUpForm() {
 
   function handleFinalSubmit(e: React.FormEvent) {
     e.preventDefault();
-    submitApplication(tierForm);
+    submitApplication({ ...tierForm, categoryDetails });
   }
 
   const tier = TIERS.find((t) => t.key === selectedTier);
@@ -477,6 +520,45 @@ function SignUpForm() {
               </div>
             </div>
           </>
+        )}
+
+        {/* Category-specific details */}
+        {categoryFields.length > 0 && (
+          <div style={{ borderTop: "1px solid #E8EDE8", paddingTop: "20px", marginTop: "4px" }}>
+            <p className="font-semibold uppercase tracking-widest mb-1" style={{ color: "#F7941D", fontSize: "10px", letterSpacing: "1.5px" }}>
+              {CATEGORIES.find((c) => c.slug === basicForm.category)?.label ?? "Category"} details
+            </p>
+            <p style={{ fontSize: "12px", color: "#4A5E4A", marginBottom: "16px" }}>
+              These help us build your specialized listing.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {categoryFields.map((f) => (
+                <div key={f.label}>
+                  <label style={labelStyle}>{f.label}</label>
+                  {f.type === "select" ? (
+                    <CustomSelect
+                      value={categoryDetails[f.label] ?? ""}
+                      onChange={(e) => setCategoryDetails((prev) => ({ ...prev, [f.label]: e.target.value }))}
+                      style={{ color: categoryDetails[f.label] ? "#003320" : "#9CA3AF" }}
+                    >
+                      <option value="">Select…</option>
+                      {(f.options ?? []).map((o) => (
+                        <option key={o} value={o}>{o}</option>
+                      ))}
+                    </CustomSelect>
+                  ) : (
+                    <input
+                      type="text"
+                      placeholder={f.placeholder ?? ""}
+                      value={categoryDetails[f.label] ?? ""}
+                      onChange={(e) => setCategoryDetails((prev) => ({ ...prev, [f.label]: e.target.value }))}
+                      style={inputStyle}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         <div style={{ display: "flex", gap: "12px", marginTop: "8px" }}>
