@@ -2,13 +2,14 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getCategoryBySlug } from "@/data/categories";
 import RetailCategoryPage from "@/components/directory/retail/RetailCategoryPage";
+import TransportCategoryPage from "@/components/directory/transport/TransportCategoryPage";
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
 // Categories that have their own dedicated template page
-const CUSTOM_TEMPLATE_SLUGS = new Set(["retail-dispensary"]);
+const CUSTOM_TEMPLATE_SLUGS = new Set(["retail-dispensary", "transportation-logistics"]);
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -25,6 +26,10 @@ export default async function CategoryPage({ params }: Props) {
 
   if (slug === "retail-dispensary") {
     return <RetailCategoryPage />;
+  }
+
+  if (slug === "transportation-logistics") {
+    return <TransportCategoryPage />;
   }
 
   // All other categories still use the shared directory filter view

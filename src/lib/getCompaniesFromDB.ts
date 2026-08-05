@@ -57,6 +57,14 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     verifiedDate: doc.verifiedDate,
     locationsCount: doc.locationsCount,
     faqs: doc.faqs,
+    vehicleCount: doc.vehicleCount,
+    transportType: doc.transportType,
+    loadsPerMonth: doc.loadsPerMonth,
+    statesActive: doc.statesActive,
+    cargoInsurance: doc.cargoInsurance,
+    gpsTracked: doc.gpsTracked,
+    dispatchHours: doc.dispatchHours,
+    licensesTable: doc.licensesTable,
   };
 }
 

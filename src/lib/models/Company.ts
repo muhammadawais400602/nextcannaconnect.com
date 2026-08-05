@@ -58,6 +58,15 @@ export interface ICompany extends Document {
   verifiedDate?: string;     // "Oct 2025"
   locationsCount?: number;
   faqs?: { question: string; answer: string }[];
+  // Template 5 — Transportation & Logistics
+  vehicleCount?: number;
+  transportType?: string;    // "Temp Controlled" | "Dry Goods" | "Armored"
+  loadsPerMonth?: string;    // "480+"
+  statesActive?: number;
+  cargoInsurance?: string;   // "$5M Cargo Coverage"
+  gpsTracked?: boolean;
+  dispatchHours?: string;    // "24/7 Dispatch"
+  licensesTable?: { type: string; authority: string; number: string; status: string }[];
   isFeatured: boolean;
   featuredExpiresAt?: Date;
   createdAt: Date;
@@ -128,6 +137,14 @@ const CompanySchema = new Schema<ICompany>(
     verifiedDate: String,
     locationsCount: Number,
     faqs: [{ question: String, answer: String }],
+    vehicleCount: Number,
+    transportType: String,
+    loadsPerMonth: String,
+    statesActive: Number,
+    cargoInsurance: String,
+    gpsTracked: Boolean,
+    dispatchHours: String,
+    licensesTable: [{ type: { type: String }, authority: String, number: String, status: String }],
     isFeatured: { type: Boolean, default: false },
     featuredExpiresAt: Date,
   },

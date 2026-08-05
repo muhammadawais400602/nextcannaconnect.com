@@ -8,6 +8,7 @@ import { MapPin, ArrowLeft } from "lucide-react";
 import { Company } from "@/types";
 import ContactForm from "./ContactForm";
 import RetailProfile from "@/components/vendor/retail/RetailProfile";
+import TransportProfile from "@/components/vendor/transport/TransportProfile";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -63,6 +64,11 @@ export default async function VendorPage({ params }: Props) {
   // Retail & Dispensary uses its own dedicated profile template
   if (company.category === "retail-dispensary") {
     return <RetailProfile company={company} similar={similar} />;
+  }
+
+  // Transportation & Logistics uses its own dedicated profile template
+  if (company.category === "transportation-logistics") {
+    return <TransportProfile company={company} />;
   }
 
   const isVerifiedPro = company.tier === "elite";

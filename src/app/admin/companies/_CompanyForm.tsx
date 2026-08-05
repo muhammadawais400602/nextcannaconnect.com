@@ -145,6 +145,8 @@ export default function CompanyForm({ initial, mode }: Props) {
     licenseNumber: "", licenseType: "", delivery: "", hours: "",
     insuranceOnFile: false, metrcIntegrated: false, verifiedDate: "",
     locationsCount: "", faqs: [],
+    vehicleCount: "", transportType: "", loadsPerMonth: "", statesActive: "",
+    cargoInsurance: "", gpsTracked: false, dispatchHours: "", licensesTable: [],
     ...initial,
   });
 
@@ -170,6 +172,9 @@ export default function CompanyForm({ initial, mode }: Props) {
       reviewCount: form.reviewCount ? Number(form.reviewCount) : undefined,
       locationsCount: form.locationsCount ? Number(form.locationsCount) : undefined,
       faqs: (form.faqs || []).filter((f: { question: string; answer: string }) => f.question?.trim()),
+      vehicleCount: form.vehicleCount ? Number(form.vehicleCount) : undefined,
+      statesActive: form.statesActive ? Number(form.statesActive) : undefined,
+      licensesTable: (form.licensesTable || []).filter((l: { type: string }) => l.type?.trim()),
     };
 
     const url = mode === "edit" ? `/api/admin/companies/${initial?.slug}` : "/api/admin/companies";
@@ -347,7 +352,7 @@ export default function CompanyForm({ initial, mode }: Props) {
           </div>
         </Row>
         <div>
-          <label style={labelStyle}>Regions Served (shown as "REGIONS" stat)</label>
+          <label style={labelStyle}>Regions Served (shown as &quot;REGIONS&quot; stat)</label>
           <input
             style={{ ...inputStyle, maxWidth: "400px" }} value={form.serviceArea || ""}
             onChange={(e) => set("serviceArea", e.target.value)}
@@ -655,6 +660,88 @@ export default function CompanyForm({ initial, mode }: Props) {
             style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
           >
             + Add FAQ
+          </button>
+        </div>
+      </Section>
+
+      <Section title="Transportation & Logistics (Template 5)">
+        <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 4px", fontFamily: "sans-serif" }}>
+          These fields power the Transportation &amp; Logistics carrier cards and profile page. Only used when Category is set to “Transportation &amp; Logistics”.
+        </p>
+        <Row>
+          <div>
+            <label style={labelStyle}># of Vehicles</label>
+            <input style={inputStyle} type="number" min="0" value={form.vehicleCount || ""} onChange={(e) => set("vehicleCount", e.target.value)} placeholder="e.g. 24" />
+          </div>
+          <div>
+            <label style={labelStyle}>Transport Type</label>
+            <CustomSelect value={form.transportType || ""} onChange={(e) => set("transportType", e.target.value)}>
+              <option value="">Select…</option>
+              <option value="Temp Controlled">Temp Controlled</option>
+              <option value="Dry Goods">Dry Goods</option>
+              <option value="Armored">Armored</option>
+              <option value="Refrigerated">Refrigerated</option>
+            </CustomSelect>
+          </div>
+        </Row>
+        <Row>
+          <div>
+            <label style={labelStyle}>Loads per Month</label>
+            <input style={inputStyle} value={form.loadsPerMonth || ""} onChange={(e) => set("loadsPerMonth", e.target.value)} placeholder="e.g. 480+" />
+          </div>
+          <div>
+            <label style={labelStyle}># of States Active</label>
+            <input style={inputStyle} type="number" min="0" value={form.statesActive || ""} onChange={(e) => set("statesActive", e.target.value)} placeholder="e.g. 6" />
+          </div>
+        </Row>
+        <Row>
+          <div>
+            <label style={labelStyle}>Cargo Insurance (trust badge)</label>
+            <input style={inputStyle} value={form.cargoInsurance || ""} onChange={(e) => set("cargoInsurance", e.target.value)} placeholder="e.g. $5M Cargo Coverage" />
+          </div>
+          <div>
+            <label style={labelStyle}>Dispatch Hours</label>
+            <input style={inputStyle} value={form.dispatchHours || ""} onChange={(e) => set("dispatchHours", e.target.value)} placeholder="e.g. 24/7 Dispatch" />
+          </div>
+        </Row>
+        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "14px", color: "#374151", fontFamily: "sans-serif" }}>
+          <input type="checkbox" checked={!!form.gpsTracked} onChange={(e) => set("gpsTracked", e.target.checked)} style={{ width: "16px", height: "16px", accentColor: "#1A4A35" }} />
+          GPS Tracked
+        </label>
+
+        {/* Licenses table */}
+        <div>
+          <label style={labelStyle}>Licenses &amp; Credentials (shown as a table on profile)</label>
+          {(form.licensesTable || []).map((lic: { type: string; authority: string; number: string; status: string }, i: number) => (
+            <div key={i} style={{ background: "#F9FAFB", borderRadius: "10px", padding: "16px", marginBottom: "12px", border: "1px solid #E5E7EB" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "13px", fontWeight: "700", color: "#374151", fontFamily: "sans-serif" }}>License {i + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => set("licensesTable", (form.licensesTable || []).filter((_: unknown, idx: number) => idx !== i))}
+                  style={{ fontSize: "12px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif" }}
+                >
+                  Remove
+                </button>
+              </div>
+              <div style={{ display: "grid", gap: "10px" }}>
+                <Row>
+                  <input style={inputStyle} placeholder="Type (e.g. Cannabis Distributor)" value={lic.type} onChange={(e) => { const u = [...(form.licensesTable || [])]; u[i] = { ...u[i], type: e.target.value }; set("licensesTable", u); }} />
+                  <input style={inputStyle} placeholder="Issuing Authority (e.g. California DCC)" value={lic.authority || ""} onChange={(e) => { const u = [...(form.licensesTable || [])]; u[i] = { ...u[i], authority: e.target.value }; set("licensesTable", u); }} />
+                </Row>
+                <Row>
+                  <input style={inputStyle} placeholder="License / Policy # (e.g. C11-0004928)" value={lic.number || ""} onChange={(e) => { const u = [...(form.licensesTable || [])]; u[i] = { ...u[i], number: e.target.value }; set("licensesTable", u); }} />
+                  <input style={inputStyle} placeholder="Status (e.g. Active)" value={lic.status || ""} onChange={(e) => { const u = [...(form.licensesTable || [])]; u[i] = { ...u[i], status: e.target.value }; set("licensesTable", u); }} />
+                </Row>
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => set("licensesTable", [...(form.licensesTable || []), { type: "", authority: "", number: "", status: "Active" }])}
+            style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
+          >
+            + Add License
           </button>
         </div>
       </Section>

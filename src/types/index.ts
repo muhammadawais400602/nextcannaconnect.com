@@ -84,4 +84,13 @@ export interface Company {
   verifiedDate?: string;      // "Oct 2025"
   locationsCount?: number;
   faqs?: { question: string; answer: string }[];
+  // Transportation & Logistics
+  vehicleCount?: number;
+  transportType?: string;     // "Temp Controlled" | "Dry Goods" | "Armored"
+  loadsPerMonth?: string;     // "480+"
+  statesActive?: number;
+  cargoInsurance?: string;    // "$5M Cargo Coverage"
+  gpsTracked?: boolean;
+  dispatchHours?: string;     // "24/7 Dispatch"
+  licensesTable?: { type: string; authority: string; number: string; status: string }[];
 }
