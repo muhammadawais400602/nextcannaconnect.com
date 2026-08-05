@@ -151,6 +151,7 @@ export default function CompanyForm({ initial, mode }: Props) {
     facilitySize: "", samplesTested: "", sampleTypes: "", rushService: "",
     sampleIntakeHours: "", accreditations: [], capabilities: [],
     certTable: [], securityFeatures: [], screenshots: [], features: [],
+    projectsCompleted: "", credentialHeadline: "", insurance: [], processSteps: [],
     ...initial,
   });
 
@@ -181,6 +182,8 @@ export default function CompanyForm({ initial, mode }: Props) {
       licensesTable: (form.licensesTable || []).filter((l: { type: string }) => l.type?.trim()),
       capabilities: (form.capabilities || []).filter((c: { name: string }) => c.name?.trim()),
       certTable: (form.certTable || []).filter((c: { standard: string }) => c.standard?.trim()),
+      insurance: (form.insurance || []).filter((it: { label: string }) => it.label?.trim()),
+      processSteps: (form.processSteps || []).filter((s: { title: string }) => s.title?.trim()),
     };
 
     const url = mode === "edit" ? `/api/admin/companies/${initial?.slug}` : "/api/admin/companies";
@@ -876,6 +879,53 @@ export default function CompanyForm({ initial, mode }: Props) {
           >
             + Add Certification
           </button>
+        </div>
+      </Section>
+
+      <Section title="Real Estate & Construction (Template 8)">
+        <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 4px", fontFamily: "sans-serif" }}>
+          Powers the Real Estate &amp; Construction firm cards and profile. Only used when Category is set to “Real Estate &amp; Construction”. Reuses <strong>Service Tags</strong> (card chips), <strong>Accreditation Badges</strong> (Template 6 — credential checklist), <strong>Licenses table</strong> (Template 5), and <strong>Product Offerings</strong> (Featured Projects gallery: name = project title, description = “120,000 sq ft • Indoor • Denver, CO”, image = photo).
+        </p>
+        <Row>
+          <div>
+            <label style={labelStyle}>Projects Completed / Delivered</label>
+            <input style={inputStyle} value={form.projectsCompleted || ""} onChange={(e) => set("projectsCompleted", e.target.value)} placeholder="e.g. 120+" />
+          </div>
+          <div>
+            <label style={labelStyle}>Credential Headline (dark card)</label>
+            <input style={inputStyle} value={form.credentialHeadline || ""} onChange={(e) => set("credentialHeadline", e.target.value)} placeholder="e.g. Credentialed in 5 States" />
+          </div>
+        </Row>
+
+        {/* Insurance snapshot */}
+        <div>
+          <label style={labelStyle}>Insurance Snapshot (profile sidebar)</label>
+          {(form.insurance || []).map((it: { label: string; value: string }, i: number) => (
+            <div key={i} style={{ display: "flex", gap: "8px", marginBottom: "8px" }}>
+              <input style={inputStyle} placeholder="Label (e.g. General Liability)" value={it.label} onChange={(e) => { const u = [...(form.insurance || [])]; u[i] = { ...u[i], label: e.target.value }; set("insurance", u); }} />
+              <input style={inputStyle} placeholder="Value (e.g. $5,000,000)" value={it.value || ""} onChange={(e) => { const u = [...(form.insurance || [])]; u[i] = { ...u[i], value: e.target.value }; set("insurance", u); }} />
+              <button type="button" onClick={() => set("insurance", (form.insurance || []).filter((_: unknown, idx: number) => idx !== i))} style={{ fontSize: "12px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif", whiteSpace: "nowrap" }}>Remove</button>
+            </div>
+          ))}
+          <button type="button" onClick={() => set("insurance", [...(form.insurance || []), { label: "", value: "" }])} style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}>+ Add Insurance Line</button>
+        </div>
+
+        {/* Process steps */}
+        <div>
+          <label style={labelStyle}>Design-Build Process Steps (profile)</label>
+          {(form.processSteps || []).map((step: { title: string; description: string }, i: number) => (
+            <div key={i} style={{ background: "#F9FAFB", borderRadius: "10px", padding: "16px", marginBottom: "12px", border: "1px solid #E5E7EB" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "13px", fontWeight: "700", color: "#374151", fontFamily: "sans-serif" }}>Step {i + 1}</span>
+                <button type="button" onClick={() => set("processSteps", (form.processSteps || []).filter((_: unknown, idx: number) => idx !== i))} style={{ fontSize: "12px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif" }}>Remove</button>
+              </div>
+              <div style={{ display: "grid", gap: "10px" }}>
+                <input style={inputStyle} placeholder="Title (e.g. Feasibility & Planning)" value={step.title} onChange={(e) => { const u = [...(form.processSteps || [])]; u[i] = { ...u[i], title: e.target.value }; set("processSteps", u); }} />
+                <textarea style={{ ...inputStyle, minHeight: "60px", resize: "vertical" }} placeholder="Description" value={step.description || ""} onChange={(e) => { const u = [...(form.processSteps || [])]; u[i] = { ...u[i], description: e.target.value }; set("processSteps", u); }} />
+              </div>
+            </div>
+          ))}
+          <button type="button" onClick={() => set("processSteps", [...(form.processSteps || []), { title: "", description: "" }])} style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}>+ Add Step</button>
         </div>
       </Section>
 

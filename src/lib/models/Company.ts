@@ -84,6 +84,11 @@ export interface ICompany extends Document {
   securityFeatures?: string[]; // AES-256 Encryption, SAML SSO Support, RBAC Controls
   screenshots?: string[];      // product screenshot image URLs
   features?: string[];         // platform feature bullets
+  // Template 8 — Real Estate & Construction
+  projectsCompleted?: string;  // "120+" / "42"
+  credentialHeadline?: string; // "Credentialed in 5 States"
+  insurance?: { label: string; value: string }[];
+  processSteps?: { title: string; description: string }[];
   isFeatured: boolean;
   featuredExpiresAt?: Date;
   createdAt: Date;
@@ -177,6 +182,10 @@ const CompanySchema = new Schema<ICompany>(
     securityFeatures: [String],
     screenshots: [String],
     features: [String],
+    projectsCompleted: String,
+    credentialHeadline: String,
+    insurance: [{ label: String, value: String }],
+    processSteps: [{ title: String, description: String }],
     isFeatured: { type: Boolean, default: false },
     featuredExpiresAt: Date,
   },

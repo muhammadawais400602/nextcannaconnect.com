@@ -80,6 +80,10 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     securityFeatures: doc.securityFeatures,
     screenshots: doc.screenshots,
     features: doc.features,
+    projectsCompleted: doc.projectsCompleted,
+    credentialHeadline: doc.credentialHeadline,
+    insurance: doc.insurance,
+    processSteps: doc.processSteps,
   };
 }
 

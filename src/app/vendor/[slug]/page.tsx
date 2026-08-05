@@ -11,6 +11,7 @@ import RetailProfile from "@/components/vendor/retail/RetailProfile";
 import TransportProfile from "@/components/vendor/transport/TransportProfile";
 import TestingProfile from "@/components/vendor/testing/TestingProfile";
 import TechProfile from "@/components/vendor/tech/TechProfile";
+import RealEstateProfile from "@/components/vendor/realestate/RealEstateProfile";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -81,6 +82,11 @@ export default async function VendorPage({ params }: Props) {
   // Technology & Software uses its own dedicated profile template
   if (company.category === "technology-software") {
     return <TechProfile company={company} />;
+  }
+
+  // Real Estate & Construction uses its own dedicated profile template
+  if (company.category === "real-estate-construction") {
+    return <RealEstateProfile company={company} />;
   }
 
   const isVerifiedPro = company.tier === "elite";

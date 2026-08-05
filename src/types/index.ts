@@ -110,4 +110,9 @@ export interface Company {
   securityFeatures?: string[];
   screenshots?: string[];
   features?: string[];
+  // Real Estate & Construction
+  projectsCompleted?: string;
+  credentialHeadline?: string;
+  insurance?: { label: string; value: string }[];
+  processSteps?: { title: string; description: string }[];
 }
