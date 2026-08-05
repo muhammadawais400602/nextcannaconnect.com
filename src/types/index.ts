@@ -74,4 +74,45 @@ export interface Company {
   bio?: string;
   rating?: number;
   reviewCount?: number;
+  // Retail & Dispensary
+  licenseNumber?: string;
+  licenseType?: string;       // "Rec + Medical" | "Recreational" | "Medical Only"
+  delivery?: string;          // "Yes" | "No" | "Only"
+  hours?: string;             // "9AM - 10PM"
+  insuranceOnFile?: boolean;
+  metrcIntegrated?: boolean;
+  verifiedDate?: string;      // "Oct 2025"
+  locationsCount?: number;
+  faqs?: { question: string; answer: string }[];
+  // Transportation & Logistics
+  vehicleCount?: number;
+  transportType?: string;     // "Temp Controlled" | "Dry Goods" | "Armored"
+  loadsPerMonth?: string;     // "480+"
+  statesActive?: number;
+  cargoInsurance?: string;    // "$5M Cargo Coverage"
+  gpsTracked?: boolean;
+  dispatchHours?: string;     // "24/7 Dispatch"
+  licensesTable?: { type: string; authority: string; number: string; status: string }[];
+  // Testing & Science
+  accreditation?: string;     // "ISO/IEC 17025"
+  turnaroundTime?: string;    // "48 Hours"
+  panelCount?: string;        // "11 Categories"
+  licenseStatus?: string;     // "Active"
+  facilitySize?: string;      // "12k sqft"
+  samplesTested?: string;     // "50k+"
+  sampleTypes?: string;       // "Flower, Oil, Edibles"
+  rushService?: string;       // "24hr (+50%)"
+  sampleIntakeHours?: string;
+  accreditations?: string[];  // trust badges
+  capabilities?: { name: string; description: string; method: string }[];
+  // Technology & Software
+  certTable?: { standard: string; status: string; lastAudit: string }[];
+  securityFeatures?: string[];
+  screenshots?: string[];
+  features?: string[];
+  // Real Estate & Construction
+  projectsCompleted?: string;
+  credentialHeadline?: string;
+  insurance?: { label: string; value: string }[];
+  processSteps?: { title: string; description: string }[];
 }

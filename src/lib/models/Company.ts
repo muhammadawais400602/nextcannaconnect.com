@@ -48,6 +48,47 @@ export interface ICompany extends Document {
   bio?: string;
   rating?: number;
   reviewCount?: number;
+  // Template 4 — Retail & Dispensary
+  licenseNumber?: string;
+  licenseType?: string;      // "Rec + Medical" | "Recreational" | "Medical Only"
+  delivery?: string;         // "Yes" | "No" | "Only"
+  hours?: string;            // "9AM - 10PM"
+  insuranceOnFile?: boolean;
+  metrcIntegrated?: boolean;
+  verifiedDate?: string;     // "Oct 2025"
+  locationsCount?: number;
+  faqs?: { question: string; answer: string }[];
+  // Template 5 — Transportation & Logistics
+  vehicleCount?: number;
+  transportType?: string;    // "Temp Controlled" | "Dry Goods" | "Armored"
+  loadsPerMonth?: string;    // "480+"
+  statesActive?: number;
+  cargoInsurance?: string;   // "$5M Cargo Coverage"
+  gpsTracked?: boolean;
+  dispatchHours?: string;    // "24/7 Dispatch"
+  licensesTable?: { type: string; authority: string; number: string; status: string }[];
+  // Template 6 — Testing & Science
+  accreditation?: string;    // "ISO/IEC 17025"
+  turnaroundTime?: string;   // "48 Hours"
+  panelCount?: string;       // "11 Categories"
+  licenseStatus?: string;    // "Active"
+  facilitySize?: string;     // "12k sqft"
+  samplesTested?: string;    // "50k+"
+  sampleTypes?: string;      // "Flower, Oil, Edibles"
+  rushService?: string;      // "24hr (+50%)"
+  sampleIntakeHours?: string;
+  accreditations?: string[]; // trust badges: A2LA Accredited, DCC Licensed (CA)
+  capabilities?: { name: string; description: string; method: string }[];
+  // Template 7 — Technology & Software
+  certTable?: { standard: string; status: string; lastAudit: string }[];
+  securityFeatures?: string[]; // AES-256 Encryption, SAML SSO Support, RBAC Controls
+  screenshots?: string[];      // product screenshot image URLs
+  features?: string[];         // platform feature bullets
+  // Template 8 — Real Estate & Construction
+  projectsCompleted?: string;  // "120+" / "42"
+  credentialHeadline?: string; // "Credentialed in 5 States"
+  insurance?: { label: string; value: string }[];
+  processSteps?: { title: string; description: string }[];
   isFeatured: boolean;
   featuredExpiresAt?: Date;
   createdAt: Date;
@@ -109,6 +150,42 @@ const CompanySchema = new Schema<ICompany>(
     bio: String,
     rating: Number,
     reviewCount: Number,
+    licenseNumber: String,
+    licenseType: String,
+    delivery: String,
+    hours: String,
+    insuranceOnFile: Boolean,
+    metrcIntegrated: Boolean,
+    verifiedDate: String,
+    locationsCount: Number,
+    faqs: [{ question: String, answer: String }],
+    vehicleCount: Number,
+    transportType: String,
+    loadsPerMonth: String,
+    statesActive: Number,
+    cargoInsurance: String,
+    gpsTracked: Boolean,
+    dispatchHours: String,
+    licensesTable: [{ type: { type: String }, authority: String, number: String, status: String }],
+    accreditation: String,
+    turnaroundTime: String,
+    panelCount: String,
+    licenseStatus: String,
+    facilitySize: String,
+    samplesTested: String,
+    sampleTypes: String,
+    rushService: String,
+    sampleIntakeHours: String,
+    accreditations: [String],
+    capabilities: [{ name: String, description: String, method: String }],
+    certTable: [{ standard: String, status: String, lastAudit: String }],
+    securityFeatures: [String],
+    screenshots: [String],
+    features: [String],
+    projectsCompleted: String,
+    credentialHeadline: String,
+    insurance: [{ label: String, value: String }],
+    processSteps: [{ title: String, description: String }],
     isFeatured: { type: Boolean, default: false },
     featuredExpiresAt: Date,
   },

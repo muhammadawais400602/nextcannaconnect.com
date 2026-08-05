@@ -7,6 +7,11 @@ import { getCategoryBySlug } from "@/data/categories";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { Company } from "@/types";
 import ContactForm from "./ContactForm";
+import RetailProfile from "@/components/vendor/retail/RetailProfile";
+import TransportProfile from "@/components/vendor/transport/TransportProfile";
+import TestingProfile from "@/components/vendor/testing/TestingProfile";
+import TechProfile from "@/components/vendor/tech/TechProfile";
+import RealEstateProfile from "@/components/vendor/realestate/RealEstateProfile";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -58,6 +63,31 @@ export default async function VendorPage({ params }: Props) {
   const category = getCategoryBySlug(company.category);
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
+
+  // Retail & Dispensary uses its own dedicated profile template
+  if (company.category === "retail-dispensary") {
+    return <RetailProfile company={company} similar={similar} />;
+  }
+
+  // Transportation & Logistics uses its own dedicated profile template
+  if (company.category === "transportation-logistics") {
+    return <TransportProfile company={company} />;
+  }
+
+  // Testing & Science uses its own dedicated profile template
+  if (company.category === "testing-science") {
+    return <TestingProfile company={company} />;
+  }
+
+  // Technology & Software uses its own dedicated profile template
+  if (company.category === "technology-software") {
+    return <TechProfile company={company} />;
+  }
+
+  // Real Estate & Construction uses its own dedicated profile template
+  if (company.category === "real-estate-construction") {
+    return <RealEstateProfile company={company} />;
+  }
 
   const isVerifiedPro = company.tier === "elite";
 
