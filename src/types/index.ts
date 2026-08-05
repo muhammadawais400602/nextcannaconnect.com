@@ -93,4 +93,16 @@ export interface Company {
   gpsTracked?: boolean;
   dispatchHours?: string;     // "24/7 Dispatch"
   licensesTable?: { type: string; authority: string; number: string; status: string }[];
+  // Testing & Science
+  accreditation?: string;     // "ISO/IEC 17025"
+  turnaroundTime?: string;    // "48 Hours"
+  panelCount?: string;        // "11 Categories"
+  licenseStatus?: string;     // "Active"
+  facilitySize?: string;      // "12k sqft"
+  samplesTested?: string;     // "50k+"
+  sampleTypes?: string;       // "Flower, Oil, Edibles"
+  rushService?: string;       // "24hr (+50%)"
+  sampleIntakeHours?: string;
+  accreditations?: string[];  // trust badges
+  capabilities?: { name: string; description: string; method: string }[];
 }

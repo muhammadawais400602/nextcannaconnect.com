@@ -65,6 +65,17 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     gpsTracked: doc.gpsTracked,
     dispatchHours: doc.dispatchHours,
     licensesTable: doc.licensesTable,
+    accreditation: doc.accreditation,
+    turnaroundTime: doc.turnaroundTime,
+    panelCount: doc.panelCount,
+    licenseStatus: doc.licenseStatus,
+    facilitySize: doc.facilitySize,
+    samplesTested: doc.samplesTested,
+    sampleTypes: doc.sampleTypes,
+    rushService: doc.rushService,
+    sampleIntakeHours: doc.sampleIntakeHours,
+    accreditations: doc.accreditations,
+    capabilities: doc.capabilities,
   };
 }
 

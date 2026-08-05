@@ -67,6 +67,18 @@ export interface ICompany extends Document {
   gpsTracked?: boolean;
   dispatchHours?: string;    // "24/7 Dispatch"
   licensesTable?: { type: string; authority: string; number: string; status: string }[];
+  // Template 6 — Testing & Science
+  accreditation?: string;    // "ISO/IEC 17025"
+  turnaroundTime?: string;   // "48 Hours"
+  panelCount?: string;       // "11 Categories"
+  licenseStatus?: string;    // "Active"
+  facilitySize?: string;     // "12k sqft"
+  samplesTested?: string;    // "50k+"
+  sampleTypes?: string;      // "Flower, Oil, Edibles"
+  rushService?: string;      // "24hr (+50%)"
+  sampleIntakeHours?: string;
+  accreditations?: string[]; // trust badges: A2LA Accredited, DCC Licensed (CA)
+  capabilities?: { name: string; description: string; method: string }[];
   isFeatured: boolean;
   featuredExpiresAt?: Date;
   createdAt: Date;
@@ -145,6 +157,17 @@ const CompanySchema = new Schema<ICompany>(
     gpsTracked: Boolean,
     dispatchHours: String,
     licensesTable: [{ type: { type: String }, authority: String, number: String, status: String }],
+    accreditation: String,
+    turnaroundTime: String,
+    panelCount: String,
+    licenseStatus: String,
+    facilitySize: String,
+    samplesTested: String,
+    sampleTypes: String,
+    rushService: String,
+    sampleIntakeHours: String,
+    accreditations: [String],
+    capabilities: [{ name: String, description: String, method: String }],
     isFeatured: { type: Boolean, default: false },
     featuredExpiresAt: Date,
   },

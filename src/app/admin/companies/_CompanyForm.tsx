@@ -147,6 +147,9 @@ export default function CompanyForm({ initial, mode }: Props) {
     locationsCount: "", faqs: [],
     vehicleCount: "", transportType: "", loadsPerMonth: "", statesActive: "",
     cargoInsurance: "", gpsTracked: false, dispatchHours: "", licensesTable: [],
+    accreditation: "", turnaroundTime: "", panelCount: "", licenseStatus: "",
+    facilitySize: "", samplesTested: "", sampleTypes: "", rushService: "",
+    sampleIntakeHours: "", accreditations: [], capabilities: [],
     ...initial,
   });
 
@@ -175,6 +178,7 @@ export default function CompanyForm({ initial, mode }: Props) {
       vehicleCount: form.vehicleCount ? Number(form.vehicleCount) : undefined,
       statesActive: form.statesActive ? Number(form.statesActive) : undefined,
       licensesTable: (form.licensesTable || []).filter((l: { type: string }) => l.type?.trim()),
+      capabilities: (form.capabilities || []).filter((c: { name: string }) => c.name?.trim()),
     };
 
     const url = mode === "edit" ? `/api/admin/companies/${initial?.slug}` : "/api/admin/companies";
@@ -742,6 +746,91 @@ export default function CompanyForm({ initial, mode }: Props) {
             style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
           >
             + Add License
+          </button>
+        </div>
+      </Section>
+
+      <Section title="Testing & Science (Template 6)">
+        <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 4px", fontFamily: "sans-serif" }}>
+          These fields power the Testing &amp; Science lab cards and profile page. Only used when Category is set to “Testing &amp; Science”.
+        </p>
+        <Row>
+          <div>
+            <label style={labelStyle}>Accreditation (badge)</label>
+            <input style={inputStyle} value={form.accreditation || ""} onChange={(e) => set("accreditation", e.target.value)} placeholder="e.g. ISO/IEC 17025" />
+          </div>
+          <div>
+            <label style={labelStyle}>Turnaround Time (TAT)</label>
+            <input style={inputStyle} value={form.turnaroundTime || ""} onChange={(e) => set("turnaroundTime", e.target.value)} placeholder="e.g. 48 Hours" />
+          </div>
+        </Row>
+        <Row>
+          <div>
+            <label style={labelStyle}>Panels (card)</label>
+            <input style={inputStyle} value={form.panelCount || ""} onChange={(e) => set("panelCount", e.target.value)} placeholder="e.g. 11 Categories" />
+          </div>
+          <div>
+            <label style={labelStyle}>State License Status</label>
+            <input style={inputStyle} value={form.licenseStatus || ""} onChange={(e) => set("licenseStatus", e.target.value)} placeholder="e.g. Active" />
+          </div>
+        </Row>
+        <Row>
+          <div>
+            <label style={labelStyle}>Facility Size</label>
+            <input style={inputStyle} value={form.facilitySize || ""} onChange={(e) => set("facilitySize", e.target.value)} placeholder="e.g. 12k sqft" />
+          </div>
+          <div>
+            <label style={labelStyle}>Samples Tested</label>
+            <input style={inputStyle} value={form.samplesTested || ""} onChange={(e) => set("samplesTested", e.target.value)} placeholder="e.g. 50k+" />
+          </div>
+        </Row>
+        <Row>
+          <div>
+            <label style={labelStyle}>Sample Types</label>
+            <input style={inputStyle} value={form.sampleTypes || ""} onChange={(e) => set("sampleTypes", e.target.value)} placeholder="e.g. Flower, Oil, Edibles" />
+          </div>
+          <div>
+            <label style={labelStyle}>Rush Service</label>
+            <input style={inputStyle} value={form.rushService || ""} onChange={(e) => set("rushService", e.target.value)} placeholder="e.g. 24hr (+50%)" />
+          </div>
+        </Row>
+        <div>
+          <label style={labelStyle}>Sample Intake Hours</label>
+          <textarea style={{ ...inputStyle, minHeight: "60px", resize: "vertical" }} value={form.sampleIntakeHours || ""} onChange={(e) => set("sampleIntakeHours", e.target.value)} placeholder={"Mon-Fri: 8:00 AM - 6:00 PM\nSat: 9:00 AM - 2:00 PM"} />
+        </div>
+        <TagInput label="Accreditation Badges (A2LA, DCC Licensed, etc.)" value={form.accreditations || []} onChange={(v) => set("accreditations", v)} />
+        <p style={{ fontSize: "12px", color: "#6B7280", margin: "8px 0 0", fontFamily: "sans-serif" }}>
+          Tip: Use <strong>Service Tags</strong> (above) for the test-category chips shown on lab cards (e.g. Potency, Pesticides, Heavy Metals).
+        </p>
+
+        {/* Testing capabilities */}
+        <div>
+          <label style={labelStyle}>Testing Capabilities (bento cards on profile)</label>
+          {(form.capabilities || []).map((cap: { name: string; description: string; method: string }, i: number) => (
+            <div key={i} style={{ background: "#F9FAFB", borderRadius: "10px", padding: "16px", marginBottom: "12px", border: "1px solid #E5E7EB" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                <span style={{ fontSize: "13px", fontWeight: "700", color: "#374151", fontFamily: "sans-serif" }}>Capability {i + 1}</span>
+                <button
+                  type="button"
+                  onClick={() => set("capabilities", (form.capabilities || []).filter((_: unknown, idx: number) => idx !== i))}
+                  style={{ fontSize: "12px", color: "#EF4444", background: "none", border: "none", cursor: "pointer", fontFamily: "sans-serif" }}
+                >
+                  Remove
+                </button>
+              </div>
+              <div style={{ display: "grid", gap: "10px" }}>
+                <input style={inputStyle} placeholder="Name (e.g. Potency Profiling)" value={cap.name} onChange={(e) => { const u = [...(form.capabilities || [])]; u[i] = { ...u[i], name: e.target.value }; set("capabilities", u); }} />
+                <input style={inputStyle} placeholder="Short description" value={cap.description || ""} onChange={(e) => { const u = [...(form.capabilities || [])]; u[i] = { ...u[i], description: e.target.value }; set("capabilities", u); }} />
+                <input style={inputStyle} placeholder="Method (e.g. HPLC-DAD)" value={cap.method || ""} onChange={(e) => { const u = [...(form.capabilities || [])]; u[i] = { ...u[i], method: e.target.value }; set("capabilities", u); }} />
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => set("capabilities", [...(form.capabilities || []), { name: "", description: "", method: "" }])}
+            style={{ ...smallBtnStyle, background: "white", color: "#1A4A35", border: "1px solid #1A4A35" }}
+          >
+            + Add Capability
           </button>
         </div>
       </Section>
