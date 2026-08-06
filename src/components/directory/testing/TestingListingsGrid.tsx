@@ -18,7 +18,7 @@ function LabCard({ company }: { company: Company }) {
   const tags = (company.serviceTags ?? []).slice(0, 3);
 
   return (
-    <div style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden", display: "flex", flexDirection: "column" }} className="testing-card">
+    <div style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden", display: "flex", flexDirection: "column" }} className="cat-card">
       <div style={{ height: "192px", position: "relative", background: company.logoColor + "22" }}>
         {company.bannerImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -91,13 +91,14 @@ function LabCard({ company }: { company: Company }) {
 
 const selectStyle: React.CSSProperties = {
   border: `1px solid ${PARCHMENT}`,
-  borderRadius: "0.25rem",
+  borderRadius: "0.5rem",
   padding: "8px 12px",
-  fontSize: "16px",
+  fontSize: "14px",
+  fontWeight: 500,
   background: "white",
   outline: "none",
   cursor: "pointer",
-  color: "#1b1c1b",
+  color: VARIANT,
 };
 
 const PAGE_SIZE = 9;
@@ -123,10 +124,10 @@ export default function TestingListingsGrid({ companies }: { companies: Company[
 
   return (
     <>
-      {/* Sticky filter bar */}
-      <div style={{ position: "sticky", top: "70px", zIndex: 40, background: "white", borderBottom: `1px solid ${PARCHMENT}`, boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }}>
-        <div className="testing-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px" }}>
-          <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "8px" }}>
+      {/* Filter bar */}
+      <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, position: "sticky", top: "70px", zIndex: 40 }}>
+        <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
+          <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
             <span className="material-symbols-outlined">filter_list</span> Filters:
           </span>
           <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
@@ -145,26 +146,36 @@ export default function TestingListingsGrid({ companies }: { companies: Company[
       </div>
 
       {/* Grid */}
-      <div className="testing-container" style={{ paddingTop: "48px", paddingBottom: "80px" }}>
-        {shown.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>science</span>
-            <p style={{ fontSize: "16px", marginTop: "12px" }}>No labs match your filters yet.</p>
-          </div>
-        ) : (
-          <div className="testing-grid">
-            {shown.map((c) => <LabCard key={c.slug} company={c} />)}
-          </div>
-        )}
+      <section style={{ background: "#f5f3f2", padding: "64px 0" }}>
+        <div className="cat-container">
+          {shown.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>science</span>
+              <p style={{ fontSize: "16px", marginTop: "12px" }}>No labs match your filters yet.</p>
+            </div>
+          ) : (
+            <div className="cat-grid">
+              {shown.map((c) => <LabCard key={c.slug} company={c} />)}
 
-        {visible < filtered.length && (
-          <div style={{ textAlign: "center", marginTop: "48px" }}>
-            <button onClick={() => setVisible((v) => v + PAGE_SIZE)} style={{ border: `1px solid ${DF}`, color: DF, padding: "12px 32px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, background: "transparent", cursor: "pointer" }}>
-              Load More Labs
-            </button>
-          </div>
-        )}
-      </div>
+              {/* CTA tile */}
+              <div style={{ background: DF, borderRadius: "0.75rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "32px" }}>
+                <span className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px" }}>biotech</span>
+                <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: "0 0 8px" }}>Are you a testing lab?</h3>
+                <p style={{ fontSize: "15px", color: "rgba(251,249,248,0.8)", margin: "0 0 24px" }}>Join the verified network of ISO-accredited cannabis testing facilities.</p>
+                <Link href="/signup" style={{ fontSize: "14px", fontWeight: 500, background: SAGE, color: DF, padding: "12px 24px", borderRadius: "0.25rem", textDecoration: "none", width: "100%", boxSizing: "border-box" }}>List Your Lab</Link>
+              </div>
+            </div>
+          )}
+
+          {visible < filtered.length && (
+            <div style={{ textAlign: "center", marginTop: "48px" }}>
+              <button onClick={() => setVisible((v) => v + PAGE_SIZE)} style={{ border: `1px solid ${DF}`, color: DF, padding: "12px 32px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, background: "transparent", cursor: "pointer" }}>
+                Load More Labs
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
     </>
   );
 }
