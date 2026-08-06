@@ -168,6 +168,72 @@ function DangerCard({
   );
 }
 
+function DemoListingsCard() {
+  const [phase, setPhase] = useState<"idle" | "loading" | "done">("idle");
+  const [action, setAction] = useState<"load" | "remove">("load");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  async function run(kind: "load" | "remove") {
+    setAction(kind);
+    setPhase("loading");
+    setError("");
+    setMessage("");
+    try {
+      const res = await fetch("/api/admin/seed-demo", { method: kind === "load" ? "POST" : "DELETE" });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Something went wrong");
+        setPhase("idle");
+        return;
+      }
+      setMessage(
+        kind === "load"
+          ? `Done — ${data.created} created, ${data.updated} updated (${data.total} demo listings).`
+          : `Removed ${data.deleted} demo listings.`
+      );
+      setPhase("done");
+    } catch {
+      setError("Network error. Please try again.");
+      setPhase("idle");
+    }
+  }
+
+  return (
+    <div style={{ background: "white", borderRadius: "16px", border: "1px solid #E5E7EB", overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", marginBottom: "24px" }}>
+      <div style={{ padding: "20px 24px", borderBottom: "1px solid #F3F4F6", background: "#F7F9F7" }}>
+        <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#1A4A35", margin: 0 }}>🧪 Demo Listings</h2>
+        <p style={{ fontSize: "13px", color: "#4A5E4A", margin: "4px 0 0" }}>
+          Loads 15 sample listings (3 per built template: Retail, Transportation, Testing, Technology, Real Estate) so you can preview the front-end. Safe to run repeatedly — it updates the same records.
+        </p>
+      </div>
+      <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+        <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+          <button
+            onClick={() => run("load")}
+            disabled={phase === "loading"}
+            style={{ padding: "10px 20px", background: "#1A4A35", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: phase === "loading" ? "wait" : "pointer", opacity: phase === "loading" && action === "load" ? 0.7 : 1 }}
+          >
+            {phase === "loading" && action === "load" ? "Loading…" : "Load Demo Listings"}
+          </button>
+          <button
+            onClick={() => run("remove")}
+            disabled={phase === "loading"}
+            style={{ padding: "10px 20px", background: "white", color: "#DC2626", border: "1px solid #FECACA", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: phase === "loading" ? "wait" : "pointer", opacity: phase === "loading" && action === "remove" ? 0.7 : 1 }}
+          >
+            {phase === "loading" && action === "remove" ? "Removing…" : "Remove Demo Listings"}
+          </button>
+        </div>
+        {message && <p style={{ fontSize: "13px", color: "#1A4A35", margin: 0 }}>✅ {message}</p>}
+        {error && <p style={{ fontSize: "13px", color: "#DC2626", margin: 0 }}>{error}</p>}
+        <p style={{ fontSize: "12px", color: "#9CA3AF", margin: 0 }}>
+          Demo records are prefixed “demo-” and can be cleanly removed with the button above.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function SettingsPage() {
   return (
     <div>
@@ -175,6 +241,9 @@ export default function SettingsPage() {
         <h1 style={{ fontSize: "24px", fontWeight: 700, color: "#0D2818", margin: 0 }}>Settings</h1>
         <p style={{ fontSize: "14px", color: "#6B7280", marginTop: "4px" }}>Manage platform data and configuration</p>
       </div>
+
+      {/* Demo Listings */}
+      <DemoListingsCard />
 
       {/* Danger Zone */}
       <div
