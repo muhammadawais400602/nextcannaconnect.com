@@ -33,7 +33,7 @@ function CarrierCard({ company, list }: { company: Company; list: boolean }) {
 
   return (
     <div
-      className="transport-card"
+      className="cat-card"
       style={{
         background: "white",
         borderRadius: "0.5rem",
@@ -125,7 +125,8 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
   const shown = companies.slice(0, visible);
 
   return (
-    <>
+    <section style={{ background: "#f5f3f2", padding: "64px 0" }}>
+      <div className="cat-container">
       {/* Header + view toggle */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", flexWrap: "wrap", gap: "12px" }}>
         <h2 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: 0 }}>{companies.length} Verified Carrier{companies.length === 1 ? "" : "s"}</h2>
@@ -145,7 +146,7 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
           <p style={{ fontSize: "16px", marginTop: "12px" }}>No carriers listed yet. Check back soon.</p>
         </div>
       ) : (
-        <div className={view === "grid" ? "transport-grid" : "transport-list"} style={{ marginBottom: "48px" }}>
+        <div className={view === "grid" ? "cat-grid" : undefined} style={view === "grid" ? { marginBottom: "48px" } : { display: "flex", flexDirection: "column", gap: "16px", marginBottom: "48px" }}>
           {shown.map((c) => <CarrierCard key={c.slug} company={c} list={view === "list"} />)}
 
           {view === "grid" && (
@@ -166,6 +167,7 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
           </button>
         </div>
       )}
-    </>
+      </div>
+    </section>
   );
 }

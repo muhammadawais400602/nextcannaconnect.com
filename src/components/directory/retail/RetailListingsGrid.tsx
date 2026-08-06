@@ -51,7 +51,7 @@ function RetailCard({ company }: { company: Company }) {
 
   return (
     <div
-      className="retail-card"
+      className="cat-card"
       style={{
         background: "white",
         borderRadius: "0.75rem",
@@ -181,7 +181,7 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
     <>
       {/* Filter bar */}
       <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, padding: "16px 0" }}>
-        <div className="retail-container" style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "center", justifyContent: "space-between" }}>
+        <div className="cat-container" style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "center", justifyContent: "space-between" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
             <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
               <option value="">Location</option>
@@ -220,14 +220,14 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
 
       {/* Grid */}
       <section style={{ background: "#f5f3f2", padding: "64px 0" }}>
-        <div className="retail-container">
+        <div className="cat-container">
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
               <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>search_off</span>
               <p style={{ fontSize: "16px", marginTop: "12px" }}>No dispensaries match your filters yet.</p>
             </div>
           ) : (
-            <div className="retail-grid">
+            <div className="cat-grid">
               {shown.map((c) => <RetailCard key={c.slug} company={c} />)}
 
               {/* CTA tile — appended to the grid */}
