@@ -1,90 +1,50 @@
-import Link from "next/link";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
+import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import TechListingsGrid from "./TechListingsGrid";
 
-const DF = "#003320";
-const SAGE = "#88B99E";
-const PARCHMENT = "#EEEAE3";
-const VARIANT = "#414943";
+const GUIDE = [
+  { icon: "verified", title: "Compliance Integration", body: "Confirm native integration with METRC or your state track-and-trace system." },
+  { icon: "lock", title: "Security Posture", body: "Look for SOC 2 / ISO 27001, encryption at rest, SSO, and role-based access." },
+  { icon: "trending_up", title: "Scalability", body: "Ensure the platform supports multi-location and multi-state operations." },
+  { icon: "support_agent", title: "Support & Onboarding", body: "Assess implementation support, training, and ongoing account management." },
+];
 
 const RELATED = [
-  { icon: "storefront", label: "Retail & Dispensary", desc: "Hardware, store fixtures, and retail operations services.", slug: "retail-dispensary" },
-  { icon: "agriculture", label: "Cultivation Tech", desc: "Lighting, climate control, and agricultural technology.", slug: "cultivation-growing" },
-  { icon: "local_shipping", label: "Logistics & Transport", desc: "Secure transport, fleet management, and distribution.", slug: "transportation-logistics" },
+  { icon: "storefront", label: "Retail & Dispensary", slug: "retail-dispensary" },
+  { icon: "nature", label: "Cultivation", slug: "cultivation-growing" },
+  { icon: "local_shipping", label: "Logistics & Transport", slug: "transportation-logistics" },
+  { icon: "gavel", label: "Compliance & Legal", slug: "compliance-legal" },
+];
+
+const FAQS = [
+  { q: "What does SOC 2 Type II mean for cannabis software?", a: "SOC 2 Type II is an independent audit of a vendor's security, availability, and confidentiality controls over time — a strong signal that your operational and customer data is well protected." },
+  { q: "Does the software integrate with METRC?", a: "Compliant platforms integrate directly with METRC and other state systems to sync inventory, manifests, and sales in real time. Each listing shows its supported integrations." },
+  { q: "Can these platforms handle multi-state operations?", a: "Enterprise-grade solutions are built for MSOs, supporting multiple licenses, locations, and state compliance frameworks under one account." },
+  { q: "What pricing models are common?", a: "Most vendors price per location or per seat, with enterprise/custom tiers for larger operators. Pricing model is shown on each vendor's profile." },
+  { q: "How long does implementation take?", a: "It varies by platform and complexity — many offer guided onboarding and data migration. Ask the vendor directly through their profile for a timeline." },
 ];
 
 export default async function TechCategoryPage() {
   const companies = await getCompaniesByCategory("technology-software");
-  const vendorCount = companies.length;
   const metrcCount = companies.filter((c) => (c.serviceTags ?? []).some((t) => t.toLowerCase().includes("metrc"))).length;
 
   return (
-    <div style={{ background: "#fbf9f8", fontFamily: "'Inter', sans-serif", color: "#1b1c1b", paddingTop: "70px" }}>
-      <style>{`
-        .tech-container { max-width: 1280px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
-        @media (min-width: 768px) { .tech-container { padding-left: 64px; padding-right: 64px; } }
-        .tech-hero-grid { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: center; }
-        @media (min-width: 1024px) { .tech-hero-grid { grid-template-columns: repeat(2, 1fr); } }
-        .tech-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
-        @media (min-width: 768px) { .tech-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 1024px) { .tech-grid { grid-template-columns: repeat(3, 1fr); } }
-        .tech-list { display: flex; flex-direction: column; gap: 16px; }
-        .tech-card { transition: box-shadow 0.3s; }
-        .tech-card:hover { box-shadow: 0 10px 30px -15px rgba(0,51,32,0.25); }
-        .tech-related { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; }
-        .tech-related > a { min-width: 280px; flex: 1; }
-      `}</style>
-
-      {/* Hero */}
-      <section className="tech-container" style={{ paddingTop: "64px", paddingBottom: "64px" }}>
-        <div className="tech-hero-grid">
-          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "4px 12px", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, background: "white", width: "fit-content" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px", color: SAGE, fontVariationSettings: "'FILL' 1" }}>verified</span>
-              <span style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em" }}>Certified Vendor Directory</span>
-            </div>
-            <h1 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700, color: DF, margin: 0, letterSpacing: "-0.02em" }}>Technology &amp; Software</h1>
-            <p style={{ fontSize: "18px", color: VARIANT, maxWidth: "560px", margin: 0, lineHeight: 1.5 }}>
-              Institutional-grade enterprise solutions for the regulated cannabis supply chain. Discover compliant POS, seed-to-sale tracking, and robust ERP platforms.
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", marginTop: "8px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px", padding: "16px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", minWidth: "140px" }}>
-                <span style={{ fontSize: "24px", fontWeight: 600, color: DF }}>{vendorCount}</span>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase" }}>Verified Vendors</span>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px", padding: "16px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", minWidth: "140px" }}>
-                <span style={{ fontSize: "24px", fontWeight: 600, color: DF }}>{metrcCount}</span>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase" }}>Metrc Integrations</span>
-              </div>
-            </div>
-          </div>
-          {/* Decorative visual panel */}
-          <div style={{ position: "relative", height: "300px", borderRadius: "0.5rem", overflow: "hidden", border: `1px solid ${PARCHMENT}`, boxShadow: "0 10px 30px -15px rgba(0,51,32,0.1)", background: `linear-gradient(135deg, ${DF} 0%, #00160d 100%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "120px", color: "rgba(136,185,158,0.35)" }}>monitoring</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Filters + listings grid (client) */}
+    <CategoryPageShell
+      categoryLabel="Technology & Software"
+      title="Technology & Software"
+      description="Institutional-grade enterprise solutions for the regulated cannabis supply chain — compliant POS, seed-to-sale tracking, and robust ERP platforms."
+      stats={[
+        { icon: "verified", label: `${companies.length} Verified Vendors` },
+        { icon: "hub", label: `${metrcCount} Metrc Integrations` },
+        { icon: "shield", label: "SOC 2 Vetted" },
+      ]}
+      primaryCta={{ label: "List Your Platform", href: "/signup" }}
+      guideTitle="What to look for in cannabis software"
+      guide={GUIDE}
+      related={RELATED}
+      faqs={FAQS}
+    >
       <TechListingsGrid companies={companies} />
-
-      {/* Related categories */}
-      <section className="tech-container" style={{ paddingTop: "64px", paddingBottom: "64px", borderTop: `1px solid ${PARCHMENT}` }}>
-        <h2 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 600, color: DF, margin: "0 0 32px", letterSpacing: "-0.01em" }}>Explore Related Categories</h2>
-        <div className="tech-related">
-          {RELATED.map((r) => (
-            <Link key={r.slug} href={`/directory/${r.slug}`} className="tech-related-card" style={{ padding: "24px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", textDecoration: "none", display: "block" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "16px" }}>
-                <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#efedec", display: "flex", alignItems: "center", justifyContent: "center", color: DF }}>
-                  <span className="material-symbols-outlined">{r.icon}</span>
-                </div>
-                <h3 style={{ fontSize: "20px", fontWeight: 600, color: DF, margin: 0 }}>{r.label}</h3>
-              </div>
-              <p style={{ fontSize: "16px", color: VARIANT, margin: 0 }}>{r.desc}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-    </div>
+    </CategoryPageShell>
   );
 }

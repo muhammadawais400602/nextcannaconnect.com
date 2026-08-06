@@ -1,67 +1,50 @@
-import Link from "next/link";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
+import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import RealEstateListingsGrid from "./RealEstateListingsGrid";
 
-const DF = "#003320";
-const PARCHMENT = "#EEEAE3";
-const VARIANT = "#414943";
+const GUIDE = [
+  { icon: "verified", title: "Active Licensing", body: "Confirm the firm holds valid contractor/architect licenses for every state you operate in." },
+  { icon: "shield", title: "Insurance & Bonding", body: "Look for adequate general liability, professional (E&O) coverage, and bonding." },
+  { icon: "nature", title: "Cannabis Experience", body: "Prioritize firms with proven cannabis buildouts — cultivation, extraction, and retail." },
+  { icon: "photo_library", title: "Portfolio & References", body: "Review completed projects and square footage delivered to gauge real capability." },
+];
+
+const RELATED = [
+  { icon: "storefront", label: "Retail & Dispensary", slug: "retail-dispensary" },
+  { icon: "nature", label: "Cultivation", slug: "cultivation-growing" },
+  { icon: "factory", label: "Manufacturers", slug: "manufacturers-suppliers" },
+  { icon: "gavel", label: "Compliance & Legal", slug: "compliance-legal" },
+];
+
+const FAQS = [
+  { q: "Why do I need a cannabis-specialized contractor?", a: "Cannabis facilities have unique requirements — biosecurity zoning, heavy HVAC and electrical loads, odor control, security, and strict local code. Specialists de-risk permitting and compliance." },
+  { q: "What licenses should a construction firm hold?", a: "Look for an active General Contractor license (and Architect/Engineer where relevant) in each state of operation. Each firm lists its jurisdictions and license numbers." },
+  { q: "What insurance coverage is standard?", a: "Expect general liability (often $2M–$10M), professional liability (E&O), and workers' compensation at statutory limits — shown in each firm's Insurance Snapshot." },
+  { q: "Do these firms handle design and build?", a: "Many are design-build firms covering feasibility, architectural design, and full construction management. Their profile outlines their process." },
+  { q: "How do I request a quote?", a: "Use the Request Project Quote button on any firm's profile to reach their team directly with your project scope." },
+];
 
 export default async function RealEstateCategoryPage() {
   const companies = await getCompaniesByCategory("real-estate-construction");
-  const firmCount = companies.length;
+  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
 
   return (
-    <div style={{ background: "#fbf9f8", fontFamily: "'Inter', sans-serif", color: "#1b1c1b", paddingTop: "70px" }}>
-      <style>{`
-        .re-container { max-width: 1280px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
-        @media (min-width: 768px) { .re-container { padding-left: 64px; padding-right: 64px; } }
-        .re-hero { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: center; }
-        @media (min-width: 1024px) { .re-hero { grid-template-columns: repeat(2, 1fr); } }
-        .re-layout { display: flex; flex-direction: column; gap: 24px; }
-        @media (min-width: 768px) { .re-layout { flex-direction: row; } }
-        .re-sidebar { width: 100%; flex-shrink: 0; }
-        @media (min-width: 768px) { .re-sidebar { width: 256px; } }
-        .re-grid-wrap { flex: 1; min-width: 0; }
-        .re-grid { display: grid; grid-template-columns: 1fr; gap: 24px; align-content: start; }
-        @media (min-width: 1280px) { .re-grid { grid-template-columns: repeat(2, 1fr); } }
-        .re-card { transition: box-shadow 0.3s; }
-        .re-card:hover { box-shadow: 0 4px 24px rgba(0,51,32,0.05); }
-        @media (min-width: 768px) { .re-cta-row { flex-direction: row !important; justify-content: space-between; align-items: center; } }
-      `}</style>
-
-      <main className="re-container" style={{ paddingTop: "40px", paddingBottom: "80px" }}>
-        {/* Hero */}
-        <section className="re-hero" style={{ marginBottom: "64px" }}>
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px", fontSize: "14px", fontWeight: 500, color: VARIANT }}>
-              <Link href="/directory" style={{ color: VARIANT, textDecoration: "none" }}>Directory</Link>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
-              <span style={{ color: DF, fontWeight: 700 }}>Real Estate &amp; Construction</span>
-            </div>
-            <h1 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700, color: "#001c10", margin: "0 0 24px", letterSpacing: "-0.02em" }}>Real Estate &amp; Construction</h1>
-            <p style={{ fontSize: "18px", color: VARIANT, margin: "0 0 32px", maxWidth: "560px", lineHeight: 1.5 }}>
-              Institutional-grade architecture, general contracting, and specialized engineering firms verified for commercial cannabis cultivation and retail buildouts.
-            </p>
-            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-              <div style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", padding: "16px", minWidth: "160px" }}>
-                <div style={{ fontSize: "32px", fontWeight: 600, color: DF }}>{firmCount}</div>
-                <div style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", marginTop: "4px" }}>Verified Firms</div>
-              </div>
-              <div style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", padding: "16px", minWidth: "160px" }}>
-                <div style={{ fontSize: "32px", fontWeight: 600, color: DF }}>100%</div>
-                <div style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", marginTop: "4px" }}>Cannabis-Zoned Specs</div>
-              </div>
-            </div>
-          </div>
-          {/* Decorative visual */}
-          <div style={{ height: "400px", borderRadius: "0.25rem", overflow: "hidden", border: `1px solid ${PARCHMENT}`, background: `linear-gradient(135deg, ${DF} 0%, #00160d 100%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "140px", color: "rgba(136,185,158,0.3)" }}>architecture</span>
-          </div>
-        </section>
-
-        {/* Filters + grid (client) */}
-        <RealEstateListingsGrid companies={companies} />
-      </main>
-    </div>
+    <CategoryPageShell
+      categoryLabel="Real Estate & Construction"
+      title="Real Estate & Construction"
+      description="Institutional-grade architecture, general contracting, and specialized engineering firms verified for commercial cannabis cultivation and retail buildouts."
+      stats={[
+        { icon: "verified", label: `${companies.length} Verified Firms` },
+        { icon: "map", label: `${statesCovered} States Covered` },
+        { icon: "task_alt", label: "100% Cannabis-Zoned Specs" },
+      ]}
+      primaryCta={{ label: "List Your Firm", href: "/signup" }}
+      guideTitle="What to look for in a construction partner"
+      guide={GUIDE}
+      related={RELATED}
+      faqs={FAQS}
+    >
+      <RealEstateListingsGrid companies={companies} />
+    </CategoryPageShell>
   );
 }
