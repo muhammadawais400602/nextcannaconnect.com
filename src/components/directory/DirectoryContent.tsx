@@ -20,7 +20,7 @@ export default function DirectoryContent({ companies, initialCategory }: Props) 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   function handleCategoryChange(slug: string | null) {
-    router.push(slug ? `/directory?category=${slug}` : "/directory");
+    router.push(slug ? `/directory/${slug}` : "/directory");
   }
 
   const activeFilterCount =
