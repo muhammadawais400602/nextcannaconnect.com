@@ -12,6 +12,13 @@ import TransportProfile from "@/components/vendor/transport/TransportProfile";
 import TestingProfile from "@/components/vendor/testing/TestingProfile";
 import TechProfile from "@/components/vendor/tech/TechProfile";
 import RealEstateProfile from "@/components/vendor/realestate/RealEstateProfile";
+import CultivationProfile from "@/components/vendor/cultivation/CultivationProfile";
+import ManufacturersProfile from "@/components/vendor/manufacturers/ManufacturersProfile";
+import ExtractionProfile from "@/components/vendor/extraction/ExtractionProfile";
+import ConsultantsProfile from "@/components/vendor/consultants/ConsultantsProfile";
+import MarketingProfile from "@/components/vendor/marketing/MarketingProfile";
+import ComplianceProfile from "@/components/vendor/compliance/ComplianceProfile";
+import FinanceProfile from "@/components/vendor/finance/FinanceProfile";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -87,6 +94,34 @@ export default async function VendorPage({ params }: Props) {
   // Real Estate & Construction uses its own dedicated profile template
   if (company.category === "real-estate-construction") {
     return <RealEstateProfile company={company} />;
+  }
+
+  if (company.category === "cultivation-growing") {
+    return <CultivationProfile company={company} similar={similar} />;
+  }
+
+  if (company.category === "manufacturers-suppliers") {
+    return <ManufacturersProfile company={company} similar={similar} />;
+  }
+
+  if (company.category === "extraction-processing") {
+    return <ExtractionProfile company={company} similar={similar} />;
+  }
+
+  if (company.category === "consultants-advisors") {
+    return <ConsultantsProfile company={company} similar={similar} />;
+  }
+
+  if (company.category === "marketing-branding-packaging") {
+    return <MarketingProfile company={company} similar={similar} />;
+  }
+
+  if (company.category === "compliance-legal") {
+    return <ComplianceProfile company={company} similar={similar} />;
+  }
+
+  if (company.category === "finance-insurance") {
+    return <FinanceProfile company={company} similar={similar} />;
   }
 
   const isVerifiedPro = company.tier === "elite";

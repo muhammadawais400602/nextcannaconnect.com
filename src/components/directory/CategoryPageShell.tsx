@@ -93,7 +93,7 @@ export default function CategoryPageShell({
         <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${DF} 0%, #00160d 100%)` }} />
         <div className="cat-container" style={{ position: "relative", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <span style={{ background: SAGE, color: DF, fontSize: "12px", fontWeight: 600, padding: "4px 12px", borderRadius: "0.75rem", marginBottom: "24px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Verified Category</span>
-          <h1 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700, color: "#FBF9F8", margin: "0 0 16px", letterSpacing: "-0.02em" }}>{title}</h1>
+          <h1 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "clamp(32px, 5vw, 52px)", fontWeight: 700, color: "#FBF9F8", margin: "0 0 16px", lineHeight: 1.15 }}>{title}</h1>
           <p style={{ fontSize: "18px", color: "rgba(251,249,248,0.9)", maxWidth: "640px", margin: "0 0 32px", lineHeight: 1.5 }}>{description}</p>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", marginBottom: "32px" }}>
             {stats.map((s) => (
@@ -116,7 +116,7 @@ export default function CategoryPageShell({
           <div className="cat-container">
             <details style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden" }}>
               <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px", cursor: "pointer", listStyle: "none" }}>
-                <h2 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: 0 }}>{guideTitle}</h2>
+                <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "26px", fontWeight: 700, color: DF, margin: 0 }}>{guideTitle}</h2>
                 <span className="material-symbols-outlined" style={{ color: DF }}>expand_more</span>
               </summary>
               <div style={{ padding: "24px", borderTop: `1px solid ${PARCHMENT}`, background: "#FBF9F8" }}>
@@ -144,7 +144,7 @@ export default function CategoryPageShell({
       {related.length > 0 && (
         <section style={{ background: "#FBF9F8", padding: "64px 0", borderTop: `1px solid ${PARCHMENT}` }}>
           <div className="cat-container">
-            <h2 style={{ fontSize: "32px", fontWeight: 600, color: DF, margin: "0 0 32px", letterSpacing: "-0.01em" }}>Explore Related Categories</h2>
+            <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "32px", fontWeight: 700, color: DF, margin: "0 0 32px" }}>Explore Related Categories</h2>
             <div className="cat-related-grid">
               {related.map((r) => (
                 <Link key={r.slug} href={`/directory/${r.slug}`} style={{ background: "white", padding: "24px", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, textAlign: "center", textDecoration: "none", display: "block" }}>
@@ -163,7 +163,7 @@ export default function CategoryPageShell({
       {faqs.length > 0 && (
         <section style={{ background: "white", padding: "64px 0", borderTop: `1px solid ${PARCHMENT}` }}>
           <div className="cat-container" style={{ maxWidth: "768px" }}>
-            <h2 style={{ fontSize: "32px", fontWeight: 600, color: DF, margin: "0 0 32px", textAlign: "center", letterSpacing: "-0.01em" }}>Frequently Asked Questions</h2>
+            <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "32px", fontWeight: 700, color: DF, margin: "0 0 32px", textAlign: "center" }}>Frequently Asked Questions</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               {faqs.map((f) => (
                 <details key={f.q} style={{ border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", background: "#fbf9f8" }}>
