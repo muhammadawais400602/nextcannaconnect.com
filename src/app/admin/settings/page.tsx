@@ -204,7 +204,7 @@ function DemoListingsCard() {
       <div style={{ padding: "20px 24px", borderBottom: "1px solid #F3F4F6", background: "#F7F9F7" }}>
         <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#1A4A35", margin: 0 }}>🧪 Demo Listings</h2>
         <p style={{ fontSize: "13px", color: "#4A5E4A", margin: "4px 0 0" }}>
-          Loads 15 sample listings (3 per built template: Retail, Transportation, Testing, Technology, Real Estate) so you can preview the front-end. Safe to run repeatedly — it updates the same records.
+          Loads 36 sample listings (3 per category, all 12 categories) so you can preview the front-end. Safe to run repeatedly — it updates the same records.
         </p>
       </div>
       <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
