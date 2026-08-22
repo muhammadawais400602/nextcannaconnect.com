@@ -84,10 +84,9 @@ export default function PrivacyPage() {
           {/* Image */}
           <div className="relative w-full overflow-hidden group" style={{ height: "400px" }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://picsum.photos/seed/nextcanna-privacy-hero/1200/500"
-              alt="Professional server room"
-              className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+            <div
+              className="w-full h-full grayscale hover:grayscale-0 transition-all duration-700"
+              style={{ background: "linear-gradient(160deg, #003320 0%, #1A4A35 40%, #2d6e52 70%, #003320 100%)" }}
             />
             <div className="absolute inset-0 bg-[#003320]/20 mix-blend-multiply"></div>
             <div className="absolute bottom-8 right-8 bg-white p-8 max-w-sm shadow-sm" style={{ border: "0.5px solid rgba(192, 201, 193, 0.3)" }}>

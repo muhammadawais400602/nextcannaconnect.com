@@ -59,11 +59,9 @@ export default function DisclaimerPage() {
           <div className="my-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="relative overflow-hidden rounded-lg" style={{ aspectRatio: "16/9", border: "0.5px solid rgba(192, 201, 193, 0.3)" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                className="object-cover w-full h-full"
-                style={{ filter: "grayscale(0.3)" }}
-                src="https://picsum.photos/seed/nextcanna-disclaimer/600/400"
-                alt="Professional workspace"
+              <div
+                className="w-full h-full"
+                style={{ filter: "grayscale(0.3)", background: "linear-gradient(135deg, #1A4A35 0%, #003320 50%, #2d6e52 100%)" }}
               />
             </div>
             <div className="pl-0 md:pl-8">

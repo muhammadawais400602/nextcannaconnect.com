@@ -118,10 +118,9 @@ export default function TermsPage() {
           <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="relative rounded-xl overflow-hidden group" style={{ aspectRatio: "4/3" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt="Modern corporate office architecture"
-                className="object-cover w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
-                src="https://picsum.photos/seed/nextcanna-tos/600/450"
+              <div
+                className="w-full h-full grayscale group-hover:grayscale-0 transition-all duration-700"
+                style={{ background: "linear-gradient(160deg, #003320 0%, #0a2a1a 40%, #1A4A35 70%, #2d6e52 100%)" }}
               />
               <div className="absolute inset-0 bg-[#003320]/20 mix-blend-overlay"></div>
             </div>

@@ -409,7 +409,7 @@ function SignUpForm() {
         <StepIndicator step={2} />
         <div className="text-center mb-8">
           <h2 className="font-bold mb-2" style={{ fontSize: "24px", color: "#1A4A35" }}>Choose Your Plan</h2>
-          <p style={{ color: "#4A5E4A", fontSize: "15px" }}>Select the tier that best fits your business goals.</p>
+          <p style={{ color: "#4A5E4A", fontSize: "15px" }}>Select the tier that best fits your business goals. <a href="/pricing" style={{ color: "#F7941D", fontWeight: 600, textDecoration: "none" }}>Compare plans →</a></p>
         </div>
 
         <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", marginBottom: "32px" }}>
@@ -661,7 +661,20 @@ export default function SignUpPage() {
             </p>
           </div>
 
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={
+            <div className="mx-auto" style={{ maxWidth: "640px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px", opacity: 0.5 }}>
+                <div style={{ height: "32px", width: "60%", margin: "0 auto", background: "#E8EDE8", borderRadius: "8px" }} />
+                <div style={{ height: "48px", background: "#E8EDE8", borderRadius: "8px" }} />
+                <div style={{ height: "48px", background: "#E8EDE8", borderRadius: "8px" }} />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                  <div style={{ height: "48px", background: "#E8EDE8", borderRadius: "8px" }} />
+                  <div style={{ height: "48px", background: "#E8EDE8", borderRadius: "8px" }} />
+                </div>
+                <div style={{ height: "48px", background: "#1A4A35", borderRadius: "8px" }} />
+              </div>
+            </div>
+          }>
             <SignUpForm />
           </Suspense>
         </div>

@@ -158,8 +158,17 @@ export default function DirectoryContent({ companies, initialCategory }: Props) 
         <div style={{ flex: 1, minWidth: 0 }}>
           <Suspense
             fallback={
-              <div style={{ padding: "40px", textAlign: "center", color: "#9CA3AF", fontFamily: "'Inter', sans-serif" }}>
-                Loading listings…
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "24px", padding: "8px 0" }}>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} style={{ background: "white", borderRadius: "12px", border: "1px solid #EEEAE3", overflow: "hidden", opacity: 0.5 }}>
+                    <div style={{ height: "160px", background: "#f0eeec" }} />
+                    <div style={{ padding: "20px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                      <div style={{ height: "16px", width: "70%", background: "#f0eeec", borderRadius: "4px" }} />
+                      <div style={{ height: "12px", width: "50%", background: "#f0eeec", borderRadius: "4px" }} />
+                      <div style={{ height: "12px", width: "90%", background: "#f0eeec", borderRadius: "4px" }} />
+                    </div>
+                  </div>
+                ))}
               </div>
             }
           >

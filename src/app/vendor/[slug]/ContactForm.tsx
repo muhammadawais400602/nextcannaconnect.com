@@ -5,20 +5,42 @@ import CustomSelect from "@/components/ui/CustomSelect";
 
 interface Props {
   companyName: string;
+  vendorSlug: string;
   serviceTags: string[];
 }
 
-export default function ContactForm({ companyName, serviceTags }: Props) {
+export default function ContactForm({ companyName, vendorSlug, serviceTags }: Props) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", service: "" });
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSending(true);
-    await new Promise((r) => setTimeout(r, 800));
-    setSent(true);
-    setSending(false);
+    setError("");
+    try {
+      const res = await fetch("/api/inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vendorSlug,
+          name: form.name,
+          email: form.email,
+          phone: form.phone || undefined,
+          serviceNeeded: form.service || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to send");
+      }
+      setSent(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (sent) {
@@ -100,6 +122,7 @@ export default function ContactForm({ companyName, serviceTags }: Props) {
         >
           {sending ? "Sending..." : "Send Inquiry"}
         </button>
+        {error && <p style={{ fontSize: "12px", color: "#DC2626", textAlign: "center", margin: 0 }}>{error}</p>}
         <p style={{ fontSize: "12px", color: "#9CA3AF", textAlign: "center", marginTop: "2px" }}>
           Priority response for ISO-certified partners.
         </p>

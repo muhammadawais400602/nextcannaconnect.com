@@ -136,7 +136,7 @@ export default function MarketingProfile({ company, similar }: Props) {
 
           <div className="mkp-sidebar">
             <div id="get-in-touch" style={{ scrollMarginTop: "96px" }}>
-              <ContactForm companyName={company.name} serviceTags={company.serviceTags ?? []} />
+              <ContactForm companyName={company.name} vendorSlug={company.slug} serviceTags={company.serviceTags ?? []} />
             </div>
             {contactItems.length > 0 && (
               <div style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "24px" }}>
