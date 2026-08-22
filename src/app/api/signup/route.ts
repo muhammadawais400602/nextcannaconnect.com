@@ -84,8 +84,8 @@ export async function POST(request: NextRequest) {
       isActive: !isPaid,
     });
 
-    // Paid tiers → create Stripe Checkout session
-    if (isPaid) {
+    // Paid tiers → create Stripe Checkout session (if Stripe is configured)
+    if (isPaid && process.env.STRIPE_SECRET_KEY) {
       const priceInfo = TIER_PRICES[tier];
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
       const stripe = getStripe();
@@ -114,13 +114,17 @@ export async function POST(request: NextRequest) {
         cancel_url: `${appUrl}/signup?tier=${tier}`,
       });
 
-      // Store the session ID
       await SignupApplication.findByIdAndUpdate(app._id, { stripeSessionId: session.id });
 
       return NextResponse.json({ checkoutUrl: session.url });
     }
 
-    // Free tier — send confirmation emails
+    if (isPaid) {
+      console.warn("[signup] STRIPE_SECRET_KEY not set — skipping checkout for paid tier");
+      await SignupApplication.findByIdAndUpdate(app._id, { paymentStatus: "pending_manual" });
+    }
+
+    // Send confirmation emails
     const tierLabel = TIER_LABELS[tier] ?? tier;
     const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
 
