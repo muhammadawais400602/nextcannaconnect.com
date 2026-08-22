@@ -107,6 +107,48 @@ const CATEGORY_FIELDS: Record<string, CatField[]> = {
     { label: "Credential Headline", placeholder: "e.g. Credentialed in 5 States" },
     { label: "Service Focus", placeholder: "e.g. Architecture, HVAC, General Contracting" },
   ],
+  "cultivation-growing": [
+    { label: "Canopy Size", placeholder: "e.g. 50,000 sq ft" },
+    { label: "Grow Type", type: "select", options: ["Indoor", "Outdoor", "Greenhouse", "Mixed"] },
+    { label: "Team Size", placeholder: "e.g. 45 employees" },
+    { label: "Wholesale", type: "select", options: ["Yes", "No"] },
+  ],
+  "manufacturers-suppliers": [
+    { label: "Minimum Order Qty", placeholder: "e.g. 500 units" },
+    { label: "Lead Time", placeholder: "e.g. 2-3 Weeks" },
+    { label: "OEM Available", type: "select", options: ["Yes", "No"] },
+    { label: "Ships To", placeholder: "e.g. Nationwide, West Coast" },
+  ],
+  "extraction-processing": [
+    { label: "Extraction Method", type: "select", options: ["CO2", "Ethanol", "Hydrocarbon", "Solventless", "Multi-Method"] },
+    { label: "Facility Size", placeholder: "e.g. 10,000 sq ft" },
+    { label: "Turnaround Time", placeholder: "e.g. 5-7 Days" },
+    { label: "White Label", type: "select", options: ["Yes", "No"] },
+  ],
+  "consultants-advisors": [
+    { label: "Specialization", placeholder: "e.g. Licensing, Operations, Compliance" },
+    { label: "Clients Served", placeholder: "e.g. 200+" },
+    { label: "Free Consultation", type: "select", options: ["Yes", "No"] },
+    { label: "Credentials", placeholder: "e.g. JD, MBA, CPA" },
+  ],
+  "marketing-branding-packaging": [
+    { label: "Core Services", placeholder: "e.g. Branding, Packaging Design, SEO" },
+    { label: "Project Minimum", placeholder: "e.g. $2,500" },
+    { label: "Avg Turnaround", placeholder: "e.g. 2-4 Weeks" },
+    { label: "States Served", placeholder: "e.g. Nationwide" },
+  ],
+  "compliance-legal": [
+    { label: "Bar License", placeholder: "e.g. CA Bar #123456" },
+    { label: "Practice Areas", placeholder: "e.g. Licensing, IP, Corporate" },
+    { label: "States Practiced", placeholder: "e.g. CA, CO, OR" },
+    { label: "Free Consultation", type: "select", options: ["Yes", "No"] },
+  ],
+  "finance-insurance": [
+    { label: "License (NMLS)", placeholder: "e.g. NMLS #123456" },
+    { label: "Service Type", type: "select", options: ["Banking", "Lending", "Insurance", "Tax & Accounting", "Payment Processing"] },
+    { label: "States Served", placeholder: "e.g. All 50 States" },
+    { label: "Avg Funding Time", placeholder: "e.g. 5-10 Business Days" },
+  ],
 };
 
 const inputStyle = {
@@ -449,27 +491,34 @@ function SignUpForm() {
     );
   }
 
-  // ── Step 3: Tier-specific details ────────────────────────────────────────────
+  // ── Step 3: Profile details (driven by tier + category) ──────────────────────
+  const categoryName = CATEGORIES.find((c) => c.slug === basicForm.category)?.label ?? "Your Business";
+
   return (
     <div className="mx-auto" style={{ maxWidth: "640px" }}>
       <StepIndicator step={3} />
       <div className="text-center mb-8">
-        <span className="tier-badge" style={{ backgroundColor: tier?.badgeBg ?? "#E8EDE8", color: tier?.badgeColor ?? "#1A2E1A" }}>
-          {tier?.name ?? ""}
-        </span>
-        <h2 className="font-bold mt-3 mb-1" style={{ fontSize: "22px", color: "#1A4A35" }}>Complete Your Profile</h2>
+        <div style={{ display: "flex", justifyContent: "center", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
+          <span className="tier-badge" style={{ backgroundColor: tier?.badgeBg ?? "#E8EDE8", color: tier?.badgeColor ?? "#1A2E1A" }}>
+            {tier?.name ?? ""}
+          </span>
+          {basicForm.category && (
+            <span style={{ display: "inline-block", backgroundColor: "rgba(247,148,29,0.12)", color: "#C67200", fontSize: "11px", fontWeight: 700, padding: "4px 12px", borderRadius: "100px", letterSpacing: "0.5px" }}>
+              {categoryName}
+            </span>
+          )}
+        </div>
+        <h2 className="font-bold mt-1 mb-1" style={{ fontSize: "22px", color: "#1A4A35" }}>Complete Your {categoryName} Profile</h2>
         <p style={{ color: "#4A5E4A", fontSize: "14px" }}>This information will appear on your public listing.</p>
       </div>
 
       <form onSubmit={handleFinalSubmit} className="flex flex-col gap-4">
-        {/* Select + Verified Pro */}
+        {/* ── Company profile fields (tier-gated) ── */}
         {(selectedTier === "select" || selectedTier === "elite") && (
           <>
-            <div>
-              <label style={labelStyle}>Website URL</label>
-              <input type="url" placeholder="https://yourcompany.com" value={tierForm.website}
-                onChange={(e) => setTierForm({ ...tierForm, website: e.target.value })} style={inputStyle} />
-            </div>
+            <p className="font-semibold uppercase tracking-widest mb-0" style={{ color: "#1A4A35", fontSize: "10px", letterSpacing: "1.5px" }}>
+              Company Profile
+            </p>
 
             <div>
               <label style={labelStyle}>Company Description *</label>
@@ -485,20 +534,26 @@ function SignUpForm() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
+                <label style={labelStyle}>Website URL</label>
+                <input type="url" placeholder="https://yourcompany.com" value={tierForm.website}
+                  onChange={(e) => setTierForm({ ...tierForm, website: e.target.value })} style={inputStyle} />
+              </div>
+              <div>
                 <label style={labelStyle}>Public Phone</label>
                 <input type="tel" placeholder="(555) 000-0000" value={tierForm.publicPhone}
                   onChange={(e) => setTierForm({ ...tierForm, publicPhone: e.target.value })} style={inputStyle} />
               </div>
-              <div>
-                <label style={labelStyle}>Service Area</label>
-                <input type="text" placeholder="e.g. Western US, Nationwide" value={tierForm.serviceArea}
-                  onChange={(e) => setTierForm({ ...tierForm, serviceArea: e.target.value })} style={inputStyle} />
-              </div>
+            </div>
+
+            <div>
+              <label style={labelStyle}>Service Area</label>
+              <input type="text" placeholder="e.g. Western US, Nationwide" value={tierForm.serviceArea}
+                onChange={(e) => setTierForm({ ...tierForm, serviceArea: e.target.value })} style={inputStyle} />
             </div>
           </>
         )}
 
-        {/* Verified Pro only */}
+        {/* ── Verified Pro extras ── */}
         {selectedTier === "elite" && (
           <>
             <div>
@@ -522,14 +577,14 @@ function SignUpForm() {
           </>
         )}
 
-        {/* Category-specific details */}
+        {/* ── Category-specific business details ── */}
         {categoryFields.length > 0 && (
           <div style={{ borderTop: "1px solid #E8EDE8", paddingTop: "20px", marginTop: "4px" }}>
             <p className="font-semibold uppercase tracking-widest mb-1" style={{ color: "#F7941D", fontSize: "10px", letterSpacing: "1.5px" }}>
-              {CATEGORIES.find((c) => c.slug === basicForm.category)?.label ?? "Category"} details
+              {categoryName} Details
             </p>
             <p style={{ fontSize: "12px", color: "#4A5E4A", marginBottom: "16px" }}>
-              These help us build your specialized listing.
+              These help us build your specialized {categoryName.toLowerCase()} listing.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {categoryFields.map((f) => (
@@ -570,7 +625,7 @@ function SignUpForm() {
             ← Back
           </button>
           <button type="submit" disabled={submitting} className="btn-primary justify-center" style={{ flex: 1, padding: "14px", fontSize: "15px", opacity: submitting ? 0.7 : 1, cursor: submitting ? "not-allowed" : "pointer" }}>
-              {submitting
+            {submitting
               ? "Processing…"
               : (selectedTier === "free" ? "Complete Registration →" : "Proceed to Payment →")
             }
