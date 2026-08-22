@@ -7,81 +7,96 @@ import { Company } from "@/types";
 const DF = "#003320";
 const SAGE = "#88B99E";
 const PARCHMENT = "#EEEAE3";
+const INK = "#1A1A1A";
 const VARIANT = "#414943";
 
 function isVerified(c: Company) {
   return c.tier === "elite" || c.tier === "select";
 }
 
-const SERVICE_ICONS: Record<string, string> = {
-  architect: "architecture",
-  contracting: "construction",
-  contractor: "construction",
-  hvac: "hvac",
-  engineering: "engineering",
-  zoning: "map",
-  build: "construction",
-};
-
-function firmIcon(company: Company): string {
-  const tags = (company.serviceTags ?? []).join(" ").toLowerCase();
-  const key = Object.keys(SERVICE_ICONS).find((k) => tags.includes(k));
-  return key ? SERVICE_ICONS[key] : "domain";
-}
-
 function FirmCard({ company }: { company: Company }) {
   const verified = isVerified(company);
-  const tags = (company.serviceTags ?? []).slice(0, 3);
+  const detail = (label: string, value?: string) => (
+    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
+      <span style={{ color: VARIANT }}>{label}</span>
+      <span style={{ fontWeight: 500, color: INK, letterSpacing: "0.01em" }}>{value || "—"}</span>
+    </div>
+  );
 
   return (
-    <article className="cat-card" style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.75rem", padding: "24px", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px", gap: "12px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", minWidth: 0 }}>
-          <div style={{ width: "48px", height: "48px", background: "#efedec", borderRadius: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${PARCHMENT}`, flexShrink: 0, overflow: "hidden" }}>
-            {company.logoUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            ) : (
-              <span className="material-symbols-outlined" style={{ color: DF }}>{firmIcon(company)}</span>
-            )}
+    <div
+      className="cat-card"
+      style={{
+        background: "white",
+        borderRadius: "0.75rem",
+        border: `1px solid ${PARCHMENT}`,
+        overflow: "hidden",
+        boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Image band */}
+      <div style={{ height: "192px", position: "relative", background: company.logoColor + "22" }}>
+        {company.bannerImageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={company.bannerImageUrl} alt={company.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : (
+          <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}33, ${company.logoColor}11)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>architecture</span>
           </div>
-          <div style={{ minWidth: 0 }}>
-            <h3 style={{ fontSize: "20px", fontWeight: 600, color: "#001c10", margin: 0 }}>{company.name}</h3>
-            <div style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, display: "flex", alignItems: "center", gap: "4px", marginTop: "4px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>location_on</span>
-              {[company.location.city, company.location.state].filter(Boolean).join(", ") || "Multi-State Operator"}
-            </div>
-          </div>
-        </div>
+        )}
         {verified && (
-          <span style={{ background: "rgba(136,185,158,0.2)", color: DF, fontSize: "11px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem", display: "flex", alignItems: "center", gap: "4px", whiteSpace: "nowrap" }}>
+          <span style={{ position: "absolute", top: "16px", left: "16px", background: SAGE, color: DF, fontSize: "12px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem", boxShadow: "0 1px 2px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "4px" }}>
             <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> VERIFIED
           </span>
         )}
       </div>
 
-      <p style={{ fontSize: "16px", color: VARIANT, margin: "0 0 16px", lineHeight: 1.4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>{company.shortDescription}</p>
-
-      {tags.length > 0 && (
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
-          {tags.map((t) => (
-            <span key={t} style={{ background: "#fbf9f8", border: `1px solid ${PARCHMENT}`, color: VARIANT, fontSize: "12px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem" }}>{t}</span>
-          ))}
+      {/* Body */}
+      <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "16px", marginBottom: "16px" }}>
+          <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#efedec", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${PARCHMENT}`, overflow: "hidden" }}>
+            {company.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              <div style={{ width: "100%", height: "100%", background: company.logoColor, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: "16px" }}>{company.logoPlaceholder}</div>
+            )}
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <h3 style={{ fontSize: "18px", fontWeight: 600, color: INK, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
+              <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "Multi-State"}</span>
+            </div>
+          </div>
         </div>
-      )}
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px", marginTop: "auto", gap: "8px", flexWrap: "wrap" }}>
-        <div style={{ color: DF }}>
-          {company.projectsCompleted ? (
-            <>
-              <span style={{ fontSize: "24px", fontWeight: 600 }}>{company.projectsCompleted}</span>
-              <span style={{ fontSize: "11px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", marginLeft: "4px" }}>Projects</span>
-            </>
+        <p style={{ fontSize: "13px", color: VARIANT, margin: "0 0 16px", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>
+          {company.shortDescription}
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px" }}>
+          {detail("Projects", company.projectsCompleted)}
+          {detail("Team Size", company.teamSize)}
+          {detail("Services", (company.serviceTags ?? []).slice(0, 3).join(", ") || undefined)}
+          {detail("Founded", company.foundedYear ? String(company.foundedYear) : undefined)}
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px", marginTop: "auto" }}>
+          {company.credentialHeadline ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: "#396751" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>
+              {company.credentialHeadline}
+            </span>
           ) : <span />}
+          <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+          </Link>
         </div>
-        <Link href={`/vendor/${company.slug}`} style={{ border: `1px solid ${DF}`, color: DF, fontSize: "14px", fontWeight: 500, padding: "8px 16px", borderRadius: "0.25rem", textDecoration: "none" }}>View Profile</Link>
       </div>
-    </article>
+    </div>
   );
 }
 
@@ -148,7 +163,7 @@ export default function RealEstateListingsGrid({ companies }: { companies: Compa
               {shown.map((c) => <FirmCard key={c.slug} company={c} />)}
 
               {/* CTA tile */}
-              <div style={{ background: DF, borderRadius: "0.75rem", padding: "32px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+              <div style={{ background: DF, borderRadius: "0.75rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "32px" }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "48px", color: SAGE, marginBottom: "16px" }}>architecture</span>
                 <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: "0 0 8px" }}>Are you a verified contractor?</h3>
                 <p style={{ fontSize: "15px", color: "rgba(251,249,248,0.8)", margin: "0 0 24px" }}>Join the institutional marketplace and connect with highly capitalized operators.</p>

@@ -7,6 +7,7 @@ import {
   getPosts,
   getFeaturedImage,
   getAuthor,
+  getAuthorSlug,
   getAuthorAvatar,
   getPostCategories,
   formatDate,
@@ -90,7 +91,7 @@ export default async function BlogPostPage({ params }: Props) {
               )}
             </div>
             <div>
-              <p style={{ fontSize: "13px", fontWeight: 600, color: "#111827", fontFamily: "'Inter', sans-serif", margin: 0 }}>{author}</p>
+              <Link href={`/blog/author/${getAuthorSlug(author)}`} style={{ fontSize: "13px", fontWeight: 600, color: "#111827", fontFamily: "'Inter', sans-serif", margin: 0, textDecoration: "none" }}>{author}</Link>
               <p style={{ fontSize: "12px", color: "#9CA3AF", fontFamily: "'Inter', sans-serif", margin: 0 }}>
                 {formatDate(post.date)} · {readingTime(post.content.rendered)} min read
               </p>

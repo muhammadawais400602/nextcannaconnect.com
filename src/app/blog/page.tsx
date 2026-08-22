@@ -7,6 +7,7 @@ import {
   getCategories,
   getFeaturedImage,
   getAuthor,
+  getAuthorSlug,
   getPostCategories,
   formatDate,
   readingTime,
@@ -411,7 +412,7 @@ export default async function BlogPage({ searchParams }: Props) {
               Stay Connected
             </h2>
             <p style={{ fontSize: "15px", color: "rgba(136,185,158,0.8)", lineHeight: 1.65, fontFamily: "'Inter', sans-serif", marginBottom: "32px", maxWidth: "460px", margin: "0 auto 32px" }}>
-              Join 20,000+ industry professionals receiving our weekly briefing on essential cannabis business developments.
+              Join our growing community of industry professionals receiving our weekly briefing on essential cannabis business developments.
             </p>
             <NewsletterForm />
             <p style={{ fontSize: "11px", color: "rgba(136,185,158,0.5)", fontFamily: "'Inter', sans-serif", marginTop: "14px" }}>

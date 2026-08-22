@@ -78,7 +78,7 @@ export default function Footer() {
             <div>
               <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "20px" }}>Company</h4>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {[{ label: "About", href: "/about" }, { label: "Blog", href: "/blog" }, { label: "Contact", href: "/contact" }].map((item) => (
+                {[{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }].map((item) => (
                   <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
                 ))}
               </div>
@@ -120,20 +120,6 @@ export default function Footer() {
                 {item.label}
               </Link>
             ))}
-          </div>
-          <div className="flex gap-5">
-            <Link href="/" style={{ color: "rgba(136,185,158,0.35)", transition: "color 0.2s" }}
-              onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = "white"; }}
-              onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = "rgba(136,185,158,0.35)"; }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>language</span>
-            </Link>
-            <Link href="/" style={{ color: "rgba(136,185,158,0.35)", transition: "color 0.2s" }}
-              onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = "white"; }}
-              onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => { e.currentTarget.style.color = "rgba(136,185,158,0.35)"; }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>share</span>
-            </Link>
           </div>
         </div>
 

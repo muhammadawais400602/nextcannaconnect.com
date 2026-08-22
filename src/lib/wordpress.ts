@@ -92,13 +92,19 @@ export function getAuthor(post: WPPost): string {
   return post._embedded?.author?.[0]?.name ?? "NextCanna Connect";
 }
 
+export function getAuthorSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
 export function getAuthorAvatar(post: WPPost): string | null {
   const avatars = post._embedded?.author?.[0]?.avatar_urls;
   return avatars ? (avatars["96"] ?? avatars["48"] ?? null) : null;
 }
 
 export function getPostCategories(post: WPPost): string[] {
-  return post._embedded?.["wp:term"]?.[0]?.map((t) => t.name) ?? [];
+  return (post._embedded?.["wp:term"]?.[0]?.map((t) => t.name) ?? []).filter(
+    (name) => name.toLowerCase() !== "uncategorized"
+  );
 }
 
 export function formatDate(dateStr: string): string {

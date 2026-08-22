@@ -24,15 +24,13 @@ export default function AboutPage() {
           overflow: "hidden",
         }}
       >
-        <img
-          src="https://picsum.photos/seed/city-skyline-dark/1600/500"
-          alt=""
+        <div
           aria-hidden="true"
           style={{
             position: "absolute", inset: 0,
             width: "100%", height: "100%",
-            objectFit: "cover", opacity: 0.22,
-            mixBlendMode: "luminosity",
+            opacity: 0.22,
+            background: "linear-gradient(135deg, #003320 0%, #001a10 40%, #0a2a1a 70%, #003320 100%)",
           }}
         />
         <div

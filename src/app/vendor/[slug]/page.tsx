@@ -7,6 +7,8 @@ import { getCategoryBySlug } from "@/data/categories";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { Company } from "@/types";
 import ContactForm from "./ContactForm";
+import ProfileViewTracker from "@/components/ProfileViewTracker";
+import ClaimBanner from "@/components/ClaimBanner";
 import RetailProfile from "@/components/vendor/retail/RetailProfile";
 import TransportProfile from "@/components/vendor/transport/TransportProfile";
 import TestingProfile from "@/components/vendor/testing/TestingProfile";
@@ -31,9 +33,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const company = await getCompanyBySlugFresh(slug);
   if (!company) return {};
+  const title = `${company.name} | NextCanna Connect`;
+  const description = company.shortDescription || `${company.name} — verified cannabis business on NextCanna Connect.`;
+  const location = [company.location?.city, company.location?.state].filter(Boolean).join(", ");
+  const fullDescription = location ? `${description} Located in ${location}.` : description;
   return {
-    title: `${company.name} | NextCanna Connect`,
-    description: company.shortDescription,
+    title,
+    description: fullDescription,
+    openGraph: {
+      title,
+      description: fullDescription,
+      type: "profile",
+      url: `https://nextcannaconnect.com/vendor/${slug}`,
+      siteName: "NextCanna Connect",
+      ...(company.bannerImageUrl && !company.bannerImageUrl.includes("picsum.photos")
+        ? { images: [{ url: company.bannerImageUrl, width: 1200, height: 630, alt: company.name }] }
+        : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: fullDescription,
+    },
   };
 }
 
@@ -71,57 +92,55 @@ export default async function VendorPage({ params }: Props) {
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
-  // Retail & Dispensary uses its own dedicated profile template
+  const tracker = <ProfileViewTracker slug={company.slug} />;
+  const claimBanner = company.tier === "free" ? <ClaimBanner slug={company.slug} /> : null;
+
   if (company.category === "retail-dispensary") {
-    return <RetailProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<RetailProfile company={company} similar={similar} /></>;
   }
 
-  // Transportation & Logistics uses its own dedicated profile template
   if (company.category === "transportation-logistics") {
-    return <TransportProfile company={company} />;
+    return <>{claimBanner}{tracker}<TransportProfile company={company} /></>;
   }
 
-  // Testing & Science uses its own dedicated profile template
   if (company.category === "testing-science") {
-    return <TestingProfile company={company} />;
+    return <>{claimBanner}{tracker}<TestingProfile company={company} /></>;
   }
 
-  // Technology & Software uses its own dedicated profile template
   if (company.category === "technology-software") {
-    return <TechProfile company={company} />;
+    return <>{claimBanner}{tracker}<TechProfile company={company} /></>;
   }
 
-  // Real Estate & Construction uses its own dedicated profile template
   if (company.category === "real-estate-construction") {
-    return <RealEstateProfile company={company} />;
+    return <>{claimBanner}{tracker}<RealEstateProfile company={company} /></>;
   }
 
   if (company.category === "cultivation-growing") {
-    return <CultivationProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<CultivationProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "manufacturers-suppliers") {
-    return <ManufacturersProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<ManufacturersProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "extraction-processing") {
-    return <ExtractionProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<ExtractionProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "consultants-advisors") {
-    return <ConsultantsProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<ConsultantsProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "marketing-branding-packaging") {
-    return <MarketingProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<MarketingProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "compliance-legal") {
-    return <ComplianceProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<ComplianceProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "finance-insurance") {
-    return <FinanceProfile company={company} similar={similar} />;
+    return <>{claimBanner}{tracker}<FinanceProfile company={company} similar={similar} /></>;
   }
 
   const isVerifiedPro = company.tier === "elite";
@@ -140,7 +159,8 @@ export default async function VendorPage({ params }: Props) {
 
   return (
     <div style={{ backgroundColor: "#fbf9f8", minHeight: "100vh" }}>
-
+      {claimBanner}
+      {tracker}
       <style>{`
         .vp-backnav  { max-width:1100px; margin:0 auto; padding:100px 20px 0; }
         .vp-main     { max-width:1100px; margin:0 auto; padding:24px 20px 80px; }
@@ -328,7 +348,7 @@ export default async function VendorPage({ params }: Props) {
           {/* ── Right sidebar ── */}
           <div className="vp-sidebar">
 
-            <ContactForm companyName={company.name} serviceTags={services} />
+            <ContactForm companyName={company.name} vendorSlug={company.slug} serviceTags={services} />
 
             {isVerifiedPro && certs.length > 0 && (
               <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", border: "1px solid #E5E7EB", marginBottom: "16px" }}>

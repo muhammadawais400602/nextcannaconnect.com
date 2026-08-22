@@ -7,50 +7,94 @@ import { Company } from "@/types";
 const DF = "#003320";
 const SAGE = "#88B99E";
 const PARCHMENT = "#EEEAE3";
+const INK = "#1A1A1A";
 const VARIANT = "#414943";
-const SECONDARY = "#396751";
 
 function isVerified(c: Company) {
   return c.tier === "elite" || c.tier === "select";
 }
 
 function VendorCard({ company }: { company: Company }) {
-  const badge = company.accreditation || (isVerified(company) ? "Verified" : null);
-  const tags = (company.serviceTags ?? []).slice(0, 4);
+  const verified = isVerified(company);
+  const detail = (label: string, value?: string) => (
+    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
+      <span style={{ color: VARIANT }}>{label}</span>
+      <span style={{ fontWeight: 500, color: INK, letterSpacing: "0.01em" }}>{value || "—"}</span>
+    </div>
+  );
 
   return (
-    <div className="cat-card" style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.75rem", padding: "24px", display: "flex", flexDirection: "column", gap: "16px" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-        <div style={{ width: "64px", height: "64px", borderRadius: "0.25rem", background: "#efedec", border: `1px solid ${PARCHMENT}`, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
-          {company.logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={company.logoUrl} alt={company.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          ) : (
-            <div style={{ width: "100%", height: "100%", background: company.logoColor, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: "20px" }}>{company.logoPlaceholder}</div>
-          )}
-        </div>
-        {badge && (
-          <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", padding: "4px 8px", background: "rgba(160,210,182,0.2)", color: SECONDARY, border: "1px solid #a0d2b6", borderRadius: "0.25rem", fontSize: "12px", fontWeight: 600 }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "14px", fontVariationSettings: "'FILL' 1" }}>shield</span>
-            {badge}
+    <div
+      className="cat-card"
+      style={{
+        background: "white",
+        borderRadius: "0.75rem",
+        border: `1px solid ${PARCHMENT}`,
+        overflow: "hidden",
+        boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Image band */}
+      <div style={{ height: "192px", position: "relative", background: company.logoColor + "22" }}>
+        {company.bannerImageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={company.bannerImageUrl} alt={company.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        ) : (
+          <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}33, ${company.logoColor}11)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>terminal</span>
+          </div>
+        )}
+        {verified && (
+          <span style={{ position: "absolute", top: "16px", left: "16px", background: SAGE, color: DF, fontSize: "12px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem", boxShadow: "0 1px 2px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "4px" }}>
+            <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> VERIFIED
           </span>
         )}
       </div>
 
-      <div>
-        <h3 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: "0 0 4px" }}>{company.name}</h3>
-        <p style={{ fontSize: "16px", color: VARIANT, margin: 0, lineHeight: 1.4, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>{company.shortDescription}</p>
-      </div>
-
-      <div style={{ marginTop: "auto", paddingTop: "16px", borderTop: `1px solid ${PARCHMENT}` }}>
-        {tags.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "16px" }}>
-            {tags.map((t) => (
-              <span key={t} style={{ padding: "4px 8px", background: "#efedec", color: VARIANT, fontSize: "12px", fontWeight: 600, borderRadius: "0.25rem", border: "1px solid #dbdad9" }}>{t}</span>
-            ))}
+      {/* Body */}
+      <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "16px", marginBottom: "16px" }}>
+          <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#efedec", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${PARCHMENT}`, overflow: "hidden" }}>
+            {company.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : (
+              <div style={{ width: "100%", height: "100%", background: company.logoColor, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 800, fontSize: "16px" }}>{company.logoPlaceholder}</div>
+            )}
           </div>
-        )}
-        <Link href={`/vendor/${company.slug}`} style={{ display: "block", textAlign: "center", padding: "8px", border: `1px solid ${DF}`, color: DF, borderRadius: "0.5rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>View Profile</Link>
+          <div style={{ minWidth: 0 }}>
+            <h3 style={{ fontSize: "18px", fontWeight: 600, color: INK, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
+              <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
+            </div>
+          </div>
+        </div>
+
+        <p style={{ fontSize: "13px", color: VARIANT, margin: "0 0 16px", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>
+          {company.shortDescription}
+        </p>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px" }}>
+          {detail("Certification", company.accreditation)}
+          {detail("Integrations", (company.serviceTags ?? []).slice(0, 3).join(", ") || undefined)}
+          {detail("Pricing", company.pricingModel)}
+          {detail("Founded", company.foundedYear ? String(company.foundedYear) : undefined)}
+        </div>
+
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px", marginTop: "auto" }}>
+          {company.accreditation ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: "#396751" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>shield</span>
+              {company.accreditation}
+            </span>
+          ) : <span />}
+          <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -118,12 +162,11 @@ export default function TechListingsGrid({ companies }: { companies: Company[] }
               {shown.map((c) => <VendorCard key={c.slug} company={c} />)}
 
               {/* CTA tile */}
-              <div style={{ background: DF, borderRadius: "0.75rem", padding: "32px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", gap: "16px", position: "relative", overflow: "hidden" }}>
-                <div style={{ position: "absolute", inset: 0, opacity: 0.1, background: "radial-gradient(circle at center, #a1d1b6 0%, transparent 70%)" }} />
-                <span className="material-symbols-outlined" style={{ fontSize: "48px", color: SAGE, position: "relative", fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
-                <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: 0, position: "relative" }}>Are you a software vendor?</h3>
-                <p style={{ fontSize: "15px", color: "#a1d1b6", margin: 0, position: "relative" }}>Join the institutional marketplace and connect with enterprise MSOs.</p>
-                <Link href="/signup" style={{ marginTop: "4px", padding: "12px 24px", background: SAGE, color: DF, borderRadius: "0.5rem", fontSize: "14px", fontWeight: 500, textDecoration: "none", width: "100%", boxSizing: "border-box", position: "relative" }}>Apply for Verification</Link>
+              <div style={{ background: DF, borderRadius: "0.75rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "32px" }}>
+                <span className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px", fontVariationSettings: "'FILL' 1" }}>rocket_launch</span>
+                <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: "0 0 8px" }}>Are you a software vendor?</h3>
+                <p style={{ fontSize: "15px", color: "rgba(251,249,248,0.8)", margin: "0 0 24px" }}>Join the institutional marketplace and connect with enterprise MSOs.</p>
+                <Link href="/signup" style={{ fontSize: "14px", fontWeight: 500, background: SAGE, color: DF, padding: "12px 24px", borderRadius: "0.25rem", textDecoration: "none", width: "100%", boxSizing: "border-box" }}>Apply for Verification</Link>
               </div>
             </div>
           )}
