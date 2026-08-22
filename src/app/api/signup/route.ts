@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
+import User from "@/lib/models/User";
 
 const TIER_LABELS: Record<string, string> = {
   free: "Claimed (Free)",
@@ -40,12 +42,21 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
 
-    const { fullName, companyName, email, phone, stateProvince, category,
+    const { fullName, companyName, email, password, phone, stateProvince, category,
             tier, website, description, publicPhone, serviceArea,
             certifications, socialLink, contactName, categoryDetails } = body;
 
     if (!fullName || !companyName || !email || !tier) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (!password || password.length < 8) {
+      return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
+    }
+
+    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existingUser) {
+      return NextResponse.json({ error: "An account with this email already exists. Please sign in instead." }, { status: 409 });
     }
 
     const isPaid = tier === "select" || tier === "elite";
@@ -57,6 +68,20 @@ export async function POST(request: NextRequest) {
       certifications, socialLink, contactName,
       categoryDetails: categoryDetails && typeof categoryDetails === "object" ? categoryDetails : {},
       paymentStatus: isPaid ? "awaiting_payment" : "not_required",
+    });
+
+    // Create user account with hashed password
+    const passwordHash = await bcrypt.hash(password, 12);
+    await User.create({
+      email: email.toLowerCase().trim(),
+      fullName,
+      companyName,
+      phone,
+      stateProvince,
+      category,
+      tier,
+      passwordHash,
+      isActive: !isPaid,
     });
 
     // Paid tiers → create Stripe Checkout session

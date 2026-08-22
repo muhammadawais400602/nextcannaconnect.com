@@ -229,6 +229,7 @@ function SignUpForm() {
     fullName: "",
     companyName: "",
     email: "",
+    password: "",
     phone: "",
     stateProvince: "",
     category: "",
@@ -348,10 +349,16 @@ function SignUpForm() {
                 onChange={(e) => setBasicForm({ ...basicForm, email: e.target.value })} style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>Phone</label>
-              <input type="tel" placeholder="(555) 000-0000" value={basicForm.phone}
-                onChange={(e) => setBasicForm({ ...basicForm, phone: e.target.value })} style={inputStyle} />
+              <label style={labelStyle}>Password *</label>
+              <input required type="password" placeholder="Min. 8 characters" minLength={8} value={basicForm.password}
+                onChange={(e) => setBasicForm({ ...basicForm, password: e.target.value })} style={inputStyle} />
             </div>
+          </div>
+
+          <div>
+            <label style={labelStyle}>Phone</label>
+            <input type="tel" placeholder="(555) 000-0000" value={basicForm.phone}
+              onChange={(e) => setBasicForm({ ...basicForm, phone: e.target.value })} style={inputStyle} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
