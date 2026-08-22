@@ -7,6 +7,7 @@ import { getCategoryBySlug } from "@/data/categories";
 import { MapPin, ArrowLeft } from "lucide-react";
 import { Company } from "@/types";
 import ContactForm from "./ContactForm";
+import ProfileViewTracker from "@/components/ProfileViewTracker";
 import RetailProfile from "@/components/vendor/retail/RetailProfile";
 import TransportProfile from "@/components/vendor/transport/TransportProfile";
 import TestingProfile from "@/components/vendor/testing/TestingProfile";
@@ -71,57 +72,54 @@ export default async function VendorPage({ params }: Props) {
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
-  // Retail & Dispensary uses its own dedicated profile template
+  const tracker = <ProfileViewTracker slug={company.slug} />;
+
   if (company.category === "retail-dispensary") {
-    return <RetailProfile company={company} similar={similar} />;
+    return <>{tracker}<RetailProfile company={company} similar={similar} /></>;
   }
 
-  // Transportation & Logistics uses its own dedicated profile template
   if (company.category === "transportation-logistics") {
-    return <TransportProfile company={company} />;
+    return <>{tracker}<TransportProfile company={company} /></>;
   }
 
-  // Testing & Science uses its own dedicated profile template
   if (company.category === "testing-science") {
-    return <TestingProfile company={company} />;
+    return <>{tracker}<TestingProfile company={company} /></>;
   }
 
-  // Technology & Software uses its own dedicated profile template
   if (company.category === "technology-software") {
-    return <TechProfile company={company} />;
+    return <>{tracker}<TechProfile company={company} /></>;
   }
 
-  // Real Estate & Construction uses its own dedicated profile template
   if (company.category === "real-estate-construction") {
-    return <RealEstateProfile company={company} />;
+    return <>{tracker}<RealEstateProfile company={company} /></>;
   }
 
   if (company.category === "cultivation-growing") {
-    return <CultivationProfile company={company} similar={similar} />;
+    return <>{tracker}<CultivationProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "manufacturers-suppliers") {
-    return <ManufacturersProfile company={company} similar={similar} />;
+    return <>{tracker}<ManufacturersProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "extraction-processing") {
-    return <ExtractionProfile company={company} similar={similar} />;
+    return <>{tracker}<ExtractionProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "consultants-advisors") {
-    return <ConsultantsProfile company={company} similar={similar} />;
+    return <>{tracker}<ConsultantsProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "marketing-branding-packaging") {
-    return <MarketingProfile company={company} similar={similar} />;
+    return <>{tracker}<MarketingProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "compliance-legal") {
-    return <ComplianceProfile company={company} similar={similar} />;
+    return <>{tracker}<ComplianceProfile company={company} similar={similar} /></>;
   }
 
   if (company.category === "finance-insurance") {
-    return <FinanceProfile company={company} similar={similar} />;
+    return <>{tracker}<FinanceProfile company={company} similar={similar} /></>;
   }
 
   const isVerifiedPro = company.tier === "elite";
@@ -140,7 +138,7 @@ export default async function VendorPage({ params }: Props) {
 
   return (
     <div style={{ backgroundColor: "#fbf9f8", minHeight: "100vh" }}>
-
+      {tracker}
       <style>{`
         .vp-backnav  { max-width:1100px; margin:0 auto; padding:100px 20px 0; }
         .vp-main     { max-width:1100px; margin:0 auto; padding:24px 20px 80px; }

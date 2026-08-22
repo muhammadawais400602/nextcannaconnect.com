@@ -180,9 +180,9 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
   return (
     <>
       {/* Filter bar */}
-      <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, padding: "16px 0" }}>
-        <div className="cat-container" style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+      <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, position: "sticky", top: "70px", zIndex: 40 }}>
+        <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", flex: 1, minWidth: 0 }}>
             <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
               <option value="">Location</option>
               {states.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -206,13 +206,13 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
               <option value="rating">Highest Rated</option>
             </select>
           </div>
-          <div style={{ position: "relative" }}>
+          <div style={{ position: "relative", flex: "0 1 256px", minWidth: "180px" }}>
             <span className="material-symbols-outlined" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#c0c9c1", fontSize: "20px" }}>search</span>
             <input
               value={search}
               onChange={(e) => { setSearch(e.target.value); setVisible(PAGE_SIZE); }}
               placeholder="Search specific names..."
-              style={{ width: "256px", maxWidth: "100%", paddingLeft: "40px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", background: "#f5f3f2", fontSize: "14px", outline: "none" }}
+              style={{ width: "100%", paddingLeft: "40px", paddingRight: "16px", paddingTop: "8px", paddingBottom: "8px", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", background: "#f5f3f2", fontSize: "14px", outline: "none", boxSizing: "border-box" }}
             />
           </div>
         </div>
