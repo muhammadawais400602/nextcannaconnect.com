@@ -17,8 +17,15 @@ function FirmCard({ company }: { company: Company }) {
   const verified = isVerified(company);
   const tags = (company.serviceTags ?? []).slice(0, 3);
 
+  const detail = (label: string, value?: string) => (
+    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
+      <span style={{ color: VARIANT }}>{label}</span>
+      <span style={{ fontWeight: 500, color: DF }}>{value || "—"}</span>
+    </div>
+  );
+
   return (
-    <div style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden", display: "flex", flexDirection: "column" }} className="cat-card">
+    <div style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }} className="cat-card">
       <div style={{ height: "192px", position: "relative", background: company.logoColor + "22" }}>
         {company.bannerImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -35,16 +42,10 @@ function FirmCard({ company }: { company: Company }) {
         )}
       </div>
 
-      <div style={{ padding: "24px", flex: 1, display: "flex", flexDirection: "column" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "16px", gap: "12px" }}>
-          <div style={{ minWidth: 0 }}>
-            <h3 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: 0, lineHeight: 1.2 }}>{company.name}</h3>
-            <p style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "16px", marginTop: "4px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
-              {[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}
-            </p>
-          </div>
-          <div style={{ width: "48px", height: "48px", background: "#efedec", borderRadius: "50%", border: `1px solid ${PARCHMENT}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+      <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
+        {/* Name row: avatar LEFT, then name */}
+        <div style={{ display: "flex", alignItems: "flex-start", gap: "16px", marginBottom: "16px" }}>
+          <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#efedec", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${PARCHMENT}`, overflow: "hidden" }}>
             {company.logoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -52,31 +53,29 @@ function FirmCard({ company }: { company: Company }) {
               <span className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>gavel</span>
             )}
           </div>
+          <div style={{ minWidth: 0 }}>
+            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
+            <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
+              <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
+            </div>
+          </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px" }}>
-          {company.licenseNumber && (
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "16px", borderBottom: `1px solid ${PARCHMENT}`, paddingBottom: "8px" }}>
-              <span style={{ color: VARIANT }}>Bar License</span>
-              <span style={{ fontWeight: 500 }}>{company.licenseNumber}</span>
-            </div>
-          )}
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "16px", borderBottom: (company.serviceTags ?? []).length > 0 ? `1px solid ${PARCHMENT}` : "none", paddingBottom: "8px" }}>
+        {/* Short description */}
+        <p style={{ fontSize: "13px", color: VARIANT, margin: "0 0 16px", lineHeight: 1.5, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" as const }}>
+          {company.shortDescription}
+        </p>
+
+        {/* Detail rows */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px" }}>
+          {detail("Bar License", company.licenseNumber)}
+          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
             <span style={{ color: VARIANT }}>States Practiced</span>
             <span style={{ fontWeight: 500, color: SAGE }}>{company.serviceArea || (isVerified(company) ? company.location.state : "—")}</span>
           </div>
-          {(company.serviceTags ?? []).length > 0 && (
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "16px", borderBottom: company.availability ? `1px solid ${PARCHMENT}` : "none", paddingBottom: "8px" }}>
-              <span style={{ color: VARIANT }}>Practice Areas</span>
-              <span style={{ fontWeight: 500 }}>{company.serviceTags![0]}</span>
-            </div>
-          )}
-          {company.availability && (
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "16px" }}>
-              <span style={{ color: VARIANT }}>Free Consultation</span>
-              <span style={{ fontWeight: 500 }}>{company.availability}</span>
-            </div>
-          )}
+          {detail("Practice Areas", company.serviceTags?.[0])}
+          {detail("Free Consultation", company.availability)}
         </div>
 
         {tags.length > 0 && (
@@ -87,9 +86,18 @@ function FirmCard({ company }: { company: Company }) {
           </div>
         )}
 
-        <Link href={`/vendor/${company.slug}`} style={{ display: "block", textAlign: "center", border: `1px solid ${DF}`, color: DF, padding: "8px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none", marginTop: tags.length ? 0 : "auto" }}>
-          View Profile
-        </Link>
+        {/* Footer */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px", marginTop: "auto" }}>
+          {company.credentials?.length ? (
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: "#396751" }}>
+              <span className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>
+              {company.credentials[0]}
+            </span>
+          ) : <span />}
+          <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
