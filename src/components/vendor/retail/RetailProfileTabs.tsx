@@ -44,11 +44,12 @@ export default function RetailProfileTabs({ company, similar }: { company: Compa
     company.licenseNumber || company.licenseType || company.delivery || company.hours || company.verifiedDate;
   const hasFaqs = (company.faqs?.length ?? 0) > 0;
   const isElite = company.tier === "elite";
+  const isFree = company.tier === "free";
 
   const tabs = [
     { id: "overview", label: "Overview" },
-    hasLicenses ? { id: "licenses", label: "Licenses" } : null,
-    hasFaqs ? { id: "faqs", label: "FAQs" } : null,
+    hasLicenses ? { id: "licenses", label: "Licenses", locked: isFree } : null,
+    hasFaqs ? { id: "faqs", label: "FAQs", locked: isFree } : null,
   ].filter(Boolean) as { id: string; label: string; locked?: boolean }[];
 
   const [active, setActive] = useState("overview");
@@ -66,14 +67,14 @@ export default function RetailProfileTabs({ company, similar }: { company: Compa
                 paddingBottom: "12px",
                 fontSize: "14px",
                 fontWeight: active === t.id ? 600 : 500,
-                color: active === t.id ? DF : VARIANT,
+                color: t.locked ? "#9CA3AF" : (active === t.id ? DF : VARIANT),
                 borderBottom: active === t.id ? `2px solid ${DF}` : "2px solid transparent",
                 background: "none",
                 cursor: "pointer",
                 whiteSpace: "nowrap",
               }}
             >
-              {t.label}
+              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
             </button>
           ))}
         </nav>
@@ -124,6 +125,15 @@ export default function RetailProfileTabs({ company, similar }: { company: Compa
               <div style={{ padding: "0 16px 16px", fontSize: "14px", color: VARIANT, lineHeight: 1.6 }}>{f.answer}</div>
             </details>
           ))}
+        </section>
+      )}
+
+      {tabs.find(t => t.id === active)?.locked && (
+        <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>{isFree ? "Select Feature" : "Verified Pro Feature"}</h3>
+          <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>{isFree ? "Upgrade to add listing details." : "Upgrade to Verified Pro to unlock this section."}</p>
+          <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>
         </section>
       )}
 
