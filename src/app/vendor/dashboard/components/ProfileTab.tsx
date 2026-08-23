@@ -158,7 +158,7 @@ export default function ProfileTab({
 
         <div style={{ marginBottom: "14px" }}>
           <label style={labelStyle}>LinkedIn URL</label>
-          {isSelect ? (
+          {isElite ? (
             <input
               style={inputStyle}
               value={form.linkedinUrl}
@@ -167,7 +167,7 @@ export default function ProfileTab({
               type="url"
             />
           ) : (
-            <TierGate requiredTier="select" currentTier={tier}>
+            <TierGate requiredTier="elite" currentTier={tier} label="Upgrade to Verified Pro to add social links">
               <input style={inputStyle} disabled />
             </TierGate>
           )}
@@ -175,7 +175,7 @@ export default function ProfileTab({
 
         <div style={{ marginBottom: "14px" }}>
           <label style={labelStyle}>Instagram URL</label>
-          {isSelect ? (
+          {isElite ? (
             <input
               style={inputStyle}
               value={form.instagramUrl}
@@ -184,7 +184,7 @@ export default function ProfileTab({
               type="url"
             />
           ) : (
-            <TierGate requiredTier="select" currentTier={tier}>
+            <TierGate requiredTier="elite" currentTier={tier} label="Upgrade to Verified Pro to add social links">
               <input style={inputStyle} disabled />
             </TierGate>
           )}
