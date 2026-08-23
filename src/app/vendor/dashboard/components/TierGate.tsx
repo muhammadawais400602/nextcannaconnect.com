@@ -50,7 +50,7 @@ export default function TierGate({
         </div>
       </div>
       <a
-        href="/membership"
+        href="/pricing"
         style={{
           fontSize: "11px",
           fontWeight: 700,
