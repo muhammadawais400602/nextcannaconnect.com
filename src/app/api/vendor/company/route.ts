@@ -80,6 +80,18 @@ export async function PUT(request: NextRequest) {
       "foundedYear", "teamSize", "serviceArea", "yearsInCannabis",
       "pricingModel", "availability", "hourlyRate", "bio",
       "linkedinUrl", "instagramUrl", "youtubeUrl",
+      "logoUrl",
+      // Category-specific fields
+      "minOrderQty", "leadTime",
+      "licenseNumber", "licenseType", "delivery", "hours", "locationsCount",
+      "metrcIntegrated",
+      "vehicleCount", "transportType", "loadsPerMonth", "cargoInsurance",
+      "dispatchHours", "gpsTracked",
+      "accreditation", "turnaroundTime", "sampleTypes", "panelCount",
+      "facilitySize", "samplesTested", "rushService", "sampleIntakeHours",
+      "licenseStatus",
+      "projectsCompleted", "credentialHeadline",
+      "yearsExperience",
     ];
     if (body.category && VALID_CATEGORIES.includes(body.category)) {
       update.category = body.category;
@@ -96,6 +108,13 @@ export async function PUT(request: NextRequest) {
     }
     if (Array.isArray(body.serviceTags)) update.serviceTags = body.serviceTags;
     if (Array.isArray(body.certifications)) update.certifications = body.certifications;
+    if (Array.isArray(body.productLines)) update.productLines = body.productLines;
+    if (Array.isArray(body.specialtyAreas)) update.specialtyAreas = body.specialtyAreas;
+    if (Array.isArray(body.credentials)) update.credentials = body.credentials;
+    if (Array.isArray(body.statesServed)) update.statesServed = body.statesServed;
+    if (Array.isArray(body.features)) update.features = body.features;
+    if (Array.isArray(body.securityFeatures)) update.securityFeatures = body.securityFeatures;
+    if (Array.isArray(body.accreditations)) update.accreditations = body.accreditations;
     if (Array.isArray(body.products)) {
       update.products = body.products.slice(0, 6).map((p: { name?: string; description?: string; imageUrl?: string }) => ({
         name: String(p.name ?? "").slice(0, 100),
