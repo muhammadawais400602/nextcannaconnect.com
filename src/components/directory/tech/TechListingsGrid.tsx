@@ -7,7 +7,6 @@ import { Company } from "@/types";
 const DF = "#003320";
 const SAGE = "#88B99E";
 const PARCHMENT = "#EEEAE3";
-const INK = "#1A1A1A";
 const VARIANT = "#414943";
 
 function isVerified(c: Company) {
@@ -19,7 +18,7 @@ function VendorCard({ company }: { company: Company }) {
   const detail = (label: string, value?: string) => (
     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
       <span style={{ color: VARIANT }}>{label}</span>
-      <span style={{ fontWeight: 500, color: INK, letterSpacing: "0.01em" }}>{value || "—"}</span>
+      <span style={{ fontWeight: 500, color: DF, letterSpacing: "0.01em" }}>{value || "—"}</span>
     </div>
   );
 
@@ -65,7 +64,7 @@ function VendorCard({ company }: { company: Company }) {
             )}
           </div>
           <div style={{ minWidth: 0 }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 600, color: INK, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
+            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
               <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
