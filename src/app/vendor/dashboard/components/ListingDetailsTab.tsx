@@ -179,6 +179,37 @@ export default function ListingDetailsTab({
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
 
+  if (tier === "free") {
+    return (
+      <div style={cardStyle}>
+        <div style={{ textAlign: "center", padding: "40px 20px" }}>
+          <span style={{ fontSize: "32px", display: "block", marginBottom: "12px" }}>🔒</span>
+          <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#1A4A35", marginBottom: "8px" }}>
+            Select Feature
+          </h2>
+          <p style={{ fontSize: "14px", color: "#6B7280", marginBottom: "20px", maxWidth: "400px", marginLeft: "auto", marginRight: "auto" }}>
+            Upgrade to add listing details. Showcase your certifications, licenses, and category-specific information to potential partners.
+          </p>
+          <a
+            href="/pricing"
+            style={{
+              display: "inline-block",
+              fontSize: "14px",
+              fontWeight: 700,
+              color: "white",
+              background: "#1A4A35",
+              textDecoration: "none",
+              padding: "12px 28px",
+              borderRadius: "8px",
+            }}
+          >
+            View Plans →
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   if (!catConfig) {
     return (
       <div style={cardStyle}>
