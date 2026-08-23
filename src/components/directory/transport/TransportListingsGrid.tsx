@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Company } from "@/types";
 
@@ -116,20 +116,56 @@ function CarrierCard({ company, list }: { company: Company; list: boolean }) {
   );
 }
 
+const selectStyle: React.CSSProperties = {
+  border: `1px solid ${SURFACE_VARIANT}`,
+  borderRadius: "0.5rem",
+  padding: "8px 12px",
+  fontSize: "14px",
+  fontWeight: 500,
+  background: "white",
+  outline: "none",
+  cursor: "pointer",
+  color: VARIANT,
+};
+
 const PAGE_SIZE = 9;
 
 export default function TransportListingsGrid({ companies }: { companies: Company[] }) {
   const [view, setView] = useState<"grid" | "list">("grid");
+  const [location, setLocation] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
-  const shown = companies.slice(0, visible);
+  const states = useMemo(() => [...new Set(companies.map((c) => c.location.state).filter(Boolean))].sort(), [companies]);
+
+  const filtered = useMemo(() => {
+    return companies.filter((c) => {
+      if (location && c.location.state !== location) return false;
+      return true;
+    });
+  }, [companies, location]);
+
+  const shown = filtered.slice(0, visible);
 
   return (
+    <>
+    {/* Filter bar */}
+    <div style={{ background: "white", borderTop: `1px solid ${SURFACE_VARIANT}`, borderBottom: `1px solid ${SURFACE_VARIANT}`, position: "sticky", top: "70px", zIndex: 40 }}>
+      <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
+        <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
+          <span className="material-symbols-outlined">filter_list</span> Filters:
+        </span>
+        <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
+          <option value="">All Locations</option>
+          {states.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </div>
+    </div>
+
     <section style={{ background: "#f5f3f2", padding: "64px 0" }}>
       <div className="cat-container">
       {/* Header + view toggle */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px", flexWrap: "wrap", gap: "12px" }}>
-        <h2 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: 0 }}>{companies.length} Verified Carrier{companies.length === 1 ? "" : "s"}</h2>
+        <h2 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: 0 }}>{filtered.length} Verified Carrier{filtered.length === 1 ? "" : "s"}</h2>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "#e4e2e1", borderRadius: "0.5rem", padding: "4px" }}>
           <button onClick={() => setView("grid")} aria-label="Grid view" style={{ padding: "8px", borderRadius: "0.25rem", border: "none", cursor: "pointer", background: view === "grid" ? "white" : "transparent", color: view === "grid" ? DF : VARIANT, display: "flex", boxShadow: view === "grid" ? "0 1px 2px rgba(0,0,0,0.1)" : "none" }}>
             <span className="material-symbols-outlined">grid_view</span>
@@ -160,7 +196,7 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
         </div>
       )}
 
-      {visible < companies.length && (
+      {visible < filtered.length && (
         <div style={{ textAlign: "center", marginBottom: "24px" }}>
           <button onClick={() => setVisible((v) => v + PAGE_SIZE)} style={{ border: `1px solid ${DF}`, color: DF, padding: "12px 32px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, background: "transparent", cursor: "pointer" }}>
             Load More Carriers
@@ -169,5 +205,6 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
       )}
       </div>
     </section>
+    </>
   );
 }

@@ -117,16 +117,19 @@ const PAGE_SIZE = 9;
 export default function TechListingsGrid({ companies }: { companies: Company[] }) {
   const [integration, setIntegration] = useState("");
   const [security, setSecurity] = useState("");
+  const [location, setLocation] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const integrations = useMemo(() => [...new Set(companies.flatMap((c) => c.serviceTags ?? []))].sort(), [companies]);
   const securities = useMemo(() => [...new Set(companies.map((c) => c.accreditation).filter(Boolean) as string[])].sort(), [companies]);
+  const states = useMemo(() => [...new Set(companies.map((c) => c.location.state).filter(Boolean))].sort(), [companies]);
 
   const filtered = useMemo(() => companies.filter((c) => {
+    if (location && c.location.state !== location) return false;
     if (integration && !(c.serviceTags ?? []).includes(integration)) return false;
     if (security && c.accreditation !== security) return false;
     return true;
-  }), [companies, integration, security]);
+  }), [companies, location, integration, security]);
 
   const shown = filtered.slice(0, visible);
 
@@ -138,6 +141,10 @@ export default function TechListingsGrid({ companies }: { companies: Company[] }
           <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
             <span className="material-symbols-outlined">filter_list</span> Filters:
           </span>
+          <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
+            <option value="">All Locations</option>
+            {states.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
           <select value={integration} onChange={(e) => { setIntegration(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Integrations</option>
             {integrations.map((i) => <option key={i} value={i}>{i}</option>)}
