@@ -1,42 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Company } from "@/types";
+import { Company, CategorySlug } from "@/types";
+import { getCardFieldCount, getCardTagCount, showBannerImage, CARD_FIELDS } from "@/lib/tier";
 
-function getBadge(company: Company): { label: string; color: string; bg: string } | null {
-  if (company.tier === "elite") {
-    return { label: "Verified Pro", color: "#92400E", bg: "rgba(217,119,6,0.12)" };
-  }
-  if (company.tier === "select") {
-    return { label: "Select", color: "#2d6e52", bg: "rgba(45,110,82,0.1)" };
-  }
-  return null;
-}
-
-function getStat1(company: Company): { label: string; value: string } {
-  if (company.serviceTags?.[0]) {
-    return { label: "Specialization", value: company.serviceTags[0] };
-  }
-  return { label: "Category", value: "Cannabis B2B" };
-}
-
-function getStat2(company: Company): { label: string; value: string } {
-  if (company.statesServed && company.statesServed.length > 0) {
-    return { label: "States Served", value: `${company.statesServed.length} States` };
-  }
-  if (company.serviceArea) return { label: "Service Area", value: company.serviceArea };
-  if (company.minOrderQty) return { label: "Min. Order", value: company.minOrderQty };
-  return { label: "Coverage", value: "Nationwide" };
-}
-
-function getStat3(company: Company): { label: string; value: string } {
-  if (company.certifications?.[0]) {
-    return { label: "Certifications", value: company.certifications[0] };
-  }
-  if (company.yearsInCannabis) {
-    return { label: "Experience", value: `${company.yearsInCannabis}+ Years` };
-  }
-  if (company.leadTime) return { label: "Lead Time", value: company.leadTime };
-  return { label: "Status", value: "Verified" };
+function getFieldValue(company: Company, key: string): string | null {
+  const val = (company as unknown as Record<string, unknown>)[key];
+  if (val == null || val === "") return null;
+  if (Array.isArray(val)) return val.length > 0 ? val.slice(0, 3).join(", ") : null;
+  if (typeof val === "number") return String(val);
+  return String(val);
 }
 
 function getSecondaryAction(company: Company): string {
@@ -55,39 +27,37 @@ interface Props {
 }
 
 export default function ListingCard({ company }: Props) {
-  const isFree = company.tier === "free";
-  const badge = getBadge(company);
-  const stat1 = getStat1(company);
-  const stat2 = getStat2(company);
-  const stat3 = getStat3(company);
-  const secondaryAction = getSecondaryAction(company);
+  const tier = company.tier;
+  const fieldCount = getCardFieldCount(tier);
+  const tagCount = getCardTagCount(tier);
+  const hasBanner = showBannerImage(tier);
+  const catFields = CARD_FIELDS[company.category as CategorySlug] ?? [];
+  const displayFields = catFields.slice(0, fieldCount);
+  const displayTags = company.serviceTags?.slice(0, tagCount) ?? [];
 
-  if (isFree) {
+  // UNCLAIMED CARD
+  if (tier === "free") {
     return (
       <div
         style={{
-          backgroundColor: "white",
-          border: "1px solid #e5e7eb",
-          borderRadius: "16px",
-          padding: "20px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "16px",
-          opacity: 0.65,
+          background: "white",
+          border: "1px solid #D3D1C7",
+          borderRadius: "12px",
+          padding: "24px",
+          opacity: 0.72,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
           <div
             style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "10px",
-              backgroundColor: "#D1D5DB",
+              width: "48px",
+              height: "48px",
+              borderRadius: "50%",
+              background: "#E5E7EB",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "13px",
+              fontSize: "15px",
               fontWeight: 700,
               color: "#9CA3AF",
               flexShrink: 0,
@@ -95,297 +65,244 @@ export default function ListingCard({ company }: Props) {
             }}
           >
             {company.logoUrl ? (
-              <Image
-                src={company.logoUrl}
-                alt={company.name}
-                width={40}
-                height={40}
-                style={{ objectFit: "cover", width: "100%", height: "100%" }}
-                unoptimized
-              />
+              <Image src={company.logoUrl} alt={company.name} width={48} height={48} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
             ) : (
               company.logoPlaceholder
             )}
           </div>
-          <div>
-            <p style={{ fontSize: "14px", fontWeight: 600, color: "#6B7280", fontFamily: "'Inter', sans-serif" }}>
+          <div style={{ minWidth: 0 }}>
+            <p style={{ fontSize: "15px", fontWeight: 600, color: "#6B7280", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {company.name}
             </p>
-            <p style={{ fontSize: "12px", color: "#9CA3AF", fontFamily: "'Inter', sans-serif" }}>
+            <p style={{ fontSize: "12px", color: "#9CA3AF" }}>
               {company.location.city}, {company.location.state}
             </p>
           </div>
         </div>
+
         <Link
           href={`/signup?listing=${company.slug}`}
           style={{
-            fontSize: "12px",
-            fontWeight: 600,
-            color: "#003320",
-            textDecoration: "none",
-            border: "1px solid #003320",
+            display: "block",
+            textAlign: "center",
+            padding: "10px",
             borderRadius: "8px",
-            padding: "7px 14px",
-            whiteSpace: "nowrap",
-            fontFamily: "'Inter', sans-serif",
+            fontSize: "13px",
+            fontWeight: 600,
+            color: "#6B7280",
+            border: "1px solid #D1D5DB",
+            textDecoration: "none",
+            background: "transparent",
           }}
         >
-          Claim Listing
+          Claim This Listing
         </Link>
       </div>
     );
   }
 
-  const isVerifiedPro = company.tier === "elite";
+  const isElite = tier === "elite";
 
-  return (
-    <div
-      style={{
-        backgroundColor: "white",
-        borderTop: isVerifiedPro ? "3px solid #D97706" : "1px solid #e5e7eb",
-        borderRight: isVerifiedPro ? "1px solid rgba(217,119,6,0.2)" : "1px solid #e5e7eb",
-        borderBottom: isVerifiedPro ? "1px solid rgba(217,119,6,0.2)" : "1px solid #e5e7eb",
-        borderLeft: isVerifiedPro ? "1px solid rgba(217,119,6,0.2)" : "1px solid #e5e7eb",
-        borderRadius: "16px",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "row",
-        boxShadow: isVerifiedPro ? "0 4px 20px rgba(217,119,6,0.08)" : "none",
-      }}
-      className="directory-listing-card"
-    >
-      {/* Left image */}
+  // SELECT CARD
+  if (tier === "select") {
+    return (
       <div
         style={{
-          width: "160px",
-          flexShrink: 0,
-          background: `linear-gradient(135deg, ${company.logoColor} 0%, ${company.bannerColor ?? company.logoColor}dd 100%)`,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "160px",
-          position: "relative",
+          background: "white",
+          border: "1px solid #E5E7EB",
+          borderRadius: "12px",
           overflow: "hidden",
         }}
-        className="listing-card-image"
       >
-        {company.bannerImageUrl ? (
-          <Image
-            src={company.bannerImageUrl}
-            alt={company.name}
-            fill
-            sizes="220px"
-            style={{ objectFit: "cover" }}
-            unoptimized
-          />
-        ) : (
-          <span
-            style={{
-              fontFamily: "'Noto Serif', serif",
-              fontSize: "36px",
-              fontStyle: "italic",
-              color: "rgba(255,255,255,0.3)",
-              fontWeight: 700,
-              userSelect: "none",
-            }}
-          >
-            {company.logoPlaceholder}
-          </span>
-        )}
-      </div>
-
-      {/* Right content */}
-      <div style={{ flex: 1, padding: "20px 24px", minWidth: 0 }}>
-        {/* Top row: badge + rating + score */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            gap: "12px",
-            marginBottom: "10px",
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            {isVerifiedPro && (
-              <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "9px", fontWeight: 800, letterSpacing: "0.12em", textTransform: "uppercase", color: "#92400E", background: "rgba(217,119,6,0.1)", padding: "3px 8px", borderRadius: "4px", fontFamily: "'Inter', sans-serif" }}>
-                ★ Priority Listing
-              </span>
-            )}
-            {badge && (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  backgroundColor: badge.bg,
-                  color: badge.color,
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  padding: "4px 10px",
-                  borderRadius: "999px",
-                  fontFamily: "'Inter', sans-serif",
-                  letterSpacing: "0.03em",
-                }}
-              >
-                <span
-                  className="material-symbols-outlined"
-                  style={{ fontSize: "13px" }}
-                >
-                  verified
+        <div style={{ padding: "24px" }}>
+          {/* Logo + name + badge */}
+          <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "16px" }}>
+            <div
+              style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "50%",
+                background: company.logoColor || "#1A4A35",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "15px",
+                fontWeight: 700,
+                color: "white",
+                flexShrink: 0,
+                overflow: "hidden",
+              }}
+            >
+              {company.logoUrl ? (
+                <Image src={company.logoUrl} alt={company.name} width={48} height={48} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
+              ) : (
+                company.logoPlaceholder
+              )}
+            </div>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {company.name}
+                </h3>
+                <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "5px", background: "#185FA5", color: "white", whiteSpace: "nowrap" }}>
+                  SELECT
                 </span>
-                {badge.label}
-              </span>
-            )}
-          </div>
-
-        </div>
-
-        {/* Company name */}
-        <h3
-          style={{
-            fontFamily: "'Noto Serif', serif",
-            fontSize: "20px",
-            fontWeight: 700,
-            color: "#111827",
-            marginBottom: "4px",
-            lineHeight: 1.2,
-          }}
-        >
-          {company.name}
-        </h3>
-
-        {/* Location */}
-        <p
-          style={{
-            fontSize: "12px",
-            color: "#9CA3AF",
-            fontFamily: "'Inter', sans-serif",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-          }}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>location_on</span>
-          {company.location.city}, {company.location.state}
-        </p>
-
-        {/* Description — 1 line on directory, full text on listing page */}
-        <p
-          style={{
-            fontSize: "13px",
-            color: "#6B7280",
-            lineHeight: 1.65,
-            marginBottom: "16px",
-            fontFamily: "'Inter', sans-serif",
-            overflow: "hidden",
-            display: "-webkit-box",
-            WebkitLineClamp: 1,
-            WebkitBoxOrient: "vertical" as const,
-          }}
-        >
-          {company.shortDescription}
-        </p>
-
-        {/* Stats row */}
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            flexWrap: "wrap",
-            paddingTop: "14px",
-            borderTop: "1px solid #f3f4f6",
-            marginBottom: "16px",
-          }}
-        >
-          {[stat1, stat2, stat3].map((stat) => (
-            <div key={stat.label}>
-              <p
-                style={{
-                  fontSize: "9px",
-                  fontWeight: 700,
-                  letterSpacing: "0.15em",
-                  textTransform: "uppercase",
-                  color: "rgba(65,73,67,0.4)",
-                  fontFamily: "'Inter', sans-serif",
-                  marginBottom: "3px",
-                }}
-              >
-                {stat.label}
-              </p>
-              <p
-                style={{
-                  fontSize: "13px",
-                  fontWeight: 600,
-                  color: "#111827",
-                  fontFamily: "'Inter', sans-serif",
-                }}
-              >
-                {stat.value}
+              </div>
+              <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "2px" }}>
+                {company.location.city}, {company.location.state}
               </p>
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* Action buttons */}
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+          {/* Field rows */}
+          {displayFields.length > 0 && (
+            <div style={{ marginBottom: "14px", display: "flex", flexDirection: "column", gap: "8px" }}>
+              {displayFields.map((f) => {
+                const val = getFieldValue(company, f.key);
+                if (!val) return null;
+                return (
+                  <div key={f.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontSize: "12px", color: "#9CA3AF", fontWeight: 600 }}>{f.label}</span>
+                    <span style={{ fontSize: "12px", color: "#374151", fontWeight: 600 }}>{val}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Tag pills */}
+          {displayTags.length > 0 && (
+            <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
+              {displayTags.map((tag) => (
+                <span key={tag} style={{ fontSize: "11px", fontWeight: 500, color: "#4A5E4A", background: "#F0F5F0", padding: "3px 10px", borderRadius: "100px" }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           <Link
             href={`/vendor/${company.slug}`}
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              backgroundColor: "#003320",
+              display: "block",
+              textAlign: "center",
+              padding: "11px",
+              borderRadius: "8px",
+              fontSize: "13px",
+              fontWeight: 700,
               color: "white",
+              background: "#003320",
               textDecoration: "none",
-              fontSize: "12px",
-              fontWeight: 700,
-              letterSpacing: "0.05em",
-              padding: "10px 20px",
-              borderRadius: "8px",
-              fontFamily: "'Inter', sans-serif",
-              whiteSpace: "nowrap",
             }}
           >
-            View Profile
-          </Link>
-          <Link
-            href={`/vendor/${company.slug}#contact`}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-              backgroundColor: "transparent",
-              color: "#003320",
-              textDecoration: "none",
-              fontSize: "12px",
-              fontWeight: 700,
-              letterSpacing: "0.05em",
-              padding: "10px 20px",
-              borderRadius: "8px",
-              border: "1px solid rgba(0,51,32,0.25)",
-              fontFamily: "'Inter', sans-serif",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {secondaryAction}
+            View Profile &rarr;
           </Link>
         </div>
       </div>
+    );
+  }
 
-      <style>{`
-        @media (max-width: 600px) {
-          .directory-listing-card {
-            flex-direction: column !important;
-          }
-          .listing-card-image {
-            width: 100% !important;
-            min-height: 120px !important;
-          }
-        }
-      `}</style>
+  // VERIFIED PRO CARD
+  return (
+    <div
+      style={{
+        background: "white",
+        border: "1px solid rgba(26,74,53,0.2)",
+        borderRadius: "12px",
+        overflow: "hidden",
+        boxShadow: "0 4px 20px rgba(26,74,53,0.08)",
+      }}
+    >
+      {/* Banner image */}
+      <div style={{ position: "relative", height: "140px", background: `linear-gradient(135deg, ${company.logoColor || "#1A4A35"} 0%, #0D2818 100%)` }}>
+        {company.bannerImageUrl && (
+          <Image src={company.bannerImageUrl} alt={company.name} fill sizes="400px" style={{ objectFit: "cover" }} unoptimized />
+        )}
+        <span style={{
+          position: "absolute", top: "10px", left: "10px",
+          display: "inline-flex", alignItems: "center", gap: "4px",
+          fontSize: "10px", fontWeight: 700, letterSpacing: "0.05em",
+          padding: "4px 10px", borderRadius: "6px",
+          background: "rgba(22,163,74,0.9)", color: "white",
+        }}>
+          ✓ Verified
+        </span>
+        {/* Overlapping logo */}
+        <div style={{
+          position: "absolute", bottom: "-24px", left: "20px",
+          width: "52px", height: "52px", borderRadius: "50%",
+          border: "3px solid white",
+          background: company.logoColor || "#1A4A35",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: "16px", fontWeight: 700, color: "white",
+          overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
+        }}>
+          {company.logoUrl ? (
+            <Image src={company.logoUrl} alt={company.name} width={52} height={52} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
+          ) : (
+            company.logoPlaceholder
+          )}
+        </div>
+      </div>
+
+      <div style={{ padding: "34px 24px 24px" }}>
+        {/* Name + badge */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", marginBottom: "2px" }}>
+          <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0 }}>
+            {company.name}
+          </h3>
+          <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "5px", background: "#1A4A35", color: "white", whiteSpace: "nowrap" }}>
+            VERIFIED PRO
+          </span>
+        </div>
+        <p style={{ fontSize: "12px", color: "#9CA3AF", marginBottom: "14px" }}>
+          {company.location.city}, {company.location.state}
+        </p>
+
+        {/* Field rows (4) */}
+        {displayFields.length > 0 && (
+          <div style={{ marginBottom: "14px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            {displayFields.map((f) => {
+              const val = getFieldValue(company, f.key);
+              if (!val) return null;
+              return (
+                <div key={f.key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: "12px", color: "#9CA3AF", fontWeight: 600 }}>{f.label}</span>
+                  <span style={{ fontSize: "12px", color: "#374151", fontWeight: 600 }}>{val}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* All tag pills */}
+        {displayTags.length > 0 && (
+          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
+            {displayTags.map((tag) => (
+              <span key={tag} style={{ fontSize: "11px", fontWeight: 500, color: "#4A5E4A", background: "#F0F5F0", padding: "3px 10px", borderRadius: "100px" }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <Link
+          href={`/vendor/${company.slug}`}
+          style={{
+            display: "block",
+            textAlign: "center",
+            padding: "11px",
+            borderRadius: "8px",
+            fontSize: "13px",
+            fontWeight: 700,
+            color: "white",
+            background: "#003320",
+            textDecoration: "none",
+          }}
+        >
+          View Profile &rarr;
+        </Link>
+      </div>
     </div>
   );
 }
