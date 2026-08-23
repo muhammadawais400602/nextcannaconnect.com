@@ -283,36 +283,34 @@ export default function Navbar() {
 
         {/* Right actions */}
         <div className="hidden md:flex items-center gap-6">
-          {!authLoading && (
-            authUser ? (
-              <ProfileMenu user={authUser} onLogout={handleLogout} />
-            ) : (
-              <>
-                <Link
-                  href="/signin"
-                  style={{
-                    fontSize: "11px",
-                    fontWeight: 600,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "#6b7280",
-                    textDecoration: "none",
-                    transition: "color 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#003320"; }}
-                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "#6b7280"; }}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className="btn-primary"
-                  style={{ fontSize: "11px", padding: "10px 20px" }}
-                >
-                  List Your Business
-                </Link>
-              </>
-            )
+          {authUser ? (
+            <ProfileMenu user={authUser} onLogout={handleLogout} />
+          ) : (
+            <>
+              <Link
+                href="/signin"
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  letterSpacing: "0.15em",
+                  textTransform: "uppercase",
+                  color: "#6b7280",
+                  textDecoration: "none",
+                  transition: "color 0.2s ease",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = "#003320"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = "#6b7280"; }}
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="btn-primary"
+                style={{ fontSize: "11px", padding: "10px 20px" }}
+              >
+                List Your Business
+              </Link>
+            </>
           )}
         </div>
 

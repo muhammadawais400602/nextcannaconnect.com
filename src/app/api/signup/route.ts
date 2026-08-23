@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
+import User from "@/lib/models/User";
 
 const TIER_LABELS: Record<string, string> = {
   free: "Claimed (Free)",
@@ -40,12 +42,21 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const body = await request.json();
 
-    const { fullName, companyName, email, phone, stateProvince, category,
+    const { fullName, companyName, email, password, phone, stateProvince, category,
             tier, website, description, publicPhone, serviceArea,
             certifications, socialLink, contactName, categoryDetails } = body;
 
     if (!fullName || !companyName || !email || !tier) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+
+    if (!password || password.length < 8) {
+      return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
+    }
+
+    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existingUser) {
+      return NextResponse.json({ error: "An account with this email already exists. Please sign in instead." }, { status: 409 });
     }
 
     const isPaid = tier === "select" || tier === "elite";
@@ -59,8 +70,22 @@ export async function POST(request: NextRequest) {
       paymentStatus: isPaid ? "awaiting_payment" : "not_required",
     });
 
-    // Paid tiers → create Stripe Checkout session
-    if (isPaid) {
+    // Create user account with hashed password
+    const passwordHash = await bcrypt.hash(password, 12);
+    await User.create({
+      email: email.toLowerCase().trim(),
+      fullName,
+      companyName,
+      phone,
+      stateProvince,
+      category,
+      tier,
+      passwordHash,
+      isActive: !isPaid,
+    });
+
+    // Paid tiers → create Stripe Checkout session (if Stripe is configured)
+    if (isPaid && process.env.STRIPE_SECRET_KEY) {
       const priceInfo = TIER_PRICES[tier];
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
       const stripe = getStripe();
@@ -89,13 +114,17 @@ export async function POST(request: NextRequest) {
         cancel_url: `${appUrl}/signup?tier=${tier}`,
       });
 
-      // Store the session ID
       await SignupApplication.findByIdAndUpdate(app._id, { stripeSessionId: session.id });
 
       return NextResponse.json({ checkoutUrl: session.url });
     }
 
-    // Free tier — send confirmation emails
+    if (isPaid) {
+      console.warn("[signup] STRIPE_SECRET_KEY not set — skipping checkout for paid tier");
+      await SignupApplication.findByIdAndUpdate(app._id, { paymentStatus: "pending_manual" });
+    }
+
+    // Send confirmation emails
     const tierLabel = TIER_LABELS[tier] ?? tier;
     const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
 

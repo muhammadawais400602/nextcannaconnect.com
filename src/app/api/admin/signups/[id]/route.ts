@@ -54,10 +54,6 @@ export async function PATCH(
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nextcanna-connect.vercel.app";
 
     if (status === "approved") {
-      // Generate secure setup token (expires in 72 hours)
-      const token = randomBytes(32).toString("hex");
-      const expires = new Date(Date.now() + 72 * 60 * 60 * 1000);
-
       // Create Company record if one doesn't exist yet (best-effort — never blocks approval)
       let companyId: unknown = null;
       try {
@@ -94,60 +90,97 @@ export async function PATCH(
         console.error("[signups PATCH] Company creation failed (non-fatal):", companyErr);
       }
 
-      // Create or update User record (linked to company)
+      // Activate user account and link to company
+      const existingUser = await User.findOne({ email: app.email });
+      const hasPassword = existingUser?.passwordHash;
+
+      const userUpdate: Record<string, unknown> = {
+        email: app.email,
+        fullName: app.fullName,
+        companyName: app.companyName,
+        phone: app.phone,
+        stateProvince: app.stateProvince,
+        category: app.category,
+        accountType: "vendor",
+        tier: TIER_MAP[app.tier] ?? "free",
+        ...(companyId ? { companyId } : {}),
+        isActive: !!hasPassword,
+      };
+
+      if (!hasPassword) {
+        const setupTokenVal = randomBytes(32).toString("hex");
+        const setupExpires = new Date(Date.now() + 72 * 60 * 60 * 1000);
+        userUpdate.setupToken = setupTokenVal;
+        userUpdate.setupTokenExpires = setupExpires;
+      }
+
       await User.findOneAndUpdate(
         { email: app.email },
-        {
-          email: app.email,
-          fullName: app.fullName,
-          companyName: app.companyName,
-          phone: app.phone,
-          stateProvince: app.stateProvince,
-          category: app.category,
-          accountType: "vendor",
-          tier: TIER_MAP[app.tier] ?? "free",
-          ...(companyId ? { companyId } : {}),
-          setupToken: token,
-          setupTokenExpires: expires,
-          isActive: false,
-        },
+        userUpdate,
         { upsert: true, new: true, setDefaultsOnInsert: true }
       );
 
-      const setupLink = `${siteUrl}/set-password?token=${token}`;
-
-      await sendEmail({
-        to: app.email,
-        subject: "Your NextCanna Connect application is approved — set your password",
-        html: `
-          <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#1A2E1A">
-            <div style="background:#1A4A35;padding:32px;text-align:center;border-radius:12px 12px 0 0">
-              <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
-            </div>
-            <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-              <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${app.fullName}!</h2>
-              <p style="line-height:1.6;color:#4A5E4A">
-                Your application for <strong>${app.companyName}</strong> on the <strong>${tierLabel}</strong>
-                plan has been <strong style="color:#1A4A35">approved</strong>.
-              </p>
-              <p style="line-height:1.6;color:#4A5E4A">
-                Click the button below to set your password and activate your account.
-                This link expires in <strong>72 hours</strong>.
-              </p>
-              <div style="text-align:center;margin:28px 0">
-                <a href="${setupLink}"
-                   style="background:#1A4A35;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;display:inline-block">
-                  Set Your Password →
-                </a>
+      if (hasPassword) {
+        await sendEmail({
+          to: app.email,
+          subject: "Your NextCanna Connect application is approved!",
+          html: `
+            <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#1A2E1A">
+              <div style="background:#1A4A35;padding:32px;text-align:center;border-radius:12px 12px 0 0">
+                <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
               </div>
-              <p style="font-size:12px;color:#9CA3AF;text-align:center">
-                Or copy this link: <a href="${setupLink}" style="color:#1A4A35;word-break:break-all">${setupLink}</a>
-              </p>
-              <p style="color:#4A5E4A;margin-top:24px">— The NextCanna Connect Team</p>
+              <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
+                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${app.fullName}!</h2>
+                <p style="line-height:1.6;color:#4A5E4A">
+                  Your application for <strong>${app.companyName}</strong> on the <strong>${tierLabel}</strong>
+                  plan has been <strong style="color:#1A4A35">approved</strong>. Your account is now active!
+                </p>
+                <div style="text-align:center;margin:28px 0">
+                  <a href="${siteUrl}/signin"
+                     style="background:#1A4A35;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;display:inline-block">
+                    Sign In to Your Account →
+                  </a>
+                </div>
+                <p style="color:#4A5E4A;margin-top:24px">— The NextCanna Connect Team</p>
+              </div>
             </div>
-          </div>
-        `,
-      });
+          `,
+        });
+      } else {
+        const setupLink = `${siteUrl}/set-password?token=${(userUpdate.setupToken as string)}`;
+        await sendEmail({
+          to: app.email,
+          subject: "Your NextCanna Connect application is approved — set your password",
+          html: `
+            <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#1A2E1A">
+              <div style="background:#1A4A35;padding:32px;text-align:center;border-radius:12px 12px 0 0">
+                <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
+              </div>
+              <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
+                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${app.fullName}!</h2>
+                <p style="line-height:1.6;color:#4A5E4A">
+                  Your application for <strong>${app.companyName}</strong> on the <strong>${tierLabel}</strong>
+                  plan has been <strong style="color:#1A4A35">approved</strong>.
+                </p>
+                <p style="line-height:1.6;color:#4A5E4A">
+                  Click the button below to set your password and activate your account.
+                  This link expires in <strong>72 hours</strong>.
+                </p>
+                <div style="text-align:center;margin:28px 0">
+                  <a href="${setupLink}"
+                     style="background:#1A4A35;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;display:inline-block">
+                    Set Your Password →
+                  </a>
+                </div>
+                <p style="font-size:12px;color:#9CA3AF;text-align:center">
+                  Or copy this link: <a href="${setupLink}" style="color:#1A4A35;word-break:break-all">${setupLink}</a>
+                </p>
+                <p style="color:#4A5E4A;margin-top:24px">— The NextCanna Connect Team</p>
+              </div>
+            </div>
+          `,
+        });
+      }
 
     } else if (status === "rejected") {
       await sendEmail({

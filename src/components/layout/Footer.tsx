@@ -70,7 +70,7 @@ export default function Footer() {
             <div>
               <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "20px" }}>Platform</h4>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {[{ label: "Directory", href: "/directory" }, { label: "Blog", href: "/blog" }, { label: "Sign Up", href: "/signup" }].map((item) => (
+                {[{ label: "Directory", href: "/directory" }, { label: "Pricing", href: "/membership" }, { label: "Blog", href: "/blog" }, { label: "Sign Up", href: "/signup" }].map((item) => (
                   <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
                 ))}
               </div>

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!user.isActive) {
-      return NextResponse.json({ error: "Your account is not active yet. Please check your email for the setup link." }, { status: 403 });
+      return NextResponse.json({ error: "Your account is not active yet. It may be pending admin approval." }, { status: 403 });
     }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
