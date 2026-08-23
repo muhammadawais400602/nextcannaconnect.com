@@ -126,24 +126,36 @@ export default function ProfileTab({
 
         <div style={{ marginBottom: "14px" }}>
           <label style={labelStyle}>About Your Business</label>
-          <textarea
-            style={{ ...inputStyle, minHeight: "120px", resize: "vertical" }}
-            value={form.fullDescription}
-            onChange={(e) => set("fullDescription", e.target.value)}
-            placeholder="Describe your business, expertise, and what sets you apart..."
-          />
+          {isSelect ? (
+            <textarea
+              style={{ ...inputStyle, minHeight: "120px", resize: "vertical" }}
+              value={form.fullDescription}
+              onChange={(e) => set("fullDescription", e.target.value)}
+              placeholder="Describe your business, expertise, and what sets you apart..."
+            />
+          ) : (
+            <TierGate requiredTier="select" currentTier={tier} label="Upgrade to Select to add a business description">
+              <textarea style={{ ...inputStyle, minHeight: "120px" }} disabled />
+            </TierGate>
+          )}
         </div>
 
         <div style={{ ...gridTwo, marginBottom: "14px" }}>
           <div>
             <label style={labelStyle}>Website URL</label>
-            <input
-              style={inputStyle}
-              value={form.website}
-              onChange={(e) => set("website", e.target.value)}
-              placeholder="https://yoursite.com"
-              type="url"
-            />
+            {isSelect ? (
+              <input
+                style={inputStyle}
+                value={form.website}
+                onChange={(e) => set("website", e.target.value)}
+                placeholder="https://yoursite.com"
+                type="url"
+              />
+            ) : (
+              <TierGate requiredTier="select" currentTier={tier} label="Upgrade to Select to add your website">
+                <input style={inputStyle} disabled />
+              </TierGate>
+            )}
           </div>
           <div>
             <label style={labelStyle}>Public Phone</label>
