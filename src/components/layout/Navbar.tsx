@@ -7,7 +7,6 @@ import { Menu, X, User } from "lucide-react";
 
 const NAV_LINKS = [
   { label: "Directory", href: "/directory" },
-  { label: "RFP Board", href: "/rfp-board" },
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
@@ -222,7 +221,6 @@ export default function Navbar() {
   const isActive = (href: string) => {
     if (href === "/directory") return pathname.startsWith("/directory");
     if (href === "/blog") return pathname.startsWith("/blog");
-    if (href === "/rfp-board") return pathname.startsWith("/rfp-board");
     return pathname === href;
   };
 

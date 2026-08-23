@@ -10,31 +10,57 @@ export default function Footer() {
 
   return (
     <footer style={{ backgroundColor: "#003320", color: "rgba(136,185,158,0.7)" }}>
-      <div className="mx-auto px-4 md:px-8 pt-14 md:pt-24 pb-12" style={{ maxWidth: "1440px" }}>
+      <div className="mx-auto px-4 md:px-8 pt-10 md:pt-14 pb-8" style={{ maxWidth: "1440px" }}>
 
-        {/* Row 1: Logo & Description */}
-        <div style={{ maxWidth: "560px", marginBottom: "80px" }}>
-          <Link
-            href="/"
-            style={{
-              fontFamily: "'Noto Serif', serif",
-              fontStyle: "italic",
-              fontSize: "22px",
-              color: "white",
-              textDecoration: "none",
-              display: "block",
-              marginBottom: "20px",
-            }}
-          >
-            NextCanna Connect
-          </Link>
-          <p style={{ fontSize: "13px", lineHeight: 1.75, color: "rgba(136,185,158,0.75)" }}>
-            NextCanna Connect is the commercial backbone of the cannabis industry. We unify every critical component of the value chain from funding and licensing to cultivation, manufacturing, and retail into a single, institutional-grade platform. By connecting operators with vetted partners across legal, banking, accounting, and advisory services, we enable seamless execution, faster scaling, and consistent performance across state markets.
-          </p>
+        {/* Top: Logo + Description | Platform | Company | Legal */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-8 md:gap-10" style={{ marginBottom: "32px" }}>
+          <div className="col-span-2 sm:col-span-4 lg:col-span-3">
+            <Link
+              href="/"
+              style={{
+                fontFamily: "'Noto Serif', serif",
+                fontStyle: "italic",
+                fontSize: "20px",
+                color: "white",
+                textDecoration: "none",
+                display: "block",
+                marginBottom: "12px",
+              }}
+            >
+              NextCanna Connect
+            </Link>
+            <p style={{ fontSize: "12px", lineHeight: 1.7, color: "rgba(136,185,158,0.7)", maxWidth: "480px" }}>
+              NextCanna Connect is the commercial backbone of the cannabis industry. We unify every critical component of the value chain from funding and licensing to cultivation, manufacturing, and retail into a single, institutional-grade platform. By connecting operators with vetted partners across legal, banking, accounting, and advisory services, we enable seamless execution, faster scaling, and consistent performance across state markets.
+            </p>
+          </div>
+          <div>
+            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "14px" }}>Platform</h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {[{ label: "Directory", href: "/directory" }, { label: "Pricing", href: "/pricing" }, { label: "Blog", href: "/blog" }, { label: "Sign Up", href: "/signup" }].map((item) => (
+                <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "14px" }}>Company</h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {[{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }].map((item) => (
+                <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "14px" }}>Legal</h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {[{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms & Conditions", href: "/terms" }, { label: "Disclaimer", href: "/disclaimer" }, { label: "Cookie Policy", href: "/cookie-policy" }].map((item) => (
+                <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Row 2: Categories */}
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "64px", marginBottom: "64px" }}>
+        {/* Categories */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "24px", marginBottom: "24px" }}>
           <h4
             style={{
               fontSize: "10px",
@@ -42,21 +68,18 @@ export default function Footer() {
               letterSpacing: "0.25em",
               textTransform: "uppercase",
               color: "rgba(255,255,255,0.3)",
-              marginBottom: "40px",
+              marginBottom: "16px",
             }}
           >
             Categories
           </h4>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-8">
+          <div className="flex flex-wrap gap-x-6 gap-y-2">
             {CATEGORIES.map((cat) => (
               <Link
                 key={cat.slug}
                 href={`/directory/${cat.slug}`}
                 className="footer-link"
-                style={{
-                  fontSize: "13px",
-                  fontWeight: 500,
-                }}
+                style={{ fontSize: "12px", fontWeight: 500 }}
               >
                 {cat.label}
               </Link>
@@ -64,67 +87,8 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Row 3: Platform & Blog links */}
-        <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "48px", marginBottom: "48px" }}>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
-            <div>
-              <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "20px" }}>Platform</h4>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {[{ label: "Directory", href: "/directory" }, { label: "Pricing", href: "/membership" }, { label: "Blog", href: "/blog" }, { label: "Sign Up", href: "/signup" }].map((item) => (
-                  <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "20px" }}>Company</h4>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {[{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }].map((item) => (
-                  <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "20px" }}>Legal</h4>
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {[{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms & Conditions", href: "/terms" }, { label: "Disclaimer", href: "/disclaimer" }].map((item) => (
-                  <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Row 4: Legal & Socials */}
-        <div
-          style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "40px" }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6"
-        >
-          <div className="flex flex-wrap gap-8">
-            {[
-              { label: "Privacy Policy", href: "/privacy" },
-              { label: "Disclaimer", href: "/disclaimer" },
-              { label: "Terms & Conditions", href: "/terms" },
-              { label: "Cookie Policy", href: "/cookie-policy" },
-            ].map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="footer-link"
-                style={{
-                  fontSize: "10px",
-                  fontWeight: 700,
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                }}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Bottom copyright */}
-        <div style={{ paddingTop: "64px", textAlign: "center" }}>
+        {/* Copyright */}
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "20px", textAlign: "center" }}>
           <p
             style={{
               fontSize: "10px",
@@ -132,6 +96,7 @@ export default function Footer() {
               letterSpacing: "0.3em",
               textTransform: "uppercase",
               color: "rgba(255,255,255,0.15)",
+              margin: 0,
             }}
           >
             © 2026 NextCanna Connect. All Rights Reserved.
