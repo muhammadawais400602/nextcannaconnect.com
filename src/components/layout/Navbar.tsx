@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, ChevronDown } from "lucide-react";
+import { CATEGORIES } from "@/data/categories";
 
 const NAV_LINKS = [
-  { label: "Directory", href: "/directory" },
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
@@ -163,6 +163,123 @@ function ProfileMenu({ user, onLogout }: { user: AuthUser; onLogout: () => void 
   );
 }
 
+const CATEGORY_ICONS: Record<string, string> = {
+  "cultivation-growing": "eco",
+  "manufacturers-suppliers": "factory",
+  "extraction-processing": "science",
+  "consultants-advisors": "support_agent",
+  "marketing-branding-packaging": "campaign",
+  "retail-dispensary": "storefront",
+  "transportation-logistics": "local_shipping",
+  "testing-science": "biotech",
+  "compliance-legal": "gavel",
+  "technology-software": "terminal",
+  "real-estate-construction": "architecture",
+  "finance-insurance": "account_balance",
+};
+
+function CategoriesDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const isOnCategory = pathname.startsWith("/directory/");
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        onMouseEnter={() => setOpen(true)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          fontSize: "11px",
+          fontWeight: 600,
+          letterSpacing: "0.15em",
+          textTransform: "uppercase" as const,
+          color: isOnCategory ? "#003320" : "#6b7280",
+          borderBottom: isOnCategory ? "2px solid #003320" : "2px solid transparent",
+          paddingBottom: "2px",
+          background: "none",
+          border: "none",
+          borderBottomWidth: "2px",
+          borderBottomStyle: "solid",
+          borderBottomColor: isOnCategory ? "#003320" : "transparent",
+          cursor: "pointer",
+          transition: "color 0.2s ease",
+        }}
+        onMouseLeave={() => {}}
+      >
+        Categories <ChevronDown size={12} style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0)" }} />
+      </button>
+
+      {open && (
+        <div
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          style={{
+            position: "absolute",
+            top: "calc(100% + 16px)",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "520px",
+            backgroundColor: "white",
+            border: "1px solid rgba(192,201,193,0.4)",
+            borderRadius: "12px",
+            boxShadow: "0 12px 48px rgba(0,0,0,0.12)",
+            overflow: "hidden",
+            zIndex: 100,
+            padding: "8px",
+          }}
+        >
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2px" }}>
+            {CATEGORIES.map((cat) => {
+              const active = pathname === `/directory/${cat.slug}`;
+              return (
+                <Link
+                  key={cat.slug}
+                  href={`/directory/${cat.slug}`}
+                  onClick={() => setOpen(false)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    padding: "10px 12px",
+                    borderRadius: "8px",
+                    textDecoration: "none",
+                    backgroundColor: active ? "#f3f7f5" : "transparent",
+                    transition: "background-color 0.15s",
+                  }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#f3f7f5"; }}
+                  onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}
+                >
+                  <span
+                    className="material-symbols-outlined"
+                    style={{ fontSize: "18px", color: "#88B99E", flexShrink: 0 }}
+                  >
+                    {CATEGORY_ICONS[cat.slug] || "category"}
+                  </span>
+                  <span style={{ fontSize: "13px", fontWeight: 500, color: active ? "#003320" : "#374151" }}>
+                    {cat.shortLabel || cat.label}
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const menuItemStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
@@ -179,6 +296,7 @@ const menuItemStyle: React.CSSProperties = {
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileCatOpen, setMobileCatOpen] = useState(false);
   const [authUser, setAuthUser] = useState<AuthUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const pathname = usePathname();
@@ -219,7 +337,6 @@ export default function Navbar() {
   }
 
   const isActive = (href: string) => {
-    if (href === "/directory") return pathname.startsWith("/directory");
     if (href === "/blog") return pathname.startsWith("/blog");
     return pathname === href;
   };
@@ -256,6 +373,7 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
+          <CategoriesDropdown />
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -333,6 +451,57 @@ export default function Navbar() {
           }}
         >
           <div className="flex flex-col px-8 py-4 gap-1">
+            {/* Categories accordion */}
+            <button
+              onClick={() => setMobileCatOpen((o) => !o)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+                padding: "12px 0",
+                fontSize: "11px",
+                letterSpacing: "0.15em",
+                textTransform: "uppercase",
+                color: pathname.startsWith("/directory/") ? "#003320" : "#6b7280",
+                fontWeight: pathname.startsWith("/directory/") ? 700 : 500,
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Categories
+              <ChevronDown size={14} style={{ transition: "transform 0.2s", transform: mobileCatOpen ? "rotate(180deg)" : "rotate(0)" }} />
+            </button>
+            {mobileCatOpen && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px", paddingBottom: "8px", paddingLeft: "4px" }}>
+                {CATEGORIES.map((cat) => (
+                  <Link
+                    key={cat.slug}
+                    href={`/directory/${cat.slug}`}
+                    onClick={() => { setMobileOpen(false); setMobileCatOpen(false); }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      padding: "8px 8px",
+                      borderRadius: "6px",
+                      fontSize: "13px",
+                      fontWeight: 500,
+                      color: pathname === `/directory/${cat.slug}` ? "#003320" : "#374151",
+                      textDecoration: "none",
+                      backgroundColor: pathname === `/directory/${cat.slug}` ? "#f3f7f5" : "transparent",
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#88B99E" }}>
+                      {CATEGORY_ICONS[cat.slug] || "category"}
+                    </span>
+                    {cat.shortLabel || cat.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
