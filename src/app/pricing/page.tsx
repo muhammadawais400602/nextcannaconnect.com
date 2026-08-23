@@ -26,7 +26,6 @@ const TIERS = [
       "Contact information",
       "Full company profile page",
       "Tier badge",
-      "RFP Board access",
       "Analytics dashboard",
     ],
     cta: "Get Listed Free",
@@ -51,7 +50,6 @@ const TIERS = [
       "Contact form (inquiries to your email)",
       "Photo gallery (up to 10 photos)",
       "4 profile tabs (Overview, Licenses, Reviews, Gallery)",
-      "RFP Board access (view + respond to buyer RFPs)",
       "Basic analytics (profile views + inquiries)",
       "Standard search placement",
     ],
@@ -92,7 +90,6 @@ const TIERS = [
       'Featured in "Similar Partners" on other listings',
       "Google Reviews integration",
       "Full analytics dashboard (views, inquiries, search appearances, CTR)",
-      "RFP Board access (priority placement in responses)",
       "Dedicated account support",
     ],
     excluded: [],
@@ -126,7 +123,6 @@ const COMPARISON_ROWS: {
   { feature: "Social Media Links", free: "—", select: "—", elite: "✓" },
   { feature: "Featured in Similar Partners", free: "—", select: "—", elite: "✓" },
   { feature: "Google Reviews Integration", free: "—", select: "—", elite: "✓" },
-  { feature: "RFP Board Access", free: "—", select: "View + Respond", elite: "Priority" },
   { feature: "Analytics Dashboard", free: "—", select: "Basic", elite: "Full" },
   { feature: "Priority Search Placement", free: "—", select: "—", elite: "✓" },
   { feature: "Dedicated Account Support", free: "—", select: "—", elite: "✓" },
@@ -142,10 +138,6 @@ const FAQS = [
   {
     q: "What is the difference between the Select badge and the Verified Pro badge?",
     a: "The Select badge means your business has a paid, active profile on NextCanna Connect. The Verified Pro badge means your business has passed our full vetting process — license verification, insurance confirmation, and compliance review — giving buyers the highest level of trust.",
-  },
-  {
-    q: "What is the RFP Board?",
-    a: "The RFP Board is where buyers on NextCanna Connect post Requests for Proposals for services they need. Select and Verified Pro members can view RFPs in their category and submit responses. Verified Pro members get priority placement in all responses.",
   },
   {
     q: "Is the Unclaimed listing automatically created for my business?",
@@ -554,112 +546,6 @@ export default function PricingPage() {
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* RFP Board Explainer */}
-      <section style={{ background: "white", padding: "70px 20px" }}>
-        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-          <p
-            style={{
-              fontSize: "11px",
-              fontWeight: 700,
-              letterSpacing: "3px",
-              textTransform: "uppercase",
-              color: "#F7941D",
-              textAlign: "center",
-              marginBottom: "10px",
-            }}
-          >
-            RFP BOARD
-          </p>
-          <h2
-            style={{
-              fontFamily: "'Noto Serif', Georgia, serif",
-              fontSize: "clamp(22px, 3.5vw, 32px)",
-              fontWeight: 700,
-              color: "#0D2818",
-              textAlign: "center",
-              marginBottom: "12px",
-            }}
-          >
-            Get Found by Buyers Actively Looking for Your Services
-          </h2>
-          <p
-            style={{
-              fontSize: "14px",
-              color: "#6B7280",
-              textAlign: "center",
-              maxWidth: "680px",
-              margin: "0 auto 40px",
-              lineHeight: 1.7,
-            }}
-          >
-            Buyers &mdash; dispensaries, cultivators, operators &mdash; post
-            Requests for Proposals directly on NextCanna Connect. Select and
-            Verified Pro members can view and respond to RFPs in their category.
-            Verified Pro members get priority placement in all RFP responses,
-            putting your business in front of the buyer first.
-          </p>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-              gap: "20px",
-            }}
-          >
-            {[
-              {
-                icon: "📄",
-                title: "Buyers Post RFPs",
-                body: "Licensed operators post their needs — transport routes, testing contracts, extraction capacity, legal counsel, and more.",
-              },
-              {
-                icon: "👁️",
-                title: "You See & Respond",
-                body: "Select and Verified Pro members receive RFP notifications in their category and can submit proposals directly through the platform.",
-              },
-              {
-                icon: "⭐",
-                title: "Pro Gets Priority",
-                body: "Verified Pro responses appear at the top of every RFP, giving you the best chance to win the contract.",
-              },
-            ].map((card) => (
-              <div
-                key={card.title}
-                style={{
-                  background: "#F7F9F7",
-                  borderRadius: "14px",
-                  padding: "28px 24px",
-                  border: "1px solid #E5E7EB",
-                }}
-              >
-                <div style={{ fontSize: "28px", marginBottom: "14px" }}>
-                  {card.icon}
-                </div>
-                <h3
-                  style={{
-                    fontSize: "15px",
-                    fontWeight: 700,
-                    color: "#0D2818",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {card.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "13px",
-                    color: "#6B7280",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  {card.body}
-                </p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
