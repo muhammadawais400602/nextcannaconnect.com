@@ -124,7 +124,7 @@ export default function VendorDashboardPage() {
   if (!vendor) return null;
 
   const tierStyle = TIER_COLORS[vendor.tier] ?? TIER_COLORS.free;
-  const tier = company?.tier ?? vendor.tier ?? "free";
+  const tier = vendor.tier ?? "free";
 
   return (
     <div style={{ minHeight: "100vh", background: "#F7F9F7" }}>
