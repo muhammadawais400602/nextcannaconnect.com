@@ -114,16 +114,33 @@ const chipStyle = (active: boolean): React.CSSProperties => ({
 
 const PAGE_SIZE = 9;
 
+const selectStyle: React.CSSProperties = {
+  border: `1px solid ${PARCHMENT}`,
+  borderRadius: "0.5rem",
+  padding: "8px 12px",
+  fontSize: "14px",
+  fontWeight: 500,
+  background: "white",
+  outline: "none",
+  cursor: "pointer",
+  color: VARIANT,
+};
+
 export default function RealEstateListingsGrid({ companies }: { companies: Company[] }) {
   const [active, setActive] = useState<string[]>([]);
+  const [location, setLocation] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const serviceTypes = useMemo(() => [...new Set(companies.flatMap((c) => c.serviceTags ?? []))].sort(), [companies]);
+  const states = useMemo(() => [...new Set(companies.map((c) => c.location.state).filter(Boolean))].sort(), [companies]);
 
   const filtered = useMemo(() => {
-    if (active.length === 0) return companies;
-    return companies.filter((c) => active.every((a) => (c.serviceTags ?? []).includes(a)));
-  }, [companies, active]);
+    return companies.filter((c) => {
+      if (location && c.location.state !== location) return false;
+      if (active.length > 0 && !active.every((a) => (c.serviceTags ?? []).includes(a))) return false;
+      return true;
+    });
+  }, [companies, location, active]);
 
   function toggle(tag: string) {
     setActive((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
@@ -138,8 +155,12 @@ export default function RealEstateListingsGrid({ companies }: { companies: Compa
       <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, position: "sticky", top: "70px", zIndex: 40 }}>
         <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "10px" }}>
           <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
-            <span className="material-symbols-outlined">filter_list</span> Service:
+            <span className="material-symbols-outlined">filter_list</span> Filters:
           </span>
+          <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
+            <option value="">All Locations</option>
+            {states.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
           {serviceTypes.length === 0 && <span style={{ fontSize: "13px", color: VARIANT }}>No filters available yet.</span>}
           {serviceTypes.map((t) => (
             <button key={t} onClick={() => toggle(t)} style={chipStyle(active.includes(t))}>{t}</button>
