@@ -40,14 +40,15 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
   const hasProducts = (company.serviceTags ?? []).length > 0 || (company.products ?? []).length > 0;
   const hasEligibility = (company.specialtyAreas ?? []).length > 0;
   const hasFaqs = (company.faqs?.length ?? 0) > 0;
+  const isElite = company.tier === "elite";
 
   const tabs = [
     { id: "overview", label: "Overview" },
     hasLicenses ? { id: "licenses", label: "Licenses" } : null,
-    hasProducts ? { id: "products", label: "Products & Services" } : null,
-    hasEligibility ? { id: "eligibility", label: "Eligibility" } : null,
+    hasProducts ? { id: "products", label: "Products & Services", locked: !isElite } : null,
+    hasEligibility ? { id: "eligibility", label: "Eligibility", locked: !isElite } : null,
     hasFaqs ? { id: "faqs", label: "FAQs" } : null,
-  ].filter(Boolean) as { id: string; label: string }[];
+  ].filter(Boolean) as { id: string; label: string; locked?: boolean }[];
 
   const [active, setActive] = useState("overview");
 
@@ -63,14 +64,14 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
                 paddingBottom: "12px",
                 fontSize: "14px",
                 fontWeight: active === t.id ? 600 : 500,
-                color: active === t.id ? DF : VARIANT,
+                color: t.locked ? "#9CA3AF" : (active === t.id ? DF : VARIANT),
                 borderBottom: active === t.id ? `2px solid ${DF}` : "2px solid transparent",
                 background: "none",
                 cursor: "pointer",
                 whiteSpace: "nowrap",
               }}
             >
-              {t.label}
+              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
             </button>
           ))}
         </nav>
@@ -168,8 +169,17 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
           ))}
         </section>
       )}
+      {tabs.find(t => t.id === active)?.locked && (
+        <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>Verified Pro Feature</h3>
+          <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>Upgrade to Verified Pro to unlock this section.</p>
+          <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>
+        </section>
+      )}
 
-      {similar.length > 0 && (
+
+      {company.tier === "elite" && similar.length > 0 && (
         <section>
           <h3 style={{ fontSize: "24px", fontWeight: 600, color: INK, margin: "16px 0 24px" }}>Similar Verified Partners</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "24px" }}>
