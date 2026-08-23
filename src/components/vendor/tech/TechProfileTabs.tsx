@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Company } from "@/types";
 
 const DF = "#003320";
@@ -42,13 +43,14 @@ export default function TechProfileTabs({ company }: { company: Company }) {
   const hasCerts = certTable.length > 0 || securityFeatures.length > 0;
   const hasFeatures = features.length > 0;
   const hasPricing = !!company.pricingModel;
+  const isElite = company.tier === "elite";
 
   const tabs = [
     { id: "overview", label: "Overview" },
     hasCerts ? { id: "certs", label: "Certifications & Security" } : null,
-    hasFeatures ? { id: "features", label: "Features" } : null,
-    hasPricing ? { id: "pricing", label: "Pricing" } : null,
-  ].filter(Boolean) as { id: string; label: string }[];
+    hasFeatures ? { id: "features", label: "Features", locked: !isElite } : null,
+    hasPricing ? { id: "pricing", label: "Pricing", locked: !isElite } : null,
+  ].filter(Boolean) as { id: string; label: string; locked?: boolean }[];
 
   const [active, setActive] = useState("overview");
 
@@ -64,7 +66,7 @@ export default function TechProfileTabs({ company }: { company: Company }) {
                 style={{
                   fontSize: "14px",
                   fontWeight: active === t.id ? 700 : 500,
-                  color: active === t.id ? DF : VARIANT,
+                  color: t.locked ? "#9CA3AF" : (active === t.id ? DF : VARIANT),
                   borderBottom: active === t.id ? `2px solid ${DF}` : "2px solid transparent",
                   paddingBottom: "16px",
                   background: "none",
@@ -72,8 +74,8 @@ export default function TechProfileTabs({ company }: { company: Company }) {
                   whiteSpace: "nowrap",
                 }}
               >
-                {t.label}
-              </button>
+              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
+            </button>
             </li>
           ))}
         </ul>
@@ -164,6 +166,15 @@ export default function TechProfileTabs({ company }: { company: Company }) {
             </div>
             <a href="#engage-vendor" style={{ background: DF, color: "white", padding: "12px 24px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>Request Pricing</a>
           </div>
+        </section>
+      )}
+
+      {tabs.find(t => t.id === active)?.locked && (
+        <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>Verified Pro Feature</h3>
+          <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>Upgrade to Verified Pro to unlock this section.</p>
+          <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>
         </section>
       )}
     </div>

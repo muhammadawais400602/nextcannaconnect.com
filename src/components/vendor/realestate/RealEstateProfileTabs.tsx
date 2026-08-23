@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Company } from "@/types";
 
 const DF = "#003320";
@@ -17,13 +18,14 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
   const hasCredentials = licenses.length > 0;
   const hasPortfolio = projects.length > 0;
   const hasProcess = steps.length > 0;
+  const isElite = company.tier === "elite";
 
   const tabs = [
     { id: "overview", label: "Overview", icon: "description" },
     hasCredentials ? { id: "credentials", label: "Credentials & Insurance", icon: "verified_user" } : null,
-    hasPortfolio ? { id: "portfolio", label: "Portfolio", icon: "photo_library" } : null,
-    hasProcess ? { id: "process", label: "Process", icon: "account_tree" } : null,
-  ].filter(Boolean) as { id: string; label: string; icon: string }[];
+    hasPortfolio ? { id: "portfolio", label: "Portfolio", locked: !isElite, icon: "photo_library" } : null,
+    hasProcess ? { id: "process", label: "Process", locked: !isElite, icon: "account_tree" } : null,
+  ].filter(Boolean) as { id: string; label: string; icon: string; locked?: boolean }[];
 
   const [active, setActive] = useState("overview");
 
@@ -40,7 +42,7 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
                 paddingBottom: "16px",
                 fontSize: "14px",
                 fontWeight: active === t.id ? 700 : 500,
-                color: active === t.id ? DF : VARIANT,
+                color: t.locked ? "#9CA3AF" : (active === t.id ? DF : VARIANT),
                 borderBottom: active === t.id ? `2px solid ${DF}` : "2px solid transparent",
                 background: "none",
                 cursor: "pointer",
@@ -51,8 +53,7 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>{t.icon}</span>
-              {t.label}
-            </button>
+              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px" }}>lock</span>}</button>
           ))}
         </div>
       </div>
@@ -141,6 +142,15 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
               </div>
             ))}
           </div>
+        </section>
+      )}
+
+      {tabs.find(t => t.id === active)?.locked && (
+        <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
+          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>Verified Pro Feature</h3>
+          <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>Upgrade to Verified Pro to unlock this section.</p>
+          <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>
         </section>
       )}
     </div>

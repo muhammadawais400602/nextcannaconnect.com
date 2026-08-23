@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCompanyBySlugFresh, getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import { getCategoryBySlug } from "@/data/categories";
-import { MapPin, ArrowLeft } from "lucide-react";
+import { MapPin, ArrowLeft, Lock } from "lucide-react";
 import { Company } from "@/types";
+import { showSimilarPartners } from "@/lib/tier";
 import ContactForm from "./ContactForm";
 import ProfileViewTracker from "@/components/ProfileViewTracker";
 import ClaimBanner from "@/components/ClaimBanner";
@@ -94,6 +95,61 @@ export default async function VendorPage({ params }: Props) {
 
   const tracker = <ProfileViewTracker slug={company.slug} />;
   const claimBanner = company.tier === "free" ? <ClaimBanner slug={company.slug} /> : null;
+
+  // UNCLAIMED — show claim page instead of full profile
+  if (company.tier === "free") {
+    return (
+      <div style={{ backgroundColor: "#F7F9F7", minHeight: "100vh" }}>
+        {tracker}
+        <div style={{ maxWidth: "600px", margin: "0 auto", padding: "120px 20px 80px", textAlign: "center" }}>
+          <div style={{
+            width: "64px", height: "64px", borderRadius: "50%", background: company.logoColor || "#E5E7EB",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: "22px", fontWeight: 700, color: "white", margin: "0 auto 20px",
+            overflow: "hidden",
+          }}>
+            {company.logoUrl ? (
+              <Image src={company.logoUrl} alt={company.name} width={64} height={64} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
+            ) : (
+              company.logoPlaceholder
+            )}
+          </div>
+          <h1 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "28px", fontWeight: 700, color: "#0D2818", marginBottom: "6px" }}>
+            {company.name}
+          </h1>
+          {(company.location.city || company.location.state) && (
+            <p style={{ fontSize: "14px", color: "#6B7280", marginBottom: "24px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+              <MapPin size={14} />
+              {[company.location.city, company.location.state].filter(Boolean).join(", ")}
+            </p>
+          )}
+          <div style={{
+            background: "white", borderRadius: "14px", border: "1px solid #E5E7EB", padding: "32px 28px", marginBottom: "24px",
+          }}>
+            <p style={{ fontSize: "15px", color: "#6B7280", lineHeight: 1.7, marginBottom: "20px" }}>
+              This listing has not been claimed yet.
+            </p>
+            <p style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7, marginBottom: "24px" }}>
+              Are you the owner? Claim it free and upgrade anytime to unlock your full company profile, contact form, analytics, and more.
+            </p>
+            <Link
+              href={`/signup?claim=${company.slug}&category=${company.category}`}
+              style={{
+                display: "inline-block", padding: "14px 32px", borderRadius: "8px",
+                fontSize: "14px", fontWeight: 700, textDecoration: "none",
+                background: "#1A4A35", color: "white",
+              }}
+            >
+              Claim This Listing &rarr;
+            </Link>
+          </div>
+          <Link href={`/directory/${company.category}`} style={{ fontSize: "13px", color: "#6B7280", textDecoration: "none", fontWeight: 600 }}>
+            &larr; Back to Directory
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (company.category === "retail-dispensary") {
     return <>{claimBanner}{tracker}<RetailProfile company={company} similar={similar} /></>;
@@ -400,7 +456,7 @@ export default async function VendorPage({ params }: Props) {
               ) : null;
             })()}
 
-            {(company.instagramUrl || company.facebookUrl || company.twitterUrl || company.yelpUrl || company.leaflyUrl) && (
+            {isVerifiedPro && (company.instagramUrl || company.facebookUrl || company.twitterUrl || company.yelpUrl || company.leaflyUrl) && (
               <div style={{ background: "white", borderRadius: "12px", padding: "20px 24px", border: "1px solid #E5E7EB" }}>
                 <div style={{ fontSize: "10px", fontWeight: "800", letterSpacing: "0.12em", color: "#9CA3AF", textTransform: "uppercase", marginBottom: "14px" }}>
                   Find Us Online
@@ -450,12 +506,12 @@ export default async function VendorPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Similar companies */}
-      {similar.length > 0 && (
+      {/* Similar companies — Verified Pro only */}
+      {showSimilarPartners(company.tier) && similar.length > 0 && (
         <section style={{ background: "white", borderTop: "1px solid #E5E7EB", padding: "48px 20px" }}>
           <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
             <h2 style={{ fontSize: "20px", fontWeight: "800", color: "#111827", marginBottom: "24px", fontFamily: "'Inter', sans-serif" }}>
-              Similar Listings
+              Similar Partners
             </h2>
             <div className="vp-similar">
               {similar.map((c) => (

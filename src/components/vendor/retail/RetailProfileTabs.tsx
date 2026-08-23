@@ -43,12 +43,13 @@ export default function RetailProfileTabs({ company, similar }: { company: Compa
   const hasLicenses =
     company.licenseNumber || company.licenseType || company.delivery || company.hours || company.verifiedDate;
   const hasFaqs = (company.faqs?.length ?? 0) > 0;
+  const isElite = company.tier === "elite";
 
   const tabs = [
     { id: "overview", label: "Overview" },
     hasLicenses ? { id: "licenses", label: "Licenses" } : null,
     hasFaqs ? { id: "faqs", label: "FAQs" } : null,
-  ].filter(Boolean) as { id: string; label: string }[];
+  ].filter(Boolean) as { id: string; label: string; locked?: boolean }[];
 
   const [active, setActive] = useState("overview");
 
@@ -127,7 +128,7 @@ export default function RetailProfileTabs({ company, similar }: { company: Compa
       )}
 
       {/* Similar partners — always visible below tab content */}
-      {similar.length > 0 && (
+      {company.tier === "elite" && similar.length > 0 && (
         <section>
           <h3 style={{ fontSize: "24px", fontWeight: 600, color: INK, margin: "16px 0 24px" }}>Similar Verified Partners</h3>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "24px" }}>
