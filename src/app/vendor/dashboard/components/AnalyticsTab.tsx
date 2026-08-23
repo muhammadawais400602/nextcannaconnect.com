@@ -4,15 +4,33 @@ import TierGate from "./TierGate";
 import { cardStyle } from "./shared";
 
 export default function AnalyticsTab({ tier }: { tier: string }) {
-  if (tier === "free") {
+  if (tier !== "elite") {
     return (
       <div style={cardStyle}>
-        <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#1A4A35", marginBottom: "8px" }}>
-          Analytics
-        </h2>
-        <TierGate requiredTier="select" currentTier={tier} label="Upgrade to Select to access analytics">
-          <div />
-        </TierGate>
+        <div style={{ textAlign: "center", padding: "40px 20px" }}>
+          <span style={{ fontSize: "32px", display: "block", marginBottom: "12px" }}>🔒</span>
+          <h2 style={{ fontSize: "18px", fontWeight: 700, color: "#1A4A35", marginBottom: "8px" }}>
+            Verified Pro Feature
+          </h2>
+          <p style={{ fontSize: "14px", color: "#6B7280", marginBottom: "20px", maxWidth: "400px", marginLeft: "auto", marginRight: "auto" }}>
+            Upgrade to Verified Pro to access the full analytics dashboard — profile views, inquiries, search appearances, and click-through rate.
+          </p>
+          <a
+            href="/pricing"
+            style={{
+              display: "inline-block",
+              fontSize: "14px",
+              fontWeight: 700,
+              color: "white",
+              background: "#1A4A35",
+              textDecoration: "none",
+              padding: "12px 28px",
+              borderRadius: "8px",
+            }}
+          >
+            View Plans →
+          </a>
+        </div>
       </div>
     );
   }
