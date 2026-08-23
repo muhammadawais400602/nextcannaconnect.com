@@ -37,11 +37,12 @@ export default function TestingProfileTabs({ company }: { company: Company }) {
   const hasCapabilities = capabilities.length > 0;
   const hasAccreditation = accreditations.length > 0 || !!company.accreditation;
   const isElite = company.tier === "elite";
+  const isFree = company.tier === "free";
 
   const tabs = [
     { id: "overview", label: "Overview" },
-    hasAccreditation ? { id: "accreditation", label: "Accreditation" } : null,
-    hasCapabilities ? { id: "capabilities", label: "Capabilities", locked: !isElite } : null,
+    hasAccreditation ? { id: "accreditation", label: "Accreditation", locked: isFree } : null,
+    hasCapabilities ? { id: "capabilities", label: "Capabilities", locked: !isElite || isFree } : null,
   ].filter(Boolean) as { id: string; label: string; locked?: boolean }[];
 
   const [active, setActive] = useState("overview");
@@ -132,8 +133,8 @@ export default function TestingProfileTabs({ company }: { company: Company }) {
       {tabs.find(t => t.id === active)?.locked && (
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
           <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
-          <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>Verified Pro Feature</h3>
-          <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>Upgrade to Verified Pro to unlock this section.</p>
+          <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>{isFree ? "Select Feature" : "Verified Pro Feature"}</h3>
+          <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>{isFree ? "Upgrade to add listing details." : "Upgrade to Verified Pro to unlock this section."}</p>
           <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>
         </section>
       )}
