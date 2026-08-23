@@ -129,28 +129,36 @@ export default function MediaTab({
       {/* Banner */}
       <div style={{ ...cardStyle, marginBottom: "16px" }}>
         <h2 style={sectionTitle}>Hero Banner</h2>
-        <div style={{ marginBottom: "14px" }}>
-          <label style={labelStyle}>
-            Banner Image{" "}
-            <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>
-              — recommended 1200 x 400 px
-            </span>
-          </label>
-          <ImageUploader
-            value={bannerUrl}
-            onChange={(url) => { setBannerUrl(url); setSaved(false); }}
-          />
-        </div>
-        <div>
-          <label style={labelStyle}>Banner Caption</label>
-          <input
-            style={inputStyle}
-            value={bannerCaption}
-            onChange={(e) => { setBannerCaption(e.target.value); setSaved(false); }}
-            placeholder="e.g. Premium Cannabis Solutions"
-            maxLength={120}
-          />
-        </div>
+        {tier === "free" ? (
+          <TierGate requiredTier="select" currentTier={tier} label="Upgrade to Select to add a hero banner">
+            <div />
+          </TierGate>
+        ) : (
+          <>
+            <div style={{ marginBottom: "14px" }}>
+              <label style={labelStyle}>
+                Banner Image{" "}
+                <span style={{ color: "#9CA3AF", fontWeight: 400, textTransform: "none" }}>
+                  — recommended 1200 x 400 px
+                </span>
+              </label>
+              <ImageUploader
+                value={bannerUrl}
+                onChange={(url) => { setBannerUrl(url); setSaved(false); }}
+              />
+            </div>
+            <div>
+              <label style={labelStyle}>Banner Caption</label>
+              <input
+                style={inputStyle}
+                value={bannerCaption}
+                onChange={(e) => { setBannerCaption(e.target.value); setSaved(false); }}
+                placeholder="e.g. Premium Cannabis Solutions"
+                maxLength={120}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Gallery - tier gated */}
