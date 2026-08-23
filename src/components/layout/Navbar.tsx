@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, User } from "lucide-react";
 
 const NAV_LINKS = [
-  { label: "Directory", href: "/directory" },
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
@@ -219,7 +218,6 @@ export default function Navbar() {
   }
 
   const isActive = (href: string) => {
-    if (href === "/directory") return pathname.startsWith("/directory");
     if (href === "/blog") return pathname.startsWith("/blog");
     return pathname === href;
   };
