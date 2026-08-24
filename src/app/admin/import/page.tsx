@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 
 type ImportResult = { imported: number; skipped: number; total: number; tier: string };
+type BulkResult = { imported: number; skipped: number; total: number; byCategory: Record<string, number> };
 type CleanupResult = { companiesDeleted: number; usersDeleted: number; signupsDeleted: number };
 
 const TIERS = [
@@ -36,6 +37,11 @@ export default function ImportPage() {
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
   const [importError, setImportError]   = useState("");
   const fileInputRef                    = useRef<HTMLInputElement>(null);
+
+  // ── Bulk import state ──────────────────────────────────────────────────────
+  const [bulkImporting, setBulkImporting]   = useState(false);
+  const [bulkResult, setBulkResult]         = useState<BulkResult | null>(null);
+  const [bulkError, setBulkError]           = useState("");
 
   // ── Cleanup state ─────────────────────────────────────────────────────────
   const [cleaning, setCleaning]           = useState(false);
@@ -89,6 +95,30 @@ export default function ImportPage() {
       setImportError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setImporting(false);
+    }
+  }
+
+  // ── Bulk import ────────────────────────────────────────────────────────────
+  async function handleBulkImport() {
+    setBulkImporting(true);
+    setBulkError("");
+    setBulkResult(null);
+    try {
+      const dataRes = await fetch("/data/listings-120.json");
+      if (!dataRes.ok) throw new Error("Could not load listings data file.");
+      const listings = await dataRes.json();
+      const res = await fetch("/api/admin/bulk-import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(listings),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Bulk import failed");
+      setBulkResult(data);
+    } catch (err) {
+      setBulkError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setBulkImporting(false);
     }
   }
 
@@ -278,6 +308,68 @@ export default function ImportPage() {
               Listings are now live at{" "}
               <a href="/directory" target="_blank" style={{ color: "#15803D", fontWeight: 600 }}>/directory</a>.
             </p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Bulk Import Card ───────────────────────────────────────────── */}
+      <div style={{ ...card, borderTop: "3px solid #2d6e52" }}>
+        <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
+          🚀 Bulk Import — 120 Verified Pro Listings
+        </h2>
+        <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 6px" }}>
+          One-click import of 120 pre-built Verified Pro listings — 10 real cannabis businesses per category across all 12 directories.
+        </p>
+        <p style={{ fontSize: "12px", color: "#9CA3AF", margin: "0 0 20px" }}>
+          Safe to run multiple times — existing listings are updated, not duplicated.
+        </p>
+
+        {bulkResult ? (
+          <div style={{ padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px" }}>
+            <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 12px" }}>✅ Bulk import complete!</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px", marginBottom: "16px" }}>
+              {[
+                { label: "Total", value: bulkResult.total },
+                { label: "Imported", value: bulkResult.imported, color: "#15803D" },
+                { label: "Skipped", value: bulkResult.skipped, color: "#B45309" },
+              ].map((s) => (
+                <div key={s.label} style={{ textAlign: "center", background: "white", borderRadius: "8px", padding: "12px" }}>
+                  <p style={{ fontSize: "24px", fontWeight: 800, color: s.color ?? "#111827", margin: 0 }}>{s.value}</p>
+                  <p style={{ fontSize: "12px", color: "#6B7280", margin: "4px 0 0" }}>{s.label}</p>
+                </div>
+              ))}
+            </div>
+            <div style={{ fontSize: "12px", color: "#374151" }}>
+              <strong>By category:</strong>{" "}
+              {Object.entries(bulkResult.byCategory).map(([cat, count]) => (
+                <span key={cat} style={{ marginRight: "12px" }}>{cat.replace(/-/g, " ")}: {count}</span>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={handleBulkImport}
+            disabled={bulkImporting}
+            style={{
+              width: "100%",
+              padding: "14px",
+              background: bulkImporting ? "#D1D5DB" : "#2d6e52",
+              color: "white",
+              border: "none",
+              borderRadius: "10px",
+              fontSize: "15px",
+              fontWeight: 700,
+              cursor: bulkImporting ? "not-allowed" : "pointer",
+              transition: "background 0.2s",
+            }}
+          >
+            {bulkImporting ? "Importing 120 listings… please wait" : "Import 120 Verified Pro Listings →"}
+          </button>
+        )}
+
+        {bulkError && (
+          <div style={{ marginTop: "16px", padding: "14px 16px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", color: "#DC2626", fontSize: "14px" }}>
+            ❌ {bulkError}
           </div>
         )}
       </div>
