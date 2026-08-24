@@ -1,0 +1,3381 @@
+[
+  {
+    "slug": "glass-house-farms",
+    "name": "Glass House Farms",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Carpinteria",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Greenhouse cannabis cultivator using natural sunlight and living-soil practices; parent company Glass House Brands also runs a large-scale greenhouse in Camarillo, CA.",
+    "fullDescription": "Greenhouse cannabis cultivator using natural sunlight and living-soil practices; parent company Glass House Brands also runs a large-scale greenhouse in Camarillo, CA.",
+    "logoPlaceholder": "GF",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Sun-Grown",
+      "Sustainable",
+      "Large-Scale",
+      "Premium"
+    ],
+    "isFeatured": false,
+    "website": "https://glasshousefarms.org",
+    "facilitySize": "5.5 million sqft greenhouse (Camarillo facility, per press reports)",
+    "serviceArea": "Greenhouse",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "copperstate-farms",
+    "name": "Copperstate Farms",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Snowflake",
+      "state": "AZ",
+      "zip": ""
+    },
+    "shortDescription": "One of the largest cannabis greenhouse producers in North America, growing sungrown cannabis in living soil and supplying wholesale flower/extracts across Arizona.",
+    "fullDescription": "One of the largest cannabis greenhouse producers in North America, growing sungrown cannabis in living soil and supplying wholesale flower/extracts across Arizona.",
+    "logoPlaceholder": "CF",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Sun-Grown",
+      "Sustainable",
+      "Wholesale",
+      "Large-Scale"
+    ],
+    "isFeatured": false,
+    "website": "https://copperstatefarms.com",
+    "phone": "(928) 457-2820",
+    "facilitySize": "1.7 million sqft",
+    "serviceArea": "Greenhouse",
+    "teamSize": "350 employees",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "veritas-fine-cannabis",
+    "name": "Veritas Fine Cannabis",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Craft indoor cultivator known for terpene-rich, small-batch cannabis flower distributed to Colorado dispensaries.",
+    "fullDescription": "Craft indoor cultivator known for terpene-rich, small-batch cannabis flower distributed to Colorado dispensaries.",
+    "logoPlaceholder": "VC",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Craft Cannabis",
+      "Rare Genetics",
+      "Premium"
+    ],
+    "isFeatured": false,
+    "website": "https://veritascannabis.com",
+    "phone": "(303) 500-6577",
+    "serviceArea": "Indoor",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "cannasol-farms",
+    "name": "CannaSol Farms",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Okanogan",
+      "state": "WA",
+      "zip": ""
+    },
+    "shortDescription": "Family-owned, Sun+Earth Certified outdoor cannabis farm using light-deprivation and no-till living-soil methods; produces the Columbia Natural and Lish brands.",
+    "fullDescription": "Family-owned, Sun+Earth Certified outdoor cannabis farm using light-deprivation and no-till living-soil methods; produces the Columbia Natural and Lish brands.",
+    "logoPlaceholder": "CF",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Sun-Grown",
+      "Craft Cannabis",
+      "Sustainable"
+    ],
+    "isFeatured": false,
+    "website": "https://cannasol.com",
+    "email": "info@cannasol.net",
+    "serviceArea": "Outdoor",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "theory-wellness",
+    "name": "Theory Wellness",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Bridgewater/Franklin",
+      "state": "MA",
+      "zip": ""
+    },
+    "shortDescription": "Vertically integrated, employee-owned Massachusetts operator cultivating cannabis at its Franklin grow facility and formulating in-house extracts and edibles.",
+    "fullDescription": "Vertically integrated, employee-owned Massachusetts operator cultivating cannabis at its Franklin grow facility and formulating in-house extracts and edibles.",
+    "logoPlaceholder": "TW",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Craft Cannabis",
+      "Wholesale",
+      "Employee-Owned"
+    ],
+    "isFeatured": false,
+    "website": "https://theorywellness.org",
+    "phone": "(508) 296-9250",
+    "serviceArea": "Indoor",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "cresco-labs",
+    "name": "Cresco Labs",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Joliet/Lincoln",
+      "state": "IL",
+      "zip": ""
+    },
+    "shortDescription": "Major multi-state operator cultivating flower at its Joliet and Lincoln, IL facilities — reported as Illinois' largest cultivation operation — for medical and adult-use markets.",
+    "fullDescription": "Major multi-state operator cultivating flower at its Joliet and Lincoln, IL facilities — reported as Illinois' largest cultivation operation — for medical and adult-use markets.",
+    "logoPlaceholder": "CL",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Wholesale",
+      "Large-Scale",
+      "Multi-State"
+    ],
+    "isFeatured": false,
+    "website": "https://crescolabs.com",
+    "facilitySize": "215,000 sqft combined IL facilities (per company release)",
+    "serviceArea": "Indoor",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "deep-roots-harvest",
+    "name": "Deep Roots Harvest",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Las Vegas",
+      "state": "NV",
+      "zip": ""
+    },
+    "shortDescription": "Vertically integrated Nevada cannabis company that cultivates and processes its own flower alongside brands like Neon Moon and CAMP, sold through its dispensary network.",
+    "fullDescription": "Vertically integrated Nevada cannabis company that cultivates and processes its own flower alongside brands like Neon Moon and CAMP, sold through its dispensary network.",
+    "logoPlaceholder": "DH",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Wholesale",
+      "Premium"
+    ],
+    "isFeatured": false,
+    "website": "https://deeprootsharvest.com",
+    "phone": "(702) 899-4060",
+    "serviceArea": "Indoor",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "hepworth-farms",
+    "name": "Hepworth Farms",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Milton",
+      "state": "NY",
+      "zip": ""
+    },
+    "shortDescription": "Seventh-generation, women-owned Hudson Valley farm that added licensed outdoor cannabis cultivation to its longtime organic vegetable operation under New York's adult-use program.",
+    "fullDescription": "Seventh-generation, women-owned Hudson Valley farm that added licensed outdoor cannabis cultivation to its longtime organic vegetable operation under New York's adult-use program.",
+    "logoPlaceholder": "HF",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Craft Cannabis",
+      "Sun-Grown",
+      "Sustainable"
+    ],
+    "isFeatured": false,
+    "website": "https://hepworthfarms.com",
+    "phone": "(845) 795-6071",
+    "email": "info@hepworthfarms.com",
+    "serviceArea": "Outdoor",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "east-fork-cultivars",
+    "name": "East Fork Cultivars",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Takilma",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "Sun+Earth Certified, USDA Organic cannabis and hemp farm in Oregon's Illinois Valley known for craft, terroir-driven genetics grown outdoors on its 33-acre ranch.",
+    "fullDescription": "Sun+Earth Certified, USDA Organic cannabis and hemp farm in Oregon's Illinois Valley known for craft, terroir-driven genetics grown outdoors on its 33-acre ranch.",
+    "logoPlaceholder": "EC",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Craft Cannabis",
+      "Sun-Grown",
+      "Rare Genetics"
+    ],
+    "isFeatured": false,
+    "website": "https://eastforkcultivars.com",
+    "facilitySize": "33 acres",
+    "serviceArea": "Outdoor",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "lume-cannabis-co",
+    "name": "Lume Cannabis Co.",
+    "tier": "elite",
+    "category": "cultivation-growing",
+    "location": {
+      "address": "",
+      "city": "Evart",
+      "state": "MI",
+      "zip": ""
+    },
+    "shortDescription": "Vertically integrated Michigan producer growing LED-lit indoor flower at its Evart cultivation facility, with expansion into outdoor and greenhouse tunnels underway.",
+    "fullDescription": "Vertically integrated Michigan producer growing LED-lit indoor flower at its Evart cultivation facility, with expansion into outdoor and greenhouse tunnels underway.",
+    "logoPlaceholder": "LC",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Wholesale",
+      "Large-Scale",
+      "Premium"
+    ],
+    "isFeatured": false,
+    "website": "https://lume.com",
+    "facilitySize": "55,000 sqft indoor (plus planned 85,000 sqft expansion, 30 acres outdoor, 4 tunnel greenhouses)",
+    "serviceArea": "Indoor",
+    "teamSize": "500 employees",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "ac-infinity",
+    "name": "AC Infinity",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "City of Industry",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer of smart environmental control systems for indoor cultivation, including grow tents, ventilation fans, and climate controllers.",
+    "fullDescription": "Manufacturer of smart environmental control systems for indoor cultivation, including grow tents, ventilation fans, and climate controllers.",
+    "logoPlaceholder": "AI",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Climate Control",
+      "Grow Tents",
+      "Ventilation",
+      "Cultivation Equipment"
+    ],
+    "isFeatured": false,
+    "website": "https://acinfinity.com",
+    "phone": "626-923-6399",
+    "email": "support@acinfinity.com",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "fluence-bioengineering",
+    "name": "Fluence Bioengineering",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Austin",
+      "state": "TX",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer of LED grow lighting systems and fixtures for commercial cannabis cultivation, vertical farms, and greenhouses.",
+    "fullDescription": "Manufacturer of LED grow lighting systems and fixtures for commercial cannabis cultivation, vertical farms, and greenhouses.",
+    "logoPlaceholder": "FB",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "LED Lighting",
+      "Cultivation Equipment",
+      "Commercial Grow"
+    ],
+    "isFeatured": false,
+    "website": "https://fluence-led.com",
+    "phone": "Not publicly listed (US line not published; intl +31 40 2750200)",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "surna-inc-surna-cultivation-technologies",
+    "name": "Surna Inc (Surna Cultivation Technologies)",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Louisville",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Publicly traded (OTCQB: SRNA) manufacturer of climate control and HVAC systems purpose-built for cannabis cultivation, including chillers, dehumidifiers, and air handlers.",
+    "fullDescription": "Publicly traded (OTCQB: SRNA) manufacturer of climate control and HVAC systems purpose-built for cannabis cultivation, including chillers, dehumidifiers, and air handlers.",
+    "logoPlaceholder": "ST",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Climate Control",
+      "HVAC",
+      "Cultivation Equipment"
+    ],
+    "isFeatured": false,
+    "website": "https://surna.com",
+    "phone": "303-993-5271",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "hydrofarm",
+    "name": "Hydrofarm",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Petaluma",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer and wholesale distributor of hydroponics and controlled-environment cultivation equipment (lighting, nutrients, growing media, environmental controls) founded 1977.",
+    "fullDescription": "Manufacturer and wholesale distributor of hydroponics and controlled-environment cultivation equipment (lighting, nutrients, growing media, environmental controls) founded 1977.",
+    "logoPlaceholder": "HY",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Cultivation Equipment",
+      "Hydroponics",
+      "Wholesale Distributor"
+    ],
+    "isFeatured": false,
+    "website": "https://hydrofarm.com",
+    "phone": "800-634-9990",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "apeks-supercritical",
+    "name": "Apeks Supercritical",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Johnstown",
+      "state": "OH",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer of CO2 supercritical fluid extraction systems for cannabis/hemp oil extraction, built and tested in its own Ohio factory.",
+    "fullDescription": "Manufacturer of CO2 supercritical fluid extraction systems for cannabis/hemp oil extraction, built and tested in its own Ohio factory.",
+    "logoPlaceholder": "AS",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Extraction Equipment",
+      "Lab Equipment",
+      "Custom OEM"
+    ],
+    "isFeatured": false,
+    "website": "https://apekssupercritical.com",
+    "phone": "740-809-1160",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "dymapak",
+    "name": "Dymapak",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Greenwich",
+      "state": "CT",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer of child-resistant packaging (mylar bags, pouches, boxes, tins) for the cannabis, tobacco, and CPG industries, with custom/private-label programs.",
+    "fullDescription": "Manufacturer of child-resistant packaging (mylar bags, pouches, boxes, tins) for the cannabis, tobacco, and CPG industries, with custom/private-label programs.",
+    "logoPlaceholder": "DY",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Packaging",
+      "Child-Resistant",
+      "Custom OEM"
+    ],
+    "isFeatured": false,
+    "website": "https://dymapak.com",
+    "phone": "917-210-1067",
+    "minOrderQty": "5,000 units (custom packaging)",
+    "serviceArea": "Worldwide",
+    "leadTime": "~6 weeks (custom orders)",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "boveda-inc",
+    "name": "Boveda Inc",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Minnetonka",
+      "state": "MN",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer of two-way humidity control packs used in cannabis packaging to maintain product freshness and prevent mold/dryness.",
+    "fullDescription": "Manufacturer of two-way humidity control packs used in cannabis packaging to maintain product freshness and prevent mold/dryness.",
+    "logoPlaceholder": "BI",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Packaging",
+      "Humidity Control",
+      "Lab Supplies"
+    ],
+    "isFeatured": false,
+    "website": "https://bovedainc.com",
+    "phone": "952-745-2900",
+    "email": "info@bovedainc.com (consumer); sales@bovedainc.com (business)",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "growspan-greenhouse-structures",
+    "name": "GrowSpan Greenhouse Structures",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "South Windsor",
+      "state": "CT",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer of commercial greenhouse structures and environmental control systems (heating, cooling, ventilation, lighting) used for cannabis and hemp cultivation.",
+    "fullDescription": "Manufacturer of commercial greenhouse structures and environmental control systems (heating, cooling, ventilation, lighting) used for cannabis and hemp cultivation.",
+    "logoPlaceholder": "GS",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Cultivation Equipment",
+      "Greenhouse Structures",
+      "Climate Control"
+    ],
+    "isFeatured": false,
+    "website": "https://growspan.com",
+    "phone": "877-835-9996",
+    "email": "info@growspan.com",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "grove-bags",
+    "name": "Grove Bags",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Bedford Heights",
+      "state": "OH",
+      "zip": ""
+    },
+    "shortDescription": "Manufacturer of USA-made cannabis curing and preservation packaging featuring proprietary TerpLoc humidity-regulating technology.",
+    "fullDescription": "Manufacturer of USA-made cannabis curing and preservation packaging featuring proprietary TerpLoc humidity-regulating technology.",
+    "logoPlaceholder": "GB",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Packaging",
+      "Humidity Control",
+      "Cure Bags"
+    ],
+    "isFeatured": false,
+    "website": "https://grovebags.com",
+    "phone": "833-837-7562",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "root-sciences",
+    "name": "Root Sciences",
+    "tier": "elite",
+    "category": "manufacturers-suppliers",
+    "location": {
+      "address": "",
+      "city": "Seattle",
+      "state": "WA",
+      "zip": ""
+    },
+    "shortDescription": "Distributor/manufacturer of end-to-end lab extraction equipment (ethanol, CO2, solventless) and distillation/post-processing systems for cannabis and hemp.",
+    "fullDescription": "Distributor/manufacturer of end-to-end lab extraction equipment (ethanol, CO2, solventless) and distillation/post-processing systems for cannabis and hemp.",
+    "logoPlaceholder": "RS",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Extraction Equipment",
+      "Lab Equipment",
+      "Distillation"
+    ],
+    "isFeatured": false,
+    "website": "https://rootsciences.com",
+    "phone": "206-452-1130",
+    "email": "info@rootsciences.com",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "fairwinds-manufacturing",
+    "name": "Fairwinds Manufacturing",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Vancouver",
+      "state": "WA",
+      "zip": ""
+    },
+    "shortDescription": "Washington's largest state-licensed medical cannabis manufacturer, producing FECO-based tinctures, capsules, vape cartridges, topicals and suppositories under strict compliance testing.",
+    "fullDescription": "Washington's largest state-licensed medical cannabis manufacturer, producing FECO-based tinctures, capsules, vape cartridges, topicals and suppositories under strict compliance testing.",
+    "logoPlaceholder": "FM",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "FECO",
+      "Medical Cannabis",
+      "Tinctures",
+      "Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://fairwindscannabis.com",
+    "email": "info@fairwindsmanufacturing.com",
+    "serviceArea": "Ethanol Extraction",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "kazmira",
+    "name": "Kazmira",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Pueblo",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Colorado hemp processor producing pharmaceutical-grade, THC-free broad-spectrum CBD distillate and isolate in bulk for B2B brand partners nationwide.",
+    "fullDescription": "Colorado hemp processor producing pharmaceutical-grade, THC-free broad-spectrum CBD distillate and isolate in bulk for B2B brand partners nationwide.",
+    "logoPlaceholder": "KA",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Bulk Distillate",
+      "Broad Spectrum",
+      "White Label"
+    ],
+    "isFeatured": false,
+    "website": "https://kazmiratx.com",
+    "serviceArea": "CO2 Extraction",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "cannacraft-absolutextracts",
+    "name": "CannaCraft (AbsoluteXtracts)",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Santa Rosa",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Sonoma County cannabis manufacturer behind the AbsoluteXtracts (ABX) brand, known for CO2-extracted vape cartridges and a multi-brand portfolio including Care by Design.",
+    "fullDescription": "Sonoma County cannabis manufacturer behind the AbsoluteXtracts (ABX) brand, known for CO2-extracted vape cartridges and a multi-brand portfolio including Care by Design.",
+    "logoPlaceholder": "C(",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "CO2 Extraction",
+      "Vape Cartridges",
+      "Multi-Brand"
+    ],
+    "isFeatured": false,
+    "website": "https://cannacraft.com",
+    "serviceArea": "CO2 Extraction",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "item-9-labs-corp",
+    "name": "Item 9 Labs Corp",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Phoenix",
+      "state": "AZ",
+      "zip": ""
+    },
+    "shortDescription": "Publicly traded, vertically integrated Arizona cannabis producer operating a 20,000 sq ft manufacturing/extraction facility making concentrates, distillates and live resin terpene sauce.",
+    "fullDescription": "Publicly traded, vertically integrated Arizona cannabis producer operating a 20,000 sq ft manufacturing/extraction facility making concentrates, distillates and live resin terpene sauce.",
+    "logoPlaceholder": "IC",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Live Resin",
+      "Distillate",
+      "Publicly Traded"
+    ],
+    "isFeatured": false,
+    "website": "https://item9labs.com",
+    "serviceArea": "Hydrocarbon Extraction",
+    "facilitySize": "20,000 sq ft",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "cloud-cover-cannabis",
+    "name": "Cloud Cover Cannabis",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Webberville",
+      "state": "MI",
+      "zip": ""
+    },
+    "shortDescription": "Multi-state cannabis producer with an in-house cultivation and extraction team crafting terp sugar, badder, honeycomb, THCa and diamond concentrates from its own biomass.",
+    "fullDescription": "Multi-state cannabis producer with an in-house cultivation and extraction team crafting terp sugar, badder, honeycomb, THCa and diamond concentrates from its own biomass.",
+    "logoPlaceholder": "CC",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Live Resin",
+      "Diamonds",
+      "Badder"
+    ],
+    "isFeatured": false,
+    "website": "https://cloudcovercannabis.com",
+    "serviceArea": "Hydrocarbon Extraction",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "revolution-cannabis",
+    "name": "Revolution Cannabis",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Delavan",
+      "state": "IL",
+      "zip": ""
+    },
+    "shortDescription": "Illinois cultivator and processor operating an advanced cultivation and extraction facility that supplies its Resin (live resin) and Rosin concentrate product lines.",
+    "fullDescription": "Illinois cultivator and processor operating an advanced cultivation and extraction facility that supplies its Resin (live resin) and Rosin concentrate product lines.",
+    "logoPlaceholder": "RC",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Live Resin",
+      "Rosin",
+      "Concentrates"
+    ],
+    "isFeatured": false,
+    "website": "https://revcanna.com",
+    "serviceArea": "Hydrocarbon Extraction",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "garden-remedies",
+    "name": "Garden Remedies",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Fitchburg",
+      "state": "MA",
+      "zip": ""
+    },
+    "shortDescription": "Massachusetts vertically integrated operator that completed a $1.5M extraction lab upgrade in Fitchburg using CO2 and ethanol methods, and now offers extraction services to outside growers.",
+    "fullDescription": "Massachusetts vertically integrated operator that completed a $1.5M extraction lab upgrade in Fitchburg using CO2 and ethanol methods, and now offers extraction services to outside growers.",
+    "logoPlaceholder": "GR",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "CO2 Extraction",
+      "Toll Processing",
+      "Tinctures"
+    ],
+    "isFeatured": false,
+    "website": "https://gardenremedies.com",
+    "phone": "(844) 344-2420",
+    "serviceArea": "CO2 Extraction",
+    "turnaroundTime": "~20 business days per 500 lb batch",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "green-therapeutics-gt-nevada",
+    "name": "Green Therapeutics (GT Nevada)",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Las Vegas",
+      "state": "NV",
+      "zip": ""
+    },
+    "shortDescription": "Nevada-licensed toll processor (Production License P055) founded in 2015 by a pharma-manufacturing team, offering live resin, rosin, botanical oil and RSO co-pack/white-label production.",
+    "fullDescription": "Nevada-licensed toll processor (Production License P055) founded in 2015 by a pharma-manufacturing team, offering live resin, rosin, botanical oil and RSO co-pack/white-label production.",
+    "logoPlaceholder": "GN",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Toll Processing",
+      "Live Resin",
+      "White Label",
+      "Rosin"
+    ],
+    "isFeatured": false,
+    "website": "https://gtnevada.com",
+    "serviceArea": "Hydrocarbon Extraction",
+    "turnaroundTime": "ASAP to 90+ days (project-dependent)",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "farmers-friend-extracts-pdx",
+    "name": "Farmer's Friend Extracts PDX",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Portland",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "Oregon OLCC-licensed CO2 toll processor offering full-spectrum extraction, mold/pathogen remediation, and white-label/co-branded production for industry partners.",
+    "fullDescription": "Oregon OLCC-licensed CO2 toll processor offering full-spectrum extraction, mold/pathogen remediation, and white-label/co-branded production for industry partners.",
+    "logoPlaceholder": "FP",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "CO2 Extraction",
+      "Toll Processing",
+      "Remediation"
+    ],
+    "isFeatured": false,
+    "website": "https://ffepdx.com",
+    "phone": "971-386-2967",
+    "email": "info@ffepdx.com",
+    "serviceArea": "CO2 Extraction",
+    "pricingModel": "Yes"
+  },
+  {
+    "slug": "ohio-green-systems",
+    "name": "Ohio Green Systems",
+    "tier": "elite",
+    "category": "extraction-processing",
+    "location": {
+      "address": "",
+      "city": "Ohio (city not publicly listed)",
+      "state": "",
+      "zip": ""
+    },
+    "shortDescription": "Ohio-licensed cannabis processor operating an 8,000 sq ft cryo-ethanol extraction facility producing oils and concentrates for the state's dispensary market under multiple in-house brands.",
+    "fullDescription": "Ohio-licensed cannabis processor operating an 8,000 sq ft cryo-ethanol extraction facility producing oils and concentrates for the state's dispensary market under multiple in-house brands.",
+    "logoPlaceholder": "OS",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Cryo-Ethanol",
+      "Concentrates",
+      "Multi-Brand"
+    ],
+    "isFeatured": false,
+    "website": "https://ohiogreensystems.com",
+    "serviceArea": "Ethanol Extraction",
+    "facilitySize": "8,000 sq ft",
+    "pricingModel": "Unknown"
+  },
+  {
+    "slug": "canna-advisors",
+    "name": "Canna Advisors",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Boulder",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "One of the longest-running U.S. cannabis consulting firms, guiding entrepreneurs through license applications, business planning, and operational strategy.",
+    "fullDescription": "One of the longest-running U.S. cannabis consulting firms, guiding entrepreneurs through license applications, business planning, and operational strategy.",
+    "logoPlaceholder": "CA",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "License Applications",
+      "Business Planning",
+      "Market Entry",
+      "Multi-State"
+    ],
+    "isFeatured": false,
+    "website": "https://thinkcanna.com",
+    "phone": "720-708-3154",
+    "email": "info@thinkcanna.com",
+    "specialtyAreas": [
+      "License Applications"
+    ],
+    "statesServed": [
+      "Nationwide U.S. coverage; additional offices in NY and CA"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "quantum-9-inc",
+    "name": "Quantum 9, Inc.",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis and psychedelics consulting firm helping entrepreneurs and investors license, operate, and sell cannabis businesses; reports a 92% license win rate.",
+    "fullDescription": "Cannabis and psychedelics consulting firm helping entrepreneurs and investors license, operate, and sell cannabis businesses; reports a 92% license win rate.",
+    "logoPlaceholder": "QI",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "License Applications",
+      "Operations",
+      "M&A Advisory",
+      "Multi-State"
+    ],
+    "isFeatured": false,
+    "website": "https://quantum9.net",
+    "specialtyAreas": [
+      "License Applications"
+    ],
+    "statesServed": [
+      "33+ U.S. states and 6 countries"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "whitney-economics",
+    "name": "Whitney Economics",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Portland",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "Economic research and consulting firm led by chief economist Beau Whitney, providing data-driven market analysis and policy consulting for cannabis and hemp.",
+    "fullDescription": "Economic research and consulting firm led by chief economist Beau Whitney, providing data-driven market analysis and policy consulting for cannabis and hemp.",
+    "logoPlaceholder": "WE",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Market Research",
+      "Capital Strategy",
+      "Policy Analysis",
+      "Forecasting"
+    ],
+    "isFeatured": false,
+    "website": "https://whitneyeconomics.com",
+    "phone": "(503) 724-3084",
+    "specialtyAreas": [
+      "Market Research / Capital Strategy"
+    ],
+    "statesServed": [
+      "United States and international markets"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "green-rush-consulting",
+    "name": "Green Rush Consulting",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Las Vegas",
+      "state": "NV",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis business consulting firm with offices in Nevada and the SF Bay Area, guiding entrepreneurs through licensing, business planning, and investment strategy.",
+    "fullDescription": "Cannabis business consulting firm with offices in Nevada and the SF Bay Area, guiding entrepreneurs through licensing, business planning, and investment strategy.",
+    "logoPlaceholder": "GC",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "License Applications",
+      "Business Planning",
+      "Market Entry",
+      "Investment Strategy"
+    ],
+    "isFeatured": false,
+    "website": "https://greenrushconsulting.com",
+    "phone": "(702) 533-4899",
+    "email": "services@greenrushconsulting.com",
+    "specialtyAreas": [
+      "License Applications"
+    ],
+    "statesServed": [
+      "Not publicly listed (primarily NV and CA)"
+    ],
+    "availability": "Yes"
+  },
+  {
+    "slug": "the-cannabis-business-advisors",
+    "name": "The Cannabis Business Advisors",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Phoenix",
+      "state": "AZ",
+      "zip": ""
+    },
+    "shortDescription": "International cannabis business consulting firm providing licensing, regulatory compliance, and strategic guidance for operators entering new state markets.",
+    "fullDescription": "International cannabis business consulting firm providing licensing, regulatory compliance, and strategic guidance for operators entering new state markets.",
+    "logoPlaceholder": "TA",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Compliance",
+      "License Applications",
+      "Market Entry"
+    ],
+    "isFeatured": false,
+    "website": "https://thecannabisbusinessadvisors.com",
+    "phone": "602-290-9424",
+    "email": "Info@TheCannabisBusinessAdvisors.com",
+    "specialtyAreas": [
+      "Compliance"
+    ],
+    "statesServed": [
+      "AZ",
+      "AR",
+      "MD",
+      "MA",
+      "MN",
+      "MO",
+      "OH",
+      "NE",
+      "NJ",
+      "NM",
+      "RI",
+      "UT",
+      "VA",
+      "US Virgin Islands",
+      "and others"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "cannaspire",
+    "name": "Cannaspire",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": ""
+    },
+    "shortDescription": "WBENC-certified cannabis consulting firm offering licensing, compliance, and operations support; reports 450+ clients and 475+ licenses won.",
+    "fullDescription": "WBENC-certified cannabis consulting firm offering licensing, compliance, and operations support; reports 450+ clients and 475+ licenses won.",
+    "logoPlaceholder": "CA",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "License Applications",
+      "Compliance",
+      "M&A Advisory",
+      "Operations"
+    ],
+    "isFeatured": false,
+    "website": "https://cannaspire.com",
+    "phone": "610-933-5181",
+    "specialtyAreas": [
+      "License Applications"
+    ],
+    "statesServed": [
+      "35+ U.S. states"
+    ],
+    "availability": "Yes"
+  },
+  {
+    "slug": "mass-cannsit-consulting",
+    "name": "Mass Cannsit Consulting",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Leicester",
+      "state": "MA",
+      "zip": ""
+    },
+    "shortDescription": "Massachusetts-based cannabis consulting firm supporting licensees with business planning, regulatory strategy, and technical/compliance operations.",
+    "fullDescription": "Massachusetts-based cannabis consulting firm supporting licensees with business planning, regulatory strategy, and technical/compliance operations.",
+    "logoPlaceholder": "MC",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Operations",
+      "Compliance Auditing",
+      "Licensing",
+      "SOPs"
+    ],
+    "isFeatured": false,
+    "website": "https://masscannsit.com",
+    "phone": "781-299-6876",
+    "email": "info@masscannsit.com",
+    "specialtyAreas": [
+      "Operations"
+    ],
+    "statesServed": [
+      "Massachusetts"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "wecann",
+    "name": "WeCann",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Orange",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "California cannabis advisory firm combining licensing, real estate brokerage, compliance, and business valuation; reports 214 license applications at an 86% success rate.",
+    "fullDescription": "California cannabis advisory firm combining licensing, real estate brokerage, compliance, and business valuation; reports 214 license applications at an 86% success rate.",
+    "logoPlaceholder": "WE",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "License Applications",
+      "Real Estate",
+      "Compliance",
+      "Capital Strategy"
+    ],
+    "isFeatured": false,
+    "website": "https://wecannca.com",
+    "phone": "(657) 888-2795",
+    "email": "info@wecann.biz",
+    "specialtyAreas": [
+      "License Applications"
+    ],
+    "statesServed": [
+      "California (primary); additional nationwide services"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "bridge-west-consulting",
+    "name": "Bridge West Consulting",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Bloomington",
+      "state": "MN",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis business consulting firm (affiliated with Bridge West CPAs) helping operators with licensing, tax navigation, compliance, and business planning.",
+    "fullDescription": "Cannabis business consulting firm (affiliated with Bridge West CPAs) helping operators with licensing, tax navigation, compliance, and business planning.",
+    "logoPlaceholder": "BC",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Capital Strategy",
+      "Compliance",
+      "License Applications",
+      "Tax Planning"
+    ],
+    "isFeatured": false,
+    "website": "https://bridgewestconsulting.com",
+    "email": "info@bridgewestconsulting.com",
+    "specialtyAreas": [
+      "Capital Strategy"
+    ],
+    "statesServed": [
+      "30 states including CA",
+      "CO",
+      "CT",
+      "FL",
+      "IL",
+      "LA",
+      "MI",
+      "MN",
+      "MO",
+      "NJ",
+      "NM",
+      "NY",
+      "OH",
+      "and others"
+    ],
+    "availability": "Yes"
+  },
+  {
+    "slug": "higher-yields-consulting",
+    "name": "Higher Yields Consulting",
+    "tier": "elite",
+    "category": "consultants-advisors",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Cannabusiness consulting firm founded in 2008, serving growers, operators, and investors with licensing, facility design, and controlled-environment agriculture expertise.",
+    "fullDescription": "Cannabusiness consulting firm founded in 2008, serving growers, operators, and investors with licensing, facility design, and controlled-environment agriculture expertise.",
+    "logoPlaceholder": "HC",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Operations",
+      "Facility Design",
+      "License Applications",
+      "Cultivation"
+    ],
+    "isFeatured": false,
+    "website": "https://higheryieldsconsulting.com",
+    "phone": "(844) 449-4353",
+    "email": "info@higheryieldsconsulting.com",
+    "specialtyAreas": [
+      "Operations"
+    ],
+    "statesServed": [
+      "Not publicly listed (international reach cited)"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "grasslands",
+    "name": "Grasslands",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Journalism-minded PR, branding, and marketing agency founded by a former Denver Post editor, serving cannabis and psychedelics brands nationwide.",
+    "fullDescription": "Journalism-minded PR, branding, and marketing agency founded by a former Denver Post editor, serving cannabis and psychedelics brands nationwide.",
+    "logoPlaceholder": "GR",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Brand Identity",
+      "PR",
+      "Content Marketing",
+      "Media Relations"
+    ],
+    "isFeatured": false,
+    "website": "https://mygrasslands.com",
+    "serviceArea": "Brand Identity",
+    "statesServed": [
+      "All Legal States"
+    ]
+  },
+  {
+    "slug": "cannabis-creative-group",
+    "name": "Cannabis Creative Group",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Newton",
+      "state": "MA",
+      "zip": ""
+    },
+    "shortDescription": "Full-service digital marketing agency for cannabis and CBD businesses offering branding, packaging, web design, and advertising.",
+    "fullDescription": "Full-service digital marketing agency for cannabis and CBD businesses offering branding, packaging, web design, and advertising.",
+    "logoPlaceholder": "CG",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Brand Identity",
+      "Packaging Design",
+      "SEO",
+      "Digital Marketing"
+    ],
+    "isFeatured": false,
+    "website": "https://cannabiscreative.com",
+    "phone": "855-420-1812",
+    "email": "info@cannabiscreative.com",
+    "serviceArea": "Digital Marketing"
+  },
+  {
+    "slug": "cannaplanners",
+    "name": "CannaPlanners",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Burlington",
+      "state": "VT",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis-focused agency delivering branding, web design, local SEO, and retention marketing to grow dispensary sales and visibility.",
+    "fullDescription": "Cannabis-focused agency delivering branding, web design, local SEO, and retention marketing to grow dispensary sales and visibility.",
+    "logoPlaceholder": "CA",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Brand Identity",
+      "Packaging Design",
+      "SEO",
+      "Web Design"
+    ],
+    "isFeatured": false,
+    "website": "https://cannaplanners.com",
+    "phone": "(802) 923-9800",
+    "email": "info@cannaplanners.com",
+    "serviceArea": "Digital Marketing"
+  },
+  {
+    "slug": "kindtyme",
+    "name": "KindTyme",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Portland",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "Creative cannabis marketing agency offering brand identity, packaging/label design, web development, SEO, and 3D product rendering.",
+    "fullDescription": "Creative cannabis marketing agency offering brand identity, packaging/label design, web development, SEO, and 3D product rendering.",
+    "logoPlaceholder": "KI",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Brand Identity",
+      "Packaging Design",
+      "SEO",
+      "Photography"
+    ],
+    "isFeatured": false,
+    "website": "https://kindtyme.com",
+    "phone": "(844) 487-8963",
+    "serviceArea": "Brand Identity"
+  },
+  {
+    "slug": "studio-linear",
+    "name": "Studio Linear",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Maine (city not publicly listed)",
+      "state": "",
+      "zip": ""
+    },
+    "shortDescription": "Female-owned creative studio specializing exclusively in cannabis and CBD branding, packaging, and digital design nationwide.",
+    "fullDescription": "Female-owned creative studio specializing exclusively in cannabis and CBD branding, packaging, and digital design nationwide.",
+    "logoPlaceholder": "SL",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Brand Identity",
+      "Packaging Design",
+      "Web Design"
+    ],
+    "isFeatured": false,
+    "website": "https://studiolinear.com",
+    "email": "hello@studiolinear.com",
+    "serviceArea": "Packaging Design",
+    "statesServed": [
+      "All Legal States"
+    ]
+  },
+  {
+    "slug": "budder-creative",
+    "name": "Budder Creative",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Philadelphia",
+      "state": "PA",
+      "zip": ""
+    },
+    "shortDescription": "Brand-to-shelf design studio handling cannabis naming, brand strategy, packaging design, and retail fixture/display production.",
+    "fullDescription": "Brand-to-shelf design studio handling cannabis naming, brand strategy, packaging design, and retail fixture/display production.",
+    "logoPlaceholder": "BC",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Brand Identity",
+      "Packaging Design",
+      "Retail Design"
+    ],
+    "isFeatured": false,
+    "website": "https://buddercreative.com",
+    "serviceArea": "Packaging Design",
+    "leadTime": "3 weeks (displays)"
+  },
+  {
+    "slug": "hybrid-marketing-co",
+    "name": "Hybrid Marketing Co",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Full-service cannabis branding and marketing agency offering strategy, SEO, paid search, social, and creative production for B2B/B2C cannabis clients.",
+    "fullDescription": "Full-service cannabis branding and marketing agency offering strategy, SEO, paid search, social, and creative production for B2B/B2C cannabis clients.",
+    "logoPlaceholder": "HC",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Brand Identity",
+      "SEO",
+      "Digital Marketing",
+      "Social Media"
+    ],
+    "isFeatured": false,
+    "website": "https://hybridmarketingco.com",
+    "phone": "720-802-1120",
+    "serviceArea": "Digital Marketing",
+    "pricingModel": "$5,000+",
+    "statesServed": [
+      "All Legal States"
+    ]
+  },
+  {
+    "slug": "the-hood-collective",
+    "name": "The Hood Collective",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Indianapolis",
+      "state": "IN",
+      "zip": ""
+    },
+    "shortDescription": "Full-service content marketing agency for cannabis brands combining branding/packaging design with photography and video storytelling.",
+    "fullDescription": "Full-service content marketing agency for cannabis brands combining branding/packaging design with photography and video storytelling.",
+    "logoPlaceholder": "TC",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Brand Identity",
+      "Packaging Design",
+      "Photography",
+      "SEO"
+    ],
+    "isFeatured": false,
+    "website": "https://hoodcollective.com",
+    "phone": "(317) 400-4792",
+    "email": "info@hoodcollective.com",
+    "serviceArea": "Brand Identity"
+  },
+  {
+    "slug": "rxdco",
+    "name": "RXDco",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "Jackson Township",
+      "state": "NJ",
+      "zip": ""
+    },
+    "shortDescription": "Engineered cannabis packaging manufacturer and design company producing jars, tubes, boxes, and compliant labeling for national brands.",
+    "fullDescription": "Engineered cannabis packaging manufacturer and design company producing jars, tubes, boxes, and compliant labeling for national brands.",
+    "logoPlaceholder": "RX",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Packaging Design",
+      "Brand Identity",
+      "Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://rxdco.com",
+    "phone": "732-276-6160",
+    "email": "info@rxdco.com",
+    "serviceArea": "Packaging Design",
+    "leadTime": "As fast as 72 hours (rush)",
+    "statesServed": [
+      "All Legal States"
+    ]
+  },
+  {
+    "slug": "cannaverse-solutions",
+    "name": "Cannaverse Solutions",
+    "tier": "elite",
+    "category": "marketing-branding-packaging",
+    "location": {
+      "address": "",
+      "city": "San Francisco",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Bi-coastal full-service cannabis and CBD marketing agency offering paid social, PR, web design, packaging, and branding.",
+    "fullDescription": "Bi-coastal full-service cannabis and CBD marketing agency offering paid social, PR, web design, packaging, and branding.",
+    "logoPlaceholder": "CS",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Brand Identity",
+      "Packaging Design",
+      "PR",
+      "Social Media"
+    ],
+    "isFeatured": false,
+    "website": "https://cannaversesolutions.com",
+    "serviceArea": "Digital Marketing",
+    "statesServed": [
+      "California",
+      "New York"
+    ]
+  },
+  {
+    "slug": "harborside",
+    "name": "Harborside",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Oakland",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "One of California's oldest and best-known cannabis retailers, operating since 2006 on Oakland's Embarcadero with a wide selection of flower, edibles, and concentrates.",
+    "fullDescription": "One of California's oldest and best-known cannabis retailers, operating since 2006 on Oakland's Embarcadero with a wide selection of flower, edibles, and concentrates.",
+    "logoPlaceholder": "HA",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://shopharborside.com",
+    "phone": "(510) 671-5377",
+    "licenseNumber": "C10-0000463-LIC",
+    "licenseType": "Rec + Medical",
+    "delivery": "Yes"
+  },
+  {
+    "slug": "planet-13-las-vegas",
+    "name": "Planet 13 Las Vegas",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Las Vegas",
+      "state": "NV",
+      "zip": ""
+    },
+    "shortDescription": "A 112,000-square-foot cannabis \"superstore\" and entertainment complex near the Las Vegas Strip, combining a full dispensary with a coffee shop, pizzeria, and light shows.",
+    "fullDescription": "A 112,000-square-foot cannabis \"superstore\" and entertainment complex near the Las Vegas Strip, combining a full dispensary with a coffee shop, pizzeria, and light shows.",
+    "logoPlaceholder": "PV",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://planet13lasvegas.com",
+    "phone": "(702) 815-1313",
+    "licenseType": "Rec + Medical",
+    "delivery": "Yes",
+    "hours": "Dispensary open 24/7; curbside pickup & delivery 9am-12am"
+  },
+  {
+    "slug": "trulieve-tallahassee-capital-circle",
+    "name": "Trulieve - Tallahassee (Capital Circle)",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Tallahassee",
+      "state": "FL",
+      "zip": ""
+    },
+    "shortDescription": "Florida's largest medical marijuana treatment center operator, with this Tallahassee storefront offering walk-in retail and an on-site ATM for registered patients.",
+    "fullDescription": "Florida's largest medical marijuana treatment center operator, with this Tallahassee storefront offering walk-in retail and an on-site ATM for registered patients.",
+    "logoPlaceholder": "TC",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://trulieve.com/dispensaries/florida/tallahassee",
+    "phone": "(850) 329-5361",
+    "licenseType": "Medical",
+    "delivery": "Yes",
+    "hours": "Mon-Sat 8:30am-8:45pm; Sun 9:00am-8:30pm"
+  },
+  {
+    "slug": "sunnyside-cannabis-dispensary-wrigleyville",
+    "name": "Sunnyside Cannabis Dispensary - Wrigleyville",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": ""
+    },
+    "shortDescription": "A Cresco Labs-owned dispensary brand serving both medical patients and adult-use customers in Chicago's Wrigleyville neighborhood.",
+    "fullDescription": "A Cresco Labs-owned dispensary brand serving both medical patients and adult-use customers in Chicago's Wrigleyville neighborhood.",
+    "logoPlaceholder": "SW",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://sunnyside.shop/store/chicago-lakeview-il",
+    "phone": "(773) 820-7280",
+    "licenseType": "Rec + Medical",
+    "delivery": "Yes",
+    "hours": "Mon-Thu, Sun 9:00am-9:00pm; Fri-Sat 9:00am-9:30pm"
+  },
+  {
+    "slug": "neta-new-england-treatment-access",
+    "name": "NETA (New England Treatment Access)",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Brookline",
+      "state": "MA",
+      "zip": ""
+    },
+    "shortDescription": "One of Massachusetts' original medical dispensaries, now also serving adult-use customers from its Brookline storefront just outside Boston.",
+    "fullDescription": "One of Massachusetts' original medical dispensaries, now also serving adult-use customers from its Brookline storefront just outside Boston.",
+    "logoPlaceholder": "NA",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://netacare.org",
+    "phone": "(617) 377-7408",
+    "email": "contact@netacare.org",
+    "licenseType": "Rec + Medical",
+    "delivery": "Unknown",
+    "hours": "Rec: Mon-Sat 10am-9pm, Sun 12pm-7pm; Medical: Mon-Fri 10am-9pm, Sat-Sun 9am-9pm"
+  },
+  {
+    "slug": "zen-leaf-phoenix-dunlap",
+    "name": "Zen Leaf - Phoenix (Dunlap)",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Phoenix",
+      "state": "AZ",
+      "zip": ""
+    },
+    "shortDescription": "Part of the Verano-owned Zen Leaf chain, this Phoenix location offers recreational and medical cannabis products including flower, vapes, and edibles.",
+    "fullDescription": "Part of the Verano-owned Zen Leaf chain, this Phoenix location offers recreational and medical cannabis products including flower, vapes, and edibles.",
+    "logoPlaceholder": "Z(",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://zenleafdispensaries.com/locations/phoenix-w-dunlap",
+    "phone": "(623) 624-4640",
+    "licenseType": "Rec + Medical",
+    "delivery": "Unknown",
+    "hours": "Daily 8:00am-10:00pm"
+  },
+  {
+    "slug": "lume-cannabis-co-kalamazoo",
+    "name": "Lume Cannabis Co. - Kalamazoo",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Kalamazoo",
+      "state": "MI",
+      "zip": ""
+    },
+    "shortDescription": "One of dozens of Michigan locations for Lume Cannabis Co., a Michigan-based multi-state operator offering recreational and medical cannabis.",
+    "fullDescription": "One of dozens of Michigan locations for Lume Cannabis Co., a Michigan-based multi-state operator offering recreational and medical cannabis.",
+    "logoPlaceholder": "LK",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://lume.com/stores/dispensary-kalamazoo-mi",
+    "phone": "(269) 888-1200",
+    "licenseType": "Rec + Medical",
+    "delivery": "Unknown",
+    "hours": "Daily 9:00am-9:00pm"
+  },
+  {
+    "slug": "nectar-portland-68th-sandy",
+    "name": "Nectar - Portland (68th & Sandy)",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Portland",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "A locally rooted Oregon dispensary chain with dozens of Portland-area storefronts offering recreational cannabis with curbside and in-store pickup.",
+    "fullDescription": "A locally rooted Oregon dispensary chain with dozens of Portland-area storefronts offering recreational cannabis with curbside and in-store pickup.",
+    "logoPlaceholder": "NS",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://nectar.store",
+    "phone": "(503) 477-5083",
+    "licenseType": "Recreational",
+    "delivery": "Unknown",
+    "hours": "Daily 7:00am-10:00pm"
+  },
+  {
+    "slug": "uncle-ikes-central-district",
+    "name": "Uncle Ike's - Central District",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Seattle",
+      "state": "WA",
+      "zip": ""
+    },
+    "shortDescription": "A well-known Seattle recreational cannabis retailer with multiple storefronts across the city, operating since Washington's I-502 legalization.",
+    "fullDescription": "A well-known Seattle recreational cannabis retailer with multiple storefronts across the city, operating since Washington's I-502 legalization.",
+    "logoPlaceholder": "UD",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://ikes.com",
+    "phone": "(206) 420-5770",
+    "licenseType": "Recreational",
+    "delivery": "Unknown",
+    "hours": "Daily 8:00am-11:45pm"
+  },
+  {
+    "slug": "curaleaf-bellmawr",
+    "name": "Curaleaf - Bellmawr",
+    "tier": "elite",
+    "category": "retail-dispensary",
+    "location": {
+      "address": "",
+      "city": "Bellmawr",
+      "state": "NJ",
+      "zip": ""
+    },
+    "shortDescription": "A South Jersey location of Curaleaf, one of the largest multi-state cannabis operators in the U.S., serving both medical patients and adult-use customers.",
+    "fullDescription": "A South Jersey location of Curaleaf, one of the largest multi-state cannabis operators in the U.S., serving both medical patients and adult-use customers.",
+    "logoPlaceholder": "CB",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://curaleaf.com/shop/new-jersey/curaleaf-nj-bellmawr",
+    "phone": "(856) 933-8700",
+    "licenseType": "Rec + Medical",
+    "delivery": "Unknown",
+    "hours": "Mon-Sun 8:00am-7:00pm"
+  },
+  {
+    "slug": "nabis",
+    "name": "Nabis",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "San Francisco",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "The largest licensed cannabis wholesale distribution platform in California, connecting brands to over 9,000 dispensary SKUs with its own delivery fleet and warehousing.",
+    "fullDescription": "The largest licensed cannabis wholesale distribution platform in California, connecting brands to over 9,000 dispensary SKUs with its own delivery fleet and warehousing.",
+    "logoPlaceholder": "NA",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Distribution",
+      "Wholesale",
+      "Freight"
+    ],
+    "isFeatured": false,
+    "website": "https://nabis.com",
+    "licenseNumber": "C11-0001651-LIC (CA); OCM-DIST-24-000114 (NY)",
+    "vehicleCount": 90,
+    "transportType": "Standard"
+  },
+  {
+    "slug": "green-parcel-service-gps-transportation",
+    "name": "Green Parcel Service (GPS Transportation)",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Colorado cannabis courier and logistics company founded in 2015 offering insured, compliance-focused wholesale marijuana transport with real-time fleet tracking and METRC coordination.",
+    "fullDescription": "Colorado cannabis courier and logistics company founded in 2015 offering insured, compliance-focused wholesale marijuana transport with real-time fleet tracking and METRC coordination.",
+    "logoPlaceholder": "GT",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Distribution",
+      "Compliance",
+      "Courier"
+    ],
+    "isFeatured": false,
+    "website": "https://greenparcelservice.co",
+    "phone": "(303) 632-8772",
+    "email": "info@greenparcelservice.com",
+    "transportType": "Standard",
+    "dispatchHours": "8am-7pm"
+  },
+  {
+    "slug": "mile-high-transport",
+    "name": "Mile High Transport",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Sapulpa",
+      "state": "OK",
+      "zip": ""
+    },
+    "shortDescription": "Oklahoma Medical Marijuana Authority-licensed carrier providing armed, insured transport for growers, processors, testing labs, and dispensaries statewide.",
+    "fullDescription": "Oklahoma Medical Marijuana Authority-licensed carrier providing armed, insured transport for growers, processors, testing labs, and dispensaries statewide.",
+    "logoPlaceholder": "MT",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Armored",
+      "Freight",
+      "Statewide"
+    ],
+    "isFeatured": false,
+    "website": "https://milehightransit.com",
+    "phone": "918-928-5309",
+    "licenseNumber": "OMMA-licensed transporter (number not publicly listed)",
+    "transportType": "Armored",
+    "dispatchHours": "Mon-Sat 8am-8pm"
+  },
+  {
+    "slug": "reliavan",
+    "name": "Reliavan",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": ""
+    },
+    "shortDescription": "One of Illinois' first licensed cannabis transporters, moving product for dispensaries, growers, and infusers with GPS-tracked, refrigerated, camera-monitored vans.",
+    "fullDescription": "One of Illinois' first licensed cannabis transporters, moving product for dispensaries, growers, and infusers with GPS-tracked, refrigerated, camera-monitored vans.",
+    "logoPlaceholder": "RE",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Distribution",
+      "Temp Controlled",
+      "Statewide"
+    ],
+    "isFeatured": false,
+    "website": "https://reliavan.com",
+    "phone": "(773) 844-1333",
+    "email": "contact@reliavan.com",
+    "licenseNumber": "2107150238-TR",
+    "transportType": "Temp Controlled"
+  },
+  {
+    "slug": "afa-secured-transport",
+    "name": "AFA Secured Transport",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Lansing",
+      "state": "MI",
+      "zip": ""
+    },
+    "shortDescription": "LARA/MMFLA-licensed secure transporter offering statewide Michigan cannabis and cash transport plus up to 96 hours of secured product storage.",
+    "fullDescription": "LARA/MMFLA-licensed secure transporter offering statewide Michigan cannabis and cash transport plus up to 96 hours of secured product storage.",
+    "logoPlaceholder": "AT",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Armored",
+      "Secure Storage",
+      "Distribution"
+    ],
+    "isFeatured": false,
+    "website": "https://afasecuredtransport.com",
+    "phone": "(810) 820-3303",
+    "email": "info@afasecuredtransport.com",
+    "licenseNumber": "ST-000052; AU-ST-000114",
+    "transportType": "Armored",
+    "dispatchHours": "Same-day pickup for 9am orders"
+  },
+  {
+    "slug": "emunio-logistics",
+    "name": "Emunio Logistics",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Bergen County",
+      "state": "NJ",
+      "zip": ""
+    },
+    "shortDescription": "New Jersey Class 3 Wholesaler / Class 4 Distributor operating a 13,000 sq ft climate-controlled facility and fleet for secure statewide cannabis distribution.",
+    "fullDescription": "New Jersey Class 3 Wholesaler / Class 4 Distributor operating a 13,000 sq ft climate-controlled facility and fleet for secure statewide cannabis distribution.",
+    "logoPlaceholder": "EL",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Distribution",
+      "Wholesale",
+      "Temp Controlled"
+    ],
+    "isFeatured": false,
+    "website": "https://emuniologistics.com",
+    "phone": "610-299-3714",
+    "email": "info@emuniologistics.com",
+    "licenseNumber": "Active Class 3 Wholesaler; Active Class 4 Distributor License",
+    "transportType": "Temp Controlled"
+  },
+  {
+    "slug": "terpene-transit",
+    "name": "Terpene Transit",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Bellingham",
+      "state": "WA",
+      "zip": ""
+    },
+    "shortDescription": "One of Washington State's first third-party I-502 cannabis logistics providers, licensed by the WSLCB, offering GPS-tracked delivery and quick payment returns.",
+    "fullDescription": "One of Washington State's first third-party I-502 cannabis logistics providers, licensed by the WSLCB, offering GPS-tracked delivery and quick payment returns.",
+    "logoPlaceholder": "TT",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Distribution",
+      "Freight",
+      "Courier"
+    ],
+    "isFeatured": false,
+    "website": "https://terpenetransit.com",
+    "phone": "360-603-0029",
+    "email": "orders@terpenetransit.com",
+    "licenseNumber": "WSLCB-licensed (number not publicly listed)",
+    "vehicleCount": 10,
+    "transportType": "Standard"
+  },
+  {
+    "slug": "buddy-delivery",
+    "name": "Buddy Delivery",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Bowie",
+      "state": "MD",
+      "zip": ""
+    },
+    "shortDescription": "Maryland Cannabis Administration-licensed B2B logistics partner offering GPS-tracked, chain-of-custody transport and secure cash processing for growers, processors, and dispensaries.",
+    "fullDescription": "Maryland Cannabis Administration-licensed B2B logistics partner offering GPS-tracked, chain-of-custody transport and secure cash processing for growers, processors, and dispensaries.",
+    "logoPlaceholder": "BD",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Armored",
+      "Distribution",
+      "Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://buddydelivery.co",
+    "email": "contact@buddydelivery.co",
+    "licenseNumber": "A-25-00005",
+    "transportType": "Armored",
+    "dispatchHours": "24/7 Dispatch"
+  },
+  {
+    "slug": "crossroads-transport-co",
+    "name": "Crossroads Transport Co.",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Wentzville",
+      "state": "MO",
+      "zip": ""
+    },
+    "shortDescription": "Veteran-owned Missouri cannabis carrier providing standard and fresh-frozen (-10F) temperature-controlled transport, sample runs, and currency handling statewide.",
+    "fullDescription": "Veteran-owned Missouri cannabis carrier providing standard and fresh-frozen (-10F) temperature-controlled transport, sample runs, and currency handling statewide.",
+    "logoPlaceholder": "CC",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Temp Controlled",
+      "Freight",
+      "Statewide"
+    ],
+    "isFeatured": false,
+    "website": "https://crossroadstransportco.com",
+    "phone": "636-534-1901",
+    "email": "info@crossroadstransportco.com",
+    "licenseNumber": "TRA000047",
+    "transportType": "Temp Controlled"
+  },
+  {
+    "slug": "sonoran-roots-distribution",
+    "name": "Sonoran Roots Distribution",
+    "tier": "elite",
+    "category": "transportation-logistics",
+    "location": {
+      "address": "",
+      "city": "Tempe",
+      "state": "AZ",
+      "zip": ""
+    },
+    "shortDescription": "Arizona cannabis supply-chain hub founded in 2024 offering warehousing, order fulfillment, and final-mile delivery to over 160 dispensaries statewide (90%+ of AZ market).",
+    "fullDescription": "Arizona cannabis supply-chain hub founded in 2024 offering warehousing, order fulfillment, and final-mile delivery to over 160 dispensaries statewide (90%+ of AZ market).",
+    "logoPlaceholder": "SD",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Distribution",
+      "Freight",
+      "Wholesale"
+    ],
+    "isFeatured": false,
+    "website": "https://sonoranroots.com",
+    "transportType": "Standard"
+  },
+  {
+    "slug": "confidence-analytics",
+    "name": "Confidence Analytics",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Redmond",
+      "state": "WA",
+      "zip": ""
+    },
+    "shortDescription": "Independent cannabis testing lab analyzing flower, extract, and edible products for cannabinoids, terpenes, and pesticides; certified by WSLCB and CA DCC.",
+    "fullDescription": "Independent cannabis testing lab analyzing flower, extract, and edible products for cannabinoids, terpenes, and pesticides; certified by WSLCB and CA DCC.",
+    "logoPlaceholder": "CA",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Potency",
+      "Terpenes",
+      "Pesticides"
+    ],
+    "isFeatured": false,
+    "website": "https://conflabs.com",
+    "phone": "(206) 743-8843",
+    "email": "info@conflabs.com",
+    "accreditation": "ISO/IEC 17025",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "sc-labs",
+    "name": "SC Labs",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Santa Cruz",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "One of the largest cannabis and hemp testing networks in the U.S., offering profile, contaminant, and specialty testing with labs in CA, CO, MI, OR, and AZ.",
+    "fullDescription": "One of the largest cannabis and hemp testing networks in the U.S., offering profile, contaminant, and specialty testing with labs in CA, CO, MI, OR, and AZ.",
+    "logoPlaceholder": "SL",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Potency",
+      "Pesticides",
+      "Heavy Metals",
+      "Microbials"
+    ],
+    "isFeatured": false,
+    "website": "https://sclabs.com",
+    "phone": "(866) 435-0709",
+    "accreditation": "ISO/IEC 17025:2017 (PJLA-accredited)",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "proverde-laboratories",
+    "name": "ProVerde Laboratories",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Milford",
+      "state": "MA",
+      "zip": ""
+    },
+    "shortDescription": "ISO 17025-accredited independent testing laboratory registered under the MA Cannabis Control Commission, offering full-panel potency and safety testing.",
+    "fullDescription": "ISO 17025-accredited independent testing laboratory registered under the MA Cannabis Control Commission, offering full-panel potency and safety testing.",
+    "logoPlaceholder": "PL",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Potency",
+      "Pesticides",
+      "Heavy Metals"
+    ],
+    "isFeatured": false,
+    "website": "https://proverdelabs.com",
+    "phone": "(617) 221-3356",
+    "accreditation": "ISO/IEC 17025",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "digipath-labs",
+    "name": "Digipath Labs",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Las Vegas",
+      "state": "NV",
+      "zip": ""
+    },
+    "shortDescription": "Nevada-licensed cannabis testing lab using Agilent analytical instrumentation for potency and safety testing, directed by Dr. Cindy Orser.",
+    "fullDescription": "Nevada-licensed cannabis testing lab using Agilent analytical instrumentation for potency and safety testing, directed by Dr. Cindy Orser.",
+    "logoPlaceholder": "DL",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Potency",
+      "Pesticides",
+      "Terpenes"
+    ],
+    "isFeatured": false,
+    "website": "https://digipathlabs.com",
+    "phone": "(702) 209-2429",
+    "accreditation": "ISO/IEC 17025:2017",
+    "turnaroundTime": "48 Hours",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "iron-laboratories",
+    "name": "Iron Laboratories",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Walled Lake",
+      "state": "MI",
+      "zip": ""
+    },
+    "shortDescription": "Michigan-licensed cannabis compliance testing lab offering chromatography-based potency, microbial, and contaminant analysis.",
+    "fullDescription": "Michigan-licensed cannabis compliance testing lab offering chromatography-based potency, microbial, and contaminant analysis.",
+    "logoPlaceholder": "IL",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Potency",
+      "Microbials",
+      "Contaminants"
+    ],
+    "isFeatured": false,
+    "website": "https://ironlaboratories.com",
+    "phone": "(248) 313-9000",
+    "email": "info@ironlaboratories.com",
+    "accreditation": "ISO/IEC 17025:2017 (Accred. #77802)",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "modern-canna",
+    "name": "Modern Canna",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Lakeland",
+      "state": "FL",
+      "zip": ""
+    },
+    "shortDescription": "Florida ISO 17025-accredited medical cannabis and hemp testing lab offering full-panel potency, pesticide, heavy metal, and microbial testing.",
+    "fullDescription": "Florida ISO 17025-accredited medical cannabis and hemp testing lab offering full-panel potency, pesticide, heavy metal, and microbial testing.",
+    "logoPlaceholder": "MC",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Potency",
+      "Pesticides",
+      "Heavy Metals",
+      "Microbials"
+    ],
+    "isFeatured": false,
+    "website": "https://moderncanna.com",
+    "phone": "(863) 608-7800",
+    "email": "info@moderncanna.com",
+    "accreditation": "ISO/IEC 17025",
+    "licenseNumber": "Active",
+    "panelCount": "12+"
+  },
+  {
+    "slug": "rose-city-laboratories",
+    "name": "Rose City Laboratories",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Portland",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "OLCC-licensed, ORELAP-accredited laboratory providing cannabis and hemp compliance testing for the Oregon market.",
+    "fullDescription": "OLCC-licensed, ORELAP-accredited laboratory providing cannabis and hemp compliance testing for the Oregon market.",
+    "logoPlaceholder": "RL",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Potency",
+      "Pesticides",
+      "Microbials"
+    ],
+    "isFeatured": false,
+    "website": "https://rosecitylabs.com",
+    "phone": "(503) 307-0096",
+    "email": "info@rosecitylabs.com",
+    "accreditation": "ORELAP / State Certification",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "act-laboratories-pennsylvania",
+    "name": "ACT Laboratories (Pennsylvania)",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Trafford",
+      "state": "PA",
+      "zip": ""
+    },
+    "shortDescription": "PA Department of Health-licensed cannabis testing lab covering flower, concentrates, vapes, and infused products with fast sample logistics.",
+    "fullDescription": "PA Department of Health-licensed cannabis testing lab covering flower, concentrates, vapes, and infused products with fast sample logistics.",
+    "logoPlaceholder": "A(",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Potency",
+      "Pesticides",
+      "Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://actlab.com/pennsylvania",
+    "phone": "(844) 822-8522",
+    "email": "PennsylvaniaSales@actlab.com",
+    "accreditation": "State-Licensed (PA DOH Lic. L1-17 / L1-25)",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "rio-grande-analytics",
+    "name": "Rio Grande Analytics",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Albuquerque",
+      "state": "NM",
+      "zip": ""
+    },
+    "shortDescription": "New Mexico state-approved cannabis testing laboratory with locations in Albuquerque and Las Cruces offering full-panel potency and terpene testing.",
+    "fullDescription": "New Mexico state-approved cannabis testing laboratory with locations in Albuquerque and Las Cruces offering full-panel potency and terpene testing.",
+    "logoPlaceholder": "RA",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Potency",
+      "Terpenes",
+      "Pesticides"
+    ],
+    "isFeatured": false,
+    "website": "https://riograndeanalytics.com",
+    "phone": "(505) 503-6830",
+    "email": "info@riograndeanalytics.com",
+    "accreditation": "State-Licensed (NM RLD)",
+    "licenseNumber": "Active"
+  },
+  {
+    "slug": "agriscience-labs",
+    "name": "AgriScience Labs",
+    "tier": "elite",
+    "category": "testing-science",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Colorado's longest continuously licensed cannabis testing lab (since 2014), covering potency, pesticide, heavy metal, and microbial panels.",
+    "fullDescription": "Colorado's longest continuously licensed cannabis testing lab (since 2014), covering potency, pesticide, heavy metal, and microbial panels.",
+    "logoPlaceholder": "AL",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Potency",
+      "Pesticides",
+      "Heavy Metals",
+      "Microbials"
+    ],
+    "isFeatured": false,
+    "website": "https://agrisciencelabs.com",
+    "phone": "(303) 292-3800",
+    "email": "info@agrisciencelabs.com",
+    "accreditation": "State-Licensed (CO MED Lic. 405-00002)",
+    "licenseNumber": "Active",
+    "panelCount": "8"
+  },
+  {
+    "slug": "vicente-llp",
+    "name": "Vicente LLP",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "One of the oldest and largest cannabis-focused law firms in the U.S., advising operators, investors, and governments on licensing, corporate, and regulatory matters.",
+    "fullDescription": "One of the oldest and largest cannabis-focused law firms in the U.S., advising operators, investors, and governments on licensing, corporate, and regulatory matters.",
+    "logoPlaceholder": "VL",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Licensing",
+      "Regulatory Compliance",
+      "M&A"
+    ],
+    "isFeatured": false,
+    "website": "https://vicentellp.com",
+    "phone": "303-860-4501",
+    "statesServed": [
+      "CO",
+      "national",
+      "international"
+    ],
+    "specialtyAreas": [
+      "Licensing",
+      "Regulatory Compliance"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "feuerstein-kulick-llp",
+    "name": "Feuerstein Kulick LLP",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "New York",
+      "state": "NY",
+      "zip": ""
+    },
+    "shortDescription": "Boutique New York firm ranked by Chambers and Legal 500 for cannabis, advising operators and investors on transactional and regulatory cannabis matters.",
+    "fullDescription": "Boutique New York firm ranked by Chambers and Legal 500 for cannabis, advising operators and investors on transactional and regulatory cannabis matters.",
+    "logoPlaceholder": "FL",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Licensing",
+      "M&A",
+      "Regulatory Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://dfmklaw.com/practices/cannabis",
+    "statesServed": [
+      "NY",
+      "national"
+    ],
+    "specialtyAreas": [
+      "Corporate Structuring",
+      "Regulatory Compliance"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "harris-sliwoski-llp",
+    "name": "Harris Sliwoski LLP",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Portland",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "Multi-office business law firm with a long-running, widely-cited cannabis practice covering licensing, compliance, and corporate matters across legal states.",
+    "fullDescription": "Multi-office business law firm with a long-running, widely-cited cannabis practice covering licensing, compliance, and corporate matters across legal states.",
+    "logoPlaceholder": "HL",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Licensing",
+      "Regulatory Compliance",
+      "Corporate Structuring"
+    ],
+    "isFeatured": false,
+    "website": "https://harris-sliwoski.com/practice-areas/cannabis",
+    "phone": "(503) 207-7313",
+    "email": "firm@harris-sliwoski.com",
+    "statesServed": [
+      "OR",
+      "WA",
+      "CA",
+      "and other legal states"
+    ],
+    "specialtyAreas": [
+      "Regulatory Compliance",
+      "Corporate Structuring"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "law-offices-of-omar-figueroa",
+    "name": "Law Offices of Omar Figueroa",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Sebastopol",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Longtime California cannabis attorney handling state/local licensing, MAUCRSA compliance, corporate formation, and IP for cannabis businesses.",
+    "fullDescription": "Longtime California cannabis attorney handling state/local licensing, MAUCRSA compliance, corporate formation, and IP for cannabis businesses.",
+    "logoPlaceholder": "LF",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Licensing",
+      "Regulatory Compliance",
+      "IP Protection"
+    ],
+    "isFeatured": false,
+    "website": "https://omarfigueroa.com",
+    "phone": "707-829-0215",
+    "statesServed": [
+      "CA"
+    ],
+    "specialtyAreas": [
+      "Licensing",
+      "Regulatory Compliance"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "bianchi-brandt",
+    "name": "Bianchi & Brandt",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Scottsdale",
+      "state": "AZ",
+      "zip": ""
+    },
+    "shortDescription": "Arizona-based firm repeatedly ranked the state's top cannabis law practice, covering licensing, regulatory compliance, and corporate/business litigation.",
+    "fullDescription": "Arizona-based firm repeatedly ranked the state's top cannabis law practice, covering licensing, regulatory compliance, and corporate/business litigation.",
+    "logoPlaceholder": "BB",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Licensing",
+      "Regulatory Compliance",
+      "M&A"
+    ],
+    "isFeatured": false,
+    "website": "https://bianchibrandt.com",
+    "phone": "480-531-1800",
+    "statesServed": [
+      "AZ"
+    ],
+    "specialtyAreas": [
+      "Licensing",
+      "Regulatory Compliance"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "honigman-llp",
+    "name": "Honigman LLP",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Detroit",
+      "state": "MI",
+      "zip": ""
+    },
+    "shortDescription": "Large full-service firm whose cannabis team helped draft Michigan's marijuana licensing law and advises on entity formation, M&A, real estate/zoning, and tax (280E).",
+    "fullDescription": "Large full-service firm whose cannabis team helped draft Michigan's marijuana licensing law and advises on entity formation, M&A, real estate/zoning, and tax (280E).",
+    "logoPlaceholder": "HL",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Licensing",
+      "M&A",
+      "Regulatory Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://honigman.com/practices-cannabis",
+    "phone": "517-377-0732",
+    "email": "dmains@honigman.com",
+    "statesServed": [
+      "MI"
+    ],
+    "specialtyAreas": [
+      "Corporate Structuring",
+      "M&A"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "collateral-base",
+    "name": "Collateral Base",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Peoria",
+      "state": "IL",
+      "zip": ""
+    },
+    "shortDescription": "Operator-run cannabis consulting firm founded by attorney Thomas Howard, focused on license applications, compliance operations, and license M&A across multiple states.",
+    "fullDescription": "Operator-run cannabis consulting firm founded by attorney Thomas Howard, focused on license applications, compliance operations, and license M&A across multiple states.",
+    "logoPlaceholder": "CB",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Licensing",
+      "Compliance Auditing",
+      "M&A"
+    ],
+    "isFeatured": false,
+    "website": "https://collateralbase.com",
+    "phone": "309-306-1095",
+    "email": "tom@collateralbase.com",
+    "licenseNumber": "-",
+    "statesServed": [
+      "IL",
+      "MO",
+      "WI",
+      "and other states"
+    ],
+    "specialtyAreas": [
+      "Licensing",
+      "Compliance Auditing"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "coats-rose-pc",
+    "name": "Coats Rose, P.C.",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Houston",
+      "state": "TX",
+      "zip": ""
+    },
+    "shortDescription": "Regional full-service law firm with a dedicated cannabis/hemp practice group advising on licensing, regulatory compliance, and corporate matters in Texas and beyond.",
+    "fullDescription": "Regional full-service law firm with a dedicated cannabis/hemp practice group advising on licensing, regulatory compliance, and corporate matters in Texas and beyond.",
+    "logoPlaceholder": "CP",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Licensing",
+      "Regulatory Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://coatsrose.com",
+    "phone": "713-651-0111",
+    "statesServed": [
+      "TX and other states"
+    ],
+    "specialtyAreas": [
+      "Regulatory Compliance",
+      "Licensing"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "canna-advisors-think-canna",
+    "name": "Canna Advisors (Think Canna)",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Boulder",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Non-attorney cannabis business consultancy operating since 2013, assisting license applications, FDA/GMP compliance, operations readiness, and M&A support.",
+    "fullDescription": "Non-attorney cannabis business consultancy operating since 2013, assisting license applications, FDA/GMP compliance, operations readiness, and M&A support.",
+    "logoPlaceholder": "CC",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Licensing",
+      "Compliance Auditing",
+      "M&A"
+    ],
+    "isFeatured": false,
+    "website": "https://thinkcanna.com",
+    "phone": "720-708-3154",
+    "email": "info@thinkcanna.com",
+    "licenseNumber": "-",
+    "statesServed": [
+      "40+ U.S. states (per firm)"
+    ],
+    "specialtyAreas": [
+      "Licensing",
+      "Compliance Auditing"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "greenspoon-marder-llp-cannabis-law-practice",
+    "name": "Greenspoon Marder LLP (Cannabis Law Practice)",
+    "tier": "elite",
+    "category": "compliance-legal",
+    "location": {
+      "address": "",
+      "city": "Fort Lauderdale",
+      "state": "FL",
+      "zip": ""
+    },
+    "shortDescription": "National law firm with a 25+ attorney dedicated cannabis group (since 2016) covering licensing/compliance, corporate structuring, tax/280E, and lobbying.",
+    "fullDescription": "National law firm with a 25+ attorney dedicated cannabis group (since 2016) covering licensing/compliance, corporate structuring, tax/280E, and lobbying.",
+    "logoPlaceholder": "GP",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Licensing",
+      "Regulatory Compliance",
+      "Corporate Structuring"
+    ],
+    "isFeatured": false,
+    "website": "https://gmlaw.com/cannabis-law",
+    "phone": "(888) 491-1120",
+    "statesServed": [
+      "FL",
+      "CO",
+      "national (12 offices)"
+    ],
+    "specialtyAreas": [
+      "Licensing",
+      "Regulatory Compliance"
+    ],
+    "availability": "Unknown"
+  },
+  {
+    "slug": "dutchie",
+    "name": "Dutchie",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Bend",
+      "state": "OR",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis retail platform offering POS, e-commerce, payments, loyalty, and compliance tools; powers 6,500+ dispensaries across North America.",
+    "fullDescription": "Cannabis retail platform offering POS, e-commerce, payments, loyalty, and compliance tools; powers 6,500+ dispensaries across North America.",
+    "logoPlaceholder": "DU",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "POS",
+      "Seed-to-Sale",
+      "Ecommerce",
+      "Metrc Integration"
+    ],
+    "isFeatured": false,
+    "website": "https://dutchie.com/business",
+    "phone": "866-838-8244",
+    "accreditation": "SOC 2 (per trust.dutchie.com)",
+    "serviceArea": "Metrc, 100+ tech/payment partners, ChatGPT/Claude via Dutchie MCP",
+    "pricingModel": "Custom/Enterprise (demo-based)"
+  },
+  {
+    "slug": "flowhub",
+    "name": "Flowhub",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Retail management and POS software for state-licensed cannabis dispensaries, combining POS, inventory management, and regulatory compliance reporting.",
+    "fullDescription": "Retail management and POS software for state-licensed cannabis dispensaries, combining POS, inventory management, and regulatory compliance reporting.",
+    "logoPlaceholder": "FL",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "POS",
+      "Inventory Management",
+      "Metrc Integration",
+      "Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://flowhub.com",
+    "serviceArea": "Metrc, HP POS hardware, payment processors",
+    "pricingModel": "Per Location/Custom"
+  },
+  {
+    "slug": "treez",
+    "name": "Treez",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Oakland",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "POS and commerce platform built for cannabis dispensaries, offering SellTreez POS, TreezPay cashless payments, ecommerce, and retail analytics.",
+    "fullDescription": "POS and commerce platform built for cannabis dispensaries, offering SellTreez POS, TreezPay cashless payments, ecommerce, and retail analytics.",
+    "logoPlaceholder": "TR",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "POS",
+      "Retail Analytics",
+      "Payments",
+      "Ecommerce"
+    ],
+    "isFeatured": false,
+    "website": "https://treez.io",
+    "serviceArea": "Metrc (state track-and-trace), payment processors, ecommerce (Gap Commerce)",
+    "pricingModel": "Custom/Enterprise"
+  },
+  {
+    "slug": "blaze",
+    "name": "BLAZE",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "San Francisco",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "AI-powered POS and e-commerce platform for cannabis dispensaries, covering inventory, payments (BLAZEPAY), online ordering, and compliance reporting.",
+    "fullDescription": "AI-powered POS and e-commerce platform for cannabis dispensaries, covering inventory, payments (BLAZEPAY), online ordering, and compliance reporting.",
+    "logoPlaceholder": "BL",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "POS",
+      "Seed-to-Sale",
+      "Metrc Integration",
+      "AI Retail"
+    ],
+    "isFeatured": false,
+    "website": "https://blaze.me",
+    "phone": "(415) 964-5689",
+    "accreditation": "SOC 1 Type II, SOC 2 Type II Certified",
+    "serviceArea": "Metrc, BioTrack, Retail ID",
+    "pricingModel": "Custom/Enterprise"
+  },
+  {
+    "slug": "cova",
+    "name": "Cova",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis and hemp dispensary POS and retail management platform focused on compliance, multi-location scaling, and fast checkout uptime; originated as an iQmetrix subsidiary.",
+    "fullDescription": "Cannabis and hemp dispensary POS and retail management platform focused on compliance, multi-location scaling, and fast checkout uptime; originated as an iQmetrix subsidiary.",
+    "logoPlaceholder": "CO",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "POS",
+      "Compliance",
+      "Multi-Location",
+      "Inventory Management"
+    ],
+    "isFeatured": false,
+    "website": "https://covasoftware.com",
+    "phone": "1-888-667-2685",
+    "serviceArea": "Metrc, BioTrack, Alpine IQ, Springbig, Weedmaps, Leafly, Solink",
+    "pricingModel": "Subscription-based"
+  },
+  {
+    "slug": "springbig",
+    "name": "Springbig",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Boca Raton",
+      "state": "FL",
+      "zip": ""
+    },
+    "shortDescription": "Loyalty and marketing platform for cannabis dispensaries offering SMS/email/push messaging, rewards programs, referrals, and online ordering.",
+    "fullDescription": "Loyalty and marketing platform for cannabis dispensaries offering SMS/email/push messaging, rewards programs, referrals, and online ordering.",
+    "logoPlaceholder": "SP",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Loyalty",
+      "Marketing",
+      "SMS Rewards",
+      "CRM"
+    ],
+    "isFeatured": false,
+    "website": "https://springbig.com",
+    "serviceArea": "POS/ecommerce partner integrations (Dutchie, Cova, etc. via Certified Marketing Partners)",
+    "pricingModel": "Subscription-based"
+  },
+  {
+    "slug": "distru",
+    "name": "Distru",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Oakland",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis ERP platform managing inventory, orders, manufacturing, distribution, and compliance from cultivation through retail sale.",
+    "fullDescription": "Cannabis ERP platform managing inventory, orders, manufacturing, distribution, and compliance from cultivation through retail sale.",
+    "logoPlaceholder": "DI",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "ERP",
+      "Seed-to-Sale",
+      "Metrc Integration",
+      "Distribution"
+    ],
+    "isFeatured": false,
+    "website": "https://distru.com",
+    "phone": "(510) 871-4169",
+    "email": "hello@distru.com",
+    "serviceArea": "Metrc, BioTrack, LeafLink, Dutchie, QuickBooks, Xero, Sage, Blaze",
+    "pricingModel": "Subscription-based (custom quote)"
+  },
+  {
+    "slug": "growflow",
+    "name": "GrowFlow",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Greenwood Village",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Seed-to-sale software for cultivators, processors, distributors, and retailers, offering POS, inventory management, and automated state compliance reporting.",
+    "fullDescription": "Seed-to-sale software for cultivators, processors, distributors, and retailers, offering POS, inventory management, and automated state compliance reporting.",
+    "logoPlaceholder": "GR",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Seed-to-Sale",
+      "POS",
+      "Inventory Management",
+      "Metrc Integration"
+    ],
+    "isFeatured": false,
+    "website": "https://growflow.com",
+    "serviceArea": "Metrc, BioTrack, CCRS, Headset, Weedmaps, Jane, QuickBooks",
+    "pricingModel": "Subscription-based"
+  },
+  {
+    "slug": "leaflink",
+    "name": "LeafLink",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "New York",
+      "state": "NY",
+      "zip": ""
+    },
+    "shortDescription": "B2B wholesale marketplace connecting cannabis brands, distributors, and retailers, with integrated ordering, payments, logistics, and compliance tools.",
+    "fullDescription": "B2B wholesale marketplace connecting cannabis brands, distributors, and retailers, with integrated ordering, payments, logistics, and compliance tools.",
+    "logoPlaceholder": "LE",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "B2B Marketplace",
+      "Wholesale",
+      "ERP Integration",
+      "Payments"
+    ],
+    "isFeatured": false,
+    "website": "https://leaflink.com",
+    "accreditation": "SOC 2",
+    "serviceArea": "Integrates with top ERP, CRM, and seed-to-sale software platforms",
+    "pricingModel": "Custom/Enterprise (free for retailers)"
+  },
+  {
+    "slug": "indicaonline",
+    "name": "IndicaOnline",
+    "tier": "elite",
+    "category": "technology-software",
+    "location": {
+      "address": "",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis software for retail, delivery, and distribution operations, handling POS, inventory management, compliance reporting, and e-commerce.",
+    "fullDescription": "Cannabis software for retail, delivery, and distribution operations, handling POS, inventory management, compliance reporting, and e-commerce.",
+    "logoPlaceholder": "IN",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "POS",
+      "Delivery",
+      "Inventory Management",
+      "Compliance"
+    ],
+    "isFeatured": false,
+    "website": "https://indicaonline.com",
+    "phone": "(888) 420-4207 support / (424) 666-2999 sales",
+    "email": "support@indicaonline.com; sales@indicaonline.com",
+    "serviceArea": "State track-and-trace systems (multi-state), e-commerce platforms",
+    "pricingModel": "Custom/Enterprise"
+  },
+  {
+    "slug": "3rd-act-architecture-consulting",
+    "name": "3rd Act Architecture + Consulting",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "St. Augustine",
+      "state": "FL",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis-focused architecture and consulting firm led by Sam Andras, providing visioning, conceptual design, and turnkey design-build services for cultivation, processing, and retail facilities nation",
+    "fullDescription": "Cannabis-focused architecture and consulting firm led by Sam Andras, providing visioning, conceptual design, and turnkey design-build services for cultivation, processing, and retail facilities nationwide.",
+    "logoPlaceholder": "3C",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://3rdactarchitecture.com",
+    "phone": "706-573-5520",
+    "projectsCompleted": "500+ facility designs (stated)",
+    "serviceArea": "Architecture, Consulting, Design-Build, Owner's Representative Services"
+  },
+  {
+    "slug": "studio-bliss",
+    "name": "Studio Bliss",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "LA-based architecture and design firm specializing in cannabis cultivation, processing, dispensary, and consumption lounge facility design across the US and internationally.",
+    "fullDescription": "LA-based architecture and design firm specializing in cannabis cultivation, processing, dispensary, and consumption lounge facility design across the US and internationally.",
+    "logoPlaceholder": "SB",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://studioblissla.com",
+    "phone": "323-873-8206",
+    "serviceArea": "Architecture, Interior Design, MEP Engineering, Permit/Licensing Support, Design-Build",
+    "statesServed": [
+      "Not publicly listed (operates nationwide)"
+    ]
+  },
+  {
+    "slug": "alta-construction",
+    "name": "Alta Construction",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Corona",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "General contractor specializing in design-build, tenant improvement, and new construction for cannabis cultivation, processing, and retail operators across multiple states.",
+    "fullDescription": "General contractor specializing in design-build, tenant improvement, and new construction for cannabis cultivation, processing, and retail operators across multiple states.",
+    "logoPlaceholder": "AC",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://altaconstruction.com",
+    "phone": "(951) 799-6082",
+    "serviceArea": "General Contracting, Design-Build, Tenant Improvement, Preconstruction Budgeting",
+    "statesServed": [
+      "AZ",
+      "CA",
+      "CT",
+      "FL",
+      "GA",
+      "IA",
+      "NV",
+      "NJ",
+      "NY",
+      "OR",
+      "PA",
+      "TX",
+      "UT",
+      "VA",
+      "WA"
+    ]
+  },
+  {
+    "slug": "epstein-epstein-global",
+    "name": "Epstein (Epstein Global)",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": ""
+    },
+    "shortDescription": "Century-old architecture, engineering, and construction firm with a dedicated cannabis practice designing dispensaries and cultivation facilities for major multi-state operators such as Cresco Labs an",
+    "fullDescription": "Century-old architecture, engineering, and construction firm with a dedicated cannabis practice designing dispensaries and cultivation facilities for major multi-state operators such as Cresco Labs and Green Thumb Industries.",
+    "logoPlaceholder": "EG",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://epsteinglobal.com",
+    "phone": "312-454-9100",
+    "email": "info@epsteinglobal.com",
+    "projectsCompleted": "20+ dispensaries and 1M+ sq ft of cultivation facilities since 2020 (stated)",
+    "serviceArea": "Architecture, Engineering, Design-Build/Construction, MEPFP Engineering, Interior Design"
+  },
+  {
+    "slug": "buildout-construction-corporation",
+    "name": "Buildout Construction Corporation",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Boston",
+      "state": "MA",
+      "zip": ""
+    },
+    "shortDescription": "Massachusetts-based general contractor and design-build firm specializing in cannabis dispensary and grow-facility construction and renovation.",
+    "fullDescription": "Massachusetts-based general contractor and design-build firm specializing in cannabis dispensary and grow-facility construction and renovation.",
+    "logoPlaceholder": "BC",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://buildoutconstruction.com",
+    "phone": "(781) 828-5900",
+    "email": "robert@buildoutconstruction.com",
+    "serviceArea": "Design-Build, General Contracting, Self-Performed Construction",
+    "statesServed": [
+      "Massachusetts"
+    ]
+  },
+  {
+    "slug": "hance-construction-inc",
+    "name": "Hance Construction, Inc.",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Washington",
+      "state": "NJ",
+      "zip": ""
+    },
+    "shortDescription": "New Jersey design-build contractor holding IAS AC478 cannabis construction accreditation; built the state's first greenhouse cannabis facility along with grow, processing, and dispensary projects.",
+    "fullDescription": "New Jersey design-build contractor holding IAS AC478 cannabis construction accreditation; built the state's first greenhouse cannabis facility along with grow, processing, and dispensary projects.",
+    "logoPlaceholder": "HI",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://hanceconstruction.com",
+    "phone": "908-835-3501",
+    "projectsCompleted": "6 documented cannabis projects",
+    "serviceArea": "Design-Build, General Construction, Construction Management, Pre-Engineered Metal Buildings",
+    "statesServed": [
+      "New Jersey",
+      "New York"
+    ]
+  },
+  {
+    "slug": "your-green-contractor",
+    "name": "Your Green Contractor",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Denver",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Denver-based commercial general contractor specializing in cannabis facility build-outs including indoor grows, greenhouses, extraction/MIP kitchens, and dispensaries.",
+    "fullDescription": "Denver-based commercial general contractor specializing in cannabis facility build-outs including indoor grows, greenhouses, extraction/MIP kitchens, and dispensaries.",
+    "logoPlaceholder": "YC",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://yourgreencontractor.com",
+    "projectsCompleted": "600+ completed projects (stated)",
+    "serviceArea": "General Contracting, Design-Build, Pre-Construction, Value Engineering",
+    "statesServed": [
+      "CO",
+      "WA",
+      "OR",
+      "AK",
+      "DC",
+      "CA",
+      "NV",
+      "ME",
+      "MA"
+    ]
+  },
+  {
+    "slug": "vkw-construction-llc",
+    "name": "VKW Construction, LLC",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Tempe",
+      "state": "AZ",
+      "zip": ""
+    },
+    "shortDescription": "Arizona-based construction firm delivering dispensary buildouts, grow-facility construction, and secure access/compliance solutions for cannabis operators.",
+    "fullDescription": "Arizona-based construction firm delivering dispensary buildouts, grow-facility construction, and secure access/compliance solutions for cannabis operators.",
+    "logoPlaceholder": "VL",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://vkwusa.com",
+    "phone": "(480) 736-2729",
+    "email": "marketing@vkwusa.com",
+    "serviceArea": "General Contracting, Dispensary Buildouts, Grow Facility Construction, HVAC/Electrical Integration"
+  },
+  {
+    "slug": "designhaus-designhaus-architecture",
+    "name": "Designhaus (Designhaus Architecture)",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Auburn Hills",
+      "state": "MI",
+      "zip": ""
+    },
+    "shortDescription": "Michigan-based architecture firm designing cannabis cultivation and retail facilities, offering zoning, security, HVAC, and energy-efficiency planning for clients nationwide.",
+    "fullDescription": "Michigan-based architecture firm designing cannabis cultivation and retail facilities, offering zoning, security, HVAC, and energy-efficiency planning for clients nationwide.",
+    "logoPlaceholder": "DA",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://designhaus.com",
+    "phone": "(248) 601-4422",
+    "email": "info@designhaus.com",
+    "serviceArea": "Architecture, Zoning Consultation, Security Planning, HVAC/Ventilation Design",
+    "statesServed": [
+      "Licensed in 39 states (specific list not detailed)"
+    ]
+  },
+  {
+    "slug": "surna-inc",
+    "name": "Surna Inc.",
+    "tier": "elite",
+    "category": "real-estate-construction",
+    "location": {
+      "address": "",
+      "city": "Louisville",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Publicly traded (Nasdaq: SRNA) cultivation-technology company providing HVAC, environmental controls, and architectural/MEP facility design for cannabis and controlled-environment agriculture operatio",
+    "fullDescription": "Publicly traded (Nasdaq: SRNA) cultivation-technology company providing HVAC, environmental controls, and architectural/MEP facility design for cannabis and controlled-environment agriculture operations.",
+    "logoPlaceholder": "SI",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "Cannabis Industry"
+    ],
+    "isFeatured": false,
+    "website": "https://surna.com",
+    "phone": "303-993-5271",
+    "serviceArea": "HVAC, Environmental Controls, Architectural Design, MEP Engineering, LED Lighting"
+  },
+  {
+    "slug": "safe-harbor-financial-shf-holdings-inc",
+    "name": "Safe Harbor Financial (SHF Holdings, Inc.)",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "Golden",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "Fintech pioneer in cannabis banking, offering compliant business checking, treasury management, and lending nationwide through partner banks/credit unions; publicly traded (NASDAQ: SHFS).",
+    "fullDescription": "Fintech pioneer in cannabis banking, offering compliant business checking, treasury management, and lending nationwide through partner banks/credit unions; publicly traded (NASDAQ: SHFS).",
+    "logoPlaceholder": "SI",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "Business Banking",
+      "Lending",
+      "Treasury Services"
+    ],
+    "isFeatured": false,
+    "website": "https://shfinancial.org",
+    "pricingModel": "Business Banking, Lending",
+    "statesServed": [
+      "41 U.S. states and territories"
+    ]
+  },
+  {
+    "slug": "abaca",
+    "name": "Abaca",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "North Little Rock",
+      "state": "AR",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis-focused fintech providing compliant business banking, payment processing, treasury tools, and lending for licensed operators from small dispensaries to public MSOs.",
+    "fullDescription": "Cannabis-focused fintech providing compliant business banking, payment processing, treasury tools, and lending for licensed operators from small dispensaries to public MSOs.",
+    "logoPlaceholder": "AB",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "Business Banking",
+      "Lending",
+      "Merchant Processing"
+    ],
+    "isFeatured": false,
+    "website": "https://goabaca.com",
+    "pricingModel": "Business Banking, Lending",
+    "statesServed": [
+      "AR",
+      "CO",
+      "FL",
+      "IL",
+      "LA",
+      "MI",
+      "MO",
+      "MT",
+      "ND",
+      "OH",
+      "OK (banking); lending/payments available more broadly"
+    ]
+  },
+  {
+    "slug": "dama-financial-leaflink-financial-services",
+    "name": "Dama Financial (LeafLink Financial Services)",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "New York",
+      "state": "NY",
+      "zip": ""
+    },
+    "shortDescription": "Long-running cannabis banking brand, now operated by LeafLink Financial Services, offering business checking, no-sudden-shutdown accounts, and business funding via FDIC-member partner banks.",
+    "fullDescription": "Long-running cannabis banking brand, now operated by LeafLink Financial Services, offering business checking, no-sudden-shutdown accounts, and business funding via FDIC-member partner banks.",
+    "logoPlaceholder": "DS",
+    "logoColor": "#1A4A35",
+    "serviceTags": [
+      "Business Banking",
+      "Merchant Processing",
+      "Lending"
+    ],
+    "isFeatured": false,
+    "website": "https://leaflink.com/banking",
+    "pricingModel": "Business Banking, Lending",
+    "statesServed": [
+      "All Legal States"
+    ]
+  },
+  {
+    "slug": "green-check-verified",
+    "name": "Green Check Verified",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "Bonita Springs",
+      "state": "FL",
+      "zip": ""
+    },
+    "shortDescription": "Compliance-technology platform connecting cannabis, hemp, and other high-risk businesses with banks and credit unions, providing data analytics and monitoring tools that power cannabis banking program",
+    "fullDescription": "Compliance-technology platform connecting cannabis, hemp, and other high-risk businesses with banks and credit unions, providing data analytics and monitoring tools that power cannabis banking programs nationwide.",
+    "logoPlaceholder": "GV",
+    "logoColor": "#2d6e52",
+    "serviceTags": [
+      "Business Banking",
+      "Compliance Software",
+      "Lending"
+    ],
+    "isFeatured": false,
+    "website": "https://greencheckverified.com",
+    "phone": "1-844-544-1940",
+    "pricingModel": "Banking Compliance Platform",
+    "statesServed": [
+      "All Legal States"
+    ]
+  },
+  {
+    "slug": "fundcanna",
+    "name": "FundCanna",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "Solana Beach",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Cannabis-focused commercial lender offering working capital loans, lines of credit, equipment financing, and vendor/BNPL financing ranging from $5K to $5M with fast approvals.",
+    "fullDescription": "Cannabis-focused commercial lender offering working capital loans, lines of credit, equipment financing, and vendor/BNPL financing ranging from $5K to $5M with fast approvals.",
+    "logoPlaceholder": "FU",
+    "logoColor": "#4A5E4A",
+    "serviceTags": [
+      "Lending",
+      "Equipment Financing",
+      "Working Capital"
+    ],
+    "isFeatured": false,
+    "website": "https://fundcanna.com",
+    "phone": "844-420-3536",
+    "email": "info@fundcanna.com",
+    "licenseNumber": "NMLS ID 2188024; CA DFPI Lic. No. 60DBO-146231",
+    "pricingModel": "Lending",
+    "statesServed": [
+      "CA",
+      "CO",
+      "MI",
+      "NY",
+      "OR",
+      "WA",
+      "AZ",
+      "NV",
+      "IL",
+      "MA",
+      "and other legal-cannabis states"
+    ]
+  },
+  {
+    "slug": "salal-credit-union",
+    "name": "Salal Credit Union",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "Seattle",
+      "state": "WA",
+      "zip": ""
+    },
+    "shortDescription": "Member-owned Pacific Northwest credit union serving the cannabis industry since 2014 with business checking/savings, lending, merchant processing, and payroll/HR support.",
+    "fullDescription": "Member-owned Pacific Northwest credit union serving the cannabis industry since 2014 with business checking/savings, lending, merchant processing, and payroll/HR support.",
+    "logoPlaceholder": "SU",
+    "logoColor": "#3d5a3e",
+    "serviceTags": [
+      "Business Banking",
+      "Lending",
+      "Merchant Processing"
+    ],
+    "isFeatured": false,
+    "website": "https://salalcu.org",
+    "phone": "800-562-5515",
+    "email": "BusinessInquiries@SalalCU.org",
+    "licenseNumber": "NMLS ID 416045",
+    "pricingModel": "Business Banking, Lending"
+  },
+  {
+    "slug": "greengrowth-cpas",
+    "name": "GreenGrowth CPAs",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "Irvine",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Specialized CPA firm providing tax planning/compliance, audit, accounting, and outsourced CFO services to cannabis operators and other regulated industries across multiple offices.",
+    "fullDescription": "Specialized CPA firm providing tax planning/compliance, audit, accounting, and outsourced CFO services to cannabis operators and other regulated industries across multiple offices.",
+    "logoPlaceholder": "GC",
+    "logoColor": "#2e5540",
+    "serviceTags": [
+      "280E Tax Strategy",
+      "Bookkeeping",
+      "CFO Services"
+    ],
+    "isFeatured": false,
+    "website": "https://greengrowthcpas.com",
+    "phone": "1-800-674-9050",
+    "pricingModel": "280E Tax Strategy, Bookkeeping",
+    "statesServed": [
+      "All Legal States"
+    ]
+  },
+  {
+    "slug": "bgm-formerly-bridge-west-cpas",
+    "name": "BGM (formerly Bridge West CPAs)",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "Longmont",
+      "state": "CO",
+      "zip": ""
+    },
+    "shortDescription": "National accounting firm whose Longmont, CO cannabis practice traces to Bridge West CPAs, an early cannabis-industry accounting pioneer; offers cannabis tax, audit, valuation, and licensing advisory s",
+    "fullDescription": "National accounting firm whose Longmont, CO cannabis practice traces to Bridge West CPAs, an early cannabis-industry accounting pioneer; offers cannabis tax, audit, valuation, and licensing advisory services.",
+    "logoPlaceholder": "BC",
+    "logoColor": "#3a5c45",
+    "serviceTags": [
+      "280E Tax Strategy",
+      "Audit Services",
+      "Bookkeeping"
+    ],
+    "isFeatured": false,
+    "website": "https://bgm360.com",
+    "phone": "952-844-2500",
+    "pricingModel": "280E Tax Strategy, Bookkeeping"
+  },
+  {
+    "slug": "canngen-insurance-services",
+    "name": "CannGen Insurance Services",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "San Diego",
+      "state": "CA",
+      "zip": ""
+    },
+    "shortDescription": "Managing General Agency and wholesale broker specializing in cannabis, CBD, and hemp insurance, serving brokers and businesses nationwide since 2008.",
+    "fullDescription": "Managing General Agency and wholesale broker specializing in cannabis, CBD, and hemp insurance, serving brokers and businesses nationwide since 2008.",
+    "logoPlaceholder": "CS",
+    "logoColor": "#445e42",
+    "serviceTags": [
+      "General Liability Insurance",
+      "Crop Insurance",
+      "Product Liability"
+    ],
+    "isFeatured": false,
+    "website": "https://canngenins.com",
+    "phone": "(888) 751-3141",
+    "email": "cannapp@canngenins.com",
+    "pricingModel": "General Liability Insurance"
+  },
+  {
+    "slug": "cannasure-insurance-services-a-one80-intermediaries-company",
+    "name": "Cannasure Insurance Services (a One80 Intermediaries company)",
+    "tier": "elite",
+    "category": "finance-insurance",
+    "location": {
+      "address": "",
+      "city": "Cleveland",
+      "state": "OH",
+      "zip": ""
+    },
+    "shortDescription": "National cannabis and hemp Managing General Agency and wholesale broker offering tailored coverage from small startups to large multi-state operators, with NCIA member preferred pricing.",
+    "fullDescription": "National cannabis and hemp Managing General Agency and wholesale broker offering tailored coverage from small startups to large multi-state operators, with NCIA member preferred pricing.",
+    "logoPlaceholder": "CC",
+    "logoColor": "#1e6b45",
+    "serviceTags": [
+      "General Liability Insurance",
+      "Crop Insurance",
+      "Product Liability"
+    ],
+    "isFeatured": false,
+    "website": "https://cannasure.com",
+    "phone": "800-420-5757",
+    "pricingModel": "General Liability Insurance",
+    "statesServed": [
+      "All Legal States (50 states + DC)"
+    ]
+  }
+]
