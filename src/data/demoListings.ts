@@ -1,12 +1,12 @@
 // Demo listings (3 per custom-template category) used to preview the front-end.
 // Seeded via POST /api/admin/seed-demo (admin only). Upserted by slug so re-running
-// refreshes rather than duplicates. All slugs are prefixed "demo-" for easy cleanup.
+// refreshes rather than duplicates. Each listing gets isDemo:true for easy cleanup.
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const DEMO_LISTINGS: Record<string, any>[] = [
   // ─── Retail & Dispensary ─────────────────────────────────────────────
   {
-    slug: "demo-green-leaf-denver",
+    slug: "green-leaf-denver",
     name: "Green Leaf Denver",
     tier: "elite",
     category: "retail-dispensary",
@@ -40,7 +40,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-highland-park-collective",
+    slug: "highland-park-collective",
     name: "Highland Park Collective",
     tier: "select",
     category: "retail-dispensary",
@@ -62,7 +62,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 58,
   },
   {
-    slug: "demo-emerald-avenue",
+    slug: "emerald-avenue",
     name: "Emerald Avenue",
     tier: "elite",
     category: "retail-dispensary",
@@ -89,7 +89,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Transportation & Logistics ──────────────────────────────────────
   {
-    slug: "demo-saferoute-logistics",
+    slug: "saferoute-logistics",
     name: "SafeRoute Cannabis Logistics",
     tier: "elite",
     category: "transportation-logistics",
@@ -122,7 +122,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-greenline-logistics",
+    slug: "greenline-logistics",
     name: "GreenLine Logistics",
     tier: "select",
     category: "transportation-logistics",
@@ -143,7 +143,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 42,
   },
   {
-    slug: "demo-apex-secure",
+    slug: "apex-secure",
     name: "Apex Secure",
     tier: "elite",
     category: "transportation-logistics",
@@ -169,7 +169,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Testing & Science ───────────────────────────────────────────────
   {
-    slug: "demo-sierra-analytical",
+    slug: "sierra-analytical",
     name: "Sierra Analytical Labs",
     tier: "elite",
     category: "testing-science",
@@ -207,7 +207,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-green-lab-solutions",
+    slug: "green-lab-solutions",
     name: "Green Lab Solutions",
     tier: "select",
     category: "testing-science",
@@ -228,7 +228,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 44,
   },
   {
-    slug: "demo-purecheck-labs",
+    slug: "purecheck-labs",
     name: "PureCheck Labs",
     tier: "elite",
     category: "testing-science",
@@ -260,7 +260,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Technology & Software ───────────────────────────────────────────
   {
-    slug: "demo-cannaflow-pos",
+    slug: "cannaflow-pos",
     name: "CannaFlow POS",
     tier: "elite",
     category: "technology-software",
@@ -285,7 +285,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     features: ["Real-time inventory sync", "Built-in compliance reporting", "Loyalty & promotions engine", "Multi-location management"],
   },
   {
-    slug: "demo-cannascale-erp",
+    slug: "cannascale-erp",
     name: "CannaScale ERP",
     tier: "elite",
     category: "technology-software",
@@ -303,7 +303,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     features: ["Seed-to-sale tracking", "Financial consolidation", "Multi-state compliance"],
   },
   {
-    slug: "demo-omniretail-pos",
+    slug: "omniretail-pos",
     name: "OmniRetail POS",
     tier: "select",
     category: "technology-software",
@@ -322,7 +322,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Real Estate & Construction ──────────────────────────────────────
   {
-    slug: "demo-terragrow-architecture",
+    slug: "terragrow-architecture",
     name: "TerraGrow Architecture",
     tier: "elite",
     category: "real-estate-construction",
@@ -364,7 +364,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-apex-facility-design",
+    slug: "apex-facility-design",
     name: "Apex Facility Design",
     tier: "select",
     category: "real-estate-construction",
@@ -389,7 +389,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-buildcore-commercial",
+    slug: "buildcore-commercial",
     name: "BuildCore Commercial",
     tier: "elite",
     category: "real-estate-construction",
@@ -423,7 +423,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Cultivation & Growing ──────────────────────────────────────────
   {
-    slug: "demo-summit-farms",
+    slug: "summit-farms",
     name: "Summit Farms Colorado",
     tier: "elite",
     category: "cultivation-growing",
@@ -456,7 +456,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-pacific-sun-cultivation",
+    slug: "pacific-sun-cultivation",
     name: "Pacific Sun Cultivation",
     tier: "select",
     category: "cultivation-growing",
@@ -479,7 +479,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 43,
   },
   {
-    slug: "demo-green-tier-genetics",
+    slug: "green-tier-genetics",
     name: "Green Tier Genetics",
     tier: "elite",
     category: "cultivation-growing",
@@ -510,7 +510,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Manufacturers & Suppliers ──────────────────────────────────────
   {
-    slug: "demo-cannapak-solutions",
+    slug: "cannapak-solutions",
     name: "CannaPak Solutions",
     tier: "elite",
     category: "manufacturers-suppliers",
@@ -541,7 +541,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-growtek-systems",
+    slug: "growtek-systems",
     name: "GrowTek Systems",
     tier: "elite",
     category: "manufacturers-suppliers",
@@ -571,7 +571,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-cannacraft-supply",
+    slug: "cannacraft-supply",
     name: "CannaCraft Supply Co.",
     tier: "select",
     category: "manufacturers-suppliers",
@@ -593,7 +593,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Extraction & Processing ────────────────────────────────────────
   {
-    slug: "demo-pureform-extracts",
+    slug: "pureform-extracts",
     name: "PureForm Extracts",
     tier: "elite",
     category: "extraction-processing",
@@ -630,7 +630,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-glacier-labs",
+    slug: "glacier-labs",
     name: "Glacier Processing Labs",
     tier: "select",
     category: "extraction-processing",
@@ -652,7 +652,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 41,
   },
   {
-    slug: "demo-verdant-processing",
+    slug: "verdant-processing",
     name: "Verdant Processing Co.",
     tier: "elite",
     category: "extraction-processing",
@@ -682,7 +682,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Consultants & Advisors ─────────────────────────────────────────
   {
-    slug: "demo-cannavise-consulting",
+    slug: "cannavise-consulting",
     name: "CannaVise Consulting Group",
     tier: "elite",
     category: "consultants-advisors",
@@ -719,7 +719,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-greenbridge-advisory",
+    slug: "greenbridge-advisory",
     name: "GreenBridge Advisory",
     tier: "select",
     category: "consultants-advisors",
@@ -742,7 +742,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 29,
   },
   {
-    slug: "demo-elevate-cannabis-ops",
+    slug: "elevate-cannabis-ops",
     name: "Elevate Cannabis Ops",
     tier: "elite",
     category: "consultants-advisors",
@@ -776,7 +776,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Marketing, Branding & Packaging ────────────────────────────────
   {
-    slug: "demo-highmark-creative",
+    slug: "highmark-creative",
     name: "HighMark Creative Agency",
     tier: "elite",
     category: "marketing-branding-packaging",
@@ -815,7 +815,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-leaf-and-vine-studio",
+    slug: "leaf-and-vine-studio",
     name: "Leaf & Vine Studio",
     tier: "select",
     category: "marketing-branding-packaging",
@@ -834,7 +834,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 28,
   },
   {
-    slug: "demo-greenwave-digital",
+    slug: "greenwave-digital",
     name: "GreenWave Digital",
     tier: "elite",
     category: "marketing-branding-packaging",
@@ -867,7 +867,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Compliance & Legal ─────────────────────────────────────────────
   {
-    slug: "demo-greenlaw-partners",
+    slug: "greenlaw-partners",
     name: "GreenLaw Partners LLP",
     tier: "elite",
     category: "compliance-legal",
@@ -904,7 +904,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-cannabiz-compliance",
+    slug: "cannabiz-compliance",
     name: "CannaBiz Compliance Group",
     tier: "select",
     category: "compliance-legal",
@@ -926,7 +926,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     reviewCount: 31,
   },
   {
-    slug: "demo-verdant-legal",
+    slug: "verdant-legal",
     name: "Verdant Legal Counsel",
     tier: "elite",
     category: "compliance-legal",
@@ -957,7 +957,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
 
   // ─── Finance & Insurance ────────────────────────────────────────────
   {
-    slug: "demo-cannabank-financial",
+    slug: "cannabank-financial",
     name: "CannaBank Financial",
     tier: "elite",
     category: "finance-insurance",
@@ -988,7 +988,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     ],
   },
   {
-    slug: "demo-shield-cannabis-insurance",
+    slug: "shield-cannabis-insurance",
     name: "Shield Cannabis Insurance",
     tier: "elite",
     category: "finance-insurance",
@@ -1015,7 +1015,7 @@ export const DEMO_LISTINGS: Record<string, any>[] = [
     website: "https://shieldcannabisinsurance.com",
   },
   {
-    slug: "demo-cannaledger-accounting",
+    slug: "cannaledger-accounting",
     name: "CannaLedger Accounting",
     tier: "select",
     category: "finance-insurance",
