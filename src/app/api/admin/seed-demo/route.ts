@@ -13,7 +13,7 @@ export async function POST() {
     for (const listing of DEMO_LISTINGS) {
       const res = await Company.updateOne(
         { slug: listing.slug },
-        { $set: { ...listing, isFeatured: listing.tier === "elite" } },
+        { $set: { ...listing, isFeatured: listing.tier === "elite", isDemo: true } },
         { upsert: true }
       );
       if (res.upsertedCount) created += 1;
@@ -27,11 +27,11 @@ export async function POST() {
   }
 }
 
-// DELETE — remove all demo listings (slugs prefixed "demo-")
+// DELETE — remove all demo listings (flagged with isDemo or legacy "demo-" prefix)
 export async function DELETE() {
   try {
     await connectDB();
-    const res = await Company.deleteMany({ slug: { $regex: "^demo-" } });
+    const res = await Company.deleteMany({ $or: [{ isDemo: true }, { slug: { $regex: "^demo-" } }] });
     return NextResponse.json({ success: true, deleted: res.deletedCount });
   } catch (err) {
     console.error("[seed-demo]", err);
