@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
+import cloudinary from "@/lib/cloudinary";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
 
 export async function POST(request: NextRequest) {
   try {
-    // Auth check
     const session = request.cookies.get("vendor_session")?.value;
     if (!session || !session.startsWith("nc-vendor:")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -33,24 +32,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "File must be smaller than 5 MB." }, { status: 400 });
     }
 
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
       return NextResponse.json({
-        error: "Blob storage token is missing. In Vercel: Settings → Environment Variables → confirm BLOB_READ_WRITE_TOKEN exists, then redeploy.",
+        error: "Cloudinary is not configured. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your environment variables.",
       }, { status: 500 });
     }
 
-    const ext = file.name.split(".").pop() ?? "jpg";
-    const filename = `vendors/${userId}/${Date.now()}.${ext}`;
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
 
-    const blob = await put(filename, file, { access: "public" });
+    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: `nextcanna/vendors/${userId}`,
+          resource_type: "image",
+          format: "webp",
+          transformation: [{ quality: "auto", fetch_format: "auto" }],
+        },
+        (error, result) => {
+          if (error || !result) reject(error || new Error("Upload failed"));
+          else resolve(result);
+        }
+      ).end(buffer);
+    });
 
-    return NextResponse.json({ url: blob.url });
+    return NextResponse.json({ url: result.secure_url });
   } catch (err) {
     console.error("[vendor/upload]", err);
-    const msg = String(err);
-    const userFacing = msg.includes("BLOB_READ_WRITE_TOKEN") || msg.includes("No token")
-      ? "Blob storage is not connected yet. Go to Vercel → Storage → Create a Blob store, then redeploy."
-      : "Upload failed — please try again.";
-    return NextResponse.json({ error: userFacing, detail: msg }, { status: 500 });
+    return NextResponse.json({ error: "Upload failed — please try again." }, { status: 500 });
   }
 }
