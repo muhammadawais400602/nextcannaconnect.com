@@ -1,19 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Company from "@/lib/models/Company";
+import { readFile } from "fs/promises";
+import path from "path";
 
 const LOGO_COLORS = [
   "#1A4A35", "#2d6e52", "#4A5E4A", "#3d5a3e",
   "#2e5540", "#3a5c45", "#445e42", "#1e6b45",
 ];
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     await connectDB();
 
-    const body = await request.json();
+    const filePath = path.join(process.cwd(), "public", "data", "cultivation-unclaimed.json");
+    const raw = await readFile(filePath, "utf-8");
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data: Record<string, any>[] = Array.isArray(body) ? body : [];
+    const data: Record<string, any>[] = JSON.parse(raw);
 
     if (!data.length) {
       return NextResponse.json({ error: "No entries found." }, { status: 400 });
