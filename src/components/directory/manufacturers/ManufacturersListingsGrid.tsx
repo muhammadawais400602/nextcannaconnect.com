@@ -15,6 +15,7 @@ function isVerified(c: Company) {
 
 function SupplierCard({ company }: { company: Company }) {
   const verified = isVerified(company);
+  const unclaimed = company.tier === "free";
   const tags = (company.serviceTags ?? []).slice(0, 3);
   const hasOem = (company.serviceTags ?? []).some((t) => t.toLowerCase().includes("oem"));
 
@@ -27,6 +28,7 @@ function SupplierCard({ company }: { company: Company }) {
 
   return (
     <div style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }} className="cat-card">
+      {!unclaimed && (
       <div style={{ height: "192px", position: "relative", background: company.logoColor + "22" }}>
         {company.bannerImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -42,6 +44,7 @@ function SupplierCard({ company }: { company: Company }) {
           </div>
         )}
       </div>
+      )}
 
       <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
         <div style={{ display: "flex", alignItems: "flex-start", gap: "16px", marginBottom: "16px" }}>
@@ -67,15 +70,21 @@ function SupplierCard({ company }: { company: Company }) {
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px" }}>
-          {detail("MOQ", company.minOrderQty)}
-          {detail("Ships To", company.serviceArea)}
-          {detail("Lead Time", company.leadTime)}
-          {hasOem ? (
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
-              <span style={{ color: VARIANT }}>OEM Available</span>
-              <span style={{ fontWeight: 500, color: SAGE }}>Yes</span>
-            </div>
-          ) : detail("OEM Available")}
+          {unclaimed ? (
+            detail("Type", company.serviceArea)
+          ) : (
+            <>
+              {detail("MOQ", company.minOrderQty)}
+              {detail("Ships To", company.serviceArea)}
+              {detail("Lead Time", company.leadTime)}
+              {hasOem ? (
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
+                  <span style={{ color: VARIANT }}>OEM Available</span>
+                  <span style={{ fontWeight: 500, color: SAGE }}>Yes</span>
+                </div>
+              ) : detail("OEM Available")}
+            </>
+          )}
         </div>
 
         {tags.length > 0 && (
@@ -91,10 +100,18 @@ function SupplierCard({ company }: { company: Company }) {
             <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: "#396751" }}>
               <span className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>{company.accreditation}
             </span>
+          ) : unclaimed ? (
+            <span style={{ fontSize: "12px", fontWeight: 600, color: "#9CA3AF", background: "#F3F4F6", padding: "4px 8px", borderRadius: "0.25rem" }}>Unclaimed</span>
           ) : <span />}
-          <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
-          </Link>
+          {unclaimed ? (
+            <Link href={`/signup?claim=${company.slug}&category=manufacturers-suppliers`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+              Claim This Listing <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+            </Link>
+          ) : (
+            <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+              View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+            </Link>
+          )}
         </div>
       </div>
     </div>

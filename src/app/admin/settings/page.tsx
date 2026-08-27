@@ -205,8 +205,8 @@ export default function SettingsPage() {
   const [bulkError, setBulkError]           = useState("");
 
   // ── Unclaimed import state ──────────────────────────────────────────────────
-  const [unclaimedImporting, setUnclaimedImporting] = useState(false);
-  const [unclaimedResult, setUnclaimedResult]       = useState<{ imported: number; skipped: number; total: number } | null>(null);
+  const [unclaimedImporting, setUnclaimedImporting] = useState<string | null>(null);
+  const [unclaimedResult, setUnclaimedResult]       = useState<{ imported: number; skipped: number; total: number; dataset: string } | null>(null);
   const [unclaimedError, setUnclaimedError]         = useState("");
 
   // ── Cleanup state ─────────────────────────────────────────────────────────
@@ -286,12 +286,16 @@ export default function SettingsPage() {
     }
   }
 
-  async function handleUnclaimedImport() {
-    setUnclaimedImporting(true);
+  async function handleUnclaimedImport(dataset: string) {
+    setUnclaimedImporting(dataset);
     setUnclaimedError("");
     setUnclaimedResult(null);
     try {
-      const res = await fetch("/api/admin/import-unclaimed", { method: "POST" });
+      const res = await fetch("/api/admin/import-unclaimed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dataset }),
+      });
       const text = await res.text();
       let data;
       try {
@@ -300,11 +304,11 @@ export default function SettingsPage() {
         throw new Error(`Server error (${res.status}): ${text.substring(0, 200)}`);
       }
       if (!res.ok) throw new Error(data.error || "Import failed");
-      setUnclaimedResult(data);
+      setUnclaimedResult({ ...data, dataset });
     } catch (err) {
       setUnclaimedError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
-      setUnclaimedImporting(false);
+      setUnclaimedImporting(null);
     }
   }
 
@@ -546,21 +550,23 @@ export default function SettingsPage() {
             )}
           </div>
 
-          {/* Unclaimed Cultivation Import Card */}
+          {/* Unclaimed Listings Import Card */}
           <div style={{ ...card, borderTop: "3px solid #92400E" }}>
             <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
-              🌿 Import Unclaimed Cultivation Listings
+              🌿 Import Unclaimed Listings
             </h2>
             <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 6px" }}>
-              One-click import of 4,422 California DCC licensed cultivation businesses as unclaimed (free-tier) listings.
+              One-click import of California DCC licensed businesses as unclaimed (free-tier) listings.
             </p>
             <p style={{ fontSize: "12px", color: "#9CA3AF", margin: "0 0 20px" }}>
               Unclaimed listings appear in the directory but have no single listing page — visitors see a &quot;Claim This Listing&quot; prompt instead. Safe to run multiple times.
             </p>
 
-            {unclaimedResult ? (
-              <div style={{ padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px" }}>
-                <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 12px" }}>✅ Import complete!</p>
+            {unclaimedResult && (
+              <div style={{ padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px", marginBottom: "16px" }}>
+                <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 12px" }}>
+                  ✅ {unclaimedResult.dataset === "manufacturers" ? "Manufacturers" : "Cultivation"} import complete!
+                </p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
                   {[
                     { label: "Total", value: unclaimedResult.total },
@@ -574,22 +580,30 @@ export default function SettingsPage() {
                   ))}
                 </div>
               </div>
-            ) : (
-              <button
-                onClick={handleUnclaimedImport}
-                disabled={unclaimedImporting}
-                style={{
-                  width: "100%", padding: "14px",
-                  background: unclaimedImporting ? "#D1D5DB" : "#92400E",
-                  color: "white", border: "none", borderRadius: "10px",
-                  fontSize: "15px", fontWeight: 700,
-                  cursor: unclaimedImporting ? "not-allowed" : "pointer",
-                  transition: "background 0.2s",
-                }}
-              >
-                {unclaimedImporting ? "Importing 4,422 listings… this may take a minute" : "Import 4,422 Cultivation Listings →"}
-              </button>
             )}
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+              {[
+                { key: "cultivation", label: "Import 4,422 Cultivation Listings →", busy: "Importing cultivation…" },
+                { key: "manufacturers", label: "Import 1,558 Manufacturer Listings →", busy: "Importing manufacturers…" },
+              ].map((d) => (
+                <button
+                  key={d.key}
+                  onClick={() => handleUnclaimedImport(d.key)}
+                  disabled={unclaimedImporting !== null}
+                  style={{
+                    padding: "14px",
+                    background: unclaimedImporting !== null ? "#D1D5DB" : "#92400E",
+                    color: "white", border: "none", borderRadius: "10px",
+                    fontSize: "14px", fontWeight: 700,
+                    cursor: unclaimedImporting !== null ? "not-allowed" : "pointer",
+                    transition: "background 0.2s",
+                  }}
+                >
+                  {unclaimedImporting === d.key ? d.busy : d.label}
+                </button>
+              ))}
+            </div>
 
             {unclaimedError && (
               <div style={{ marginTop: "16px", padding: "14px 16px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", color: "#DC2626", fontSize: "14px" }}>
