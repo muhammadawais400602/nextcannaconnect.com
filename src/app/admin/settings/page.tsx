@@ -204,6 +204,11 @@ export default function SettingsPage() {
   const [bulkResult, setBulkResult]         = useState<BulkResult | null>(null);
   const [bulkError, setBulkError]           = useState("");
 
+  // ── Unclaimed import state ──────────────────────────────────────────────────
+  const [unclaimedImporting, setUnclaimedImporting] = useState(false);
+  const [unclaimedResult, setUnclaimedResult]       = useState<{ imported: number; skipped: number; total: number } | null>(null);
+  const [unclaimedError, setUnclaimedError]         = useState("");
+
   // ── Cleanup state ─────────────────────────────────────────────────────────
   const [cleaning, setCleaning]           = useState(false);
   const [cleanupResult, setCleanupResult] = useState<CleanupResult | null>(null);
@@ -278,6 +283,29 @@ export default function SettingsPage() {
       setBulkError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setBulkImporting(false);
+    }
+  }
+
+  async function handleUnclaimedImport() {
+    setUnclaimedImporting(true);
+    setUnclaimedError("");
+    setUnclaimedResult(null);
+    try {
+      const dataRes = await fetch("/data/cultivation-unclaimed.json");
+      if (!dataRes.ok) throw new Error("Could not load cultivation data file.");
+      const listings = await dataRes.json();
+      const res = await fetch("/api/admin/import-unclaimed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(listings),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Import failed");
+      setUnclaimedResult(data);
+    } catch (err) {
+      setUnclaimedError(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      setUnclaimedImporting(false);
     }
   }
 
@@ -515,6 +543,58 @@ export default function SettingsPage() {
             {bulkError && (
               <div style={{ marginTop: "16px", padding: "14px 16px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", color: "#DC2626", fontSize: "14px" }}>
                 ❌ {bulkError}
+              </div>
+            )}
+          </div>
+
+          {/* Unclaimed Cultivation Import Card */}
+          <div style={{ ...card, borderTop: "3px solid #92400E" }}>
+            <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
+              🌿 Import Unclaimed Cultivation Listings
+            </h2>
+            <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 6px" }}>
+              One-click import of 4,422 California DCC licensed cultivation businesses as unclaimed (free-tier) listings.
+            </p>
+            <p style={{ fontSize: "12px", color: "#9CA3AF", margin: "0 0 20px" }}>
+              Unclaimed listings appear in the directory but have no single listing page — visitors see a &quot;Claim This Listing&quot; prompt instead. Safe to run multiple times.
+            </p>
+
+            {unclaimedResult ? (
+              <div style={{ padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px" }}>
+                <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 12px" }}>✅ Import complete!</p>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                  {[
+                    { label: "Total", value: unclaimedResult.total },
+                    { label: "Imported", value: unclaimedResult.imported, color: "#15803D" },
+                    { label: "Skipped", value: unclaimedResult.skipped, color: "#B45309" },
+                  ].map((s) => (
+                    <div key={s.label} style={{ textAlign: "center", background: "white", borderRadius: "8px", padding: "12px" }}>
+                      <p style={{ fontSize: "24px", fontWeight: 800, color: s.color ?? "#111827", margin: 0 }}>{s.value}</p>
+                      <p style={{ fontSize: "12px", color: "#6B7280", margin: "4px 0 0" }}>{s.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={handleUnclaimedImport}
+                disabled={unclaimedImporting}
+                style={{
+                  width: "100%", padding: "14px",
+                  background: unclaimedImporting ? "#D1D5DB" : "#92400E",
+                  color: "white", border: "none", borderRadius: "10px",
+                  fontSize: "15px", fontWeight: 700,
+                  cursor: unclaimedImporting ? "not-allowed" : "pointer",
+                  transition: "background 0.2s",
+                }}
+              >
+                {unclaimedImporting ? "Importing 4,422 listings… this may take a minute" : "Import 4,422 Cultivation Listings →"}
+              </button>
+            )}
+
+            {unclaimedError && (
+              <div style={{ marginTop: "16px", padding: "14px 16px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", color: "#DC2626", fontSize: "14px" }}>
+                ❌ {unclaimedError}
               </div>
             )}
           </div>
