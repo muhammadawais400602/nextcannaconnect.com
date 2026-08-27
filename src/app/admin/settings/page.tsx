@@ -292,7 +292,13 @@ export default function SettingsPage() {
     setUnclaimedResult(null);
     try {
       const res = await fetch("/api/admin/import-unclaimed", { method: "POST" });
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(`Server error (${res.status}): ${text.substring(0, 200)}`);
+      }
       if (!res.ok) throw new Error(data.error || "Import failed");
       setUnclaimedResult(data);
     } catch (err) {
