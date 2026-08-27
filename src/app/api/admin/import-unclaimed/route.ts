@@ -10,12 +10,20 @@ const LOGO_COLORS = [
   "#2e5540", "#3a5c45", "#445e42", "#1e6b45",
 ];
 
+const DATASETS: Record<string, { file: string; label: string }> = {
+  cultivation: { file: "cultivation-unclaimed.json", label: "cultivation" },
+  manufacturers: { file: "manufacturers-unclaimed.json", label: "manufacturing" },
+};
+
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
+    const body = await request.json().catch(() => ({}));
+    const dataset = DATASETS[body?.dataset] ?? DATASETS.cultivation;
+
     const origin = request.nextUrl.origin;
-    const dataRes = await fetch(`${origin}/data/cultivation-unclaimed.json`);
+    const dataRes = await fetch(`${origin}/data/${dataset.file}`);
     if (!dataRes.ok) {
       return NextResponse.json(
         { error: `Could not load data file (${dataRes.status})` },
@@ -85,15 +93,19 @@ export async function POST(request: NextRequest) {
       if (catData.licenseNumber) doc.licenseNumber = catData.licenseNumber;
       if (catData.licenseType) doc.licenseType = catData.licenseType;
       if (catData.licenseStatus) doc.licenseStatus = catData.licenseStatus;
-      if (catData.statesServed) doc.statesServed = catData.statesServed;
-      if (catData.growType) doc.serviceArea = catData.growType;
+      if (catData.statesServed || catData.statesShipped) {
+        doc.statesServed = catData.statesServed || catData.statesShipped;
+      }
+      if (catData.growType || catData.manufacturerType) {
+        doc.serviceArea = catData.growType || catData.manufacturerType;
+      }
       if (catData.canopySize) doc.facilitySize = catData.canopySize;
       if (catData.ownerName) doc.bio = catData.ownerName;
       if (catData.licenseDesignation) {
         doc.certifications = [catData.licenseDesignation];
       }
       if (loc.county) {
-        doc.fullDescription = `Licensed cannabis cultivation operation in ${loc.county} County, ${loc.state || "CA"}. License: ${catData.licenseNumber || "N/A"} (${catData.licenseType || "N/A"}).`;
+        doc.fullDescription = `Licensed cannabis ${dataset.label} operation in ${loc.county} County, ${loc.state || "CA"}. License: ${catData.licenseNumber || "N/A"} (${catData.licenseType || "N/A"}).`;
       }
 
       ops.push({
