@@ -291,15 +291,14 @@ export default function SettingsPage() {
     setUnclaimedError("");
     setUnclaimedResult(null);
     try {
-      const dataRes = await fetch("/data/cultivation-unclaimed.json");
-      if (!dataRes.ok) throw new Error("Could not load cultivation data file.");
-      const listings = await dataRes.json();
-      const res = await fetch("/api/admin/import-unclaimed", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(listings),
-      });
-      const data = await res.json();
+      const res = await fetch("/api/admin/import-unclaimed", { method: "POST" });
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(`Server error (${res.status}): ${text.substring(0, 200)}`);
+      }
       if (!res.ok) throw new Error(data.error || "Import failed");
       setUnclaimedResult(data);
     } catch (err) {

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Company from "@/lib/models/Company";
 
+export const maxDuration = 60;
+
 const LOGO_COLORS = [
   "#1A4A35", "#2d6e52", "#4A5E4A", "#3d5a3e",
   "#2e5540", "#3a5c45", "#445e42", "#1e6b45",
@@ -11,9 +13,16 @@ export async function POST(request: NextRequest) {
   try {
     await connectDB();
 
-    const body = await request.json();
+    const origin = request.nextUrl.origin;
+    const dataRes = await fetch(`${origin}/data/cultivation-unclaimed.json`);
+    if (!dataRes.ok) {
+      return NextResponse.json(
+        { error: `Could not load data file (${dataRes.status})` },
+        { status: 500 },
+      );
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const data: Record<string, any>[] = Array.isArray(body) ? body : [];
+    const data: Record<string, any>[] = await dataRes.json();
 
     if (!data.length) {
       return NextResponse.json({ error: "No entries found." }, { status: 400 });
