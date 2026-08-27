@@ -89,19 +89,33 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
 
 // ─── Cached DB fetchers ────────────────────────────────────────────────────
 
-const fetchCompaniesByCategory = unstable_cache(
-  async (categorySlug: string): Promise<CompanyType[]> => {
-    await connectDB();
-    const docs = await Company.find({
-      $or: [{ category: categorySlug }, { secondaryCategory: categorySlug }],
-    })
-      .select("-__v")
-      .lean();
+// Card-level fields used by the category page grids. Heavy detail-only fields
+// (fullDescription, faqs, caseStudies, bio, …) are excluded so large categories
+// stay under the Next.js data cache 2MB-per-entry limit.
+const CATEGORY_CARD_FIELDS =
+  "slug name tier category secondaryCategory location shortDescription " +
+  "logoPlaceholder logoColor logoUrl bannerImageUrl serviceTags " +
+  "accreditation accreditations availability certifications credentialHeadline credentials " +
+  "delivery dispatchHours facilitySize foundedYear hours leadTime " +
+  "licenseNumber licenseStatus licenseType minOrderQty panelCount pricingModel " +
+  "projectsCompleted rating reviewCount serviceArea specialtyAreas statesServed " +
+  "teamSize transportType turnaroundTime vehicleCount yearsInCannabis";
 
-    return docs
-      .map(docToCompany)
-      .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
-  },
+async function queryCompaniesByCategory(categorySlug: string): Promise<CompanyType[]> {
+  await connectDB();
+  const docs = await Company.find({
+    $or: [{ category: categorySlug }, { secondaryCategory: categorySlug }],
+  })
+    .select(CATEGORY_CARD_FIELDS)
+    .lean();
+
+  return docs
+    .map(docToCompany)
+    .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
+}
+
+const fetchCompaniesByCategory = unstable_cache(
+  queryCompaniesByCategory,
   ["companies-by-category"],
   { revalidate: 1800, tags: ["companies"] }
 );
@@ -136,8 +150,15 @@ export async function getCompaniesByCategory(categorySlug: string): Promise<Comp
   try {
     return await fetchCompaniesByCategory(categorySlug);
   } catch (err) {
-    console.error(`[getCompaniesByCategory] Failed for "${categorySlug}":`, err);
-    return [];
+    // The cached path can fail even when the DB is fine (e.g. result exceeds
+    // the data cache's 2MB-per-entry limit) — fall back to a direct query.
+    console.error(`[getCompaniesByCategory] Cached fetch failed for "${categorySlug}", querying directly:`, err);
+    try {
+      return await queryCompaniesByCategory(categorySlug);
+    } catch (dbErr) {
+      console.error(`[getCompaniesByCategory] Direct query failed for "${categorySlug}":`, dbErr);
+      return [];
+    }
   }
 }
 
@@ -166,14 +187,16 @@ const LISTING_FIELDS =
   "serviceTags statesServed serviceArea minOrderQty certifications yearsInCannabis leadTime " +
   "rating reviewCount";
 
+async function queryAllCompanies(): Promise<CompanyType[]> {
+  await connectDB();
+  const docs = await Company.find({}).select(LISTING_FIELDS).lean();
+  return docs
+    .map(docToCompany)
+    .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
+}
+
 const fetchAllCompanies = unstable_cache(
-  async (): Promise<CompanyType[]> => {
-    await connectDB();
-    const docs = await Company.find({}).select(LISTING_FIELDS).lean();
-    return docs
-      .map(docToCompany)
-      .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
-  },
+  queryAllCompanies,
   ["all-companies"],
   { revalidate: 300, tags: ["companies"] }
 );
@@ -182,8 +205,13 @@ export async function getAllCompanies(): Promise<CompanyType[]> {
   try {
     return await fetchAllCompanies();
   } catch (err) {
-    console.error("[getAllCompanies] Failed:", err);
-    return [];
+    console.error("[getAllCompanies] Cached fetch failed, querying directly:", err);
+    try {
+      return await queryAllCompanies();
+    } catch (dbErr) {
+      console.error("[getAllCompanies] Direct query failed:", dbErr);
+      return [];
+    }
   }
 }
 
