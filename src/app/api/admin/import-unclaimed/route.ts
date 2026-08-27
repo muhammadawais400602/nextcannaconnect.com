@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag, revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import Company from "@/lib/models/Company";
 
@@ -112,6 +113,9 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < ops.length; i += BATCH) {
       await Company.bulkWrite(ops.slice(i, i + BATCH), { ordered: false });
     }
+
+    revalidateTag("companies", "max");
+    revalidatePath("/directory", "layout");
 
     return NextResponse.json({
       success: true,
