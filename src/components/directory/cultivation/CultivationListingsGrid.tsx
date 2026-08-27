@@ -15,6 +15,7 @@ function isVerified(c: Company) {
 
 function CultivatorCard({ company }: { company: Company }) {
   const verified = isVerified(company);
+  const unclaimed = company.tier === "free";
   const tags = (company.serviceTags ?? []).slice(0, 3);
 
   const detail = (label: string, value?: string) => (
@@ -26,6 +27,7 @@ function CultivatorCard({ company }: { company: Company }) {
 
   return (
     <div style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 1px 2px rgba(0,0,0,0.04)" }} className="cat-card">
+      {!unclaimed && (
       <div style={{ height: "192px", position: "relative", background: company.logoColor + "22" }}>
         {company.bannerImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -41,6 +43,7 @@ function CultivatorCard({ company }: { company: Company }) {
           </div>
         )}
       </div>
+      )}
 
       <div style={{ padding: "24px", display: "flex", flexDirection: "column", flex: 1 }}>
         {/* Name row: avatar LEFT, then name */}
@@ -70,12 +73,14 @@ function CultivatorCard({ company }: { company: Company }) {
         {/* Detail rows */}
         <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px" }}>
           {detail("Canopy Size", company.serviceArea)}
-          {detail("Grow Type", company.transportType)}
-          {detail("Team Size", company.teamSize)}
-          <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
-            <span style={{ color: VARIANT }}>Wholesale</span>
-            <span style={{ fontWeight: 500, color: SAGE }}>{company.delivery || "—"}</span>
-          </div>
+          {!unclaimed && detail("Grow Type", company.transportType)}
+          {!unclaimed && detail("Team Size", company.teamSize)}
+          {!unclaimed && (
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
+              <span style={{ color: VARIANT }}>Wholesale</span>
+              <span style={{ fontWeight: 500, color: SAGE }}>{company.delivery || "—"}</span>
+            </div>
+          )}
         </div>
 
         {tags.length > 0 && (
@@ -93,10 +98,18 @@ function CultivatorCard({ company }: { company: Company }) {
               <span className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>
               {company.accreditation}
             </span>
+          ) : unclaimed ? (
+            <span style={{ fontSize: "12px", fontWeight: 600, color: "#9CA3AF", background: "#F3F4F6", padding: "4px 8px", borderRadius: "0.25rem" }}>Unclaimed</span>
           ) : <span />}
-          <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
-          </Link>
+          {unclaimed ? (
+            <Link href={`/signup?claim=${company.slug}&category=cultivation-growing`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+              Claim This Listing <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+            </Link>
+          ) : (
+            <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+              View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+            </Link>
+          )}
         </div>
       </div>
     </div>
