@@ -14,6 +14,7 @@ import {
   readingTime,
   stripHtml,
 } from "@/lib/wordpress";
+import DOMPurify from "isomorphic-dompurify";
 import ShareButton from "@/components/blog/ShareButton";
 
 interface Props {
@@ -123,7 +124,7 @@ export default async function BlogPostPage({ params }: Props) {
             <article>
               <div
                 className="article-body"
-                dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content.rendered) }}
               />
 
               {/* ── Share bar ── */}

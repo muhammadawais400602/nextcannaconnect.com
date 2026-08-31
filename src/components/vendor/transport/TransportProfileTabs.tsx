@@ -24,7 +24,7 @@ export default function TransportProfileTabs({ company }: { company: Company }) 
     company.foundedYear ? { icon: "corporate_fare", value: String(company.foundedYear), label: "Founded" } : null,
     company.vehicleCount ? { icon: "local_shipping", value: String(company.vehicleCount), label: "Vehicles" } : null,
     company.statesActive || company.statesServed?.length
-      ? { icon: "map", value: String(company.statesActive ?? company.statesServed!.length), label: "States Active" }
+      ? { icon: "map", value: String(company.statesActive ?? (company.statesServed ?? []).length), label: "States Active" }
       : null,
     company.loadsPerMonth ? { icon: "sync_alt", value: company.loadsPerMonth, label: "Loads/mo" } : null,
   ].filter(Boolean) as { icon: string; value: string; label: string }[];

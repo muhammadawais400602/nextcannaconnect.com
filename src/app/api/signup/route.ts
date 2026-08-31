@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
 import User from "@/lib/models/User";
+import { escapeHtml } from "@/lib/escapeHtml";
+import { rateLimit } from "@/lib/rateLimit";
 
 const TIER_LABELS: Record<string, string> = {
   free: "Claimed (Free)",
@@ -39,6 +41,11 @@ async function sendEmail(payload: { to: string; subject: string; html: string })
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (!rateLimit(`signup:${ip}`, 5, 60_000)) {
+      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+    }
+
     await connectDB();
     const body = await request.json();
 
@@ -128,6 +135,15 @@ export async function POST(request: NextRequest) {
     const tierLabel = TIER_LABELS[tier] ?? tier;
     const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
 
+    const eName = escapeHtml(fullName);
+    const eCompany = escapeHtml(companyName);
+    const eEmail = escapeHtml(email);
+    const eState = stateProvince ? escapeHtml(stateProvince) : "";
+    const ePhone = phone ? escapeHtml(phone) : "";
+    const eCategory = category ? escapeHtml(category) : "";
+    const eWebsite = website ? escapeHtml(website) : "";
+    const eDescription = description ? escapeHtml(description) : "";
+
     await sendEmail({
       to: email,
       subject: "You're on the list — NextCanna Connect",
@@ -137,19 +153,19 @@ export async function POST(request: NextRequest) {
             <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
           </div>
           <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-            <h2 style="color:#1A4A35;margin:0 0 16px">Welcome, ${fullName}!</h2>
+            <h2 style="color:#1A4A35;margin:0 0 16px">Welcome, ${eName}!</h2>
             <p style="line-height:1.6;color:#4A5E4A">
-              We've received your application for the <strong>${tierLabel}</strong> plan
-              for <strong>${companyName}</strong>. Our team will review your information
+              We've received your application for the <strong>${escapeHtml(tierLabel)}</strong> plan
+              for <strong>${eCompany}</strong>. Our team will review your information
               and reach out within 1–2 business days.
             </p>
             <div style="background:white;border:1px solid #E8EDE8;border-radius:8px;padding:16px;margin:24px 0">
               <p style="margin:0 0 8px;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;font-weight:600">Your Application</p>
               <table style="width:100%;font-size:14px;color:#374151;border-collapse:collapse">
-                <tr><td style="padding:4px 0;color:#6B7280">Plan</td><td style="padding:4px 0"><strong>${tierLabel}</strong></td></tr>
-                <tr><td style="padding:4px 0;color:#6B7280">Company</td><td style="padding:4px 0">${companyName}</td></tr>
-                <tr><td style="padding:4px 0;color:#6B7280">Email</td><td style="padding:4px 0">${email}</td></tr>
-                ${stateProvince ? `<tr><td style="padding:4px 0;color:#6B7280">Location</td><td style="padding:4px 0">${stateProvince}</td></tr>` : ""}
+                <tr><td style="padding:4px 0;color:#6B7280">Plan</td><td style="padding:4px 0"><strong>${escapeHtml(tierLabel)}</strong></td></tr>
+                <tr><td style="padding:4px 0;color:#6B7280">Company</td><td style="padding:4px 0">${eCompany}</td></tr>
+                <tr><td style="padding:4px 0;color:#6B7280">Email</td><td style="padding:4px 0">${eEmail}</td></tr>
+                ${eState ? `<tr><td style="padding:4px 0;color:#6B7280">Location</td><td style="padding:4px 0">${eState}</td></tr>` : ""}
               </table>
             </div>
             <p style="line-height:1.6;color:#4A5E4A">
@@ -165,24 +181,24 @@ export async function POST(request: NextRequest) {
     if (adminEmail) {
       await sendEmail({
         to: adminEmail,
-        subject: `New signup: ${companyName} (${tierLabel})`,
+        subject: `New signup: ${eCompany} (${escapeHtml(tierLabel)})`,
         html: `
           <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
             <h2 style="color:#1A4A35">New Signup Application</h2>
             <table style="width:100%;border-collapse:collapse;font-size:14px">
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Name</td><td style="padding:8px">${fullName}</td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Company</td><td style="padding:8px">${companyName}</td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Email</td><td style="padding:8px"><a href="mailto:${email}">${email}</a></td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Phone</td><td style="padding:8px">${phone || "—"}</td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Plan</td><td style="padding:8px">${tierLabel}</td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">State</td><td style="padding:8px">${stateProvince || "—"}</td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Category</td><td style="padding:8px">${category || "—"}</td></tr>
-              ${website ? `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Website</td><td style="padding:8px">${website}</td></tr>` : ""}
-              ${description ? `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Description</td><td style="padding:8px">${description}</td></tr>` : ""}
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Name</td><td style="padding:8px">${eName}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Company</td><td style="padding:8px">${eCompany}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Email</td><td style="padding:8px"><a href="mailto:${eEmail}">${eEmail}</a></td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Phone</td><td style="padding:8px">${ePhone || "—"}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Plan</td><td style="padding:8px">${escapeHtml(tierLabel)}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">State</td><td style="padding:8px">${eState || "—"}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Category</td><td style="padding:8px">${eCategory || "—"}</td></tr>
+              ${eWebsite ? `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Website</td><td style="padding:8px">${eWebsite}</td></tr>` : ""}
+              ${eDescription ? `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Description</td><td style="padding:8px">${eDescription}</td></tr>` : ""}
               ${categoryDetails && typeof categoryDetails === "object"
                 ? Object.entries(categoryDetails)
                     .filter(([, v]) => v)
-                    .map(([k, v]) => `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">${k}</td><td style="padding:8px">${v}</td></tr>`)
+                    .map(([k, v]) => `<tr><td style="padding:8px;background:#F7F9F7;font-weight:600">${escapeHtml(String(k))}</td><td style="padding:8px">${escapeHtml(String(v))}</td></tr>`)
                     .join("")
                 : ""}
             </table>
@@ -195,6 +211,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[signup] Error:", err);
-    return NextResponse.json({ error: "Failed to submit application", detail: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });
   }
 }

@@ -132,7 +132,7 @@ export default function SignInPage() {
                 Password
               </label>
               <Link
-                href="/forgot-password"
+                href="/signin"
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontSize: "10px",
@@ -215,7 +215,7 @@ export default function SignInPage() {
             Interested in Joining?
           </p>
           <Link
-            href="/request-membership"
+            href="/signup"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "14px",

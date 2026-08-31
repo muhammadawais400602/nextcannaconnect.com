@@ -103,7 +103,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "32px" }}>
           <h2 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 16px" }}>Services</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {company.serviceTags!.map((tag) => (
+            {(company.serviceTags ?? []).map((tag) => (
               <div key={tag} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 0", borderBottom: `1px solid ${PARCHMENT}` }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE }}>check_circle</span>
                 <span style={{ fontSize: "16px", color: INK }}>{tag}</span>
@@ -115,7 +115,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
 
       {active === "case-studies" && hasCaseStudies && (
         <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {company.caseStudies!.map((cs) => (
+          {(company.caseStudies ?? []).map((cs) => (
             <div key={cs.title} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "24px" }}>
               <h3 style={{ fontSize: "18px", fontWeight: 600, color: INK, margin: "0 0 8px" }}>{cs.title}</h3>
               <p style={{ fontSize: "14px", color: VARIANT, lineHeight: 1.6, margin: 0 }}>{cs.summary}</p>
@@ -126,7 +126,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
 
       {active === "faqs" && hasFaqs && (
         <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {company.faqs!.map((f) => (
+          {(company.faqs ?? []).map((f) => (
             <details key={f.question} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}>
               <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", cursor: "pointer", fontSize: "14px", fontWeight: 500, color: INK, listStyle: "none" }}>
                 {f.question}

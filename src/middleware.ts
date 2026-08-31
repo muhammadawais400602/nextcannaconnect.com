@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 
 function isValidSession(request: NextRequest): boolean {
   const session = request.cookies.get("admin_session");
-  return !!session?.value?.startsWith("nc-admin:");
+  const val = session?.value;
+  if (!val?.startsWith("nc-admin:")) return false;
+  const secret = process.env.ADMIN_SECRET;
+  if (!secret) return false;
+  const parts = val.slice("nc-admin:".length);
+  const lastColon = parts.lastIndexOf(":");
+  if (lastColon === -1) return false;
+  const payload = parts.slice(0, lastColon);
+  const sig = parts.slice(lastColon + 1);
+  const expected = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
 }
 
 export function middleware(request: NextRequest) {

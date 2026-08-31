@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
 function generateToken(secret: string): string {
-  return "nc-admin:" + crypto.createHmac("sha256", secret).update("admin-session").digest("hex");
+  const nonce = crypto.randomUUID();
+  const ts = Date.now();
+  const payload = `${nonce}:${ts}`;
+  const sig = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+  return `nc-admin:${payload}:${sig}`;
 }
 
 export async function POST(request: NextRequest) {

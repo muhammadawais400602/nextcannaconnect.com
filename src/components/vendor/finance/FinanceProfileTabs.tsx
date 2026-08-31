@@ -106,7 +106,7 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
             <div style={{ marginTop: "24px" }}>
               <h3 style={{ fontSize: "14px", fontWeight: 600, color: INK, margin: "0 0 12px" }}>Certifications</h3>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
-                {company.certifications!.map((cert) => (
+                {(company.certifications ?? []).map((cert) => (
                   <span key={cert} style={{ display: "flex", alignItems: "center", gap: "6px", background: "rgba(187,238,209,0.15)", color: DF, fontSize: "13px", fontWeight: 600, padding: "8px 14px", borderRadius: "0.5rem", border: `1px solid ${SAGE}44` }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "16px", color: SAGE }}>verified</span> {cert}
                   </span>
@@ -122,7 +122,7 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
           <h2 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 16px" }}>Products &amp; Services</h2>
           {(company.serviceTags ?? []).length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: (company.products ?? []).length > 0 ? "24px" : 0 }}>
-              {company.serviceTags!.map((tag) => (
+              {(company.serviceTags ?? []).map((tag) => (
                 <div key={tag} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 0", borderBottom: `1px solid ${PARCHMENT}` }}>
                   <span className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE }}>account_balance</span>
                   <span style={{ fontSize: "14px", fontWeight: 500, color: INK }}>{tag}</span>
@@ -132,7 +132,7 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
           )}
           {(company.products ?? []).length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {company.products!.map((p) => (
+              {(company.products ?? []).map((p) => (
                 <div key={p.name} style={{ padding: "16px", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}>
                   <h3 style={{ fontSize: "16px", fontWeight: 600, color: INK, margin: "0 0 8px" }}>{p.name}</h3>
                   <p style={{ fontSize: "14px", color: VARIANT, lineHeight: 1.6, margin: 0 }}>{p.description}</p>
@@ -147,7 +147,7 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "32px" }}>
           <h2 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 16px" }}>Eligibility Requirements</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {company.specialtyAreas!.map((area) => (
+            {(company.specialtyAreas ?? []).map((area) => (
               <div key={area} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 0", borderBottom: `1px solid ${PARCHMENT}` }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE }}>check_circle</span>
                 <span style={{ fontSize: "14px", fontWeight: 500, color: INK }}>{area}</span>
@@ -159,7 +159,7 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
 
       {active === "faqs" && hasFaqs && (
         <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {company.faqs!.map((f) => (
+          {(company.faqs ?? []).map((f) => (
             <details key={f.question} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}>
               <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", cursor: "pointer", fontSize: "14px", fontWeight: 500, color: INK, listStyle: "none" }}>
                 {f.question}

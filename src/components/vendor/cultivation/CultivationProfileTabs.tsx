@@ -101,7 +101,7 @@ export default function CultivationProfileTabs({ company, similar }: { company: 
           <h2 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 16px" }}>Capabilities</h2>
           {(company.serviceTags?.length ?? 0) > 0 && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: (company.products?.length ?? 0) > 0 ? "32px" : 0 }}>
-              {company.serviceTags!.map((tag) => (
+              {(company.serviceTags ?? []).map((tag) => (
                 <span key={tag} style={{ background: "#fbf9f8", color: "#1b1c1b", fontSize: "12px", fontWeight: 600, padding: "6px 12px", borderRadius: "0.25rem", border: `1px solid ${PARCHMENT}` }}>{tag}</span>
               ))}
             </div>
@@ -110,7 +110,7 @@ export default function CultivationProfileTabs({ company, similar }: { company: 
             <>
               <h2 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 16px" }}>Products</h2>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                {company.products!.map((p) => (
+                {(company.products ?? []).map((p) => (
                   <div key={p.name} style={{ padding: "12px 0", borderBottom: `1px solid ${PARCHMENT}` }}>
                     <h4 style={{ fontSize: "14px", fontWeight: 600, color: INK, margin: "0 0 4px" }}>{p.name}</h4>
                     <p style={{ fontSize: "14px", color: VARIANT, margin: 0 }}>{p.description}</p>
@@ -137,7 +137,7 @@ export default function CultivationProfileTabs({ company, similar }: { company: 
 
       {active === "faqs" && hasFaqs && (
         <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {company.faqs!.map((f) => (
+          {(company.faqs ?? []).map((f) => (
             <details key={f.question} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}>
               <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", cursor: "pointer", fontSize: "14px", fontWeight: 500, color: INK, listStyle: "none" }}>
                 {f.question}
