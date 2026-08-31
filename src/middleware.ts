@@ -1,7 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 
-function isValidSession(request: NextRequest): boolean {
+async function hmacHex(secret: string, data: string): Promise<string> {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"],
+  );
+  const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data));
+  return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
+async function isValidSession(request: NextRequest): Promise<boolean> {
   const session = request.cookies.get("admin_session");
   const val = session?.value;
   if (!val?.startsWith("nc-admin:")) return false;
@@ -12,29 +29,26 @@ function isValidSession(request: NextRequest): boolean {
   if (lastColon === -1) return false;
   const payload = parts.slice(0, lastColon);
   const sig = parts.slice(lastColon + 1);
-  const expected = crypto.createHmac("sha256", secret).update(payload).digest("hex");
-  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+  const expected = await hmacHex(secret, payload);
+  return timingSafeEqual(sig, expected);
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow login page and auth API through
   if (pathname === "/admin/login" || pathname.startsWith("/api/admin/auth")) {
     return NextResponse.next();
   }
 
-  // Protect all /admin page routes
   if (pathname.startsWith("/admin")) {
-    if (!isValidSession(request)) {
+    if (!(await isValidSession(request))) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
     return NextResponse.next();
   }
 
-  // Protect all /api/admin/* routes
   if (pathname.startsWith("/api/admin")) {
-    if (!isValidSession(request)) {
+    if (!(await isValidSession(request))) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     return NextResponse.next();
