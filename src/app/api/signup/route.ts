@@ -218,11 +218,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    const errMsg = err instanceof Error ? err.message : String(err);
     console.error("[signup] Error:", err);
-    return NextResponse.json({
-      error: "Failed to submit application",
-      reason: errMsg.slice(0, 200),
-    }, { status: 500 });
+    return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });
   }
 }
