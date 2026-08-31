@@ -175,8 +175,7 @@ function SignUpForm() {
       });
       if (!res.ok) {
         const data = await res.json();
-        const detail = data.reason ? ` (${data.reason})` : "";
-        throw new Error((data.error || "Submission failed") + detail);
+        throw new Error(data.error || "Submission failed");
       }
       const data = await res.json();
       if (data.checkoutUrl) {

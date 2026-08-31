@@ -14,10 +14,11 @@ const cached: MongooseCache = global.mongoose ?? { conn: null, promise: null };
 global.mongoose = cached;
 
 export async function connectDB(): Promise<typeof mongoose> {
-  const MONGODB_URI = process.env.MONGODB_URI;
-  if (!MONGODB_URI) {
+  const raw = process.env.MONGODB_URI;
+  if (!raw) {
     throw new Error("Please define the MONGODB_URI environment variable");
   }
+  const MONGODB_URI = raw.trim().replace(/^["']|["']$/g, "");
 
   if (cached.conn) return cached.conn;
 
