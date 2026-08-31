@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const count = await Company.countDocuments({});
     const res = await Company.deleteMany({});
 
-    revalidateTag("companies");
+    revalidateTag("companies", "max");
     revalidatePath("/directory", "layout");
 
     return NextResponse.json({

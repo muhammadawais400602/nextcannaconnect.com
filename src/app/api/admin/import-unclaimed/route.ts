@@ -1,0 +1,142 @@
+import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag, revalidatePath } from "next/cache";
+import { connectDB } from "@/lib/mongodb";
+import Company from "@/lib/models/Company";
+
+export const maxDuration = 60;
+
+const LOGO_COLORS = [
+  "#1A4A35", "#2d6e52", "#4A5E4A", "#3d5a3e",
+  "#2e5540", "#3a5c45", "#445e42", "#1e6b45",
+];
+
+const DATASETS: Record<string, { file: string; label: string }> = {
+  cultivation: { file: "cultivation-unclaimed.json", label: "cultivation" },
+  manufacturers: { file: "manufacturers-unclaimed.json", label: "manufacturing" },
+};
+
+export async function POST(request: NextRequest) {
+  try {
+    await connectDB();
+
+    const body = await request.json().catch(() => ({}));
+    const dataset = DATASETS[body?.dataset] ?? DATASETS.cultivation;
+
+    const origin = request.nextUrl.origin;
+    const dataRes = await fetch(`${origin}/data/${dataset.file}`);
+    if (!dataRes.ok) {
+      return NextResponse.json(
+        { error: `Could not load data file (${dataRes.status})` },
+        { status: 500 },
+      );
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: Record<string, any>[] = await dataRes.json();
+
+    if (!data.length) {
+      return NextResponse.json({ error: "No entries found." }, { status: 400 });
+    }
+
+    const existingSlugs = new Set(
+      (await Company.find({}, { slug: 1, _id: 0 }).lean()).map((d) => (d as { slug: string }).slug)
+    );
+    const usedSlugs = new Set(existingSlugs);
+
+    const ops = [];
+    let skipped = 0;
+    const now = new Date();
+
+    for (let i = 0; i < data.length; i++) {
+      const entry = data[i];
+      const name = (entry.businessName || entry.legalName || "").trim();
+      if (!name) { skipped++; continue; }
+
+      const category = entry.categorySlug || "cultivation-growing";
+
+      let slug = entry.slug || "";
+      if (!slug) { skipped++; continue; }
+
+      let finalSlug = slug;
+      let suffix = 2;
+      while (usedSlugs.has(finalSlug) && !existingSlugs.has(finalSlug)) {
+        finalSlug = `${slug}-${suffix++}`;
+      }
+      usedSlugs.add(finalSlug);
+
+      const loc = entry.location || {};
+      const contact = entry.contact || {};
+      const catData = entry.categoryData || {};
+
+      const tagline = entry.tagline || `${name} — cannabis industry partner.`;
+
+      const doc: Record<string, unknown> = {
+        slug: finalSlug,
+        name,
+        tier: "free",
+        category,
+        location: {
+          address: "",
+          city: loc.city || "",
+          state: loc.state || "CA",
+          zip: loc.zip || "",
+        },
+        shortDescription: tagline,
+        logoPlaceholder: entry.initials || name.substring(0, 2).toUpperCase(),
+        logoColor: LOGO_COLORS[i % LOGO_COLORS.length],
+        serviceTags: entry.trustBadges || ["Cannabis Industry"],
+        isFeatured: false,
+        updatedAt: now,
+      };
+
+      if (contact.email) doc.email = contact.email.toLowerCase();
+      if (contact.phone) doc.phone = contact.phone;
+      if (catData.licenseNumber) doc.licenseNumber = catData.licenseNumber;
+      if (catData.licenseType) doc.licenseType = catData.licenseType;
+      if (catData.licenseStatus) doc.licenseStatus = catData.licenseStatus;
+      if (catData.statesServed || catData.statesShipped) {
+        doc.statesServed = catData.statesServed || catData.statesShipped;
+      }
+      if (catData.growType || catData.manufacturerType) {
+        doc.serviceArea = catData.growType || catData.manufacturerType;
+      }
+      if (catData.canopySize) doc.facilitySize = catData.canopySize;
+      if (catData.ownerName) doc.bio = catData.ownerName;
+      if (catData.licenseDesignation) {
+        doc.certifications = [catData.licenseDesignation];
+      }
+      if (loc.county) {
+        doc.fullDescription = `Licensed cannabis ${dataset.label} operation in ${loc.county} County, ${loc.state || "CA"}. License: ${catData.licenseNumber || "N/A"} (${catData.licenseType || "N/A"}).`;
+      }
+
+      ops.push({
+        updateOne: {
+          filter: { slug: finalSlug },
+          update: { $set: doc, $setOnInsert: { createdAt: now } },
+          upsert: true,
+        },
+      });
+    }
+
+    if (ops.length === 0) {
+      return NextResponse.json({ error: "No valid entries found." }, { status: 400 });
+    }
+
+    const BATCH = 200;
+    for (let i = 0; i < ops.length; i += BATCH) {
+      await Company.bulkWrite(ops.slice(i, i + BATCH), { ordered: false });
+    }
+
+    revalidateTag("companies", "max");
+    revalidatePath("/directory", "layout");
+
+    return NextResponse.json({
+      success: true,
+      imported: ops.length,
+      skipped,
+      total: data.length,
+    });
+  } catch (err) {
+    console.error("[import-unclaimed]", err);
+    return NextResponse.json({ error: "Import failed." }, { status: 500 });
+  }
+}
