@@ -61,34 +61,42 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
     }
 
-    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+    const normalizedEmail = email.toLowerCase().trim();
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return NextResponse.json({ error: "An account with this email already exists. Please sign in instead." }, { status: 409 });
     }
 
     const isPaid = tier === "select" || tier === "elite";
 
+    // Create user account first (has unique index on email — fail fast on duplicates)
+    const passwordHash = await bcrypt.hash(password, 12);
+    try {
+      await User.create({
+        email: normalizedEmail,
+        fullName,
+        companyName,
+        phone,
+        stateProvince,
+        category,
+        tier,
+        passwordHash,
+        isActive: !isPaid,
+      });
+    } catch (userErr: unknown) {
+      if (userErr && typeof userErr === "object" && "code" in userErr && (userErr as { code: number }).code === 11000) {
+        return NextResponse.json({ error: "An account with this email already exists. Please sign in instead." }, { status: 409 });
+      }
+      throw userErr;
+    }
+
     // Save application
     const app = await SignupApplication.create({
-      fullName, companyName, email, phone, stateProvince, category,
+      fullName, companyName, email: normalizedEmail, phone, stateProvince, category,
       tier, website, description, publicPhone, serviceArea,
       certifications, socialLink, contactName,
       categoryDetails: categoryDetails && typeof categoryDetails === "object" ? categoryDetails : {},
       paymentStatus: isPaid ? "awaiting_payment" : "not_required",
-    });
-
-    // Create user account with hashed password
-    const passwordHash = await bcrypt.hash(password, 12);
-    await User.create({
-      email: email.toLowerCase().trim(),
-      fullName,
-      companyName,
-      phone,
-      stateProvince,
-      category,
-      tier,
-      passwordHash,
-      isActive: !isPaid,
     });
 
     // Paid tiers → create Stripe Checkout session (if Stripe is configured)
