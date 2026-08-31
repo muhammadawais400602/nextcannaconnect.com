@@ -3,15 +3,12 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import { verifyVendorSession } from "@/lib/verifyVendorSession";
 
 export async function POST(request: NextRequest) {
   try {
     const session = request.cookies.get("vendor_session")?.value;
-    if (!session || !session.startsWith("nc-vendor:")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const userId = session.split(":")[1];
+    const userId = session ? verifyVendorSession(session) : null;
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

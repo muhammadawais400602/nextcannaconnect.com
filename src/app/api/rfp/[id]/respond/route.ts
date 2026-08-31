@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import Company from "@/lib/models/Company";
 import RFP from "@/lib/models/RFP";
+import { verifyVendorSession } from "@/lib/verifyVendorSession";
 
 export async function POST(
   request: NextRequest,
@@ -12,10 +13,7 @@ export async function POST(
   try {
     const { id } = await params;
     const session = request.cookies.get("vendor_session")?.value;
-    if (!session || !session.startsWith("nc-vendor:")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const userId = session.split(":")[1];
+    const userId = session ? verifyVendorSession(session) : null;
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
