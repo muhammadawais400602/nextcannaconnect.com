@@ -290,11 +290,6 @@ export default function SettingsPage() {
   const [bulkResult, setBulkResult]         = useState<BulkResult | null>(null);
   const [bulkError, setBulkError]           = useState("");
 
-  // ── Unclaimed import state ──────────────────────────────────────────────────
-  const [unclaimedImporting, setUnclaimedImporting] = useState<string | null>(null);
-  const [unclaimedResult, setUnclaimedResult]       = useState<{ imported: number; skipped: number; total: number; dataset: string } | null>(null);
-  const [unclaimedError, setUnclaimedError]         = useState("");
-
   // ── Cleanup state ─────────────────────────────────────────────────────────
   const [cleaning, setCleaning]           = useState(false);
   const [cleanupResult, setCleanupResult] = useState<CleanupResult | null>(null);
@@ -369,32 +364,6 @@ export default function SettingsPage() {
       setBulkError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setBulkImporting(false);
-    }
-  }
-
-  async function handleUnclaimedImport(dataset: string) {
-    setUnclaimedImporting(dataset);
-    setUnclaimedError("");
-    setUnclaimedResult(null);
-    try {
-      const res = await fetch("/api/admin/import-unclaimed", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dataset }),
-      });
-      const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error(`Server error (${res.status}): ${text.substring(0, 200)}`);
-      }
-      if (!res.ok) throw new Error(data.error || "Import failed");
-      setUnclaimedResult({ ...data, dataset });
-    } catch (err) {
-      setUnclaimedError(err instanceof Error ? err.message : "Something went wrong.");
-    } finally {
-      setUnclaimedImporting(null);
     }
   }
 
@@ -632,68 +601,6 @@ export default function SettingsPage() {
             {bulkError && (
               <div style={{ marginTop: "16px", padding: "14px 16px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", color: "#DC2626", fontSize: "14px" }}>
                 ❌ {bulkError}
-              </div>
-            )}
-          </div>
-
-          {/* Unclaimed Listings Import Card */}
-          <div style={{ ...card, borderTop: "3px solid #92400E" }}>
-            <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>
-              🌿 Import Unclaimed Listings
-            </h2>
-            <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 6px" }}>
-              One-click import of California DCC licensed businesses as unclaimed (free-tier) listings.
-            </p>
-            <p style={{ fontSize: "12px", color: "#9CA3AF", margin: "0 0 20px" }}>
-              Unclaimed listings appear in the directory but have no single listing page — visitors see a &quot;Claim This Listing&quot; prompt instead. Safe to run multiple times.
-            </p>
-
-            {unclaimedResult && (
-              <div style={{ padding: "20px 24px", background: "#F0FDF4", border: "1px solid #BBF7D0", borderRadius: "10px", marginBottom: "16px" }}>
-                <p style={{ fontSize: "16px", fontWeight: 700, color: "#15803D", margin: "0 0 12px" }}>
-                  ✅ {unclaimedResult.dataset === "manufacturers" ? "Manufacturers" : "Cultivation"} import complete!
-                </p>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
-                  {[
-                    { label: "Total", value: unclaimedResult.total },
-                    { label: "Imported", value: unclaimedResult.imported, color: "#15803D" },
-                    { label: "Skipped", value: unclaimedResult.skipped, color: "#B45309" },
-                  ].map((s) => (
-                    <div key={s.label} style={{ textAlign: "center", background: "white", borderRadius: "8px", padding: "12px" }}>
-                      <p style={{ fontSize: "24px", fontWeight: 800, color: s.color ?? "#111827", margin: 0 }}>{s.value}</p>
-                      <p style={{ fontSize: "12px", color: "#6B7280", margin: "4px 0 0" }}>{s.label}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
-              {[
-                { key: "cultivation", label: "Import 4,422 Cultivation Listings →", busy: "Importing cultivation…" },
-                { key: "manufacturers", label: "Import 1,558 Manufacturer Listings →", busy: "Importing manufacturers…" },
-              ].map((d) => (
-                <button
-                  key={d.key}
-                  onClick={() => handleUnclaimedImport(d.key)}
-                  disabled={unclaimedImporting !== null}
-                  style={{
-                    padding: "14px",
-                    background: unclaimedImporting !== null ? "#D1D5DB" : "#92400E",
-                    color: "white", border: "none", borderRadius: "10px",
-                    fontSize: "14px", fontWeight: 700,
-                    cursor: unclaimedImporting !== null ? "not-allowed" : "pointer",
-                    transition: "background 0.2s",
-                  }}
-                >
-                  {unclaimedImporting === d.key ? d.busy : d.label}
-                </button>
-              ))}
-            </div>
-
-            {unclaimedError && (
-              <div style={{ marginTop: "16px", padding: "14px 16px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", color: "#DC2626", fontSize: "14px" }}>
-                ❌ {unclaimedError}
               </div>
             )}
           </div>
