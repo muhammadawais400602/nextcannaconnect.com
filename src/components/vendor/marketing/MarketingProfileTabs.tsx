@@ -89,7 +89,7 @@ export default function MarketingProfileTabs({ company, similar }: { company: Co
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "32px" }}>
           <h2 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 16px" }}>Services</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-            {company.serviceTags!.map((tag) => (
+            {(company.serviceTags ?? []).map((tag) => (
               <div key={tag} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 0", borderBottom: `1px solid ${PARCHMENT}` }}>
                 <span className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE }}>check_circle</span>
                 <span style={{ fontSize: "16px", color: INK }}>{tag}</span>
@@ -126,7 +126,7 @@ export default function MarketingProfileTabs({ company, similar }: { company: Co
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "32px" }}>
           <h2 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 24px" }}>Our Process</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-            {company.processSteps!.map((step, i) => (
+            {(company.processSteps ?? []).map((step, i) => (
               <div key={step.title} style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}>
                 <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: SAGE + "22", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "14px", fontWeight: 700, color: DF }}>{i + 1}</div>
                 <div>
@@ -141,7 +141,7 @@ export default function MarketingProfileTabs({ company, similar }: { company: Co
 
       {active === "faqs" && hasFaqs && (
         <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {company.faqs!.map((f) => (
+          {(company.faqs ?? []).map((f) => (
             <details key={f.question} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}>
               <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", cursor: "pointer", fontSize: "14px", fontWeight: 500, color: INK, listStyle: "none" }}>
                 {f.question}

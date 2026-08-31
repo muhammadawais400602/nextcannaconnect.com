@@ -85,7 +85,7 @@ function CarrierCard({ company }: { company: Company }) {
 
         {(company.serviceTags?.length ?? 0) > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
-            {company.serviceTags!.slice(0, 3).map((tag) => (
+            {(company.serviceTags ?? []).slice(0, 3).map((tag) => (
               <span key={tag} style={{ background: "#fbf9f8", color: "#1b1c1b", padding: "4px 8px", borderRadius: "0.25rem", fontSize: "12px", fontWeight: 600, border: `1px solid ${PARCHMENT}` }}>{tag}</span>
             ))}
           </div>

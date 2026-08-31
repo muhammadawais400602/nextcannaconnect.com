@@ -116,7 +116,7 @@ export default function RetailProfileTabs({ company, similar }: { company: Compa
       {/* FAQs */}
       {active === "faqs" && hasFaqs && (
         <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {company.faqs!.map((f) => (
+          {(company.faqs ?? []).map((f) => (
             <details key={f.question} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}>
               <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", cursor: "pointer", fontSize: "14px", fontWeight: 500, color: INK, listStyle: "none" }}>
                 {f.question}

@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { escapeHtml } from "@/lib/escapeHtml";
+import { rateLimit } from "@/lib/rateLimit";
 
 async function sendEmail(payload: { to: string; subject: string; html: string }) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -17,30 +19,38 @@ async function sendEmail(payload: { to: string; subject: string; html: string })
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    if (!rateLimit(`contact:${ip}`, 5, 60_000)) {
+      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+    }
+
     const { name, email, subject, message } = await request.json();
 
     if (!name || !email || !subject || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // Notify team
+    const eName = escapeHtml(name);
+    const eEmail = escapeHtml(email);
+    const eSubject = escapeHtml(subject);
+    const eMessage = escapeHtml(message);
+
     await sendEmail({
         to: "help@nextcannaconnect.com",
-        subject: `Contact form: ${subject} — ${name}`,
+        subject: `Contact form: ${eSubject} — ${eName}`,
         html: `
           <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
             <h2 style="color:#1A4A35">New Contact Form Submission</h2>
             <table style="width:100%;border-collapse:collapse;font-size:14px">
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Name</td><td style="padding:8px">${name}</td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Email</td><td style="padding:8px"><a href="mailto:${email}">${email}</a></td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Subject</td><td style="padding:8px">${subject}</td></tr>
-              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Message</td><td style="padding:8px;white-space:pre-wrap">${message}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Name</td><td style="padding:8px">${eName}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Email</td><td style="padding:8px"><a href="mailto:${eEmail}">${eEmail}</a></td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Subject</td><td style="padding:8px">${eSubject}</td></tr>
+              <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Message</td><td style="padding:8px;white-space:pre-wrap">${eMessage}</td></tr>
             </table>
           </div>
         `,
       });
 
-    // Auto-reply to sender
     await sendEmail({
       to: email,
       subject: "We received your message — NextCanna Connect",
@@ -50,13 +60,13 @@ export async function POST(request: NextRequest) {
             <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
           </div>
           <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-            <h2 style="color:#1A4A35;margin:0 0 16px">Thanks for reaching out, ${name}!</h2>
+            <h2 style="color:#1A4A35;margin:0 0 16px">Thanks for reaching out, ${eName}!</h2>
             <p style="line-height:1.6;color:#4A5E4A">
               We've received your message and will get back to you within 1–2 business days.
             </p>
             <div style="background:white;border:1px solid #E8EDE8;border-radius:8px;padding:16px;margin:24px 0">
               <p style="margin:0 0 8px;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;font-weight:600">Your message</p>
-              <p style="font-size:14px;color:#374151;margin:0;white-space:pre-wrap">${message}</p>
+              <p style="font-size:14px;color:#374151;margin:0;white-space:pre-wrap">${eMessage}</p>
             </div>
             <p style="line-height:1.6;color:#4A5E4A">
               In the meantime, feel free to explore our
