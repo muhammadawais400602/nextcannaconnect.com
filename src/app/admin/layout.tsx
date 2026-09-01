@@ -35,7 +35,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             N
           </div>
           <div>
-            <div style={{ fontSize: "13px", fontWeight: "700", color: "white" }}>NextCanna</div>
+            <div style={{ fontSize: "13px", fontWeight: "700", color: "white" }}>NextCanna Connect</div>
             <div style={{ fontSize: "11px", color: "#86A898", fontWeight: "500" }}>Admin Portal</div>
           </div>
         </div>

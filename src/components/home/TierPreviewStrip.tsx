@@ -35,7 +35,7 @@ const TIERS = [
     badgeColor: "#2d6e52",
     features: [
       "Full company profile page",
-      "NextCanna Select badge",
+      "NextCanna Connect Select badge",
       "Contact info visible",
       "RFP Bid Board access",
       "$9.99 per lead",

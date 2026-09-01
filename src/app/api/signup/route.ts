@@ -14,8 +14,8 @@ const TIER_LABELS: Record<string, string> = {
 };
 
 const TIER_PRICES: Record<string, { unit_amount: number; name: string }> = {
-  select: { unit_amount: 4999, name: "NextCanna Select — $49.99/mo" },
-  elite:  { unit_amount: 9900, name: "NextCanna Verified Pro — $99/mo" },
+  select: { unit_amount: 4999, name: "NextCanna Connect Select — $49.99/mo" },
+  elite:  { unit_amount: 9900, name: "NextCanna Connect Verified Pro — $99/mo" },
 };
 
 function getStripe() {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
+import FaqAccordion from "@/components/ui/FaqAccordion";
 
 export const metadata: Metadata = {
   title: "Pricing | NextCanna Connect",
@@ -40,11 +41,11 @@ const TIERS = [
     highlight: false,
     pill: null,
     description:
-      "A full company profile with the NextCanna Select badge and direct inbound leads.",
+      "A full company profile with the NextCanna Connect Select badge and direct inbound leads.",
     included: [
       "Everything in Unclaimed",
       "Full company profile page",
-      "NextCanna Select badge",
+      "NextCanna Connect Select badge",
       "Contact info on profile (phone, email, website)",
       "Enhanced directory card (2 field rows + tag pills)",
       "Contact form (inquiries to your email)",
@@ -78,7 +79,7 @@ const TIERS = [
       "The highest tier — full vetting, premium placement, and every tool to convert profile visitors into clients.",
     included: [
       "Everything in Select",
-      "Verified Pro badge (full vetting by NextCanna)",
+      "Verified Pro badge (full vetting by NextCanna Connect)",
       "Priority search placement",
       "All profile tabs unlocked (up to 7, category-specific)",
       "Full directory card (4 field rows + all tag pills)",
@@ -565,45 +566,26 @@ export default function PricingPage() {
           >
             Frequently Asked Questions
           </h2>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
+          <FaqAccordion
+            items={FAQS}
+            itemStyle={{
+              background: "white",
+              borderRadius: "12px",
+              border: "1px solid #E5E7EB",
             }}
-          >
-            {FAQS.map((faq) => (
-              <div
-                key={faq.q}
-                style={{
-                  background: "white",
-                  borderRadius: "12px",
-                  border: "1px solid #E5E7EB",
-                  padding: "22px 24px",
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    color: "#0D2818",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {faq.q}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "13px",
-                    color: "#6B7280",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {faq.a}
-                </p>
-              </div>
-            ))}
-          </div>
+            questionStyle={{
+              fontSize: "14px",
+              fontWeight: 700,
+              color: "#0D2818",
+              padding: "22px 24px",
+            }}
+            answerStyle={{
+              fontSize: "13px",
+              color: "#6B7280",
+              lineHeight: 1.7,
+              padding: "0 24px 22px",
+            }}
+          />
         </div>
       </section>
 
