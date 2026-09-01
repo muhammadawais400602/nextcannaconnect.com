@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
+import FaqAccordion from "@/components/ui/FaqAccordion";
 
 export const metadata: Metadata = {
   title: "Pricing | NextCanna Connect",
@@ -565,45 +566,26 @@ export default function PricingPage() {
           >
             Frequently Asked Questions
           </h2>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
+          <FaqAccordion
+            items={FAQS}
+            itemStyle={{
+              background: "white",
+              borderRadius: "12px",
+              border: "1px solid #E5E7EB",
             }}
-          >
-            {FAQS.map((faq) => (
-              <div
-                key={faq.q}
-                style={{
-                  background: "white",
-                  borderRadius: "12px",
-                  border: "1px solid #E5E7EB",
-                  padding: "22px 24px",
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: 700,
-                    color: "#0D2818",
-                    marginBottom: "8px",
-                  }}
-                >
-                  {faq.q}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "13px",
-                    color: "#6B7280",
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {faq.a}
-                </p>
-              </div>
-            ))}
-          </div>
+            questionStyle={{
+              fontSize: "14px",
+              fontWeight: 700,
+              color: "#0D2818",
+              padding: "22px 24px",
+            }}
+            answerStyle={{
+              fontSize: "13px",
+              color: "#6B7280",
+              lineHeight: 1.7,
+              padding: "0 24px 22px",
+            }}
+          />
         </div>
       </section>
 

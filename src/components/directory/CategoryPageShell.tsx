@@ -1,4 +1,5 @@
 import Link from "next/link";
+import FaqAccordion from "@/components/ui/FaqAccordion";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -168,17 +169,12 @@ export default function CategoryPageShell({
         <section style={{ background: "white", padding: "64px 0", borderTop: `1px solid ${PARCHMENT}` }}>
           <div className="cat-container" style={{ maxWidth: "768px" }}>
             <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "32px", fontWeight: 700, color: DF, margin: "0 0 32px", textAlign: "center" }}>Frequently Asked Questions</h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {faqs.map((f) => (
-                <details key={f.q} style={{ border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", background: "#fbf9f8" }}>
-                  <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", cursor: "pointer", fontSize: "14px", fontWeight: 500, color: "#1b1c1b", listStyle: "none" }}>
-                    {f.q}
-                    <span className="material-symbols-outlined" style={{ color: OUTLINE }}>expand_more</span>
-                  </summary>
-                  <div style={{ padding: "0 16px 16px", fontSize: "14px", color: VARIANT, lineHeight: 1.6 }}>{f.a}</div>
-                </details>
-              ))}
-            </div>
+            <FaqAccordion
+              items={faqs}
+              itemStyle={{ border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", background: "#fbf9f8" }}
+              answerStyle={{ color: VARIANT }}
+              chevronColor={OUTLINE}
+            />
           </div>
         </section>
       )}
