@@ -37,10 +37,10 @@ const TIERS = [
     badgeColor: "#2d6e52",
     highlight: false,
     pill: null,
-    description: "A full company profile with the NextCanna Select Seal and reduced lead pricing.",
+    description: "A full company profile with the NextCanna Connect Select Seal and reduced lead pricing.",
     features: [
       { label: "Full company page", included: true },
-      { label: "NextCanna Select Seal badge", included: true },
+      { label: "NextCanna Connect Select Seal badge", included: true },
       { label: "Contact info on profile", included: true },
       { label: "Enhanced directory card", included: true },
       { label: "Priority search placement", included: false },
@@ -59,7 +59,7 @@ const TIERS = [
     description: "The highest tier — full vetting, premium placement, and real-time calendar sync.",
     features: [
       { label: "Premium company page", included: true },
-      { label: "NextCanna Verified badge (full vetting)", included: true },
+      { label: "NextCanna Connect Verified badge (full vetting)", included: true },
       { label: "Priority search placement", included: true },
       { label: "Real-time calendar sync", included: true },
       { label: "Dedicated account support", included: true },

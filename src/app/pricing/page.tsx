@@ -40,11 +40,11 @@ const TIERS = [
     highlight: false,
     pill: null,
     description:
-      "A full company profile with the NextCanna Select badge and direct inbound leads.",
+      "A full company profile with the NextCanna Connect Select badge and direct inbound leads.",
     included: [
       "Everything in Unclaimed",
       "Full company profile page",
-      "NextCanna Select badge",
+      "NextCanna Connect Select badge",
       "Contact info on profile (phone, email, website)",
       "Enhanced directory card (2 field rows + tag pills)",
       "Contact form (inquiries to your email)",
@@ -78,7 +78,7 @@ const TIERS = [
       "The highest tier — full vetting, premium placement, and every tool to convert profile visitors into clients.",
     included: [
       "Everything in Select",
-      "Verified Pro badge (full vetting by NextCanna)",
+      "Verified Pro badge (full vetting by NextCanna Connect)",
       "Priority search placement",
       "All profile tabs unlocked (up to 7, category-specific)",
       "Full directory card (4 field rows + all tag pills)",
