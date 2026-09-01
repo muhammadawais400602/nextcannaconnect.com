@@ -44,7 +44,7 @@ function ImageUploader({
       {value ? (
         <div style={{ position: "relative", marginBottom: "10px" }}>
           <div style={{ position: "relative", width: "100%", height: "160px", borderRadius: "8px", overflow: "hidden", border: "1px solid #E5E7EB" }}>
-            <Image src={value} alt="Preview" fill style={{ objectFit: "cover" }} unoptimized />
+            <Image src={value} alt="Preview" fill style={{ objectFit: "cover" }} />
           </div>
           <button
             type="button"

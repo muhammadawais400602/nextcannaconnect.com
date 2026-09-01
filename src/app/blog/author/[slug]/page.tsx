@@ -12,7 +12,7 @@ import {
   stripHtml,
 } from "@/lib/wordpress";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -90,7 +90,7 @@ export default async function AuthorPage({ params, searchParams }: Props) {
                     <article className="blog-card" style={{ backgroundColor: "white", borderRadius: "16px", overflow: "hidden", border: "1px solid #e5e7eb", height: "100%", display: "flex", flexDirection: "column" }}>
                       <div style={{ position: "relative", height: "200px", backgroundColor: "#f3f4f6", flexShrink: 0 }}>
                         {img ? (
-                          <Image src={img} alt={post.title.rendered} fill style={{ objectFit: "cover" }} unoptimized />
+                          <Image src={img} alt={post.title.rendered} fill style={{ objectFit: "cover" }} />
                         ) : (
                           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #003320 0%, #1A4A35 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <span style={{ fontFamily: "'Noto Serif', serif", fontSize: "28px", fontStyle: "italic", color: "rgba(255,255,255,0.15)" }}>NC</span>

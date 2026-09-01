@@ -86,7 +86,7 @@ export default async function BlogPostPage({ params }: Props) {
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "0" }}>
             <div style={{ width: "40px", height: "40px", borderRadius: "50%", backgroundColor: "#003320", overflow: "hidden", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
               {authorAvatar ? (
-                <Image src={authorAvatar} alt={author} width={40} height={40} style={{ objectFit: "cover" }} unoptimized />
+                <Image src={authorAvatar} alt={author} width={40} height={40} style={{ objectFit: "cover" }} />
               ) : (
                 <span style={{ fontSize: "14px", fontWeight: 700, color: "white" }}>{author.charAt(0)}</span>
               )}
@@ -110,8 +110,7 @@ export default async function BlogPostPage({ params }: Props) {
             fill
             style={{ objectFit: "cover" }}
             priority
-            unoptimized
-          />
+                     />
         </div>
       )}
 
@@ -210,7 +209,7 @@ export default async function BlogPostPage({ params }: Props) {
                     <article style={{ borderRadius: "16px", overflow: "hidden", border: "1px solid #e5e7eb" }}>
                       <div style={{ position: "relative", height: "180px", backgroundColor: "#f3f4f6" }}>
                         {img ? (
-                          <Image src={img} alt={p.title.rendered} fill style={{ objectFit: "cover" }} unoptimized />
+                          <Image src={img} alt={p.title.rendered} fill style={{ objectFit: "cover" }} />
                         ) : (
                           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #003320 0%, #1A4A35 100%)" }} />
                         )}
