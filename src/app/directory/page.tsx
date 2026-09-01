@@ -5,7 +5,7 @@ import DirectoryLoader from "@/components/directory/DirectoryLoader";
 import DirectoryLoadingSkeleton from "@/components/directory/DirectoryLoadingSkeleton";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 120;
 
 export const metadata: Metadata = {
   title: "B2B Marketplace Directory | NextCanna Connect",

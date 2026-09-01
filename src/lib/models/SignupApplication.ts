@@ -47,6 +47,8 @@ const SignupApplicationSchema = new Schema<ISignupApplication>(
   { timestamps: true }
 );
 
+SignupApplicationSchema.index({ status: 1, createdAt: -1 });
+
 const SignupApplication: Model<ISignupApplication> =
   mongoose.models.SignupApplication ||
   mongoose.model<ISignupApplication>("SignupApplication", SignupApplicationSchema);
