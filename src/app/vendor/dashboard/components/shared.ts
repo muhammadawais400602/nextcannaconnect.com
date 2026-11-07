@@ -61,6 +61,8 @@ export interface VendorUser {
   fullName: string;
   companyName?: string;
   tier: string;
+  hasBilling?: boolean;
+  hasSubscription?: boolean;
 }
 
 export interface CompanyData {

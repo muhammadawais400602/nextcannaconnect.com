@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import SectionDivider from "@/components/ui/SectionDivider";
 import { CATEGORIES } from "@/data/categories";
@@ -135,6 +135,8 @@ function StepIndicator({ step }: { step: number }) {
 function SignUpForm() {
   const searchParams = useSearchParams();
   const initialTier = searchParams.get("tier") || "";
+  const claimSlug = searchParams.get("claim") || "";
+  const [claimInfo, setClaimInfo] = useState<{ name: string; category?: string; state?: string; claimed: boolean } | null>(null);
 
   const [step, setStep] = useState(1);
   const [selectedTier, setSelectedTier] = useState(initialTier);
@@ -151,6 +153,27 @@ function SignUpForm() {
     stateProvince: "",
     category: "",
   });
+
+  // Claiming an existing listing: show which one and pre-fill the company details.
+  useEffect(() => {
+    if (!claimSlug) return;
+    let cancelled = false;
+    fetch(`/api/claim-info?slug=${encodeURIComponent(claimSlug)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled || !d?.found) return;
+        setClaimInfo({ name: d.name, category: d.category, state: d.state, claimed: d.claimed });
+        setBasicForm((f) => ({
+          ...f,
+          companyName: f.companyName || d.name || "",
+          category: f.category || d.category || "",
+        }));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [claimSlug]);
 
   function handleBasicSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -169,7 +192,7 @@ function SignUpForm() {
       const res = await fetch("/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...basicForm, tier: selectedTier, ...extraFields }),
+        body: JSON.stringify({ ...basicForm, tier: selectedTier, ...(claimSlug ? { claimSlug } : {}), ...extraFields }),
       });
       if (!res.ok) {
         const data = await res.json();
@@ -222,6 +245,33 @@ function SignUpForm() {
     return (
       <div className="mx-auto" style={{ maxWidth: "640px" }}>
         <StepIndicator step={1} />
+        {claimInfo && (
+          <div
+            role="status"
+            style={{
+              background: claimInfo.claimed ? "#FEF2F2" : "#EEF6F1",
+              border: `1px solid ${claimInfo.claimed ? "#FECACA" : "#C6E0D0"}`,
+              color: claimInfo.claimed ? "#991B1B" : "#1A4A35",
+              borderRadius: "10px",
+              padding: "14px 16px",
+              marginBottom: "20px",
+              fontSize: "14px",
+              lineHeight: 1.5,
+            }}
+          >
+            {claimInfo.claimed ? (
+              <>
+                <strong>{claimInfo.name}</strong> has already been claimed. If this is your business, email{" "}
+                <a href="mailto:help@nextcannaconnect.com" style={{ color: "inherit", fontWeight: 600 }}>help@nextcannaconnect.com</a>.
+              </>
+            ) : (
+              <>
+                You&apos;re claiming <strong>{claimInfo.name}</strong>. Use an email address at your company&apos;s domain
+                so our team can verify you own the business quickly.
+              </>
+            )}
+          </div>
+        )}
         <form onSubmit={handleBasicSubmit} className="flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>

@@ -105,7 +105,7 @@ export default function RFPBoardPage() {
               Upgrade to Select ($19.99/mo) or Verified Pro ($39.99/mo) to view and respond to RFPs from buyers in your category.
             </p>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link href="/vendor/login" style={{ padding: "10px 20px", borderRadius: "8px", fontSize: "13px", fontWeight: 700, border: "1px solid #1A4A35", color: "#1A4A35", textDecoration: "none" }}>
+              <Link href="/signin" style={{ padding: "10px 20px", borderRadius: "8px", fontSize: "13px", fontWeight: 700, border: "1px solid #1A4A35", color: "#1A4A35", textDecoration: "none" }}>
                 Sign In
               </Link>
               <Link href="/pricing" style={{ padding: "10px 20px", borderRadius: "8px", fontSize: "13px", fontWeight: 700, background: "#1A4A35", color: "white", textDecoration: "none" }}>

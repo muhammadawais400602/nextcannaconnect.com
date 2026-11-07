@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { TIER_LABELS, TIER_COLORS, inputStyle, labelStyle, cardStyle, sectionTitle } from "./shared";
 import type { VendorUser } from "./shared";
 
@@ -23,6 +22,37 @@ export default function AccountTab({
   const [pwError, setPwError] = useState("");
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [billingLoading, setBillingLoading] = useState<string | null>(null);
+  const [billingError, setBillingError] = useState("");
+
+  async function openBilling(action: "upgrade" | "portal", tier?: "select" | "elite") {
+    setBillingError("");
+    setBillingLoading(tier ?? action);
+    try {
+      const res = await fetch("/api/vendor/billing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, tier }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.url) throw new Error(data.error || "Couldn't open billing.");
+      window.location.href = data.url;
+    } catch (err) {
+      setBillingError(err instanceof Error ? err.message : "Couldn't open billing.");
+      setBillingLoading(null);
+    }
+  }
+
+  const upgradeButton: React.CSSProperties = {
+    fontSize: "12px",
+    fontWeight: 700,
+    color: "white",
+    background: "#1A4A35",
+    padding: "6px 16px",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer",
+  };
 
   async function handleChangePassword(e: React.FormEvent) {
     e.preventDefault();
@@ -63,7 +93,7 @@ export default function AccountTab({
       {/* Current Plan */}
       <div style={{ ...cardStyle, marginBottom: "16px" }}>
         <h2 style={sectionTitle}>Current Plan</h2>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px", flexWrap: "wrap" }}>
           <span
             style={{
               padding: "5px 16px",
@@ -76,23 +106,35 @@ export default function AccountTab({
           >
             {tierLabel}
           </span>
+          {vendor.tier === "free" && (
+            <button type="button" style={upgradeButton} disabled={!!billingLoading} onClick={() => openBilling("upgrade", "select")}>
+              {billingLoading === "select" ? "Opening…" : "Upgrade to Select →"}
+            </button>
+          )}
           {vendor.tier !== "elite" && (
-            <Link
-              href="/membership"
-              style={{
-                fontSize: "12px",
-                fontWeight: 700,
-                color: "white",
-                background: "#1A4A35",
-                padding: "6px 16px",
-                borderRadius: "6px",
-                textDecoration: "none",
-              }}
+            <button type="button" style={upgradeButton} disabled={!!billingLoading} onClick={() => openBilling("upgrade", "elite")}>
+              {billingLoading === "elite" ? "Opening…" : "Upgrade to Verified Pro →"}
+            </button>
+          )}
+          {vendor.hasBilling && (
+            <button
+              type="button"
+              disabled={!!billingLoading}
+              onClick={() => openBilling("portal")}
+              style={{ ...upgradeButton, background: "white", color: "#1A4A35", border: "1px solid #C6E0D0" }}
             >
-              Upgrade Plan →
-            </Link>
+              {billingLoading === "portal" ? "Opening…" : "Manage billing"}
+            </button>
           )}
         </div>
+        {billingError && (
+          <p role="alert" style={{ fontSize: "13px", color: "#B91C1C", margin: "0 0 12px" }}>{billingError}</p>
+        )}
+        {vendor.hasSubscription && (
+          <p style={{ fontSize: "12px", color: "#6B7280", margin: "0 0 12px" }}>
+            Change plan, update your card, download invoices or cancel any time under &ldquo;Manage billing&rdquo;.
+          </p>
+        )}
 
         {vendor.tier === "free" && (
           <div style={{ background: "#FFFBF0", border: "1px solid #FDE68A", borderRadius: "8px", padding: "14px 16px" }}>

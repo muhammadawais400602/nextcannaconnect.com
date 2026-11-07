@@ -61,7 +61,7 @@ export default function PostRFPPage() {
       <div style={{ backgroundColor: "#F7F9F7", minHeight: "100vh", padding: "120px 20px", textAlign: "center" }}>
         <h1 style={{ fontSize: "20px", fontWeight: 700, color: "#0D2818", marginBottom: "12px" }}>Sign In Required</h1>
         <p style={{ color: "#6B7280", fontSize: "14px", marginBottom: "20px" }}>You need to sign in to post an RFP.</p>
-        <Link href="/vendor/login" style={{ padding: "12px 24px", borderRadius: "8px", fontSize: "14px", fontWeight: 700, background: "#1A4A35", color: "white", textDecoration: "none" }}>
+        <Link href="/signin" style={{ padding: "12px 24px", borderRadius: "8px", fontSize: "14px", fontWeight: 700, background: "#1A4A35", color: "white", textDecoration: "none" }}>
           Sign In
         </Link>
       </div>

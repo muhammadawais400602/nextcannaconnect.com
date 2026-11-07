@@ -33,14 +33,43 @@ export async function PATCH(
   try {
     await connectDB();
     const { id } = await params;
-    const { status } = await request.json();
+    const { status, confirmUnpaid } = await request.json();
 
     if (!["approved", "rejected", "pending"].includes(status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const app = await SignupApplication.findByIdAndUpdate(id, { status }, { new: true });
-    if (!app) return NextResponse.json({ error: "Application not found" }, { status: 404 });
+    const existingApp = await SignupApplication.findById(id);
+    if (!existingApp) return NextResponse.json({ error: "Application not found" }, { status: 404 });
+
+    // Don't silently approve a paid plan that hasn't been paid for.
+    if (status === "approved" && existingApp.paymentStatus === "awaiting_payment" && !confirmUnpaid) {
+      return NextResponse.json(
+        { error: "This applicant chose a paid plan but hasn't completed payment.", code: "UNPAID" },
+        { status: 409 },
+      );
+    }
+
+    // Never hand a listing that another account already owns to a new applicant.
+    let claimTarget: InstanceType<typeof Company> | null = null;
+    if (status === "approved") {
+      claimTarget = existingApp.claimSlug
+        ? await Company.findOne({ slug: existingApp.claimSlug })
+        : await Company.findOne({ email: existingApp.email });
+      if (claimTarget) {
+        const owner = await User.findOne({ companyId: claimTarget._id }).select("email").lean();
+        if (owner && owner.email !== existingApp.email) {
+          return NextResponse.json(
+            { error: `"${claimTarget.name}" is already owned by ${owner.email}. Resolve the ownership before approving.` },
+            { status: 409 },
+          );
+        }
+      }
+    }
+
+    existingApp.status = status;
+    await existingApp.save();
+    const app = existingApp;
 
     const tierLabel = TIER_LABELS[app.tier] ?? app.tier;
     const siteUrl = SITE_URL;
@@ -52,8 +81,13 @@ export async function PATCH(
       // Create Company record if one doesn't exist yet (best-effort — never blocks approval)
       let companyId: unknown = null;
       try {
-        let company = await Company.findOne({ email: app.email });
-        if (!company) {
+        let company = claimTarget;
+        if (company) {
+          // Existing / claimed listing: apply the plan the owner signed up (and paid) for.
+          company.tier = (TIER_MAP[app.tier] ?? "free") as typeof company.tier;
+          if (!company.email) company.email = app.email;
+          await company.save();
+        } else {
           const baseSlug = toSlug(app.companyName) || "company";
           let slug = baseSlug;
           let suffix = 2;
@@ -99,6 +133,8 @@ export async function PATCH(
         accountType: "vendor",
         tier: TIER_MAP[app.tier] ?? "free",
         ...(companyId ? { companyId } : {}),
+        ...(app.stripeCustomerId ? { stripeCustomerId: app.stripeCustomerId } : {}),
+        ...(app.stripeSubscriptionId ? { stripeSubscriptionId: app.stripeSubscriptionId } : {}),
         isActive: !!hasPassword,
       };
 

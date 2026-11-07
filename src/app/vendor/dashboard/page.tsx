@@ -31,7 +31,7 @@ export default function VendorDashboardPage() {
       fetch("/api/vendor/company").then((r) => (r.ok ? r.json() : null)),
     ]).then(([meData, companyData]) => {
       if (!meData) {
-        window.location.href = "/vendor/login";
+        window.location.href = "/signin";
         return;
       }
       setVendor(meData.user);
@@ -42,7 +42,7 @@ export default function VendorDashboardPage() {
       }
       setLoading(false);
     }).catch(() => {
-      window.location.href = "/vendor/login";
+      window.location.href = "/signin";
     });
   }
 
@@ -88,7 +88,7 @@ export default function VendorDashboardPage() {
 
   async function handleLogout() {
     await fetch("/api/auth/vendor-logout", { method: "POST" });
-    window.location.href = "/vendor/login";
+    window.location.href = "/signin";
   }
 
   if (loading) {

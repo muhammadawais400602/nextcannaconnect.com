@@ -18,8 +18,12 @@ export interface ISignupApplication extends Document {
   contactName?: string;
   categoryDetails?: Record<string, string>;
   status: "pending" | "approved" | "rejected";
-  paymentStatus: "not_required" | "awaiting_payment" | "paid";
+  paymentStatus: "not_required" | "awaiting_payment" | "paid" | "pending_manual";
   stripeSessionId?: string;
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  /** Slug of an existing unclaimed listing this applicant is claiming. */
+  claimSlug?: string;
   createdAt: Date;
 }
 
@@ -43,6 +47,9 @@ const SignupApplicationSchema = new Schema<ISignupApplication>(
     status:          { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
     paymentStatus:   { type: String, enum: ["not_required", "awaiting_payment", "paid", "pending_manual"], default: "not_required" },
     stripeSessionId: String,
+    stripeCustomerId: String,
+    stripeSubscriptionId: String,
+    claimSlug: String,
   },
   { timestamps: true }
 );
