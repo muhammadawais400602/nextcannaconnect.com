@@ -157,11 +157,12 @@ export default function VendorDashboardPage() {
               fontWeight: 800,
               color: "#1A4A35",
               fontFamily: "serif",
+              whiteSpace: "nowrap",
             }}
           >
             NextCanna Connect
           </Link>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
             {company && (
               <Link
                 href={`/vendor/${company.slug}`}
@@ -176,7 +177,7 @@ export default function VendorDashboardPage() {
                   padding: "5px 12px",
                 }}
               >
-                View Listing →
+                <span className="hidden sm:inline">View </span>Listing →
               </Link>
             )}
             <button
@@ -186,6 +187,7 @@ export default function VendorDashboardPage() {
                 border: "1px solid #E5E7EB",
                 borderRadius: "7px",
                 padding: "5px 12px",
+                whiteSpace: "nowrap",
                 fontSize: "13px",
                 color: "#6B7280",
                 cursor: "pointer",
@@ -414,15 +416,15 @@ export default function VendorDashboardPage() {
                 marginBottom: "8px",
               }}
             >
-              Your listing is being set up
+              Your listing is being reviewed
             </h2>
-            <p style={{ fontSize: "14px", color: "#6B7280", lineHeight: 1.6 }}>
-              Your company listing will appear here shortly. If it&apos;s been more than
-              a few minutes,{" "}
+            <p style={{ fontSize: "14px", color: "#6B7280", lineHeight: 1.6, maxWidth: "460px", margin: "0 auto" }}>
+              Our team checks every new business before it goes live — usually within 1–2 business
+              days. We&apos;ll email you the moment it&apos;s approved, and you&apos;ll be able to edit
+              your profile and see buyer inquiries right here. Questions?{" "}
               <a href="mailto:hello@nextcannaconnect.com" style={{ color: "#1A4A35" }}>
-                contact support
+                hello@nextcannaconnect.com
               </a>
-              .
             </p>
           </div>
         )}

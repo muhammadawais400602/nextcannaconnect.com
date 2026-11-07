@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Company } from "@/types";
 import FaqAccordion from "@/components/ui/FaqAccordion";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -194,7 +195,7 @@ export default function FinanceProfileTabs({ company, similar }: { company: Comp
                 </div>
                 <h4 style={{ fontSize: "14px", fontWeight: 700, color: INK, margin: "0 0 4px" }}>{c.name}</h4>
                 <p style={{ fontSize: "12px", color: VARIANT, margin: "0 0 8px" }}>{[c.location.city, c.location.state].filter(Boolean).join(", ")}</p>
-                {(c.tier === "elite" || c.tier === "select") && (
+                {isVerifiedListing(c) && (
                   <span style={{ fontSize: "12px", color: SAGE, background: "rgba(187,238,209,0.2)", padding: "2px 8px", borderRadius: "0.25rem", display: "inline-block", fontWeight: 600 }}>Verified</span>
                 )}
               </Link>

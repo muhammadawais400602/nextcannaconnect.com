@@ -2,9 +2,10 @@
 
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
+import { formatLocation, matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
 import Link from "next/link";
 import { Company } from "@/types";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -12,7 +13,7 @@ const PARCHMENT = "#EEEAE3";
 const VARIANT = "#414943";
 
 function isVerified(c: Company) {
-  return c.tier === "elite" || c.tier === "select";
+  return isVerifiedListing(c);
 }
 
 function StarRow({ rating }: { rating: number }) {
@@ -43,7 +44,8 @@ function StarRow({ rating }: { rating: number }) {
 
 function RetailCard({ company }: { company: Company }) {
   const verified = isVerified(company);
-  const detail = (label: string, value?: string) => (
+  // Rows with no data are skipped (cards used to show a column of "—").
+  const detail = (label: string, value?: string) => (value === undefined || value === null || value === "") ? null : (
     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
       <span style={{ color: VARIANT }}>{label}</span>
       <span style={{ fontWeight: 500, color: DF, letterSpacing: "0.01em" }}>{value || "—"}</span>
@@ -95,7 +97,7 @@ function RetailCard({ company }: { company: Company }) {
             <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
-              <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
+              <span>{formatLocation(company.location) || (company.statesServed?.some((s) => /nationwide/i.test(s)) ? "Nationwide" : "Location not listed")}</span>
             </div>
           </div>
         </div>

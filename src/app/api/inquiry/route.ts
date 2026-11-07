@@ -8,6 +8,7 @@ import { EMAIL_RE, isHoneypotTripped, str } from "@/lib/formGuard";
 import { sendEmail, emailLayout, emailButton, ADMIN_EMAIL } from "@/lib/email";
 import { escapeHtml } from "@/lib/escapeHtml";
 import { SITE_URL } from "@/lib/siteUrl";
+import { cleanEmail } from "@/lib/getCompaniesFromDB";
 
 export async function POST(req: NextRequest) {
   try {
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
 
     // Notify the vendor: the listing's public email plus the owner's account email.
     const owner = await User.findOne({ companyId: company._id }).select("email").lean();
-    const recipients = [...new Set([company.email, owner?.email].filter(Boolean) as string[])];
+    const recipients = [...new Set([cleanEmail(company.email), owner?.email].filter(Boolean) as string[])];
 
     const rows = [
       ["Name", name],

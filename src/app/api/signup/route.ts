@@ -1,6 +1,8 @@
 import { sendEmail, ADMIN_EMAIL } from "@/lib/email";
 import { createSubscriptionCheckout, isPaidTier, stripeConfigured } from "@/lib/stripe";
 import Company from "@/lib/models/Company";
+import { CATEGORIES } from "@/data/categories";
+import { setVendorSessionCookie } from "@/lib/verifyVendorSession";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
@@ -10,7 +12,7 @@ import { escapeHtml } from "@/lib/escapeHtml";
 import { rateLimit } from "@/lib/rateLimit";
 
 const TIER_LABELS: Record<string, string> = {
-  free: "Claimed (Free)",
+  free: "Free",
   select: "Select — $19.99/mo",
   elite: "Verified Pro — $39.99/mo",
 };
@@ -32,6 +34,12 @@ export async function POST(request: NextRequest) {
 
     if (!["free", "select", "elite"].includes(tier)) {
       return NextResponse.json({ error: "Please choose a plan" }, { status: 400 });
+    }
+    if (!category || !CATEGORIES.some((c) => c.slug === category)) {
+      return NextResponse.json({ error: "Please choose your business category" }, { status: 400 });
+    }
+    if (!stateProvince) {
+      return NextResponse.json({ error: "Please choose your state or province" }, { status: 400 });
     }
 
     if (!fullName || !companyName || !email || !tier) {
@@ -223,7 +231,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true });
+    // Free accounts are active straight away: sign them in so they land in
+    // their dashboard (which explains the listing is being reviewed).
+    const response = NextResponse.json({ success: true, signedIn: !isPaid });
+    if (!isPaid) {
+      const created = await User.findOne({ email: normalizedEmail }).select("_id sessionVersion");
+      if (created) setVendorSessionCookie(response, String(created._id), created.sessionVersion ?? 0);
+    }
+    return response;
   } catch (err) {
     console.error("[signup] Error:", err);
     return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });

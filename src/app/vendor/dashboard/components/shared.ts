@@ -1,7 +1,7 @@
 import type React from "react";
 
 export const TIER_LABELS: Record<string, string> = {
-  free: "Unclaimed",
+  free: "Free",
   select: "Select",
   elite: "Verified Pro",
 };

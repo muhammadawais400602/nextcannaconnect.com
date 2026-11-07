@@ -1,5 +1,7 @@
 import { Company } from "@/types";
+import ContactForm from "@/app/vendor/[slug]/ContactForm";
 import RealEstateProfileTabs from "./RealEstateProfileTabs";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -10,7 +12,7 @@ const SEC_CONTAINER = "#b8ebce";
 const ON_SEC_CONTAINER = "#3d6c55";
 
 export default function RealEstateProfile({ company }: { company: Company }) {
-  const verified = company.tier === "elite" || company.tier === "select";
+  const verified = isVerifiedListing(company);
 
   const stats = [
     company.foundedYear ? { label: "Established", value: String(company.foundedYear) } : null,
@@ -99,7 +101,7 @@ export default function RealEstateProfile({ company }: { company: Company }) {
                 </ul>
               )}
             </div>
-            <a href="#contact-info" style={{ width: "100%", background: "#FBF9F8", color: DF, fontSize: "14px", fontWeight: 500, padding: "12px 16px", borderRadius: "0.25rem", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxSizing: "border-box" }}>
+            <a href="#vendor-contact" style={{ width: "100%", background: "#FBF9F8", color: DF, fontSize: "14px", fontWeight: 500, padding: "12px 16px", borderRadius: "0.25rem", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxSizing: "border-box" }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>assignment</span>
               Request Project Quote
             </a>
@@ -132,6 +134,9 @@ export default function RealEstateProfile({ company }: { company: Company }) {
               </div>
             )}
 
+            <div id="vendor-contact" style={{ scrollMarginTop: "112px" }}>
+              <ContactForm companyName={company.name} vendorSlug={company.slug} serviceTags={company.serviceTags ?? []} />
+            </div>
             {/* Contact */}
             <div id="contact-info" style={{ scrollMarginTop: "96px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "24px" }}>
               <h3 style={{ fontSize: "20px", fontWeight: 600, color: DF, margin: "0 0 24px" }}>Contact Information</h3>

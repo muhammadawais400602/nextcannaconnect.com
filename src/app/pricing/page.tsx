@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const TIERS = [
   {
     key: "free",
-    name: "Unclaimed",
+    name: "Free",
     price: "$0",
     badge: null,
     highlight: false,
@@ -21,11 +21,11 @@ const TIERS = [
     included: [
       "Basic directory listing",
       "Business name, location & circular logo",
+      "Receive buyer inquiries by email",
     ],
     excluded: [
       "Full company profile",
       "Public contact information",
-      "Customer inquiry form",
       "Photo gallery",
       "Analytics dashboard",
     ],
@@ -43,19 +43,19 @@ const TIERS = [
     description:
       "Enhanced listing with a full company profile and business inquiries.",
     included: [
-      "Everything in Unclaimed",
+      "Everything in Free",
       "Full company profile page",
       "NextCanna Connect Select badge",
       "Public contact information",
       "Customer inquiry form",
-      "Photo gallery (up to 3 photos)",
+      "Photo gallery — up to 3 photos (coming soon)",
       "Basic enhanced directory card",
       "4 profile tabs",
     ],
     excluded: [
       "Priority search placement",
       "Video embedding & social links",
-      "Google Reviews integration",
+      "Google Reviews integration (coming soon)",
       "Analytics dashboard",
       "Verified Pro badge",
     ],
@@ -78,9 +78,9 @@ const TIERS = [
       "Priority search placement",
       "Profile tabs (up to 7)",
       "Premium enhanced directory card",
-      "Unlimited photo gallery",
+      "Unlimited photo gallery (coming soon)",
       "Video embedding & social links",
-      "Google Reviews integration",
+      "Google Reviews integration (coming soon)",
       "Analytics dashboard",
     ],
     excluded: [],
@@ -100,13 +100,13 @@ const COMPARISON_ROWS: {
   { feature: "Business Name, Location & Logo", free: "✓", select: "✓", elite: "✓" },
   { feature: "Full Company Profile", free: "—", select: "✓", elite: "✓" },
   { feature: "Public Contact Information", free: "—", select: "✓", elite: "✓" },
-  { feature: "Customer Inquiry Form", free: "—", select: "✓", elite: "✓" },
-  { feature: "Photo Gallery", free: "—", select: "Up to 3", elite: "Unlimited" },
+  { feature: "Customer Inquiry Form", free: "✓", select: "✓", elite: "✓" },
+  { feature: "Photo Gallery (coming soon)", free: "—", select: "Up to 3", elite: "Unlimited" },
   { feature: "Enhanced Directory Card", free: "—", select: "Basic", elite: "Premium" },
   { feature: "Profile Tabs", free: "—", select: "4", elite: "Up to 7" },
   { feature: "Priority Search Placement", free: "—", select: "—", elite: "✓" },
   { feature: "Video Embedding & Social Links", free: "—", select: "—", elite: "✓" },
-  { feature: "Google Reviews Integration", free: "—", select: "—", elite: "✓" },
+  { feature: "Google Reviews Integration (coming soon)", free: "—", select: "—", elite: "✓" },
   { feature: "Analytics Dashboard", free: "—", select: "—", elite: "✓" },
   { feature: "Verified Pro Badge", free: "—", select: "—", elite: "After verification" },
 ];
@@ -126,7 +126,7 @@ const FAQS = [
   },
   {
     q: "What happens to my listing if I cancel my subscription?",
-    a: "Your listing reverts to Unclaimed status — your business name and location remain visible in the directory but your profile page, contact info, and all paid features are hidden until you reactivate.",
+    a: "Your listing moves to the Free plan at the end of the billing period. It stays in the directory and you keep receiving buyer inquiries, but paid features (full profile, public contact details, badges, video and analytics) are hidden until you upgrade again.",
   },
 ];
 
@@ -483,7 +483,7 @@ export default function PricingPage() {
                         fontSize: "12px",
                       }}
                     >
-                      Unclaimed
+                      Free
                     </th>
                     <th
                       style={{

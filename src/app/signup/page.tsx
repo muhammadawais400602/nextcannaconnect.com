@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import SectionDivider from "@/components/ui/SectionDivider";
 import { CATEGORIES } from "@/data/categories";
 import { Check, X } from "lucide-react";
@@ -10,7 +11,7 @@ import CustomSelect from "@/components/ui/CustomSelect";
 const TIERS = [
   {
     key: "free",
-    name: "Unclaimed",
+    name: "Free",
     price: "$0",
     period: "/mo",
     badge: null,
@@ -22,6 +23,7 @@ const TIERS = [
     features: [
       { label: "Basic directory listing", included: true },
       { label: "Business name, location & logo", included: true },
+      { label: "Receive buyer inquiries by email", included: true },
       { label: "Full company profile", included: false },
       { label: "Public contact information", included: false },
       { label: "Photo gallery", included: false },
@@ -42,7 +44,7 @@ const TIERS = [
       { label: "Full company profile", included: true },
       { label: "NextCanna Connect Select badge", included: true },
       { label: "Public contact info & inquiry form", included: true },
-      { label: "Photo gallery (up to 3 photos)", included: true },
+      { label: "Photo gallery — up to 3 photos (coming soon)", included: true },
       { label: "Basic enhanced directory card", included: true },
     ],
   },
@@ -61,7 +63,7 @@ const TIERS = [
       { label: "Everything in Select", included: true },
       { label: "Verified Pro badge (after verification)", included: true },
       { label: "Priority search placement", included: true },
-      { label: "Unlimited photo gallery", included: true },
+      { label: "Unlimited photo gallery (coming soon)", included: true },
       { label: "Video embedding, social links & analytics", included: true },
     ],
   },
@@ -141,6 +143,7 @@ function SignUpForm() {
   const [step, setStep] = useState(1);
   const [selectedTier, setSelectedTier] = useState(initialTier);
   const [submitted, setSubmitted] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
@@ -203,6 +206,7 @@ function SignUpForm() {
         window.location.href = data.checkoutUrl;
         return;
       }
+      setSignedIn(!!data.signedIn);
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
@@ -231,11 +235,27 @@ function SignUpForm() {
         >
           ✓
         </div>
-        <h2 className="font-bold text-2xl mb-2">You&apos;re on the list!</h2>
+        <h2 className="font-bold text-2xl mb-2">Welcome, {basicForm.fullName.split(" ")[0]}!</h2>
         <p style={{ opacity: 0.85, fontSize: "15px", lineHeight: 1.6 }}>
-          Welcome, <strong>{basicForm.fullName}</strong>! We&apos;ve received your application for the{" "}
-          <strong>{tier?.name}</strong> plan. Check <strong>{basicForm.email}</strong> for next steps.
+          Your account is created on the <strong>{tier?.name}</strong> plan.
         </p>
+        <ol style={{ textAlign: "left", margin: "20px auto", padding: "0 0 0 20px", fontSize: "14px", lineHeight: 1.7, opacity: 0.9, maxWidth: "340px" }}>
+          <li>Our team reviews your listing — usually within 1–2 business days.</li>
+          <li>We email <strong>{basicForm.email}</strong> as soon as it&apos;s live.</li>
+          <li>Buyer inquiries arrive in your inbox and your dashboard.</li>
+        </ol>
+        {signedIn ? (
+          <Link
+            href="/vendor/dashboard"
+            style={{ display: "inline-block", marginTop: "8px", background: "white", color: "#1A4A35", fontWeight: 700, padding: "12px 24px", borderRadius: "8px", textDecoration: "none" }}
+          >
+            Go to your dashboard →
+          </Link>
+        ) : (
+          <p style={{ fontSize: "13px", opacity: 0.85, marginTop: "8px" }}>
+            You&apos;ll be able to sign in as soon as your account is activated — we&apos;ll email you.
+          </p>
+        )}
       </div>
     );
   }
@@ -307,8 +327,9 @@ function SignUpForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label style={labelStyle}>State / Province</label>
+              <label style={labelStyle}>State / Province *</label>
               <CustomSelect
+                required
                 value={basicForm.stateProvince}
                 onChange={(e) => setBasicForm({ ...basicForm, stateProvince: e.target.value })}
                 style={{ color: basicForm.stateProvince ? "#003320" : "#9CA3AF" }}
@@ -329,8 +350,8 @@ function SignUpForm() {
               </CustomSelect>
             </div>
             <div>
-              <label style={labelStyle}>Business Category</label>
-              <CustomSelect value={basicForm.category} onChange={(e) => setBasicForm({ ...basicForm, category: e.target.value })}>
+              <label style={labelStyle}>Business Category *</label>
+              <CustomSelect required value={basicForm.category} onChange={(e) => setBasicForm({ ...basicForm, category: e.target.value })}>
                 <option value="">Select a category...</option>
                 {CATEGORIES.map((cat) => (
                   <option key={cat.slug} value={cat.slug}>{cat.label}</option>

@@ -19,9 +19,9 @@ export default function DashboardTab({
   company: CompanyData | null;
   onTabChange: (tab: TabKey) => void;
 }) {
-  const { percent, incomplete } = getProfileCompletion(company);
+  const { percent, incomplete } = getProfileCompletion(company, vendor.tier);
   const tierStyle = TIER_COLORS[vendor.tier] ?? TIER_COLORS.free;
-  const tierLabel = TIER_LABELS[vendor.tier] ?? "Unclaimed";
+  const tierLabel = TIER_LABELS[vendor.tier] ?? "Free";
   const { inquiries, stats, loading, error } = useVendorLeads();
   const fmt = (n: number | undefined) => (loading ? "…" : n === undefined ? "—" : n.toLocaleString());
 

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ContactForm from "@/app/vendor/[slug]/ContactForm";
 import { Company } from "@/types";
 import TestingProfileTabs from "./TestingProfileTabs";
 
@@ -121,7 +122,11 @@ export default function TestingProfile({ company }: { company: Company }) {
           {/* Right sidebar */}
           <div className="ts-sidebar">
             <div id="contact-lab" style={{ scrollMarginTop: "112px", display: "flex", flexDirection: "column", gap: "24px" }}>
+              <div id="vendor-contact" style={{ scrollMarginTop: "112px" }}>
+              <ContactForm companyName={company.name} vendorSlug={company.slug} serviceTags={company.serviceTags ?? []} />
+            </div>
               {/* Contact Lab */}
+              {(company.phone || company.email || company.sampleIntakeHours) && (
               <div style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", padding: "24px" }}>
                 <h3 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: "0 0 16px", borderBottom: `1px solid ${PARCHMENT}`, paddingBottom: "8px" }}>Contact Lab</h3>
                 <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -152,11 +157,9 @@ export default function TestingProfile({ company }: { company: Company }) {
                       </div>
                     </li>
                   )}
-                  {!company.phone && !company.email && !company.sampleIntakeHours && (
-                    <li style={{ color: VARIANT, fontSize: "14px" }}>Contact details available on request.</li>
-                  )}
                 </ul>
               </div>
+              )}
 
               {/* Quick Facts */}
               {quickFacts.length > 0 && (

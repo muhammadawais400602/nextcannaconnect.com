@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useInView } from "@/hooks/useInView";
 import type { Company } from "@/types";
 import { formatLocation } from "@/lib/states";
+import { isVerifiedListing } from "@/lib/tier";
 
 const TIER_LABELS: Record<string, string> = {
   elite:  "Verified Pro",
@@ -158,7 +159,7 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
                         borderRadius: "2px",
                       }}
                     >
-                      {TIER_LABELS[company.tier] || "Listed"}
+                      {isVerifiedListing(company) ? TIER_LABELS[company.tier] || "Listed" : "Featured"}
                     </span>
                   </div>
                 </div>

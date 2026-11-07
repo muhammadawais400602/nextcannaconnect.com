@@ -32,6 +32,8 @@ export interface Company {
   category: CategorySlug;
   secondaryCategory?: CategorySlug;
   location: { address?: string; city: string; state: string; zip?: string };
+  /** True when a registered account owns this listing. */
+  claimed?: boolean;
   shortDescription: string;
   fullDescription?: string;
   serviceTags: string[];

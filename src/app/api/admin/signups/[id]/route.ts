@@ -14,7 +14,7 @@ function toSlug(str: string): string {
 }
 
 const TIER_LABELS: Record<string, string> = {
-  free: "Claimed (Free)",
+  free: "Free",
   select: "Select — $19.99/mo",
   elite: "Verified Pro — $39.99/mo",
 };
@@ -99,7 +99,9 @@ export async function PATCH(
             name: app.companyName,
             category: app.category || "consultants-advisors",
             tier: TIER_MAP[app.tier] ?? "free",
-            location: { city: "", state: app.stateProvince || "" },
+            // "All States (USA)" / "All Provinces (Canada)" are service areas, not a location.
+            location: { city: "", state: app.stateProvince && !app.stateProvince.startsWith("all-") ? app.stateProvince : "" },
+            statesServed: app.stateProvince === "all-us" ? ["Nationwide"] : app.stateProvince === "all-ca" ? ["All Canada"] : [],
             shortDescription: app.description || `${app.companyName} — cannabis industry professional`,
             email: app.email,
             phone: app.phone || "",

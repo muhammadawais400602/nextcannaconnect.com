@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Company } from "@/types";
 import ContactForm from "@/app/vendor/[slug]/ContactForm";
 import FinanceProfileTabs from "./FinanceProfileTabs";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export default function FinanceProfile({ company, similar }: Props) {
-  const verified = company.tier === "elite" || company.tier === "select";
+  const verified = isVerifiedListing(company);
 
   const pills = [
     company.licenseNumber ? { icon: "check_circle", label: "NMLS Licensed" } : null,

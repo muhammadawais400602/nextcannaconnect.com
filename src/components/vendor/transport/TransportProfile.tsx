@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Company } from "@/types";
 import TransportProfileTabs from "./TransportProfileTabs";
 import TransportQuoteForm from "./TransportQuoteForm";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -9,7 +10,7 @@ const PARCHMENT = "#EEEAE3";
 const VARIANT = "#414943";
 
 export default function TransportProfile({ company }: { company: Company }) {
-  const verified = company.tier === "elite" || company.tier === "select";
+  const verified = isVerifiedListing(company);
 
   const pills = [
     verified ? { icon: "verified_user", label: "License Verified" } : null,

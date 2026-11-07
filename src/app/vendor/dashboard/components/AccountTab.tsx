@@ -11,7 +11,7 @@ export default function AccountTab({
   vendor: VendorUser;
   onLogout: () => void;
 }) {
-  const tierLabel = TIER_LABELS[vendor.tier] ?? "Unclaimed";
+  const tierLabel = TIER_LABELS[vendor.tier] ?? "Free";
   const tierStyle = TIER_COLORS[vendor.tier] ?? TIER_COLORS.free;
 
   const [currentPassword, setCurrentPassword] = useState("");

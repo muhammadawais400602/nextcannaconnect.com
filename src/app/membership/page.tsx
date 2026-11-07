@@ -6,12 +6,12 @@ import { Check, X } from "lucide-react";
 export const metadata: Metadata = {
   title: "Membership Plans | NextCanna Connect",
   description:
-    "Choose the right membership tier for your cannabis business. Unclaimed, Select, and Verified Pro plans available.",
+    "Choose the right membership tier for your cannabis business. Free, Select, and Verified Pro plans available.",
 };
 
 const TIERS = [
   {
-    name: "Unclaimed",
+    name: "Free",
     price: "$0",
     period: "/mo",
     badge: null,
@@ -25,6 +25,7 @@ const TIERS = [
     features: [
       { label: "Basic directory listing", included: true },
       { label: "Business name, location & logo", included: true },
+      { label: "Receive buyer inquiries by email", included: true },
       { label: "Full company profile", included: false },
       { label: "Public contact information", included: false },
       { label: "Photo gallery", included: false },
@@ -47,7 +48,7 @@ const TIERS = [
       { label: "Full company profile", included: true },
       { label: "NextCanna Connect Select badge", included: true },
       { label: "Public contact info & inquiry form", included: true },
-      { label: "Photo gallery (up to 3 photos)", included: true },
+      { label: "Photo gallery — up to 3 photos (coming soon)", included: true },
       { label: "Basic enhanced directory card", included: true },
       { label: "4 profile tabs", included: true },
       { label: "Priority search placement", included: false },
@@ -70,9 +71,9 @@ const TIERS = [
       { label: "Everything in Select", included: true },
       { label: "Verified Pro badge (after verification)", included: true },
       { label: "Priority search placement", included: true },
-      { label: "Unlimited photo gallery", included: true },
+      { label: "Unlimited photo gallery (coming soon)", included: true },
       { label: "Video embedding & social links", included: true },
-      { label: "Google Reviews integration", included: true },
+      { label: "Google Reviews integration (coming soon)", included: true },
       { label: "Analytics dashboard", included: true },
     ],
     leadPrice: null,
@@ -84,13 +85,13 @@ const COMPARISON = [
   { feature: "Business Name, Location & Logo",unclaimed: true,   select: true,         verifiedPro: true },
   { feature: "Full Company Profile",          unclaimed: false,  select: true,         verifiedPro: true },
   { feature: "Public Contact Information",    unclaimed: false,  select: true,         verifiedPro: true },
-  { feature: "Customer Inquiry Form",         unclaimed: false,  select: true,         verifiedPro: true },
-  { feature: "Photo Gallery",                 unclaimed: false,  select: "Up to 3",    verifiedPro: "Unlimited" },
+  { feature: "Customer Inquiry Form",         unclaimed: true,   select: true,         verifiedPro: true },
+  { feature: "Photo Gallery (coming soon)",                 unclaimed: false,  select: "Up to 3",    verifiedPro: "Unlimited" },
   { feature: "Enhanced Directory Card",       unclaimed: false,  select: "Basic",      verifiedPro: "Premium" },
   { feature: "Profile Tabs",                  unclaimed: false,  select: "4",          verifiedPro: "Up to 7" },
   { feature: "Priority Search Placement",     unclaimed: false,  select: false,        verifiedPro: true },
   { feature: "Video Embedding & Social Links",unclaimed: false,  select: false,        verifiedPro: true },
-  { feature: "Google Reviews Integration",    unclaimed: false,  select: false,        verifiedPro: true },
+  { feature: "Google Reviews Integration (coming soon)",    unclaimed: false,  select: false,        verifiedPro: true },
   { feature: "Analytics Dashboard",           unclaimed: false,  select: false,        verifiedPro: true },
   { feature: "Verified Pro Badge",            unclaimed: false,  select: false,        verifiedPro: "After verification" },
 ];
@@ -221,7 +222,7 @@ export default function MembershipPage() {
                   <th className="px-5 py-4 text-left" style={{ fontSize: "13px", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
                     Feature
                   </th>
-                  {["Unclaimed", "Select", "Verified Pro"].map((t) => (
+                  {["Free", "Select", "Verified Pro"].map((t) => (
                     <th key={t} className="px-4 py-4 text-center" style={{ fontSize: "13px", color: "white", fontWeight: 700 }}>
                       {t}
                     </th>

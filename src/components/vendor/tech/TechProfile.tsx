@@ -1,4 +1,5 @@
 import { Company } from "@/types";
+import ContactForm from "@/app/vendor/[slug]/ContactForm";
 import TechProfileTabs from "./TechProfileTabs";
 
 const DF = "#003320";
@@ -16,8 +17,10 @@ export default function TechProfile({ company }: { company: Company }) {
     company.pricingModel ? { label: "Pricing Model", value: company.pricingModel } : null,
   ].filter(Boolean) as { label: string; value: string }[];
 
-  const trialHref = company.website || "/signup";
-  const demoHref = company.email ? `mailto:${company.email}` : "/contact";
+  // Both actions reach the vendor: their own site for a trial, our contact form for a demo
+  // (these used to fall back to NextCanna's own signup/contact pages).
+  const trialHref = company.website;
+  const demoHref = "#vendor-contact";
 
   return (
     <div style={{ background: "#fbf9f8", fontFamily: "'Inter', sans-serif", color: "#1b1c1b", paddingTop: "70px" }}>
@@ -69,10 +72,12 @@ export default function TechProfile({ company }: { company: Company }) {
             <div id="engage-vendor" style={{ scrollMarginTop: "96px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "24px", boxShadow: "0 4px 24px rgba(0,51,32,0.04)" }}>
               <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#001c10", margin: "0 0 16px" }}>Engage Vendor</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                <a href={trialHref} target={company.website ? "_blank" : undefined} rel="noopener noreferrer" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", background: DF, color: "white", padding: "12px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
-                  <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>play_arrow</span>
-                  Start Free Trial
-                </a>
+                {trialHref && (
+                  <a href={trialHref} target="_blank" rel="noopener noreferrer" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", background: DF, color: "white", padding: "12px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
+                    <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>language</span>
+                    Visit Website
+                  </a>
+                )}
                 <a href={demoHref} style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", background: "transparent", border: `1px solid ${DF}`, color: DF, padding: "12px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
                   <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>calendar_today</span>
                   Book a Demo
@@ -92,6 +97,9 @@ export default function TechProfile({ company }: { company: Company }) {
                   </ul>
                 </div>
               )}
+            </div>
+            <div id="vendor-contact" style={{ scrollMarginTop: "112px" }}>
+              <ContactForm companyName={company.name} vendorSlug={company.slug} serviceTags={company.serviceTags ?? []} />
             </div>
           </div>
         </div>

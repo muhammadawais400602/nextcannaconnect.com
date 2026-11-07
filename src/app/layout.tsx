@@ -5,6 +5,7 @@ import { SITE_URL } from "@/lib/siteUrl";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import BrokenImageGuard from "@/components/BrokenImageGuard";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -68,6 +69,7 @@ export default function RootLayout({
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <BrokenImageGuard />
       </body>
     </html>
   );

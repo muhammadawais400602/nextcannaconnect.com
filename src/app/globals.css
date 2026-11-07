@@ -398,3 +398,8 @@ textarea:focus {
 .delay-675 { animation-delay: 675ms; }
 .delay-750 { animation-delay: 750ms; }
 .delay-825 { animation-delay: 825ms; }
+
+/* Hidden by BrokenImageGuard when a (scraped) image link is dead. */
+img.img-broken {
+  visibility: hidden;
+}

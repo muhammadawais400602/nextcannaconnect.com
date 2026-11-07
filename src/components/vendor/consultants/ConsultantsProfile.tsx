@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Company } from "@/types";
 import ContactForm from "@/app/vendor/[slug]/ContactForm";
 import ConsultantsProfileTabs from "./ConsultantsProfileTabs";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export default function ConsultantsProfile({ company, similar }: Props) {
-  const verified = company.tier === "elite" || company.tier === "select";
+  const verified = isVerifiedListing(company);
 
   const pills = [
     verified ? { icon: "check_circle", label: "Industry Verified" } : null,
@@ -114,8 +115,8 @@ export default function ConsultantsProfile({ company, similar }: Props) {
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", minWidth: "200px" }}>
-            <a href="#get-in-touch" style={{ background: DF, color: "white", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, padding: "12px 24px", textAlign: "center", textDecoration: "none" }}>Book Free Consultation</a>
-            <a href="#get-in-touch" style={{ border: `1px solid ${DF}`, color: DF, borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, padding: "12px 24px", textAlign: "center", textDecoration: "none" }}>View Case Studies</a>
+            <a href="#get-in-touch" style={{ background: DF, color: "white", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, padding: "12px 24px", textAlign: "center", textDecoration: "none" }}>Request a Consultation</a>
+            <a href="#get-in-touch" style={{ border: `1px solid ${DF}`, color: DF, borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, padding: "12px 24px", textAlign: "center", textDecoration: "none" }}>Send a Message</a>
           </div>
         </div>
 
