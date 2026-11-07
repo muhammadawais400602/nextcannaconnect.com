@@ -130,6 +130,7 @@ function DangerCard({ title, description, scope }: { title: string; description:
 
 function RemoveAllCompaniesCard() {
   const [phase, setPhase] = useState<"idle" | "confirm" | "loading" | "done">("idle");
+  const [typed, setTyped] = useState("");
   const [result, setResult] = useState<{ removed: number } | null>(null);
   const [error, setError] = useState("");
 
@@ -140,7 +141,7 @@ function RemoveAllCompaniesCard() {
       const res = await fetch("/api/admin/remove-all-companies", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ confirm: "REMOVE ALL" }),
+        body: JSON.stringify({ confirm: typed }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Removal failed");
@@ -157,7 +158,7 @@ function RemoveAllCompaniesCard() {
       <div style={{ padding: "20px 24px", borderBottom: "1px solid #FEE2E2", background: "#FFF5F5" }}>
         <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#DC2626", margin: 0 }}>🗑️ Remove All Companies</h2>
         <p style={{ fontSize: "13px", color: "#7F1D1D", margin: "4px 0 0" }}>
-          One-click removal of every company listing currently showing on the frontend. Users and signups are kept.
+          Removes every company listing on the site. Users and signups are kept. Use Data Cleanup for targeted fixes instead.
         </p>
       </div>
       <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
@@ -171,11 +172,20 @@ function RemoveAllCompaniesCard() {
         ) : phase === "confirm" ? (
           <div style={{ padding: "20px", background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: "10px" }}>
             <p style={{ fontSize: "14px", fontWeight: 600, color: "#92400E", margin: "0 0 16px" }}>
-              ⚠️ This will permanently remove ALL company listings from the database. Are you sure?
+              ⚠️ This permanently deletes ALL company listings — including listings owned by your members. It cannot be undone.
+              Type <strong>REMOVE ALL</strong> to confirm.
             </p>
+            <input
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              placeholder="REMOVE ALL"
+              aria-label="Type REMOVE ALL to confirm"
+              style={{ width: "100%", padding: "10px", border: "1px solid #FED7AA", borderRadius: "8px", marginBottom: "12px", boxSizing: "border-box" }}
+            />
             <div style={{ display: "flex", gap: "10px" }}>
               <button
                 onClick={handleRemove}
+                disabled={typed !== "REMOVE ALL"}
                 style={{ flex: 1, padding: "11px", background: "#DC2626", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}
               >
                 Yes, Remove All Companies
@@ -295,6 +305,7 @@ export default function SettingsPage() {
   const [cleanupResult, setCleanupResult] = useState<CleanupResult | null>(null);
   const [cleanupError, setCleanupError]   = useState("");
   const [confirmClean, setConfirmClean]   = useState(false);
+  const [cleanTyped, setCleanTyped]       = useState("");
 
   // ── Drag & drop ───────────────────────────────────────────────────────────
   const onDrop = useCallback((e: React.DragEvent) => {
@@ -372,7 +383,11 @@ export default function SettingsPage() {
     setCleanupError("");
     setCleanupResult(null);
     try {
-      const res  = await fetch("/api/admin/cleanup", { method: "POST" });
+      const res  = await fetch("/api/admin/cleanup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ confirm: cleanTyped }),
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Cleanup failed");
       setCleanupResult(data);
@@ -607,9 +622,10 @@ export default function SettingsPage() {
 
           {/* Cleanup Card */}
           <div style={{ ...card, borderTop: "3px solid #EF4444" }}>
-            <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>🧹 Clean Up Test Accounts</h2>
+            <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: "0 0 6px" }}>🧹 Delete All Free Accounts</h2>
             <p style={{ fontSize: "13px", color: "#6B7280", margin: "0 0 20px" }}>
-              Removes all free-tier (unclaimed) vendor accounts, their linked companies, and any rejected signup applications.
+              Deletes <strong>every</strong> free-plan vendor account, their linked company listings and signup applications —
+              this includes real members, not just test accounts. Only use it before launch.
             </p>
 
             {cleanupResult ? (
@@ -623,10 +639,19 @@ export default function SettingsPage() {
               </div>
             ) : confirmClean ? (
               <div style={{ padding: "20px", background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: "10px" }}>
-                <p style={{ fontSize: "14px", fontWeight: 600, color: "#92400E", margin: "0 0 16px" }}>⚠️ Are you sure? This cannot be undone.</p>
+                <p style={{ fontSize: "14px", fontWeight: 600, color: "#92400E", margin: "0 0 12px" }}>
+                  ⚠️ This permanently deletes all free members and their listings. Type <strong>DELETE FREE ACCOUNTS</strong> to confirm.
+                </p>
+                <input
+                  value={cleanTyped}
+                  onChange={(e) => setCleanTyped(e.target.value)}
+                  placeholder="DELETE FREE ACCOUNTS"
+                  aria-label="Type DELETE FREE ACCOUNTS to confirm"
+                  style={{ width: "100%", padding: "10px", border: "1px solid #FED7AA", borderRadius: "8px", marginBottom: "12px", boxSizing: "border-box" }}
+                />
                 <div style={{ display: "flex", gap: "10px" }}>
-                  <button onClick={handleCleanup} disabled={cleaning} style={{ flex: 1, padding: "11px", background: "#EF4444", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: cleaning ? "not-allowed" : "pointer" }}>
-                    {cleaning ? "Cleaning…" : "Yes, delete test data"}
+                  <button onClick={handleCleanup} disabled={cleaning || cleanTyped !== "DELETE FREE ACCOUNTS"} style={{ flex: 1, padding: "11px", background: "#EF4444", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: cleaning ? "not-allowed" : "pointer" }}>
+                    {cleaning ? "Deleting…" : "Delete all free accounts"}
                   </button>
                   <button onClick={() => setConfirmClean(false)} style={{ flex: 1, padding: "11px", background: "white", color: "#374151", border: "1px solid #D1D5DB", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer" }}>
                     Cancel
@@ -635,7 +660,7 @@ export default function SettingsPage() {
               </div>
             ) : (
               <button onClick={() => setConfirmClean(true)} style={{ padding: "11px 24px", background: "rgba(239,68,68,0.08)", color: "#EF4444", border: "1px solid rgba(239,68,68,0.2)", borderRadius: "8px", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>
-                Clean Up Test Data
+                Delete All Free Accounts…
               </button>
             )}
 

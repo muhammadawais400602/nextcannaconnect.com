@@ -1,12 +1,17 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import Company from "@/lib/models/Company";
 import SignupApplication from "@/lib/models/SignupApplication";
 import mongoose from "mongoose";
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    // This deletes EVERY free-plan account (real members included) — require a typed phrase.
+    const body = await request.json().catch(() => ({}));
+    if (body?.confirm !== "DELETE FREE ACCOUNTS") {
+      return NextResponse.json({ error: 'Type "DELETE FREE ACCOUNTS" to confirm.' }, { status: 400 });
+    }
     await connectDB();
 
     // Find all free-tier users and collect their companyIds
