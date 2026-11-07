@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import { rateLimit } from "@/lib/rateLimit";
+import { setVendorSessionCookie } from "@/lib/verifyVendorSession";
 
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    if (!rateLimit(`vendor-login:${ip}`, 10, 60_000)) {
+    if (!await rateLimit(`vendor-login:${ip}`, 10, 60_000)) {
       return NextResponse.json({ error: "Too many login attempts. Please try again later." }, { status: 429 });
     }
 
@@ -34,22 +34,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
-    const vendorSecret = process.env.ADMIN_SECRET || "fallback-vendor-secret";
-    const payload = `${user._id}:${Date.now()}`;
-    const sig = crypto.createHmac("sha256", vendorSecret).update(payload).digest("hex");
-    const session = `nc-vendor:${payload}:${sig}`;
     const response = NextResponse.json({
       success: true,
       user: { email: user.email, fullName: user.fullName, companyName: user.companyName, tier: user.tier },
     });
-
-    response.cookies.set("vendor_session", session, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: "/",
-    });
+    setVendorSessionCookie(response, String(user._id), user.sessionVersion ?? 0);
 
     return response;
   } catch (err) {

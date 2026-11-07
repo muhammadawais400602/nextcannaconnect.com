@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import mongoose, { Schema } from "mongoose";
+import { rateLimit, clientIp } from "@/lib/rateLimit";
+import { isHoneypotTripped } from "@/lib/formGuard";
 
 interface ISubscriber {
   email: string;
@@ -18,7 +20,11 @@ const Subscriber =
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = await req.json().catch(() => ({}));
+    if (isHoneypotTripped(body)) return NextResponse.json({ ok: true, message: "Successfully subscribed!" });
+    if (!(await rateLimit(`newsletter:${clientIp(req)}`, 5, 10 * 60_000))) {
+      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+    }
     const email = (body.email ?? "").trim().toLowerCase();
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -32,7 +38,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: true, message: "You're already subscribed!" });
     }
 
-    await Subscriber.create({ email, source: body.source ?? "blog" });
+    await Subscriber.create({ email, source: typeof body.source === "string" ? body.source.slice(0, 40) : "blog" });
     return NextResponse.json({ ok: true, message: "Successfully subscribed!" });
   } catch (err: unknown) {
     if (err && typeof err === "object" && "code" in err && (err as { code: number }).code === 11000) {

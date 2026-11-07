@@ -7,6 +7,8 @@ import ProfileCompletionBar, {
 import { TIER_LABELS, TIER_COLORS, cardStyle } from "./shared";
 import type { VendorUser, CompanyData } from "./shared";
 import type { TabKey } from "./TabNavigation";
+import { useVendorLeads } from "./useVendorLeads";
+import InquiryList from "./InquiryList";
 
 export default function DashboardTab({
   vendor,
@@ -17,15 +19,14 @@ export default function DashboardTab({
   company: CompanyData | null;
   onTabChange: (tab: TabKey) => void;
 }) {
-  const { percent, incomplete } = getProfileCompletion(company);
+  const { percent, incomplete } = getProfileCompletion(company, vendor.tier);
   const tierStyle = TIER_COLORS[vendor.tier] ?? TIER_COLORS.free;
-  const tierLabel = TIER_LABELS[vendor.tier] ?? "Unclaimed";
+  const tierLabel = TIER_LABELS[vendor.tier] ?? "Free";
+  const { inquiries, stats, loading, error } = useVendorLeads();
+  const fmt = (n: number | undefined) => (loading ? "…" : n === undefined ? "—" : n.toLocaleString());
 
-  const listingStatus = company
-    ? vendor.tier === "free"
-      ? "Unclaimed"
-      : "Active"
-    : "Pending";
+  // A linked company means the listing is claimed and live, on any plan.
+  const listingStatus = company ? "Active" : "Pending";
 
   const statusColor =
     listingStatus === "Active"
@@ -43,8 +44,8 @@ export default function DashboardTab({
         className="grid grid-cols-2 lg:grid-cols-4"
         style={{ gap: "12px", marginBottom: "24px" }}
       >
-        <StatCard label="Profile Views" value="—" sub="Last 30 days" />
-        <StatCard label="Inquiries" value="—" sub="Last 30 days" />
+        <StatCard label="Profile Views" value={fmt(stats?.views30)} sub="Last 30 days" />
+        <StatCard label="Inquiries" value={fmt(stats?.inquiries30)} sub="Last 30 days" />
         <StatCard
           label="Listing Status"
           value={listingStatus}
@@ -154,31 +155,21 @@ export default function DashboardTab({
           >
             Recent Inquiries
           </h3>
-          <button
-            onClick={() => onTabChange("analytics")}
-            style={{
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "#1A4A35",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-            }}
-          >
-            View All →
-          </button>
         </div>
-        <div
-          style={{
-            textAlign: "center",
-            padding: "24px",
-            color: "#9CA3AF",
-            fontSize: "13px",
-          }}
-        >
-          No inquiries yet. Once visitors contact you through your listing,
-          they&apos;ll appear here.
-        </div>
+        <InquiryList inquiries={inquiries} loading={loading} error={error} limit={5} />
+        {inquiries.length > 5 && (
+          <p style={{ fontSize: "12px", color: "#6B7280", margin: "12px 0 0" }}>
+            Showing the 5 most recent of {stats?.inquiriesTotal ?? inquiries.length} inquiries.
+            {vendor.tier === "elite" && (
+              <button
+                onClick={() => onTabChange("analytics")}
+                style={{ marginLeft: "8px", fontSize: "12px", fontWeight: 600, color: "#1A4A35", background: "none", border: "none", cursor: "pointer" }}
+              >
+                View all →
+              </button>
+            )}
+          </p>
+        )}
       </div>
 
       {/* View Listing */}

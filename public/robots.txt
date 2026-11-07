@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /admin
+Disallow: /vendor/dashboard
+Disallow: /set-password
+Disallow: /reset-password
+Disallow: /forgot-password
+Disallow: /signup/success
 
 Sitemap: https://nextcannaconnect.com/sitemap.xml

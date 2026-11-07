@@ -17,6 +17,10 @@ export interface IUser extends Document {
   setupToken?: string;
   setupTokenExpires?: Date;
   isActive: boolean;
+  /** Incremented on logout / password change to revoke existing sessions. */
+  sessionVersion?: number;
+  resetToken?: string;
+  resetTokenExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -38,6 +42,9 @@ const UserSchema = new Schema<IUser>(
     setupToken: { type: String, index: true },
     setupTokenExpires: Date,
     isActive: { type: Boolean, default: false },
+    sessionVersion: { type: Number, default: 0 },
+    resetToken: { type: String, index: true },
+    resetTokenExpires: Date,
   },
   { timestamps: true }
 );

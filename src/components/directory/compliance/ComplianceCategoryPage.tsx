@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import ComplianceListingsGrid from "./ComplianceListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function ComplianceCategoryPage() {
   const companies = await getCompaniesByCategory("compliance-legal");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function ComplianceCategoryPage() {
       title="Compliance & Legal"
       description="Cannabis-specialized attorneys, licensing experts, and regulatory compliance professionals."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Firms` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Firms` },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "gavel", label: "Licensing to M&A" },
       ]}

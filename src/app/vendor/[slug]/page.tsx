@@ -1,4 +1,7 @@
 import { notFound } from "next/navigation";
+import VendorJsonLd from "@/components/vendor/VendorJsonLd";
+import VendorMediaSection from "@/components/vendor/VendorMediaSection";
+
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +25,7 @@ import ConsultantsProfile from "@/components/vendor/consultants/ConsultantsProfi
 import MarketingProfile from "@/components/vendor/marketing/MarketingProfile";
 import ComplianceProfile from "@/components/vendor/compliance/ComplianceProfile";
 import FinanceProfile from "@/components/vendor/finance/FinanceProfile";
+import { formatLocation } from "@/lib/states";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -33,19 +37,24 @@ export const dynamicParams = true;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const company = await getCompanyBySlugFresh(slug);
-  if (!company) return {};
+  // Throwing here (before the page streams) makes unknown vendors return a real 404 status.
+  if (!company) notFound();
   const title = `${company.name} | NextCanna Connect`;
-  const description = company.shortDescription || `${company.name} — verified cannabis business on NextCanna Connect.`;
+  const description = company.shortDescription || `${company.name} — cannabis industry business on NextCanna Connect.`;
   const location = [company.location?.city, company.location?.state].filter(Boolean).join(", ");
   const fullDescription = location ? `${description} Located in ${location}.` : description;
+  // Unclaimed free listings only show a "claim this listing" page — keep those
+  // thin pages out of search results (links on them are still followed).
+  const thin = company.tier === "free" && !company.claimed;
   return {
     title,
     description: fullDescription,
+    ...(thin ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title,
       description: fullDescription,
       type: "profile",
-      url: `https://nextcannaconnect.com/vendor/${slug}`,
+      url: `/vendor/${slug}`,
       siteName: "NextCanna Connect",
       ...(company.bannerImageUrl && !company.bannerImageUrl.includes("picsum.photos")
         ? { images: [{ url: company.bannerImageUrl, width: 1200, height: 630, alt: company.name }] }
@@ -76,7 +85,7 @@ function SimilarCard({ company }: { company: Company }) {
         {company.location && (
           <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "8px", fontSize: "11px", color: "#9CA3AF" }}>
             <MapPin size={10} />
-            {company.location.city}, {company.location.state}
+            {formatLocation(company.location) || "Location not listed"}
           </div>
         )}
       </div>
@@ -93,11 +102,26 @@ export default async function VendorPage({ params }: Props) {
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
-  const tracker = <ProfileViewTracker slug={company.slug} />;
-  const claimBanner = company.tier === "free" ? <ClaimBanner slug={company.slug} /> : null;
+  const tracker = (
+    <>
+      <ProfileViewTracker slug={company.slug} />
+      <VendorJsonLd company={company} />
+    </>
+  );
+  // A listing is claimed once an account owns it, on any plan. Free-plan owners
+  // used to see "This listing has not been claimed yet" on their own page.
+  // Claimed = a registered account owns the listing. Imported listings that were
+  // stored on a paid tier keep their full profile but still invite the real
+  // business to claim it (and show no "verified" badges).
+  const isClaimed = !!company.claimed;
+  const claimBanner = !isClaimed ? <ClaimBanner slug={company.slug} /> : null;
+  // Free plan: direct contact details are a paid feature (see /pricing); buyers
+  // still reach the business through the contact form.
+  const profileCompany =
+    company.tier === "free" ? { ...company, email: undefined, phone: undefined, website: undefined } : company;
 
-  // UNCLAIMED — show claim page instead of full profile
-  if (company.tier === "free") {
+  // UNCLAIMED free listing — show claim page instead of full profile
+  if (!isClaimed && company.tier === "free") {
     return (
       <div style={{ backgroundColor: "#F7F9F7", minHeight: "100vh" }}>
         {tracker}
@@ -152,51 +176,51 @@ export default async function VendorPage({ params }: Props) {
   }
 
   if (company.category === "retail-dispensary") {
-    return <>{claimBanner}{tracker}<RetailProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<RetailProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "transportation-logistics") {
-    return <>{claimBanner}{tracker}<TransportProfile company={company} /></>;
+    return <>{claimBanner}{tracker}<TransportProfile company={profileCompany} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "testing-science") {
-    return <>{claimBanner}{tracker}<TestingProfile company={company} /></>;
+    return <>{claimBanner}{tracker}<TestingProfile company={profileCompany} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "technology-software") {
-    return <>{claimBanner}{tracker}<TechProfile company={company} /></>;
+    return <>{claimBanner}{tracker}<TechProfile company={profileCompany} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "real-estate-construction") {
-    return <>{claimBanner}{tracker}<RealEstateProfile company={company} /></>;
+    return <>{claimBanner}{tracker}<RealEstateProfile company={profileCompany} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "cultivation-growing") {
-    return <>{claimBanner}{tracker}<CultivationProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<CultivationProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "manufacturers-suppliers") {
-    return <>{claimBanner}{tracker}<ManufacturersProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<ManufacturersProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "extraction-processing") {
-    return <>{claimBanner}{tracker}<ExtractionProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<ExtractionProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "consultants-advisors") {
-    return <>{claimBanner}{tracker}<ConsultantsProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<ConsultantsProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "marketing-branding-packaging") {
-    return <>{claimBanner}{tracker}<MarketingProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<MarketingProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "compliance-legal") {
-    return <>{claimBanner}{tracker}<ComplianceProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<ComplianceProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   if (company.category === "finance-insurance") {
-    return <>{claimBanner}{tracker}<FinanceProfile company={company} similar={similar} /></>;
+    return <>{claimBanner}{tracker}<FinanceProfile company={profileCompany} similar={similar} /><VendorMediaSection company={company} /></>;
   }
 
   const isVerifiedPro = company.tier === "elite";
@@ -384,7 +408,7 @@ export default async function VendorPage({ params }: Props) {
                           <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width:768px) 100vw, 200px" style={{ objectFit: "cover" }} />
                         ) : (
                           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}44, ${company.logoColor}22)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <span className="material-symbols-outlined" style={{ fontSize: "36px", color: company.logoColor, opacity: 0.4 }}>inventory_2</span>
+                            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "36px", color: company.logoColor, opacity: 0.4 }}>inventory_2</span>
                           </div>
                         )}
                       </div>
@@ -428,7 +452,7 @@ export default async function VendorPage({ params }: Props) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {services.map((s) => (
                     <div key={s} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>check_circle</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>check_circle</span>
                       <span style={{ fontSize: "13px", color: "#374151" }}>{s}</span>
                     </div>
                   ))}
@@ -463,37 +487,37 @@ export default async function VendorPage({ params }: Props) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {company.website && (
                     <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#003320", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>language</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>language</span>
                       Website
                     </a>
                   )}
                   {company.instagramUrl && (
                     <a href={company.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#E1306C", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>photo_camera</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>photo_camera</span>
                       Instagram
                     </a>
                   )}
                   {company.facebookUrl && (
                     <a href={company.facebookUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#1877F2", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>thumb_up</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>thumb_up</span>
                       Facebook
                     </a>
                   )}
                   {company.twitterUrl && (
                     <a href={company.twitterUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#1DA1F2", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>alternate_email</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>alternate_email</span>
                       Twitter / X
                     </a>
                   )}
                   {company.yelpUrl && (
                     <a href={company.yelpUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#D32323", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>star</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>star</span>
                       Yelp
                     </a>
                   )}
                   {company.leaflyUrl && (
                     <a href={company.leaflyUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#4caf50", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>local_florist</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>local_florist</span>
                       Leafly
                     </a>
                   )}

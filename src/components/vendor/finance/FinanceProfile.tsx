@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Company } from "@/types";
 import ContactForm from "@/app/vendor/[slug]/ContactForm";
 import FinanceProfileTabs from "./FinanceProfileTabs";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -15,7 +16,7 @@ interface Props {
 }
 
 export default function FinanceProfile({ company, similar }: Props) {
-  const verified = company.tier === "elite" || company.tier === "select";
+  const verified = isVerifiedListing(company);
 
   const pills = [
     company.licenseNumber ? { icon: "check_circle", label: "NMLS Licensed" } : null,
@@ -48,11 +49,11 @@ export default function FinanceProfile({ company, similar }: Props) {
       <div style={{ padding: "16px 0" }}>
         <div className="fp-container" style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 600, color: VARIANT, flexWrap: "wrap" }}>
           <Link href="/" style={{ color: VARIANT, textDecoration: "none" }}>Home</Link>
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
           <Link href="/directory" style={{ color: VARIANT, textDecoration: "none" }}>Directory</Link>
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
           <Link href="/directory/finance-insurance" style={{ color: VARIANT, textDecoration: "none" }}>Finance &amp; Insurance</Link>
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
           <span style={{ color: DF }}>{company.name}</span>
         </div>
       </div>
@@ -68,7 +69,7 @@ export default function FinanceProfile({ company, similar }: Props) {
         <div className="fp-container" style={{ position: "relative", height: "100%" }}>
           <div style={{ position: "absolute", top: "24px", left: "20px" }}>
             <Link href="/directory/finance-insurance" style={{ display: "flex", alignItems: "center", gap: "8px", color: "white", fontSize: "14px", fontWeight: 500, background: "rgba(0,0,0,0.2)", padding: "8px 16px", borderRadius: "0.5rem", backdropFilter: "blur(4px)", textDecoration: "none" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>arrow_back</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "20px" }}>arrow_back</span>
               <span>Back to Finance &amp; Insurance</span>
             </Link>
           </div>
@@ -93,19 +94,19 @@ export default function FinanceProfile({ company, similar }: Props) {
                 <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px", fontSize: "12px", fontWeight: 600 }}>
                   {(company.location.city || company.location.state) && (
                     <span style={{ display: "flex", alignItems: "center", color: VARIANT }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px", marginRight: "4px" }}>location_on</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", marginRight: "4px" }}>location_on</span>
                       {[company.location.city, company.location.state].filter(Boolean).join(", ")}
                     </span>
                   )}
                   {verified && (
                     <span style={{ display: "flex", alignItems: "center", color: SAGE, background: "rgba(187,238,209,0.2)", padding: "4px 8px", borderRadius: "0.75rem" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "14px", marginRight: "4px" }}>verified</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px", marginRight: "4px" }}>verified</span>
                       {company.verifiedDate ? `Verified ${company.verifiedDate}` : "Verified"}
                     </span>
                   )}
                   {typeof company.rating === "number" && (
                     <span style={{ display: "flex", alignItems: "center", color: INK }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#f59e0b", marginRight: "4px", fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: "#f59e0b", marginRight: "4px", fontVariationSettings: "'FILL' 1" }}>star</span>
                       {company.rating}{company.reviewCount ? ` (${company.reviewCount} Reviews)` : ""}
                     </span>
                   )}
@@ -123,7 +124,7 @@ export default function FinanceProfile({ company, similar }: Props) {
           <div style={{ display: "flex", gap: "16px", overflowX: "auto", paddingBottom: "8px", marginBottom: "32px" }}>
             {pills.map((p) => (
               <div key={p.label} style={{ display: "flex", alignItems: "center", gap: "8px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.75rem", padding: "8px 16px", whiteSpace: "nowrap", fontSize: "12px", fontWeight: 600, color: VARIANT }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "16px", color: SAGE }}>{p.icon}</span> {p.label}
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: SAGE }}>{p.icon}</span> {p.label}
               </div>
             ))}
           </div>
@@ -144,7 +145,7 @@ export default function FinanceProfile({ company, similar }: Props) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                   {contactItems.map((c) => (
                     <a key={c.label} href={c.href} target={c.icon === "language" ? "_blank" : undefined} rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "16px", color: INK, textDecoration: "none" }}>
-                      <span className="material-symbols-outlined" style={{ color: VARIANT }}>{c.icon}</span> {c.label}
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT }}>{c.icon}</span> {c.label}
                     </a>
                   ))}
                 </div>

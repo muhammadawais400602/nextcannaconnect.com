@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { COMPANIES } from "@/data/companies";
 import { CATEGORIES } from "@/data/categories";
+import { formatLocation } from "@/lib/states";
 
 const TIER_COLORS: Record<string, string> = {
   elite: "#1A4A35",
@@ -185,7 +186,7 @@ export default function DashboardPage() {
                         {CATEGORIES.find((cat) => cat.slug === c.category)?.shortLabel ?? c.category}
                       </td>
                       <td style={{ padding: "12px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>
-                        {c.location.city}, {c.location.state}
+                        {formatLocation(c.location) || "Location not listed"}
                       </td>
                       <td style={{ padding: "12px 20px" }}>
                         <span style={{ fontSize: "11px", fontWeight: "600", textTransform: "capitalize", color: TIER_COLORS[c.tier] || "#6B7280", background: TIER_BG[c.tier] || "#F9FAFB", padding: "2px 8px", borderRadius: "20px", fontFamily: "sans-serif" }}>

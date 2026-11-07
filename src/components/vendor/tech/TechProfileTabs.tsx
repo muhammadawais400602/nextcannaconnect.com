@@ -75,7 +75,7 @@ export default function TechProfileTabs({ company }: { company: Company }) {
                   whiteSpace: "nowrap",
                 }}
               >
-              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
+              {t.label}{t.locked && <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
             </button>
             </li>
           ))}
@@ -132,7 +132,7 @@ export default function TechProfileTabs({ company }: { company: Company }) {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "16px" }}>
               {securityFeatures.map((f) => (
                 <div key={f} style={{ border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", padding: "16px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", background: "#fbf9f8" }}>
-                  <span className="material-symbols-outlined" style={{ color: DF, marginBottom: "8px", fontSize: "24px", fontVariationSettings: "'FILL' 1" }}>{secIcon(f)}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ color: DF, marginBottom: "8px", fontSize: "24px", fontVariationSettings: "'FILL' 1" }}>{secIcon(f)}</span>
                   <span style={{ fontSize: "12px", fontWeight: 600, color: "#1b1c1b" }}>{f}</span>
                 </div>
               ))}
@@ -148,7 +148,7 @@ export default function TechProfileTabs({ company }: { company: Company }) {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "16px" }}>
             {features.map((f) => (
               <div key={f} style={{ display: "flex", alignItems: "flex-start", gap: "12px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "16px" }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE, flexShrink: 0 }}>check_circle</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE, flexShrink: 0 }}>check_circle</span>
                 <span style={{ fontSize: "14px", color: "#1b1c1b", lineHeight: 1.5 }}>{f}</span>
               </div>
             ))}
@@ -172,7 +172,7 @@ export default function TechProfileTabs({ company }: { company: Company }) {
 
       {tabs.find(t => t.id === active)?.locked && (
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
           <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>{isFree ? "Select Feature" : "Verified Pro Feature"}</h3>
           <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>{isFree ? "Upgrade to add listing details." : "Upgrade to Verified Pro to unlock this section."}</p>
           <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>

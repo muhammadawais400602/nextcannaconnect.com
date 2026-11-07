@@ -1,5 +1,7 @@
 import { Company } from "@/types";
+import ContactForm from "@/app/vendor/[slug]/ContactForm";
 import RealEstateProfileTabs from "./RealEstateProfileTabs";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -10,7 +12,7 @@ const SEC_CONTAINER = "#b8ebce";
 const ON_SEC_CONTAINER = "#3d6c55";
 
 export default function RealEstateProfile({ company }: { company: Company }) {
-  const verified = company.tier === "elite" || company.tier === "select";
+  const verified = isVerifiedListing(company);
 
   const stats = [
     company.foundedYear ? { label: "Established", value: String(company.foundedYear) } : null,
@@ -50,7 +52,7 @@ export default function RealEstateProfile({ company }: { company: Company }) {
                 <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px", flexWrap: "wrap" }}>
                   {verified && (
                     <span style={{ background: SEC_CONTAINER, color: ON_SEC_CONTAINER, fontSize: "12px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem", display: "flex", alignItems: "center", gap: "4px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> Verified Standards
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> Verified Standards
                     </span>
                   )}
                   <span style={{ color: VARIANT, fontSize: "12px", fontWeight: 600, border: `1px solid ${PARCHMENT}`, padding: "4px 8px", borderRadius: "0.25rem" }}>Real Estate &amp; Construction</span>
@@ -84,7 +86,7 @@ export default function RealEstateProfile({ company }: { company: Company }) {
             <div>
               {showCredentialCard && (
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "16px" }}>
-                  <span className="material-symbols-outlined" style={{ color: SAGE, fontSize: "30px", fontVariationSettings: "'FILL' 1" }}>shield_person</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE, fontSize: "30px", fontVariationSettings: "'FILL' 1" }}>shield_person</span>
                   <h3 style={{ fontSize: "18px", fontWeight: 700, color: SAGE, margin: 0 }}>{company.credentialHeadline || "Verified Credentials"}</h3>
                 </div>
               )}
@@ -92,15 +94,15 @@ export default function RealEstateProfile({ company }: { company: Company }) {
                 <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "12px", marginBottom: "32px" }}>
                   {credentials.map((c) => (
                     <li key={c} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "16px", opacity: 0.9 }}>
-                      <span className="material-symbols-outlined" style={{ color: SAGE, fontSize: "18px" }}>check_circle</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE, fontSize: "18px" }}>check_circle</span>
                       {c}
                     </li>
                   ))}
                 </ul>
               )}
             </div>
-            <a href="#contact-info" style={{ width: "100%", background: "#FBF9F8", color: DF, fontSize: "14px", fontWeight: 500, padding: "12px 16px", borderRadius: "0.25rem", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxSizing: "border-box" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>assignment</span>
+            <a href="#vendor-contact" style={{ width: "100%", background: "#FBF9F8", color: DF, fontSize: "14px", fontWeight: 500, padding: "12px 16px", borderRadius: "0.25rem", textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", boxSizing: "border-box" }}>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>assignment</span>
               Request Project Quote
             </a>
           </div>
@@ -118,7 +120,7 @@ export default function RealEstateProfile({ company }: { company: Company }) {
             {insurance.length > 0 && (
               <div style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "24px" }}>
                 <h3 style={{ fontSize: "20px", fontWeight: 600, color: DF, margin: "0 0 16px", display: "flex", alignItems: "center", gap: "8px" }}>
-                  <span className="material-symbols-outlined" style={{ color: "#6e9d83" }}>admin_panel_settings</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ color: "#6e9d83" }}>admin_panel_settings</span>
                   Insurance Snapshot
                 </h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -132,13 +134,16 @@ export default function RealEstateProfile({ company }: { company: Company }) {
               </div>
             )}
 
+            <div id="vendor-contact" style={{ scrollMarginTop: "112px" }}>
+              <ContactForm companyName={company.name} vendorSlug={company.slug} serviceTags={company.serviceTags ?? []} />
+            </div>
             {/* Contact */}
             <div id="contact-info" style={{ scrollMarginTop: "96px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "24px" }}>
               <h3 style={{ fontSize: "20px", fontWeight: 600, color: DF, margin: "0 0 24px" }}>Contact Information</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 {addressLines.length > 0 && (
                   <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                    <span className="material-symbols-outlined" style={{ color: VARIANT, marginTop: "2px" }}>location_on</span>
+                    <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT, marginTop: "2px" }}>location_on</span>
                     <div>
                       {addressLines.map((l, i) => <p key={i} style={{ fontSize: "16px", color: VARIANT, margin: 0 }}>{l}</p>)}
                     </div>
@@ -146,19 +151,19 @@ export default function RealEstateProfile({ company }: { company: Company }) {
                 )}
                 {company.phone && (
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <span className="material-symbols-outlined" style={{ color: VARIANT }}>call</span>
+                    <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT }}>call</span>
                     <a href={`tel:${company.phone}`} style={{ fontSize: "16px", color: VARIANT, textDecoration: "none" }}>{company.phone}</a>
                   </div>
                 )}
                 {company.email && (
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <span className="material-symbols-outlined" style={{ color: VARIANT }}>mail</span>
+                    <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT }}>mail</span>
                     <a href={`mailto:${company.email}`} style={{ fontSize: "16px", color: SECONDARY, textDecoration: "none", wordBreak: "break-all" }}>{company.email}</a>
                   </div>
                 )}
                 {company.website && (
                   <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                    <span className="material-symbols-outlined" style={{ color: VARIANT }}>language</span>
+                    <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT }}>language</span>
                     <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: "16px", color: SECONDARY, textDecoration: "none" }}>{company.website.replace(/^https?:\/\//, "")}</a>
                   </div>
                 )}

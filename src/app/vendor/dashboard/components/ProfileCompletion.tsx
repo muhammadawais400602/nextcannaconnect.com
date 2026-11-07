@@ -7,7 +7,10 @@ interface IncompleteField {
   tab: string;
 }
 
-export function getProfileCompletion(company: CompanyData | null): {
+// Fields that are only editable on paid plans (see ProfileTab / MediaTab).
+const PAID_FIELDS = new Set(["shortDescription", "fullDescription", "website", "phone", "bannerImageUrl"]);
+
+export function getProfileCompletion(company: CompanyData | null, tier = "free"): {
   percent: number;
   incomplete: IncompleteField[];
 } {
@@ -25,8 +28,12 @@ export function getProfileCompletion(company: CompanyData | null): {
   ];
 
   const incomplete: IncompleteField[] = [];
+  // Only ask owners to fill fields their plan lets them edit.
+  const editable = fields.filter((f) => tier !== "free" || !PAID_FIELDS.has(f.key));
 
-  for (const f of fields) {
+  for (const f of editable) {
+    // Nationwide / multi-state businesses have no single state.
+    if (f.key === "location.state" && Array.isArray(company.statesServed) && company.statesServed.length) continue;
     let val: unknown;
     if (f.key.includes(".")) {
       const [a, b] = f.key.split(".");
@@ -39,8 +46,8 @@ export function getProfileCompletion(company: CompanyData | null): {
     }
   }
 
-  const filled = fields.length - incomplete.length;
-  const percent = Math.round((filled / fields.length) * 100);
+  const filled = editable.length - incomplete.length;
+  const percent = Math.round((filled / editable.length) * 100);
 
   return { percent, incomplete };
 }

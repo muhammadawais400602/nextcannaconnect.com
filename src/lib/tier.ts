@@ -110,3 +110,12 @@ export const CARD_FIELDS: Record<CategorySlug, { label: string; key: string }[]>
     { label: "Funding Time", key: "leadTime" },
   ],
 };
+
+/**
+ * Whether to show "Verified" / plan badges. Paid-tier badges are only shown on
+ * listings a real business owns — imported listings that were stored on a paid
+ * tier keep their layout but don't claim to be verified.
+ */
+export function isVerifiedListing(c: { tier: Tier; claimed?: boolean }): boolean {
+  return (c.tier === "elite" || c.tier === "select") && c.claimed !== false;
+}

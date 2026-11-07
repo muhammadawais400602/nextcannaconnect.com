@@ -66,7 +66,7 @@ export default function TestingProfileTabs({ company }: { company: Company }) {
               cursor: "pointer",
             }}
           >
-              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
+              {t.label}{t.locked && <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
             </button>
         ))}
       </div>
@@ -97,7 +97,7 @@ export default function TestingProfileTabs({ company }: { company: Company }) {
           <h2 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: "0 0 24px" }}>Accreditation &amp; Credentials</h2>
           {company.accreditation && (
             <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "#f5f3f2", border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", padding: "12px 16px", fontSize: "16px", fontWeight: 600, color: DF, marginBottom: "24px" }}>
-              <span className="material-symbols-outlined" style={{ color: "#88B99E" }}>verified</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ color: "#88B99E" }}>verified</span>
               {company.accreditation}
             </div>
           )}
@@ -117,7 +117,7 @@ export default function TestingProfileTabs({ company }: { company: Company }) {
             {capabilities.map((c) => (
               <div key={c.name} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", padding: "24px" }}>
                 <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: "#efedec", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px", color: DF }}>
-                  <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>{capIcon(c.name)}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>{capIcon(c.name)}</span>
                 </div>
                 <h3 style={{ fontSize: "14px", fontWeight: 700, color: DF, margin: "0 0 8px" }}>{c.name}</h3>
                 <p style={{ fontSize: "14px", color: VARIANT, margin: "0 0 16px", lineHeight: 1.5 }}>{c.description}</p>
@@ -132,7 +132,7 @@ export default function TestingProfileTabs({ company }: { company: Company }) {
 
       {tabs.find(t => t.id === active)?.locked && (
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
           <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>{isFree ? "Select Feature" : "Verified Pro Feature"}</h3>
           <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>{isFree ? "Upgrade to add listing details." : "Upgrade to Verified Pro to unlock this section."}</p>
           <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>

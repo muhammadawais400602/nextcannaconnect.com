@@ -16,6 +16,8 @@ interface RFPDetail {
   postedByName?: string;
   createdAt: string;
   status: string;
+  responseCount?: number;
+  isOwner?: boolean;
   responses: {
     companyName: string;
     message: string;
@@ -197,11 +199,15 @@ export default function RFPDetailPage() {
         {/* Responses */}
         <div style={{ marginBottom: "24px" }}>
           <h2 style={{ fontSize: "16px", fontWeight: 700, color: "#0D2818", marginBottom: "14px" }}>
-            Responses ({rfp.responses.length})
+            Responses ({rfp.responseCount ?? rfp.responses.length})
           </h2>
           {rfp.responses.length === 0 ? (
             <div style={{ background: "white", borderRadius: "12px", border: "1px solid #E5E7EB", padding: "24px", textAlign: "center", color: "#9CA3AF", fontSize: "14px" }}>
-              No responses yet.
+              {(rfp.responseCount ?? 0) === 0
+                ? "No responses yet."
+                : rfp.isOwner
+                  ? "No responses yet."
+                  : "Responses are private and visible only to the poster of this RFP."}
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>

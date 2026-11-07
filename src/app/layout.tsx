@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Serif } from "next/font/google";
+import localFont from "next/font/local";
+import { SITE_URL } from "@/lib/siteUrl";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import BrokenImageGuard from "@/components/BrokenImageGuard";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,12 +21,34 @@ const notoSerif = Noto_Serif({
   variable: "--font-noto-serif",
 });
 
+// Self-hosted, subsetted Material Symbols (only the icons used on the site).
+// Regenerate with `scripts/update-icon-font.sh` after adding new icon names.
+const materialSymbols = localFont({
+  src: "./fonts/material-symbols-outlined.woff2",
+  variable: "--font-material-symbols",
+  weight: "300 400",
+  display: "block",
+  preload: false,
+  adjustFontFallback: false,
+  fallback: [],
+});
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  // "./" resolves to each page's own path, so every page gets a canonical URL
+  // (query strings like ?state= are dropped).
+  alternates: { canonical: "./" },
+  openGraph: {
+    siteName: "NextCanna Connect",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
   title: "NextCanna Connect — The Verified Marketplace for the Cannabis Industry",
   description:
     "Find and connect with verified cannabis manufacturers, consultants, suppliers, and service providers across 12 industry categories.",
@@ -39,17 +64,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${notoSerif.variable}`}>
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${inter.variable} ${notoSerif.variable} ${materialSymbols.variable}`}>
       <body className="antialiased">
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <BrokenImageGuard />
       </body>
     </html>
   );

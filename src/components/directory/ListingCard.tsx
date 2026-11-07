@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Company, CategorySlug } from "@/types";
 import { getCardFieldCount, getCardTagCount, showBannerImage, CARD_FIELDS } from "@/lib/tier";
+import { formatLocation } from "@/lib/states";
+import { isVerifiedListing } from "@/lib/tier";
 
 function getFieldValue(company: Company, key: string): string | null {
   const val = (company as unknown as Record<string, unknown>)[key];
@@ -75,7 +77,7 @@ export default function ListingCard({ company }: Props) {
               {company.name}
             </p>
             <p style={{ fontSize: "12px", color: "#9CA3AF" }}>
-              {company.location.city}, {company.location.state}
+              {formatLocation(company.location) || "Location not listed"}
             </p>
           </div>
         </div>
@@ -144,12 +146,14 @@ export default function ListingCard({ company }: Props) {
                 <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {company.name}
                 </h3>
-                <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "5px", background: "#185FA5", color: "white", whiteSpace: "nowrap" }}>
-                  SELECT
-                </span>
+                {isVerifiedListing(company) && (
+                  <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "5px", background: "#185FA5", color: "white", whiteSpace: "nowrap" }}>
+                    SELECT
+                  </span>
+                )}
               </div>
               <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "2px" }}>
-                {company.location.city}, {company.location.state}
+                {formatLocation(company.location) || "Location not listed"}
               </p>
             </div>
           </div>
@@ -218,15 +222,17 @@ export default function ListingCard({ company }: Props) {
         {company.bannerImageUrl && (
           <Image src={company.bannerImageUrl} alt={company.name} fill sizes="400px" style={{ objectFit: "cover" }} />
         )}
-        <span style={{
-          position: "absolute", top: "10px", left: "10px",
-          display: "inline-flex", alignItems: "center", gap: "4px",
-          fontSize: "10px", fontWeight: 700, letterSpacing: "0.05em",
-          padding: "4px 10px", borderRadius: "6px",
-          background: "rgba(22,163,74,0.9)", color: "white",
-        }}>
-          ✓ Verified
-        </span>
+        {isVerifiedListing(company) && (
+          <span style={{
+            position: "absolute", top: "10px", left: "10px",
+            display: "inline-flex", alignItems: "center", gap: "4px",
+            fontSize: "10px", fontWeight: 700, letterSpacing: "0.05em",
+            padding: "4px 10px", borderRadius: "6px",
+            background: "rgba(22,163,74,0.9)", color: "white",
+          }}>
+            ✓ Verified
+          </span>
+        )}
         {/* Overlapping logo */}
         <div style={{
           position: "absolute", bottom: "-24px", left: "20px",
@@ -251,12 +257,14 @@ export default function ListingCard({ company }: Props) {
           <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0 }}>
             {company.name}
           </h3>
-          <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "5px", background: "#1A4A35", color: "white", whiteSpace: "nowrap" }}>
-            VERIFIED PRO
-          </span>
+          {isVerifiedListing(company) && (
+            <span style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.08em", padding: "3px 8px", borderRadius: "5px", background: "#1A4A35", color: "white", whiteSpace: "nowrap" }}>
+              VERIFIED PRO
+            </span>
+          )}
         </div>
         <p style={{ fontSize: "12px", color: "#9CA3AF", marginBottom: "14px" }}>
-          {company.location.city}, {company.location.state}
+          {formatLocation(company.location) || "Location not listed"}
         </p>
 
         {/* Field rows (4) */}

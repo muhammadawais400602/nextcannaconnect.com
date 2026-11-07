@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import HoneypotField from "@/components/ui/HoneypotField";
+import { HONEYPOT_FIELD } from "@/lib/formGuard";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -18,6 +20,7 @@ const inputStyle: React.CSSProperties = {
 export default function ContactForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [trap, setTrap] = useState("");
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -30,7 +33,7 @@ export default function ContactForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, [HONEYPOT_FIELD]: trap }),
       });
       if (res.ok) {
         setStatus("success");
@@ -82,15 +85,18 @@ export default function ContactForm() {
         display: "flex",
         flexDirection: "column",
         gap: "20px",
+        position: "relative",
       }}
     >
+      <HoneypotField value={trap} onChange={setTrap} />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
         <div>
-          <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }}>
+          <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }} htmlFor="contact-name">
             Name *
           </label>
           <input
             name="name"
+            id="contact-name"
             required
             value={form.name}
             onChange={handleChange}
@@ -101,11 +107,12 @@ export default function ContactForm() {
           />
         </div>
         <div>
-          <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }}>
+          <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }} htmlFor="contact-email">
             Email *
           </label>
           <input
             name="email"
+          id="contact-email"
             type="email"
             required
             value={form.email}
@@ -119,11 +126,12 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }}>
+        <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }} htmlFor="contact-subject">
           Subject *
         </label>
         <select
           name="subject"
+          id="contact-subject"
           required
           value={form.subject}
           onChange={handleChange}
@@ -142,11 +150,12 @@ export default function ContactForm() {
       </div>
 
       <div>
-        <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }}>
+        <label style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6b7280", display: "block", marginBottom: "6px" }} htmlFor="contact-message">
           Message *
         </label>
         <textarea
           name="message"
+          id="contact-message"
           required
           rows={5}
           value={form.message}

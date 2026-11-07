@@ -1,5 +1,9 @@
+import { sendEmail, ADMIN_EMAIL } from "@/lib/email";
+import { createSubscriptionCheckout, isPaidTier, stripeConfigured } from "@/lib/stripe";
+import Company from "@/lib/models/Company";
+import { CATEGORIES } from "@/data/categories";
+import { setVendorSessionCookie } from "@/lib/verifyVendorSession";
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
@@ -8,41 +12,16 @@ import { escapeHtml } from "@/lib/escapeHtml";
 import { rateLimit } from "@/lib/rateLimit";
 
 const TIER_LABELS: Record<string, string> = {
-  free: "Claimed (Free)",
+  free: "Free",
   select: "Select — $19.99/mo",
   elite: "Verified Pro — $39.99/mo",
 };
 
-const TIER_PRICES: Record<string, { unit_amount: number; name: string }> = {
-  select: { unit_amount: 1999, name: "NextCanna Connect Select — $19.99/mo" },
-  elite:  { unit_amount: 3999, name: "NextCanna Connect Verified Pro — $39.99/mo" },
-};
-
-function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error("STRIPE_SECRET_KEY is not set");
-  return new Stripe(key);
-}
-
-async function sendEmail(payload: { to: string; subject: string; html: string }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL || "NextCanna Connect <noreply@nextcannaconnect.com>";
-  if (!apiKey) {
-    console.warn("[signup] RESEND_API_KEY not set — skipping email");
-    return;
-  }
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, ...payload }),
-  });
-  if (!res.ok) console.error("[signup] Resend error:", await res.text());
-}
 
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    if (!rateLimit(`signup:${ip}`, 5, 60_000)) {
+    if (!await rateLimit(`signup:${ip}`, 5, 60_000)) {
       return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
     }
 
@@ -51,7 +30,17 @@ export async function POST(request: NextRequest) {
 
     const { fullName, companyName, email, password, phone, stateProvince, category,
             tier, website, description, publicPhone, serviceArea,
-            certifications, socialLink, contactName, categoryDetails } = body;
+            certifications, socialLink, contactName, categoryDetails, claimSlug } = body;
+
+    if (!["free", "select", "elite"].includes(tier)) {
+      return NextResponse.json({ error: "Please choose a plan" }, { status: 400 });
+    }
+    if (!category || !CATEGORIES.some((c) => c.slug === category)) {
+      return NextResponse.json({ error: "Please choose your business category" }, { status: 400 });
+    }
+    if (!stateProvince) {
+      return NextResponse.json({ error: "Please choose your state or province" }, { status: 400 });
+    }
 
     if (!fullName || !companyName || !email || !tier) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -61,13 +50,58 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
     }
 
-    const normalizedEmail = email.toLowerCase().trim();
-    const existingUser = await User.findOne({ email: normalizedEmail });
-    if (existingUser) {
-      return NextResponse.json({ error: "An account with this email already exists. Please sign in instead." }, { status: 409 });
+    const normalizedEmail = String(email).toLowerCase().trim();
+    const isPaid = isPaidTier(tier);
+
+    // Claiming an existing (unclaimed) listing?
+    let claimCompanySlug: string | undefined;
+    if (claimSlug) {
+      const target = await Company.findOne({ slug: String(claimSlug) }).select("_id slug").lean();
+      if (!target) {
+        return NextResponse.json({ error: "The listing you're trying to claim no longer exists." }, { status: 400 });
+      }
+      if (await User.exists({ companyId: target._id })) {
+        return NextResponse.json(
+          { error: "This listing has already been claimed. If it's your business, please contact help@nextcannaconnect.com." },
+          { status: 409 },
+        );
+      }
+      claimCompanySlug = target.slug;
     }
 
-    const isPaid = tier === "select" || tier === "elite";
+    const existingUser = await User.findOne({ email: normalizedEmail });
+    if (existingUser) {
+      // Someone who started a paid signup but abandoned Stripe checkout can resume it
+      // (previously they were locked out with "account already exists").
+      const pendingApp = !existingUser.isActive
+        ? await SignupApplication.findOne({ email: normalizedEmail, paymentStatus: "awaiting_payment" }).sort({ createdAt: -1 })
+        : null;
+      const samePassword = existingUser.passwordHash
+        ? await bcrypt.compare(String(password), existingUser.passwordHash)
+        : false;
+      if (pendingApp && samePassword && stripeConfigured() && isPaid) {
+        pendingApp.set({ tier, ...(claimCompanySlug ? { claimSlug: claimCompanySlug } : {}) });
+        const session = await createSubscriptionCheckout({
+          tier,
+          email: normalizedEmail,
+          metadata: { applicationId: String(pendingApp._id), companyName: String(companyName), fullName: String(fullName) },
+          successPath: "/signup/success?session_id={CHECKOUT_SESSION_ID}",
+          cancelPath: `/signup?tier=${tier}`,
+        });
+        pendingApp.stripeSessionId = session.id;
+        await pendingApp.save();
+        await User.updateOne({ _id: existingUser._id }, { tier });
+        return NextResponse.json({ checkoutUrl: session.url });
+      }
+      return NextResponse.json(
+        {
+          error: pendingApp
+            ? "You already started signing up with this email. Enter the same password to continue to payment, or reset your password."
+            : "An account with this email already exists. Please sign in instead.",
+        },
+        { status: 409 },
+      );
+    }
 
     // Create user account first (has unique index on email — fail fast on duplicates)
     const passwordHash = await bcrypt.hash(password, 12);
@@ -97,36 +131,17 @@ export async function POST(request: NextRequest) {
       certifications, socialLink, contactName,
       categoryDetails: categoryDetails && typeof categoryDetails === "object" ? categoryDetails : {},
       paymentStatus: isPaid ? "awaiting_payment" : "not_required",
+      ...(claimCompanySlug ? { claimSlug: claimCompanySlug } : {}),
     });
 
     // Paid tiers → create Stripe Checkout session (if Stripe is configured)
-    if (isPaid && process.env.STRIPE_SECRET_KEY) {
-      const priceInfo = TIER_PRICES[tier];
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-      const stripe = getStripe();
-
-      const session = await stripe.checkout.sessions.create({
-        mode: "subscription",
-        line_items: [
-          {
-            price_data: {
-              currency: "usd",
-              recurring: { interval: "month" },
-              product_data: { name: priceInfo.name },
-              unit_amount: priceInfo.unit_amount,
-            },
-            quantity: 1,
-          },
-        ],
-        customer_email: email,
-        metadata: {
-          applicationId: String(app._id),
-          tier,
-          companyName,
-          fullName,
-        },
-        success_url: `${appUrl}/signup/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${appUrl}/signup?tier=${tier}`,
+    if (isPaid && stripeConfigured()) {
+      const session = await createSubscriptionCheckout({
+        tier,
+        email: normalizedEmail,
+        metadata: { applicationId: String(app._id), companyName: String(companyName), fullName: String(fullName) },
+        successPath: "/signup/success?session_id={CHECKOUT_SESSION_ID}",
+        cancelPath: `/signup?tier=${tier}`,
       });
 
       await SignupApplication.findByIdAndUpdate(app._id, { stripeSessionId: session.id });
@@ -141,7 +156,7 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation emails
     const tierLabel = TIER_LABELS[tier] ?? tier;
-    const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
+    const adminEmail = ADMIN_EMAIL;
 
     const eName = escapeHtml(fullName);
     const eCompany = escapeHtml(companyName);
@@ -216,7 +231,14 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true });
+    // Free accounts are active straight away: sign them in so they land in
+    // their dashboard (which explains the listing is being reviewed).
+    const response = NextResponse.json({ success: true, signedIn: !isPaid });
+    if (!isPaid) {
+      const created = await User.findOne({ email: normalizedEmail }).select("_id sessionVersion");
+      if (created) setVendorSessionCookie(response, String(created._id), created.sessionVersion ?? 0);
+    }
+    return response;
   } catch (err) {
     console.error("[signup] Error:", err);
     return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });

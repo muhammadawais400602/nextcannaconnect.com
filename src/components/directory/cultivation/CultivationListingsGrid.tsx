@@ -1,8 +1,11 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { formatLocation, matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
 import Link from "next/link";
 import { Company } from "@/types";
+import { isVerifiedListing } from "@/lib/tier";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -10,7 +13,7 @@ const PARCHMENT = "#EEEAE3";
 const VARIANT = "#414943";
 
 function isVerified(c: Company) {
-  return c.tier === "elite" || c.tier === "select";
+  return isVerifiedListing(c);
 }
 
 function CultivatorCard({ company }: { company: Company }) {
@@ -18,7 +21,8 @@ function CultivatorCard({ company }: { company: Company }) {
   const unclaimed = company.tier === "free";
   const tags = (company.serviceTags ?? []).slice(0, 3);
 
-  const detail = (label: string, value?: string) => (
+  // Rows with no data are skipped (cards used to show a column of "—").
+  const detail = (label: string, value?: string) => (value === undefined || value === null || value === "") ? null : (
     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
       <span style={{ color: VARIANT }}>{label}</span>
       <span style={{ fontWeight: 500, color: DF }}>{value || "—"}</span>
@@ -34,12 +38,12 @@ function CultivatorCard({ company }: { company: Company }) {
           <img src={company.bannerImageUrl} alt={company.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}33, ${company.logoColor}11)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>nature</span>
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>nature</span>
           </div>
         )}
         {(verified || company.accreditation) && (
           <div style={{ position: "absolute", top: "16px", left: "16px", background: SAGE, color: DF, fontSize: "12px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem", boxShadow: "0 1px 2px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "4px" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> {company.accreditation || "Verified"}
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> {company.accreditation || "Verified"}
           </div>
         )}
       </div>
@@ -53,14 +57,14 @@ function CultivatorCard({ company }: { company: Company }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
-              <span className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>nature</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>nature</span>
             )}
           </div>
           <div style={{ minWidth: 0 }}>
             <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
-              <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
+              <span>{formatLocation(company.location) || (company.statesServed?.some((s) => /nationwide/i.test(s)) ? "Nationwide" : "Location not listed")}</span>
             </div>
           </div>
         </div>
@@ -95,7 +99,7 @@ function CultivatorCard({ company }: { company: Company }) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px", marginTop: "auto" }}>
           {company.accreditation ? (
             <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: "#396751" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>
               {company.accreditation}
             </span>
           ) : unclaimed ? (
@@ -103,11 +107,11 @@ function CultivatorCard({ company }: { company: Company }) {
           ) : <span />}
           {unclaimed ? (
             <Link href={`/signup?claim=${company.slug}&category=cultivation-growing`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-              Claim This Listing <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+              Claim This Listing <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
             </Link>
           ) : (
             <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-              View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+              View Profile <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
             </Link>
           )}
         </div>
@@ -131,17 +135,19 @@ const selectStyle: React.CSSProperties = {
 const PAGE_SIZE = 9;
 
 export default function CultivationListingsGrid({ companies }: { companies: Company[] }) {
-  const [location, setLocation] = useState("");
+  const searchParams = useSearchParams();
+  // Pre-select the state chosen in the home/directory search (?state=California or ?state=CA).
+  const [location, setLocation] = useState(() => toStateCode(searchParams.get("state")));
   const [growType, setGrowType] = useState("");
   const [sort, setSort] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
-  const states = useMemo(() => [...new Set(companies.map((c) => c.location.state).filter(Boolean))].sort(), [companies]);
+  const states = useMemo(() => stateOptions(companies), [companies]);
   const growTypes = useMemo(() => [...new Set(companies.flatMap((c) => c.serviceTags ?? []))].sort(), [companies]);
 
   const filtered = useMemo(() => {
     let result = companies.filter((c) => {
-      if (location && c.location.state !== location) return false;
+      if (location && !matchesState(c, location)) return false;
       if (growType && !(c.serviceTags ?? []).includes(growType)) return false;
       return true;
     });
@@ -155,13 +161,13 @@ export default function CultivationListingsGrid({ companies }: { companies: Comp
   return (
     <>
       <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, position: "sticky", top: "70px", zIndex: 40 }}>
-        <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
+        <div className="cat-container" style={{ paddingTop: "16px", paddingBottom: "16px", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
           <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
-            <span className="material-symbols-outlined">filter_list</span> Filters:
+            <span aria-hidden="true" className="material-symbols-outlined">filter_list</span> Filters:
           </span>
           <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Locations</option>
-            {states.map((s) => <option key={s} value={s}>{s}</option>)}
+            {(location && !states.includes(location) ? [location, ...states] : states).map((s) => <option key={s} value={s}>{stateName(s)}</option>)}
           </select>
           <select value={growType} onChange={(e) => { setGrowType(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Grow Types</option>
@@ -179,15 +185,15 @@ export default function CultivationListingsGrid({ companies }: { companies: Comp
         <div className="cat-container">
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>nature</span>
-              <p style={{ fontSize: "16px", marginTop: "12px" }}>No cultivators match your filters yet.</p>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>nature</span>
+              <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No cultivators are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No cultivators match your filters. Try removing a filter.</>}</p>
             </div>
           ) : (
             <div className="cat-grid">
               {shown.map((c) => <CultivatorCard key={c.slug} company={c} />)}
 
               <div style={{ background: DF, borderRadius: "0.75rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "32px" }}>
-                <span className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px" }}>nature</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px" }}>nature</span>
                 <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: "0 0 8px" }}>Are you a licensed cultivator?</h3>
                 <p style={{ fontSize: "15px", color: "rgba(251,249,248,0.8)", margin: "0 0 24px" }}>Join the verified network of compliant cannabis grows.</p>
                 <Link href="/signup" style={{ fontSize: "14px", fontWeight: 500, background: SAGE, color: DF, padding: "12px 24px", borderRadius: "0.25rem", textDecoration: "none", width: "100%", boxSizing: "border-box" }}>List Your Grow</Link>

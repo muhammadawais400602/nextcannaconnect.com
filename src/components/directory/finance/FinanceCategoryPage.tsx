@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import FinanceListingsGrid from "./FinanceListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function FinanceCategoryPage() {
   const companies = await getCompaniesByCategory("finance-insurance");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function FinanceCategoryPage() {
       title="Finance & Insurance"
       description="Cannabis-specialized banking, lending, insurance, and accounting services for licensed cannabis operators."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Providers` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Providers` },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "account_balance", label: "Banking to Insurance" },
       ]}

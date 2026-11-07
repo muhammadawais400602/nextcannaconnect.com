@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import HoneypotField from "@/components/ui/HoneypotField";
+import { HONEYPOT_FIELD } from "@/lib/formGuard";
 
 export default function NewsletterForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const [trap, setTrap] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -15,7 +18,7 @@ export default function NewsletterForm() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, source: "blog" }),
+        body: JSON.stringify({ email, source: "blog", [HONEYPOT_FIELD]: trap }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -45,10 +48,13 @@ export default function NewsletterForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{ display: "flex", gap: "12px", maxWidth: "440px", margin: "0 auto", flexWrap: "wrap", justifyContent: "center" }}
+      style={{ display: "flex", gap: "12px", maxWidth: "440px", margin: "0 auto", flexWrap: "wrap", justifyContent: "center", position: "relative" }}
     >
+      <HoneypotField value={trap} onChange={setTrap} />
       <input
         type="email"
+        aria-label="Email address"
+        autoComplete="email"
         value={email}
         onChange={(e) => { setEmail(e.target.value); if (status === "error") setStatus("idle"); }}
         placeholder="professional@company.com"

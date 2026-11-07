@@ -1,3 +1,6 @@
+import { sendEmail } from "@/lib/email";
+import { SITE_URL } from "@/lib/siteUrl";
+import { escapeHtml } from "@/lib/escapeHtml";
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { revalidateTag } from "next/cache";
@@ -11,7 +14,7 @@ function toSlug(str: string): string {
 }
 
 const TIER_LABELS: Record<string, string> = {
-  free: "Claimed (Free)",
+  free: "Free",
   select: "Select — $19.99/mo",
   elite: "Verified Pro — $39.99/mo",
 };
@@ -22,17 +25,6 @@ const TIER_MAP: Record<string, "free" | "select" | "elite"> = {
   elite: "elite",
 };
 
-async function sendEmail(payload: { to: string; subject: string; html: string }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL || "NextCanna Connect <hello@nextcannaconnect.com>";
-  if (!apiKey) return;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, ...payload }),
-  });
-  if (!res.ok) console.error("[sendEmail]", await res.text());
-}
 
 export async function PATCH(
   request: NextRequest,
@@ -41,24 +33,61 @@ export async function PATCH(
   try {
     await connectDB();
     const { id } = await params;
-    const { status } = await request.json();
+    const { status, confirmUnpaid } = await request.json();
 
     if (!["approved", "rejected", "pending"].includes(status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const app = await SignupApplication.findByIdAndUpdate(id, { status }, { new: true });
-    if (!app) return NextResponse.json({ error: "Application not found" }, { status: 404 });
+    const existingApp = await SignupApplication.findById(id);
+    if (!existingApp) return NextResponse.json({ error: "Application not found" }, { status: 404 });
+
+    // Don't silently approve a paid plan that hasn't been paid for.
+    if (status === "approved" && existingApp.paymentStatus === "awaiting_payment" && !confirmUnpaid) {
+      return NextResponse.json(
+        { error: "This applicant chose a paid plan but hasn't completed payment.", code: "UNPAID" },
+        { status: 409 },
+      );
+    }
+
+    // Never hand a listing that another account already owns to a new applicant.
+    let claimTarget: InstanceType<typeof Company> | null = null;
+    if (status === "approved") {
+      claimTarget = existingApp.claimSlug
+        ? await Company.findOne({ slug: existingApp.claimSlug })
+        : await Company.findOne({ email: existingApp.email });
+      if (claimTarget) {
+        const owner = await User.findOne({ companyId: claimTarget._id }).select("email").lean();
+        if (owner && owner.email !== existingApp.email) {
+          return NextResponse.json(
+            { error: `"${claimTarget.name}" is already owned by ${owner.email}. Resolve the ownership before approving.` },
+            { status: 409 },
+          );
+        }
+      }
+    }
+
+    existingApp.status = status;
+    await existingApp.save();
+    const app = existingApp;
 
     const tierLabel = TIER_LABELS[app.tier] ?? app.tier;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nextcanna-connect.vercel.app";
+    const siteUrl = SITE_URL;
+    const eFullName = escapeHtml(app.fullName);
+    const eCompanyName = escapeHtml(app.companyName);
+    const eTierLabel = escapeHtml(tierLabel);
 
     if (status === "approved") {
       // Create Company record if one doesn't exist yet (best-effort — never blocks approval)
       let companyId: unknown = null;
       try {
-        let company = await Company.findOne({ email: app.email });
-        if (!company) {
+        let company = claimTarget;
+        if (company) {
+          // Existing / claimed listing: apply the plan the owner signed up (and paid) for.
+          company.tier = (TIER_MAP[app.tier] ?? "free") as typeof company.tier;
+          if (!company.email) company.email = app.email;
+          await company.save();
+        } else {
           const baseSlug = toSlug(app.companyName) || "company";
           let slug = baseSlug;
           let suffix = 2;
@@ -70,7 +99,9 @@ export async function PATCH(
             name: app.companyName,
             category: app.category || "consultants-advisors",
             tier: TIER_MAP[app.tier] ?? "free",
-            location: { city: "", state: app.stateProvince || "" },
+            // "All States (USA)" / "All Provinces (Canada)" are service areas, not a location.
+            location: { city: "", state: app.stateProvince && !app.stateProvince.startsWith("all-") ? app.stateProvince : "" },
+            statesServed: app.stateProvince === "all-us" ? ["Nationwide"] : app.stateProvince === "all-ca" ? ["All Canada"] : [],
             shortDescription: app.description || `${app.companyName} — cannabis industry professional`,
             email: app.email,
             phone: app.phone || "",
@@ -104,6 +135,8 @@ export async function PATCH(
         accountType: "vendor",
         tier: TIER_MAP[app.tier] ?? "free",
         ...(companyId ? { companyId } : {}),
+        ...(app.stripeCustomerId ? { stripeCustomerId: app.stripeCustomerId } : {}),
+        ...(app.stripeSubscriptionId ? { stripeSubscriptionId: app.stripeSubscriptionId } : {}),
         isActive: !!hasPassword,
       };
 
@@ -130,9 +163,9 @@ export async function PATCH(
                 <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
               </div>
               <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${app.fullName}!</h2>
+                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${eFullName}!</h2>
                 <p style="line-height:1.6;color:#4A5E4A">
-                  Your application for <strong>${app.companyName}</strong> on the <strong>${tierLabel}</strong>
+                  Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>. Your account is now active!
                 </p>
                 <div style="text-align:center;margin:28px 0">
@@ -157,9 +190,9 @@ export async function PATCH(
                 <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
               </div>
               <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${app.fullName}!</h2>
+                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${eFullName}!</h2>
                 <p style="line-height:1.6;color:#4A5E4A">
-                  Your application for <strong>${app.companyName}</strong> on the <strong>${tierLabel}</strong>
+                  Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>.
                 </p>
                 <p style="line-height:1.6;color:#4A5E4A">
@@ -192,9 +225,9 @@ export async function PATCH(
               <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
             </div>
             <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-              <h2 style="color:#1A4A35;margin:0 0 16px">Hi ${app.fullName},</h2>
+              <h2 style="color:#1A4A35;margin:0 0 16px">Hi ${eFullName},</h2>
               <p style="line-height:1.6;color:#4A5E4A">
-                Thank you for applying to list <strong>${app.companyName}</strong> on NextCanna Connect.
+                Thank you for applying to list <strong>${eCompanyName}</strong> on NextCanna Connect.
                 After review, we're unable to approve your application at this time.
               </p>
               <p style="line-height:1.6;color:#4A5E4A">
@@ -211,7 +244,7 @@ export async function PATCH(
     return NextResponse.json({ success: true, status: app.status });
   } catch (err) {
     console.error("[signups PATCH]", err);
-    return NextResponse.json({ error: "Failed to update", detail: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update" }, { status: 500 });
   }
 }
 
@@ -227,6 +260,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[signups DELETE]", err);
-    return NextResponse.json({ error: "Failed to delete", detail: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 }

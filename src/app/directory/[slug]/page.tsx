@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCategoryBySlug } from "@/data/categories";
 import RetailCategoryPage from "@/components/directory/retail/RetailCategoryPage";
@@ -36,7 +36,7 @@ const CUSTOM_TEMPLATE_SLUGS = new Set([
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const category = getCategoryBySlug(slug);
-  if (!category) return {};
+  if (!category || !CUSTOM_TEMPLATE_SLUGS.has(slug)) notFound();
   return {
     title: `${category.label} Directory | NextCanna Connect`,
     description: category.description,
@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
+  if (!CUSTOM_TEMPLATE_SLUGS.has(slug)) notFound();
 
   if (slug === "retail-dispensary") {
     return <RetailCategoryPage />;
@@ -94,7 +95,5 @@ export default async function CategoryPage({ params }: Props) {
     return <FinanceCategoryPage />;
   }
 
-  if (!CUSTOM_TEMPLATE_SLUGS.has(slug)) {
-    redirect(`/directory?category=${slug}`);
-  }
+  notFound();
 }

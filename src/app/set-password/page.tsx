@@ -43,7 +43,7 @@ function SetPasswordForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed");
       setDone(true);
-      setTimeout(() => router.push("/vendor/login"), 3000);
+      setTimeout(() => router.push("/signin"), 3000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -68,7 +68,8 @@ function SetPasswordForm() {
         <h2 style={{ fontSize: "20px", fontWeight: 700, color: "#1A4A35", marginBottom: "8px" }}>Link Expired or Invalid</h2>
         <p style={{ color: "#6B7280", fontSize: "14px", lineHeight: 1.6, marginBottom: "20px" }}>
           This password setup link has expired or already been used.<br />
-          Please contact <a href="mailto:hello@nextcannaconnect.com" style={{ color: "#1A4A35" }}>hello@nextcannaconnect.com</a> for a new link.
+          <Link href="/forgot-password" style={{ color: "#1A4A35", fontWeight: 600 }}>Get a new link</Link> — enter your email and
+          we&apos;ll send a fresh one.
         </p>
         <Link href="/" style={{ color: "#1A4A35", fontSize: "14px", fontWeight: 600, textDecoration: "none" }}>
           ← Back to Home

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useId } from "react";
 
 export interface FlatOption {
   value: string;
@@ -38,6 +38,30 @@ export default function CustomDropdown({
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState({ top: 0, left: 0, width: 0 });
   const triggerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const listId = useId();
+
+  // Arrow keys move between options; Escape closes and returns focus to the trigger.
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape") {
+      setOpen(false);
+      buttonRef.current?.focus();
+      return;
+    }
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    if (!open) {
+      updatePos();
+      setOpen(true);
+      requestAnimationFrame(() => listRef.current?.querySelector<HTMLButtonElement>('[role="option"]')?.focus());
+      return;
+    }
+    const options = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>('[role="option"]') ?? []);
+    const i = options.indexOf(document.activeElement as HTMLButtonElement);
+    const next = e.key === "ArrowDown" ? Math.min(options.length - 1, i + 1) : Math.max(0, i - 1);
+    options[next]?.focus();
+  }
 
   const selectedLabel = (() => {
     for (const item of items) {
@@ -83,7 +107,9 @@ export default function CustomDropdown({
     <button
       key={opt.value}
       type="button"
-      onClick={() => { onChange(opt.value); setOpen(false); }}
+      role="option"
+      aria-selected={value === opt.value}
+      onClick={() => { onChange(opt.value); setOpen(false); buttonRef.current?.focus(); }}
       onMouseEnter={(e) => { if (value !== opt.value) e.currentTarget.style.background = "#f3f4f6"; }}
       onMouseLeave={(e) => { e.currentTarget.style.background = value === opt.value ? "rgba(0,51,32,0.07)" : "transparent"; }}
       style={{
@@ -110,10 +136,15 @@ export default function CustomDropdown({
     <div
       ref={triggerRef}
       style={{ position: "relative", ...wrapperStyle }}
-      onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
+      onKeyDown={handleKeyDown}
     >
       <button
+        ref={buttonRef}
         type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        aria-label={selectedLabel ? `${placeholder}: ${selectedLabel}` : placeholder}
         onClick={handleToggle}
         style={{
           width: "100%",
@@ -136,7 +167,7 @@ export default function CustomDropdown({
         <span style={{ flex: 1, textAlign: "left", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {selectedLabel ?? placeholder}
         </span>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none"
           style={{ flexShrink: 0, color: "#9CA3AF", transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }}
         >
           <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -145,6 +176,10 @@ export default function CustomDropdown({
 
       {open && (
         <div
+          ref={listRef}
+          id={listId}
+          role="listbox"
+          aria-label={placeholder}
           style={{
             position: "fixed",
             top: pos.top,
@@ -163,7 +198,7 @@ export default function CustomDropdown({
           {items.map((item, i) =>
             isGroup(item) ? (
               <div key={i}>
-                <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9CA3AF", padding: "8px 12px 4px", fontFamily: "'Inter', sans-serif", margin: 0 }}>
+                <p role="presentation" style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "#9CA3AF", padding: "8px 12px 4px", fontFamily: "'Inter', sans-serif", margin: 0 }}>
                   {item.groupLabel}
                 </p>
                 {item.options.map(optionBtn)}

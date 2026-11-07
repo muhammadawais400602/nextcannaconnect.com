@@ -31,7 +31,7 @@ export default function ShareButton({ title }: Props) {
         cursor: "pointer",
       }}
     >
-      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>share</span>
+      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>share</span>
       Share
     </button>
   );

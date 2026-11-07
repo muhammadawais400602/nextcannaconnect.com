@@ -36,8 +36,16 @@ interface SignupApp {
   serviceArea?: string;
   categoryDetails?: Record<string, string>;
   status: "pending" | "approved" | "rejected";
+  paymentStatus?: string;
+  claimSlug?: string;
   createdAt: string;
 }
+
+const PAYMENT_BADGE: Record<string, { label: string; bg: string; color: string }> = {
+  paid: { label: "Paid", bg: "#DCFCE7", color: "#166534" },
+  awaiting_payment: { label: "Not paid", bg: "#FEE2E2", color: "#991B1B" },
+  pending_manual: { label: "Manual payment", bg: "#FEF3C7", color: "#92400E" },
+};
 
 export default function UsersPage() {
   const [tab, setTab] = useState<"users" | "signups">("users");
@@ -97,18 +105,28 @@ export default function UsersPage() {
     }
   }
 
-  async function updateStatus(id: string, status: "approved" | "rejected") {
+  async function updateStatus(id: string, status: "approved" | "rejected", confirmUnpaid = false) {
     setActionLoading(id + status);
     try {
       const res = await fetch(`/api/admin/signups/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ status, confirmUnpaid }),
       });
-      if (!res.ok) throw new Error("Failed");
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data.code === "UNPAID" && !confirmUnpaid) {
+          setActionLoading(null);
+          if (confirm(`${data.error}\n\nApprove anyway (e.g. you arranged payment manually)?`)) {
+            return updateStatus(id, status, true);
+          }
+          return;
+        }
+        throw new Error(data.error || "Failed");
+      }
       setApps((prev) => prev.map((a) => a._id === id ? { ...a, status } : a));
-    } catch {
-      alert("Failed to update status. Please try again.");
+    } catch (err) {
+      alert(err instanceof Error && err.message !== "Failed" ? err.message : "Failed to update status. Please try again.");
     } finally {
       setActionLoading(null);
     }
@@ -316,6 +334,16 @@ export default function UsersPage() {
                       <span style={{ padding: "2px 10px", borderRadius: "20px", fontSize: "11px", fontWeight: 600, ...(STATUS_COLORS[app.status]) }}>
                         {app.status}
                       </span>
+                      {app.paymentStatus && PAYMENT_BADGE[app.paymentStatus] && (
+                        <span style={{ padding: "2px 10px", borderRadius: "20px", fontSize: "11px", fontWeight: 600, background: PAYMENT_BADGE[app.paymentStatus].bg, color: PAYMENT_BADGE[app.paymentStatus].color }}>
+                          {PAYMENT_BADGE[app.paymentStatus].label}
+                        </span>
+                      )}
+                      {app.claimSlug && (
+                        <a href={`/vendor/${app.claimSlug}`} target="_blank" rel="noreferrer" style={{ padding: "2px 10px", borderRadius: "20px", fontSize: "11px", fontWeight: 600, background: "#EEF2FF", color: "#3730A3", textDecoration: "none" }}>
+                          Claiming: {app.claimSlug} ↗
+                        </a>
+                      )}
                     </div>
                     <div style={{ fontSize: "12px", color: "#6B7280" }}>
                       {app.fullName} · <a href={`mailto:${app.email}`} style={{ color: "#2563EB", textDecoration: "none" }}>{app.email}</a>

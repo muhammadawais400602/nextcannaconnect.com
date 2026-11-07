@@ -130,7 +130,7 @@ export default function TermsPage() {
                 NextCanna Connect operates with a mandate of absolute clarity. Our terms are designed to protect both the integrity of the marketplace and the growth of your enterprise.
               </p>
               <div className="flex items-center gap-4">
-                <span className="material-symbols-outlined text-[#1a4a35]">verified_user</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-[#1a4a35]">verified_user</span>
                 <span className="text-[0.6875rem] uppercase tracking-widest font-bold text-[#003320]">ISO 27001 Certified Infrastructure</span>
               </div>
             </div>

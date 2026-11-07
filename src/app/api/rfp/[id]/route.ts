@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import RFP from "@/lib/models/RFP";
+import { verifyVendorSession, VENDOR_SESSION_COOKIE } from "@/lib/verifyVendorSession";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -23,7 +24,21 @@ export async function GET(
       return (order[a.tier] ?? 2) - (order[b.tier] ?? 2);
     });
 
-    return NextResponse.json({ rfp: { ...rfp, responses: sorted } });
+    // Bids are private: only the poster sees the responses. Everyone else just
+    // sees how many there are (previously competitors could read each other's bids).
+    const viewerId = await verifyVendorSession(request.cookies.get(VENDOR_SESSION_COOKIE)?.value);
+    const isOwner = !!viewerId && String(rfp.postedBy) === viewerId;
+    const { postedBy: _postedBy, ...publicRfp } = rfp;
+    void _postedBy;
+
+    return NextResponse.json({
+      rfp: {
+        ...publicRfp,
+        responses: isOwner ? sorted : [],
+        responseCount: sorted.length,
+        isOwner,
+      },
+    });
   } catch (err) {
     console.error("[rfp/[id] GET]", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

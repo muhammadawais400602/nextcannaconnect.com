@@ -1,12 +1,61 @@
 import { unstable_cache } from "next/cache";
 import { connectDB } from "@/lib/mongodb";
 import Company, { ICompany } from "@/lib/models/Company";
+import User from "@/lib/models/User";
 import type { Company as CompanyType } from "@/types";
 
 const TIER_ORDER: Record<string, number> = { elite: 0, select: 1, free: 2 };
 
-function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
-  return {
+/**
+ * Drops undefined / null fields. Listing pages send
+ * thousands of companies to the browser, and every missing field was being
+ * serialized as "$undefined" — most of a 7.8 MB category page was padding.
+ */
+function compact<T extends object>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== undefined && v !== null),
+  ) as T;
+}
+
+/**
+ * Cleans scraped logo/banner URLs: upgrades http:// to https:// (the image
+ * optimizer rejects http and browsers flag mixed content) and drops "images"
+ * that are really web pages (e.g. a company's homepage URL).
+ */
+export function cleanImageUrl(url?: string | null): string | undefined {
+  const v = url?.trim();
+  if (!v) return undefined;
+  let u: URL;
+  try {
+    u = new URL(v.replace(/^http:\/\//i, "https://"));
+  } catch {
+    return undefined;
+  }
+  if (u.protocol !== "https:") return undefined;
+  if (u.pathname === "/" || /\.(html?|php|aspx?|jsp)$/i.test(u.pathname)) return undefined;
+  return u.toString();
+}
+
+/** Ids of companies that a registered account owns (i.e. claimed listings). */
+async function getOwnedCompanyIds(): Promise<Set<string>> {
+  const ids = await User.distinct("companyId", { companyId: { $ne: null } });
+  return new Set(ids.map(String));
+}
+
+/**
+ * Fixes scraped emails like "info@atmosphere.comphone" (a label glued onto the
+ * domain) and drops values that still aren't a usable address.
+ */
+export function cleanEmail(email?: string | null): string | undefined {
+  let v = email?.trim().replace(/^mailto:/i, "");
+  if (!v) return undefined;
+  v = v.replace(/\.(com|net|org|co|io|us|ca|biz|info)(phone|email|fax|tel|website|web|call|contact|address)$/i, ".$1");
+  return /^[^\s@]+@[^\s@]+\.[a-z]{2,24}$/i.test(v) ? v : undefined;
+}
+
+function docToCompany(doc: Partial<ICompany> & { _id?: unknown }, owned?: Set<string>): CompanyType {
+  return compact({
+    claimed: owned ? owned.has(String(doc._id)) : undefined,
     id: String(doc._id ?? doc.slug),
     slug: doc.slug!,
     name: doc.name!,
@@ -19,14 +68,14 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     serviceTags: doc.serviceTags ?? [],
     logoPlaceholder: doc.logoPlaceholder!,
     logoColor: doc.logoColor ?? "#1A4A35",
-    logoUrl: doc.logoUrl,
-    bannerImageUrl: doc.bannerImageUrl,
+    logoUrl: cleanImageUrl(doc.logoUrl),
+    bannerImageUrl: cleanImageUrl(doc.bannerImageUrl),
     bannerCaption: doc.bannerCaption,
     foundedYear: doc.foundedYear,
     products: doc.products,
     website: doc.website,
     phone: doc.phone,
-    email: doc.email,
+    email: cleanEmail(doc.email),
     linkedinUrl: doc.linkedinUrl,
     instagramUrl: doc.instagramUrl,
     youtubeUrl: doc.youtubeUrl,
@@ -84,7 +133,7 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     credentialHeadline: doc.credentialHeadline,
     insurance: doc.insurance,
     processSteps: doc.processSteps,
-  };
+  } as CompanyType);
 }
 
 // ─── Cached DB fetchers ────────────────────────────────────────────────────
@@ -103,6 +152,7 @@ const CATEGORY_CARD_FIELDS =
 
 async function queryCompaniesByCategory(categorySlug: string): Promise<CompanyType[]> {
   await connectDB();
+  const owned = await getOwnedCompanyIds();
   const docs = await Company.find({
     $or: [{ category: categorySlug }, { secondaryCategory: categorySlug }],
   })
@@ -110,7 +160,7 @@ async function queryCompaniesByCategory(categorySlug: string): Promise<CompanyTy
     .lean();
 
   return docs
-    .map(docToCompany)
+    .map((d) => docToCompany(d, owned))
     .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
 }
 
@@ -123,12 +173,13 @@ const fetchCompaniesByCategory = unstable_cache(
 const fetchFeaturedCompanies = unstable_cache(
   async (): Promise<CompanyType[]> => {
     await connectDB();
+    const owned = await getOwnedCompanyIds();
     const docs = await Company.find({ tier: "select" })
       .sort({ createdAt: -1 })
       .limit(20)
       .select("-__v")
       .lean();
-    return docs.map(docToCompany);
+    return docs.map((d) => docToCompany(d, owned));
   },
   ["featured-companies"],
   { revalidate: 3600, tags: ["companies"] }
@@ -138,7 +189,7 @@ const fetchCompanyBySlug = unstable_cache(
   async (slug: string): Promise<CompanyType | undefined> => {
     await connectDB();
     const doc = await Company.findOne({ slug }).select("-__v").lean();
-    return doc ? docToCompany(doc) : undefined;
+    return doc ? docToCompany(doc, await getOwnedCompanyIds()) : undefined;
   },
   ["company-by-slug"],
   { revalidate: 1800, tags: ["companies"] }
@@ -189,9 +240,10 @@ const LISTING_FIELDS =
 
 async function queryAllCompanies(): Promise<CompanyType[]> {
   await connectDB();
+  const owned = await getOwnedCompanyIds();
   const docs = await Company.find({}).select(LISTING_FIELDS).lean();
   return docs
-    .map(docToCompany)
+    .map((d) => docToCompany(d, owned))
     .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
 }
 
@@ -218,9 +270,10 @@ export async function getAllCompanies(): Promise<CompanyType[]> {
 export async function getAllCompaniesFresh(): Promise<CompanyType[]> {
   try {
     await connectDB();
+    const owned = await getOwnedCompanyIds();
     const docs = await Company.find({}).select("-__v").lean();
     return docs
-      .map(docToCompany)
+      .map((d) => docToCompany(d, owned))
       .sort((a, b) => (TIER_ORDER[a.tier] ?? 9) - (TIER_ORDER[b.tier] ?? 9));
   } catch (err) {
     console.error("[getAllCompaniesFresh] Failed:", err);
@@ -233,7 +286,7 @@ export async function getCompanyBySlugFresh(slug: string): Promise<CompanyType |
   try {
     await connectDB();
     const doc = await Company.findOne({ slug }).select("-__v").lean();
-    return doc ? docToCompany(doc) : undefined;
+    return doc ? docToCompany(doc, await getOwnedCompanyIds()) : undefined;
   } catch (err) {
     console.error(`[getCompanyBySlugFresh] Failed for "${slug}":`, err);
     return undefined;
