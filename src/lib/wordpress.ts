@@ -61,7 +61,7 @@ export async function getPosts(params?: {
 
   if (!res.ok) return { posts: [], total: 0, totalPages: 0 };
 
-  const posts: WPPost[] = await res.json();
+  const posts: WPPost[] = (await res.json()).map(withDecodedTitle);
   const total = Number(res.headers.get("X-WP-Total") ?? 0);
   const totalPages = Number(res.headers.get("X-WP-TotalPages") ?? 0);
   return { posts, total, totalPages };
@@ -69,8 +69,8 @@ export async function getPosts(params?: {
 
 export async function getPost(slug: string): Promise<WPPost | null> {
   try {
-    const posts = await wpFetch<WPPost[]>(`/posts?slug=${slug}&_embed=1`);
-    return posts[0] ?? null;
+    const posts = await wpFetch<WPPost[]>(`/posts?slug=${encodeURIComponent(slug)}&_embed=1`);
+    return posts[0] ? withDecodedTitle(posts[0]) : null;
   } catch {
     return null;
   }
@@ -115,8 +115,28 @@ export function formatDate(dateStr: string): string {
   });
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", hellip: "…",
+  ndash: "–", mdash: "—", lsquo: "‘", rsquo: "’", ldquo: "“", rdquo: "”",
+};
+
+/** Decodes HTML entities (WordPress returns titles like "Buyer&#8217;s Guide"). */
+export function decodeEntities(text: string): string {
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (m, code: string) => {
+    if (code[0] === "#") {
+      const n = code[1].toLowerCase() === "x" ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10);
+      return Number.isFinite(n) ? String.fromCodePoint(n) : m;
+    }
+    return NAMED_ENTITIES[code.toLowerCase()] ?? m;
+  });
+}
+
+function withDecodedTitle(post: WPPost): WPPost {
+  return { ...post, title: { ...post.title, rendered: decodeEntities(post.title.rendered) } };
+}
+
 export function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, "").replace(/&[^;]+;/g, " ").trim();
+  return decodeEntities(html.replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim();
 }
 
 export function readingTime(content: string): number {
