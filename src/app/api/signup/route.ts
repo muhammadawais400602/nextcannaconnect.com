@@ -1,3 +1,4 @@
+import { sendEmail, ADMIN_EMAIL } from "@/lib/email";
 import { SITE_URL } from "@/lib/siteUrl";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -25,25 +26,11 @@ function getStripe() {
   return new Stripe(key);
 }
 
-async function sendEmail(payload: { to: string; subject: string; html: string }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL || "NextCanna Connect <noreply@nextcannaconnect.com>";
-  if (!apiKey) {
-    console.warn("[signup] RESEND_API_KEY not set — skipping email");
-    return;
-  }
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, ...payload }),
-  });
-  if (!res.ok) console.error("[signup] Resend error:", await res.text());
-}
 
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    if (!rateLimit(`signup:${ip}`, 5, 60_000)) {
+    if (!await rateLimit(`signup:${ip}`, 5, 60_000)) {
       return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
     }
 
@@ -142,7 +129,7 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation emails
     const tierLabel = TIER_LABELS[tier] ?? tier;
-    const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
+    const adminEmail = ADMIN_EMAIL;
 
     const eName = escapeHtml(fullName);
     const eCompany = escapeHtml(companyName);

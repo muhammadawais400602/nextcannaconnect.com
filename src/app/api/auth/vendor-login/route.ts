@@ -8,7 +8,7 @@ import { setVendorSessionCookie } from "@/lib/verifyVendorSession";
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    if (!rateLimit(`vendor-login:${ip}`, 10, 60_000)) {
+    if (!await rateLimit(`vendor-login:${ip}`, 10, 60_000)) {
       return NextResponse.json({ error: "Too many login attempts. Please try again later." }, { status: 429 });
     }
 

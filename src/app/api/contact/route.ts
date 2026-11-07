@@ -1,33 +1,30 @@
+import { sendEmail } from "@/lib/email";
 import { NextRequest, NextResponse } from "next/server";
 import { escapeHtml } from "@/lib/escapeHtml";
 import { rateLimit } from "@/lib/rateLimit";
+import { EMAIL_RE, isHoneypotTripped, str } from "@/lib/formGuard";
+import { ADMIN_EMAIL } from "@/lib/email";
 
-async function sendEmail(payload: { to: string; subject: string; html: string }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL || "NextCanna Connect <noreply@nextcannaconnect.com>";
-  if (!apiKey) {
-    console.warn("[contact] RESEND_API_KEY not set — skipping email");
-    return;
-  }
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, ...payload }),
-  });
-  if (!res.ok) console.error("[contact] Resend error:", await res.text());
-}
 
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    if (!rateLimit(`contact:${ip}`, 5, 60_000)) {
+    if (!await rateLimit(`contact:${ip}`, 5, 60_000)) {
       return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
     }
 
-    const { name, email, subject, message } = await request.json();
+    const body = await request.json().catch(() => ({}));
+    if (isHoneypotTripped(body)) return NextResponse.json({ success: true });
+    const name = str(body.name, 100);
+    const email = str(body.email, 200);
+    const subject = str(body.subject, 200);
+    const message = str(body.message, 5000);
 
     if (!name || !email || !subject || !message) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
+    if (!EMAIL_RE.test(email)) {
+      return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
     }
 
     const eName = escapeHtml(name);
@@ -36,7 +33,8 @@ export async function POST(request: NextRequest) {
     const eMessage = escapeHtml(message);
 
     await sendEmail({
-        to: "help@nextcannaconnect.com",
+        to: ADMIN_EMAIL,
+        replyTo: email,
         subject: `Contact form: ${eSubject} — ${eName}`,
         html: `
           <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
@@ -60,14 +58,10 @@ export async function POST(request: NextRequest) {
             <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
           </div>
           <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-            <h2 style="color:#1A4A35;margin:0 0 16px">Thanks for reaching out, ${eName}!</h2>
+            <h2 style="color:#1A4A35;margin:0 0 16px">Thanks for reaching out!</h2>
             <p style="line-height:1.6;color:#4A5E4A">
               We've received your message and will get back to you within 1–2 business days.
             </p>
-            <div style="background:white;border:1px solid #E8EDE8;border-radius:8px;padding:16px;margin:24px 0">
-              <p style="margin:0 0 8px;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;font-weight:600">Your message</p>
-              <p style="font-size:14px;color:#374151;margin:0;white-space:pre-wrap">${eMessage}</p>
-            </div>
             <p style="line-height:1.6;color:#4A5E4A">
               In the meantime, feel free to explore our
               <a href="https://nextcannaconnect.com/directory" style="color:#1A4A35">business directory</a>

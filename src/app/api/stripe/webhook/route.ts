@@ -1,3 +1,4 @@
+import { sendEmail, ADMIN_EMAIL } from "@/lib/email";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { connectDB } from "@/lib/mongodb";
@@ -10,17 +11,6 @@ function getStripe() {
   return new Stripe(key);
 }
 
-async function sendEmail(payload: { to: string; subject: string; html: string }) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM_EMAIL || "NextCanna Connect <noreply@nextcannaconnect.com>";
-  if (!apiKey) return;
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, ...payload }),
-  });
-  if (!res.ok) console.error("[webhook] Resend error:", await res.text());
-}
 
 export async function POST(request: NextRequest) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -71,7 +61,7 @@ export async function POST(request: NextRequest) {
         elite: "Verified Pro — $39.99/mo",
       };
       const tierLabel = tierLabels[app.tier] ?? app.tier;
-      const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
+      const adminEmail = ADMIN_EMAIL;
 
       // Confirmation to applicant
       await sendEmail({

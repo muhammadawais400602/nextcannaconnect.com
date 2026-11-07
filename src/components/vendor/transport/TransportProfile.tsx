@@ -130,7 +130,7 @@ export default function TransportProfile({ company }: { company: Company }) {
           {/* Right sidebar */}
           <div className="tp-sidebar">
             <div id="quote" style={{ scrollMarginTop: "112px", display: "flex", flexDirection: "column", gap: "24px" }}>
-              <TransportQuoteForm companyName={company.name} />
+              <TransportQuoteForm companyName={company.name} vendorSlug={company.slug} />
               {(company.phone || company.email || company.website) && (
                 <div style={{ background: "white", borderRadius: "0.5rem", border: `1px solid ${PARCHMENT}`, padding: "24px" }}>
                   <h3 style={{ fontSize: "12px", fontWeight: 600, color: VARIANT, textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 16px" }}>Get In Touch</h3>

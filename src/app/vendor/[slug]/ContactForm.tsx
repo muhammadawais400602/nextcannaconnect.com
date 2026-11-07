@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import CustomSelect from "@/components/ui/CustomSelect";
+import HoneypotField from "@/components/ui/HoneypotField";
+import { HONEYPOT_FIELD } from "@/lib/formGuard";
 
 interface Props {
   companyName: string;
@@ -10,7 +12,8 @@ interface Props {
 }
 
 export default function ContactForm({ companyName, vendorSlug, serviceTags }: Props) {
-  const [form, setForm] = useState({ name: "", email: "", phone: "", service: "" });
+  const [form, setForm] = useState({ name: "", email: "", phone: "", service: "", message: "" });
+  const [trap, setTrap] = useState("");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -29,6 +32,8 @@ export default function ContactForm({ companyName, vendorSlug, serviceTags }: Pr
           email: form.email,
           phone: form.phone || undefined,
           serviceNeeded: form.service || undefined,
+          message: form.message || undefined,
+          [HONEYPOT_FIELD]: trap,
         }),
       });
       if (!res.ok) {
@@ -48,7 +53,7 @@ export default function ContactForm({ companyName, vendorSlug, serviceTags }: Pr
       <div style={{ background: "white", borderRadius: "12px", padding: "28px", border: "1px solid #E5E7EB", marginBottom: "16px", textAlign: "center" }}>
         <div style={{ fontSize: "32px", marginBottom: "12px" }}>✅</div>
         <div style={{ fontSize: "15px", fontWeight: "700", color: "#111827", marginBottom: "6px" }}>Inquiry Sent</div>
-        <div style={{ fontSize: "13px", color: "#6B7280" }}>{companyName} will respond shortly.</div>
+        <div style={{ fontSize: "13px", color: "#6B7280" }}>We sent your message to {companyName}. They&apos;ll reply to you by email, and we&apos;ve emailed you a confirmation.</div>
       </div>
     );
   }
@@ -61,46 +66,56 @@ export default function ContactForm({ companyName, vendorSlug, serviceTags }: Pr
       <p style={{ fontSize: "13px", color: "#6B7280", marginBottom: "20px", lineHeight: 1.5 }}>
         Request a bespoke quote or technical consultation.
       </p>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "14px", position: "relative" }}>
         <div>
-          <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }}>
+          <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }} htmlFor="cf-name">
             Full Name
           </label>
           <input
+            id="cf-name"
             required
             value={form.name}
             onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+            maxLength={100}
+            autoComplete="name"
             placeholder="Jonathan Sterling"
             style={{ width: "100%", padding: "10px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "14px", outline: "none", boxSizing: "border-box", color: "#111827" }}
           />
         </div>
         <div>
-          <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }}>
+          <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }} htmlFor="cf-email">
             Corporate Email
           </label>
           <input
+            id="cf-email"
             required
             type="email"
             value={form.email}
             onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+            maxLength={200}
+            autoComplete="email"
             placeholder="j.sterling@enterprise.com"
             style={{ width: "100%", padding: "10px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "14px", outline: "none", boxSizing: "border-box", color: "#111827" }}
           />
         </div>
         <div>
-          <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }}>
+          <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }} htmlFor="cf-phone">
             Phone Number
           </label>
           <input
+            id="cf-phone"
             value={form.phone}
             onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+            type="tel"
+            maxLength={40}
+            autoComplete="tel"
             placeholder="+1 (415) 555-0123"
             style={{ width: "100%", padding: "10px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "14px", outline: "none", boxSizing: "border-box", color: "#111827" }}
           />
         </div>
         {serviceTags.length > 0 && (
           <div>
-            <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }}>
+            <label style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }} htmlFor="cf-service">
               Service Needed
             </label>
             <CustomSelect
@@ -115,6 +130,21 @@ export default function ContactForm({ companyName, vendorSlug, serviceTags }: Pr
             </CustomSelect>
           </div>
         )}
+        <div>
+          <label htmlFor="cf-message" style={{ display: "block", fontSize: "11px", fontWeight: "700", color: "#6B7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "6px" }}>
+            Message (optional)
+          </label>
+          <textarea
+            id="cf-message"
+            rows={3}
+            maxLength={3000}
+            value={form.message}
+            onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+            placeholder="Tell them what you need, volumes, timelines…"
+            style={{ width: "100%", padding: "10px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "14px", outline: "none", boxSizing: "border-box", color: "#111827", resize: "vertical", fontFamily: "inherit" }}
+          />
+        </div>
+        <HoneypotField value={trap} onChange={setTrap} />
         <button
           type="submit"
           disabled={sending}
@@ -122,9 +152,9 @@ export default function ContactForm({ companyName, vendorSlug, serviceTags }: Pr
         >
           {sending ? "Sending..." : "Send Inquiry"}
         </button>
-        {error && <p style={{ fontSize: "12px", color: "#DC2626", textAlign: "center", margin: 0 }}>{error}</p>}
+        {error && <p role="alert" style={{ fontSize: "12px", color: "#DC2626", textAlign: "center", margin: 0 }}>{error}</p>}
         <p style={{ fontSize: "12px", color: "#9CA3AF", textAlign: "center", marginTop: "2px" }}>
-          Priority response for ISO-certified partners.
+          Your details go only to {companyName}.
         </p>
       </form>
     </div>
