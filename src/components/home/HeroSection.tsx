@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CATEGORIES } from "@/data/categories";
@@ -36,16 +37,14 @@ export default function HeroSection() {
       }}
     >
       {/* Background image */}
-      <div
+      <Image
+        src="/hero-bg.webp"
+        alt=""
         aria-hidden
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "url('/hero-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-        }}
+        fill
+        preload
+        unoptimized
+        style={{ objectFit: "cover", objectPosition: "center" }}
       />
 
       {/* Content */}

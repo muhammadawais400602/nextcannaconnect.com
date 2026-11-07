@@ -109,7 +109,6 @@ export default function OurStory() {
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 style={{ objectFit: "cover", objectPosition: "center" }}
-                priority
               />
             </div>
             <div

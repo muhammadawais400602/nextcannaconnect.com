@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Serif } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -16,6 +17,18 @@ const notoSerif = Noto_Serif({
   weight: ["400", "700"],
   style: ["normal", "italic"],
   variable: "--font-noto-serif",
+});
+
+// Self-hosted, subsetted Material Symbols (only the icons used on the site).
+// Regenerate with `scripts/update-icon-font.sh` after adding new icon names.
+const materialSymbols = localFont({
+  src: "./fonts/material-symbols-outlined.woff2",
+  variable: "--font-material-symbols",
+  weight: "300 400",
+  display: "block",
+  preload: false,
+  adjustFontFallback: false,
+  fallback: [],
 });
 
 export const viewport: Viewport = {
@@ -39,13 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${notoSerif.variable}`}>
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${inter.variable} ${notoSerif.variable} ${materialSymbols.variable}`}>
       <body className="antialiased">
         <Navbar />
         <main>{children}</main>
