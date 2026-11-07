@@ -12,8 +12,8 @@ function toSlug(str: string): string {
 
 const TIER_LABELS: Record<string, string> = {
   free: "Claimed (Free)",
-  select: "Select — $49.99/mo",
-  elite: "Verified Pro — $99/mo",
+  select: "Select — $19.99/mo",
+  elite: "Verified Pro — $39.99/mo",
 };
 
 const TIER_MAP: Record<string, "free" | "select" | "elite"> = {

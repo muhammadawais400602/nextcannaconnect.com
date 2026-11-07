@@ -171,7 +171,7 @@ export default function MediaTab({
         ) : (
           <div style={{ textAlign: "center", padding: "24px", color: "#9CA3AF", fontSize: "13px" }}>
             Gallery upload coming soon.
-            {tier === "select" && " Select plan: up to 10 photos."}
+            {tier === "select" && " Select plan: up to 3 photos."}
             {tier === "elite" && " Verified Pro: unlimited photos."}
           </div>
         )}

@@ -18,53 +18,51 @@ const TIERS = [
     badgeColor: null,
     highlight: false,
     pill: null,
-    description: "Get your business listed in our directory at no cost.",
+    description: "Basic directory presence at no cost.",
     features: [
-      { label: "Standard directory listing", included: true },
-      { label: "Name, category & location visible", included: true },
-      { label: "Contact information", included: false },
-      { label: "Full company page", included: false },
-      { label: "Tier badge", included: false },
+      { label: "Basic directory listing", included: true },
+      { label: "Business name, location & logo", included: true },
+      { label: "Full company profile", included: false },
+      { label: "Public contact information", included: false },
+      { label: "Photo gallery", included: false },
     ],
   },
   {
     key: "select",
     name: "Select",
-    price: "$49.99",
+    price: "$19.99",
     period: "/mo",
     badge: "SELECT",
     badgeBg: "rgba(45,110,82,0.12)",
     badgeColor: "#2d6e52",
     highlight: false,
     pill: null,
-    description: "A full company profile with the NextCanna Select Seal and reduced lead pricing.",
+    description: "Enhanced listing with a full company profile and business inquiries.",
     features: [
-      { label: "Full company page", included: true },
-      { label: "NextCanna Select Seal badge", included: true },
-      { label: "Contact info on profile", included: true },
-      { label: "Enhanced directory card", included: true },
-      { label: "Priority search placement", included: false },
+      { label: "Full company profile", included: true },
+      { label: "NextCanna Connect Select badge", included: true },
+      { label: "Public contact info & inquiry form", included: true },
+      { label: "Photo gallery (up to 3 photos)", included: true },
+      { label: "Basic enhanced directory card", included: true },
     ],
   },
   {
     key: "elite",
     name: "Verified Pro",
-    price: "$99",
+    price: "$39.99",
     period: "/mo",
     badge: "VERIFIED PRO",
     badgeBg: "rgba(26,74,53,0.12)",
     badgeColor: "#1A4A35",
     highlight: true,
     pill: "BEST VALUE",
-    description: "The highest tier — full vetting, premium placement, and real-time calendar sync.",
+    description: "Premium visibility and advanced profile tools for verified operators.",
     features: [
-      { label: "Premium company page", included: true },
-      { label: "NextCanna Verified badge (full vetting)", included: true },
+      { label: "Everything in Select", included: true },
+      { label: "Verified Pro badge (after verification)", included: true },
       { label: "Priority search placement", included: true },
-      { label: "Real-time calendar sync", included: true },
-      { label: "Dedicated account support", included: true },
-      { label: "Links to social media (LinkedIn, Instagram)", included: true },
-      { label: "Display of Certifications", included: true },
+      { label: "Unlimited photo gallery", included: true },
+      { label: "Video embedding, social links & analytics", included: true },
     ],
   },
 ];
@@ -175,7 +173,7 @@ function SignUpForm() {
       });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.detail || data.error || "Submission failed");
+        throw new Error(data.error || "Submission failed");
       }
       const data = await res.json();
       if (data.checkoutUrl) {
