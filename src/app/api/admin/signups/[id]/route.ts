@@ -1,3 +1,5 @@
+import { SITE_URL } from "@/lib/siteUrl";
+import { escapeHtml } from "@/lib/escapeHtml";
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { revalidateTag } from "next/cache";
@@ -51,7 +53,10 @@ export async function PATCH(
     if (!app) return NextResponse.json({ error: "Application not found" }, { status: 404 });
 
     const tierLabel = TIER_LABELS[app.tier] ?? app.tier;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://nextcanna-connect.vercel.app";
+    const siteUrl = SITE_URL;
+    const eFullName = escapeHtml(app.fullName);
+    const eCompanyName = escapeHtml(app.companyName);
+    const eTierLabel = escapeHtml(tierLabel);
 
     if (status === "approved") {
       // Create Company record if one doesn't exist yet (best-effort — never blocks approval)
@@ -130,9 +135,9 @@ export async function PATCH(
                 <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
               </div>
               <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${app.fullName}!</h2>
+                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${eFullName}!</h2>
                 <p style="line-height:1.6;color:#4A5E4A">
-                  Your application for <strong>${app.companyName}</strong> on the <strong>${tierLabel}</strong>
+                  Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>. Your account is now active!
                 </p>
                 <div style="text-align:center;margin:28px 0">
@@ -157,9 +162,9 @@ export async function PATCH(
                 <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
               </div>
               <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${app.fullName}!</h2>
+                <h2 style="color:#1A4A35;margin:0 0 12px">Welcome aboard, ${eFullName}!</h2>
                 <p style="line-height:1.6;color:#4A5E4A">
-                  Your application for <strong>${app.companyName}</strong> on the <strong>${tierLabel}</strong>
+                  Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>.
                 </p>
                 <p style="line-height:1.6;color:#4A5E4A">
@@ -192,9 +197,9 @@ export async function PATCH(
               <h1 style="color:white;margin:0;font-size:22px">NextCanna Connect</h1>
             </div>
             <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
-              <h2 style="color:#1A4A35;margin:0 0 16px">Hi ${app.fullName},</h2>
+              <h2 style="color:#1A4A35;margin:0 0 16px">Hi ${eFullName},</h2>
               <p style="line-height:1.6;color:#4A5E4A">
-                Thank you for applying to list <strong>${app.companyName}</strong> on NextCanna Connect.
+                Thank you for applying to list <strong>${eCompanyName}</strong> on NextCanna Connect.
                 After review, we're unable to approve your application at this time.
               </p>
               <p style="line-height:1.6;color:#4A5E4A">
@@ -211,7 +216,7 @@ export async function PATCH(
     return NextResponse.json({ success: true, status: app.status });
   } catch (err) {
     console.error("[signups PATCH]", err);
-    return NextResponse.json({ error: "Failed to update", detail: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Failed to update" }, { status: 500 });
   }
 }
 
@@ -227,6 +232,6 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("[signups DELETE]", err);
-    return NextResponse.json({ error: "Failed to delete", detail: String(err) }, { status: 500 });
+    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 }

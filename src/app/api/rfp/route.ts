@@ -8,7 +8,7 @@ import { verifyVendorSession } from "@/lib/verifyVendorSession";
 async function getVendorUser(request: NextRequest) {
   const session = request.cookies.get("vendor_session")?.value;
   if (!session) return null;
-  const userId = verifyVendorSession(session);
+  const userId = await verifyVendorSession(session);
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) return null;
   await connectDB();
   const user = await User.findById(userId).select("isActive fullName tier");

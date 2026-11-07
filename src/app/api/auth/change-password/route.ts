@@ -3,12 +3,12 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import { verifyVendorSession } from "@/lib/verifyVendorSession";
+import { verifyVendorSession, setVendorSessionCookie } from "@/lib/verifyVendorSession";
 
 export async function POST(request: NextRequest) {
   try {
     const session = request.cookies.get("vendor_session")?.value;
-    const userId = session ? verifyVendorSession(session) : null;
+    const userId = await verifyVendorSession(session);
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     await connectDB();
-    const user = await User.findById(userId).select("passwordHash isActive");
+    const user = await User.findById(userId).select("passwordHash isActive sessionVersion");
 
     if (!user || !user.isActive || !user.passwordHash) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -35,9 +35,13 @@ export async function POST(request: NextRequest) {
     }
 
     user.passwordHash = await bcrypt.hash(newPassword, 12);
+    // Sign out every other device, then re-issue this browser's session.
+    user.sessionVersion = (user.sessionVersion ?? 0) + 1;
     await user.save();
 
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ success: true });
+    setVendorSessionCookie(response, String(user._id), user.sessionVersion);
+    return response;
   } catch (err) {
     console.error("[change-password]", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

@@ -7,7 +7,7 @@ import { verifyVendorSession } from "@/lib/verifyVendorSession";
 export async function GET(request: NextRequest) {
   try {
     const session = request.cookies.get("vendor_session")?.value;
-    const userId = session ? verifyVendorSession(session) : null;
+    const userId = await verifyVendorSession(session);
 
     if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

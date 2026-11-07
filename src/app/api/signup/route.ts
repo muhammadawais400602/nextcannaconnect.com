@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/siteUrl";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import bcrypt from "bcryptjs";
@@ -102,7 +103,7 @@ export async function POST(request: NextRequest) {
     // Paid tiers → create Stripe Checkout session (if Stripe is configured)
     if (isPaid && process.env.STRIPE_SECRET_KEY) {
       const priceInfo = TIER_PRICES[tier];
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+      const appUrl = SITE_URL;
       const stripe = getStripe();
 
       const session = await stripe.checkout.sessions.create({
