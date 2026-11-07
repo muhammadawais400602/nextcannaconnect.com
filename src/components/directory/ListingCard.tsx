@@ -65,7 +65,7 @@ export default function ListingCard({ company }: Props) {
             }}
           >
             {company.logoUrl ? (
-              <Image src={company.logoUrl} alt={company.name} width={48} height={48} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
+              <Image src={company.logoUrl} alt={company.name} width={48} height={48} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} />
             ) : (
               company.logoPlaceholder
             )}
@@ -134,7 +134,7 @@ export default function ListingCard({ company }: Props) {
               }}
             >
               {company.logoUrl ? (
-                <Image src={company.logoUrl} alt={company.name} width={48} height={48} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
+                <Image src={company.logoUrl} alt={company.name} width={48} height={48} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} />
               ) : (
                 company.logoPlaceholder
               )}
@@ -216,7 +216,7 @@ export default function ListingCard({ company }: Props) {
       {/* Banner image */}
       <div style={{ position: "relative", height: "140px", background: `linear-gradient(135deg, ${company.logoColor || "#1A4A35"} 0%, #0D2818 100%)` }}>
         {company.bannerImageUrl && (
-          <Image src={company.bannerImageUrl} alt={company.name} fill sizes="400px" style={{ objectFit: "cover" }} unoptimized />
+          <Image src={company.bannerImageUrl} alt={company.name} fill sizes="400px" style={{ objectFit: "cover" }} />
         )}
         <span style={{
           position: "absolute", top: "10px", left: "10px",
@@ -238,7 +238,7 @@ export default function ListingCard({ company }: Props) {
           overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.12)",
         }}>
           {company.logoUrl ? (
-            <Image src={company.logoUrl} alt={company.name} width={52} height={52} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
+            <Image src={company.logoUrl} alt={company.name} width={52} height={52} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} />
           ) : (
             company.logoPlaceholder
           )}

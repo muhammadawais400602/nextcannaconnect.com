@@ -34,6 +34,8 @@ const LeadSchema = new Schema<ILead>(
   { timestamps: true }
 );
 
+LeadSchema.index({ companyId: 1, createdAt: -1 });
+
 const Lead: Model<ILead> =
   mongoose.models.Lead || mongoose.model<ILead>("Lead", LeadSchema);
 

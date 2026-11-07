@@ -27,7 +27,7 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 export const dynamicParams = true;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -109,7 +109,7 @@ export default async function VendorPage({ params }: Props) {
             overflow: "hidden",
           }}>
             {company.logoUrl ? (
-              <Image src={company.logoUrl} alt={company.name} width={64} height={64} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} unoptimized />
+              <Image src={company.logoUrl} alt={company.name} width={64} height={64} style={{ objectFit: "cover", width: "100%", height: "100%", borderRadius: "50%" }} />
             ) : (
               company.logoPlaceholder
             )}
@@ -270,8 +270,7 @@ export default async function VendorPage({ params }: Props) {
                   sizes="(max-width: 768px) 100vw, (max-width: 1100px) 100vw, 770px"
                   style={{ objectFit: "cover" }}
                   priority
-                  unoptimized
-                />
+                                 />
               ) : (
                 <div style={{ width: "100%", height: "100%", background: `linear-gradient(160deg, ${company.logoColor} 0%, #0f1a12 100%)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <div style={{ fontSize: "80px", fontWeight: "900", color: "rgba(255,255,255,0.08)", fontFamily: "'Inter', sans-serif" }}>
@@ -382,7 +381,7 @@ export default async function VendorPage({ params }: Props) {
                     <div key={product.name} style={{ borderRadius: "10px", overflow: "hidden", border: "1px solid #E5E7EB", background: "white" }}>
                       <div style={{ position: "relative", height: "160px", background: company.logoColor + "33" }}>
                         {product.imageUrl ? (
-                          <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width:768px) 100vw, 200px" style={{ objectFit: "cover" }} unoptimized />
+                          <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width:768px) 100vw, 200px" style={{ objectFit: "cover" }} />
                         ) : (
                           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}44, ${company.logoColor}22)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <span className="material-symbols-outlined" style={{ fontSize: "36px", color: company.logoColor, opacity: 0.4 }}>inventory_2</span>

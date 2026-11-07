@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
+import { verifyVendorSession } from "@/lib/verifyVendorSession";
 
 async function getVendorUserId(request: NextRequest): Promise<string | null> {
   const session = request.cookies.get("vendor_session")?.value;
-  if (!session || !session.startsWith("nc-vendor:")) return null;
-  const userId = session.split(":")[1];
+  if (!session) return null;
+  const userId = verifyVendorSession(session);
   if (!userId || !mongoose.Types.ObjectId.isValid(userId)) return null;
   return userId;
 }

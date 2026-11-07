@@ -41,11 +41,13 @@ const SignupApplicationSchema = new Schema<ISignupApplication>(
     contactName:   String,
     categoryDetails: { type: Schema.Types.Mixed, default: {} },
     status:          { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
-    paymentStatus:   { type: String, enum: ["not_required", "awaiting_payment", "paid"], default: "not_required" },
+    paymentStatus:   { type: String, enum: ["not_required", "awaiting_payment", "paid", "pending_manual"], default: "not_required" },
     stripeSessionId: String,
   },
   { timestamps: true }
 );
+
+SignupApplicationSchema.index({ status: 1, createdAt: -1 });
 
 const SignupApplication: Model<ISignupApplication> =
   mongoose.models.SignupApplication ||

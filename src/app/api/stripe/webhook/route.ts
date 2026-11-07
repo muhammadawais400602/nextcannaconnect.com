@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { connectDB } from "@/lib/mongodb";
 import SignupApplication from "@/lib/models/SignupApplication";
+import { escapeHtml } from "@/lib/escapeHtml";
 
 function getStripe() {
   const key = process.env.STRIPE_SECRET_KEY;
@@ -84,17 +85,17 @@ export async function POST(request: NextRequest) {
             <div style="padding:32px;background:#F7F9F7;border-radius:0 0 12px 12px;border:1px solid #E8EDE8">
               <h2 style="color:#1A4A35;margin:0 0 16px">Payment Confirmed!</h2>
               <p style="line-height:1.6;color:#4A5E4A">
-                Thank you, <strong>${app.fullName}</strong>! Your payment for the
+                Thank you, <strong>${escapeHtml(app.fullName)}</strong>! Your payment for the
                 <strong>${tierLabel}</strong> plan has been confirmed.
-                Our team will review your application for <strong>${app.companyName}</strong>
+                Our team will review your application for <strong>${escapeHtml(app.companyName)}</strong>
                 and activate your listing within 1–2 business days.
               </p>
               <div style="background:white;border:1px solid #E8EDE8;border-radius:8px;padding:16px;margin:24px 0">
                 <p style="margin:0 0 8px;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;font-weight:600">Subscription Details</p>
                 <table style="width:100%;font-size:14px;color:#374151;border-collapse:collapse">
                   <tr><td style="padding:4px 0;color:#6B7280">Plan</td><td style="padding:4px 0"><strong>${tierLabel}</strong></td></tr>
-                  <tr><td style="padding:4px 0;color:#6B7280">Company</td><td style="padding:4px 0">${app.companyName}</td></tr>
-                  <tr><td style="padding:4px 0;color:#6B7280">Email</td><td style="padding:4px 0">${app.email}</td></tr>
+                  <tr><td style="padding:4px 0;color:#6B7280">Company</td><td style="padding:4px 0">${escapeHtml(app.companyName)}</td></tr>
+                  <tr><td style="padding:4px 0;color:#6B7280">Email</td><td style="padding:4px 0">${escapeHtml(app.email)}</td></tr>
                 </table>
               </div>
               <p style="line-height:1.6;color:#4A5E4A">
@@ -111,14 +112,14 @@ export async function POST(request: NextRequest) {
       if (adminEmail) {
         await sendEmail({
           to: adminEmail,
-          subject: `Payment received: ${app.companyName} (${tierLabel})`,
+          subject: `Payment received: ${escapeHtml(app.companyName)} (${tierLabel})`,
           html: `
             <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
               <h2 style="color:#1A4A35">New Paid Signup</h2>
               <table style="width:100%;border-collapse:collapse;font-size:14px">
-                <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Name</td><td style="padding:8px">${app.fullName}</td></tr>
-                <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Company</td><td style="padding:8px">${app.companyName}</td></tr>
-                <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Email</td><td style="padding:8px"><a href="mailto:${app.email}">${app.email}</a></td></tr>
+                <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Name</td><td style="padding:8px">${escapeHtml(app.fullName)}</td></tr>
+                <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Company</td><td style="padding:8px">${escapeHtml(app.companyName)}</td></tr>
+                <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Email</td><td style="padding:8px"><a href="mailto:${escapeHtml(app.email)}">${escapeHtml(app.email)}</a></td></tr>
                 <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Plan</td><td style="padding:8px">${tierLabel}</td></tr>
                 <tr><td style="padding:8px;background:#F7F9F7;font-weight:600">Stripe Session</td><td style="padding:8px">${session.id}</td></tr>
               </table>

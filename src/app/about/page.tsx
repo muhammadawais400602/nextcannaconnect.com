@@ -102,7 +102,7 @@ export default function AboutPage() {
             {/* Right */}
             <div className="about-right-col" style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
               <p style={{ color: "#414943", lineHeight: 1.75 }}>
-                Building the NextCanna brand has been one of the most{" "}
+                Building the NextCanna Connect brand has been one of the most{" "}
                 <strong>rewarding and frustrating experiences</strong> I&apos;ve had. Not because
                 the opportunity isn&apos;t there—it absolutely is. But because the cannabis industry
                 still runs on fragmented systems, closed networks, and relationships you&apos;re

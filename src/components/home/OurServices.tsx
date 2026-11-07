@@ -157,7 +157,7 @@ export default function OurServices() {
 
           <div style={{ display: "flex", flexDirection: "column", gap: "20px", marginBottom: "36px" }}>
             <p style={{ fontSize: "16px", color: "#414943", lineHeight: 1.75 }}>
-              Beyond commerce, NextCanna provides access to 17+ core service modules designed
+              Beyond commerce, NextCanna Connect provides access to 17+ core service modules designed
               to optimize every facet of your business. From seed-to-sale compliance auditing to
               institutional-grade facility management, our vetted service providers offer the
               infrastructure you need to scale with confidence.

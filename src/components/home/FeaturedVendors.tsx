@@ -129,7 +129,7 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
                         fill
                         sizes="280px"
                         style={{ objectFit: "cover" }}
-                        unoptimized
+
                       />
                     ) : (
                       <span

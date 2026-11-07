@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Company } from "@/types";
+import FaqAccordion from "@/components/ui/FaqAccordion";
 
 const DF = "#003320";
 const SAGE = "#88B99E";
@@ -115,17 +116,12 @@ export default function RetailProfileTabs({ company, similar }: { company: Compa
 
       {/* FAQs */}
       {active === "faqs" && hasFaqs && (
-        <section style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {(company.faqs ?? []).map((f) => (
-            <details key={f.question} style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}>
-              <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px", cursor: "pointer", fontSize: "14px", fontWeight: 500, color: INK, listStyle: "none" }}>
-                {f.question}
-                <span className="material-symbols-outlined" style={{ color: "#717973" }}>expand_more</span>
-              </summary>
-              <div style={{ padding: "0 16px 16px", fontSize: "14px", color: VARIANT, lineHeight: 1.6 }}>{f.answer}</div>
-            </details>
-          ))}
-        </section>
+        <FaqAccordion
+          items={(company.faqs ?? []).map((f) => ({ q: f.question, a: f.answer }))}
+          itemStyle={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem" }}
+          questionStyle={{ color: INK }}
+          answerStyle={{ color: VARIANT }}
+        />
       )}
 
       {tabs.find(t => t.id === active)?.locked && (

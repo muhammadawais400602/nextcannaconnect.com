@@ -14,7 +14,7 @@ import {
   stripHtml,
 } from "@/lib/wordpress";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Cannabis Industry Insights | NextCanna Connect",
@@ -237,8 +237,7 @@ export default async function BlogPage({ searchParams }: Props) {
                         alt={featuredPost.title.rendered}
                         fill
                         style={{ objectFit: "cover" }}
-                        unoptimized
-                      />
+                                             />
                     ) : (
                       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #003320 0%, #1A4A35 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <span style={{ fontFamily: "'Noto Serif', serif", fontSize: "48px", fontStyle: "italic", color: "rgba(255,255,255,0.15)" }}>NC</span>
@@ -331,7 +330,7 @@ export default async function BlogPage({ searchParams }: Props) {
                       {/* Image */}
                       <div style={{ position: "relative", height: "200px", backgroundColor: "#f3f4f6", flexShrink: 0 }}>
                         {img ? (
-                          <Image src={img} alt={post.title.rendered} fill style={{ objectFit: "cover" }} unoptimized />
+                          <Image src={img} alt={post.title.rendered} fill style={{ objectFit: "cover" }} />
                         ) : (
                           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, #003320 0%, #1A4A35 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <span style={{ fontFamily: "'Noto Serif', serif", fontSize: "28px", fontStyle: "italic", color: "rgba(255,255,255,0.15)" }}>NC</span>
