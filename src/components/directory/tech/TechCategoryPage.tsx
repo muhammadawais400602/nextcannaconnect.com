@@ -34,7 +34,7 @@ export default async function TechCategoryPage() {
       title="Technology & Software"
       description="Institutional-grade enterprise solutions for the regulated cannabis supply chain — compliant POS, seed-to-sale tracking, and robust ERP platforms."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Vendors` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Vendors` },
         { icon: "hub", label: `${metrcCount} Metrc Integrations` },
         { icon: "shield", label: "SOC 2 Vetted" },
       ]}

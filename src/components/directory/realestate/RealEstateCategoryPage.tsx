@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import RealEstateListingsGrid from "./RealEstateListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function RealEstateCategoryPage() {
   const companies = await getCompaniesByCategory("real-estate-construction");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function RealEstateCategoryPage() {
       title="Real Estate & Construction"
       description="Institutional-grade architecture, general contracting, and specialized engineering firms verified for commercial cannabis cultivation and retail buildouts."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Firms` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Firms` },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "task_alt", label: "100% Cannabis-Zoned Specs" },
       ]}

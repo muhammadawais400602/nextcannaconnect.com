@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Serif } from "next/font/google";
 import localFont from "next/font/local";
+import { SITE_URL } from "@/lib/siteUrl";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -37,6 +38,16 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  // "./" resolves to each page's own path, so every page gets a canonical URL
+  // (query strings like ?state= are dropped).
+  alternates: { canonical: "./" },
+  openGraph: {
+    siteName: "NextCanna Connect",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
   title: "NextCanna Connect — The Verified Marketplace for the Cannabis Industry",
   description:
     "Find and connect with verified cannabis manufacturers, consultants, suppliers, and service providers across 12 industry categories.",

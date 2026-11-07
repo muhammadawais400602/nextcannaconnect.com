@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import TransportListingsGrid from "./TransportListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function TransportCategoryPage() {
   const companies = await getCompaniesByCategory("transportation-logistics");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function TransportCategoryPage() {
       title="Transportation & Logistics"
       description="Licensed cannabis distributors, secure carriers, and last-mile fleets moving product legally across state lines and within regulated markets."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Carriers` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Carriers` },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "support_agent", label: "24/7 Support" },
       ]}

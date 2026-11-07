@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import ManufacturersListingsGrid from "./ManufacturersListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function ManufacturersCategoryPage() {
   const companies = await getCompaniesByCategory("manufacturers-suppliers");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function ManufacturersCategoryPage() {
       title="Manufacturers & Suppliers"
       description="Equipment manufacturers, raw material suppliers, and wholesale distributors serving licensed cannabis operators."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Suppliers` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Suppliers` },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "inventory_2", label: "B2B & Wholesale" },
       ]}

@@ -77,7 +77,7 @@ export default function OurStory() {
             }}
           >
             Learn more about our mission
-            <span className="material-symbols-outlined" style={{ fontSize: "18px", transition: "transform 0.2s" }}>
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px", transition: "transform 0.2s" }}>
               arrow_forward
             </span>
           </Link>

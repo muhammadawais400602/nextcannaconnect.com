@@ -70,12 +70,12 @@ function RetailCard({ company }: { company: Company }) {
           <img src={company.bannerImageUrl} alt={company.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}33, ${company.logoColor}11)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>storefront</span>
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>storefront</span>
           </div>
         )}
         {verified && (
           <span style={{ position: "absolute", top: "16px", left: "16px", background: SAGE, color: DF, fontSize: "12px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem", boxShadow: "0 1px 2px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "4px" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> VERIFIED
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> VERIFIED
           </span>
         )}
       </div>
@@ -88,13 +88,13 @@ function RetailCard({ company }: { company: Company }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
-              <span className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>storefront</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>storefront</span>
             )}
           </div>
           <div style={{ minWidth: 0 }}>
             <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
               <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
             </div>
           </div>
@@ -114,7 +114,7 @@ function RetailCard({ company }: { company: Company }) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px", marginTop: "auto" }}>
           {typeof company.rating === "number" ? <StarRow rating={company.rating} /> : <span />}
           <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+            View Profile <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
           </Link>
         </div>
       </div>
@@ -184,7 +184,7 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
     <>
       {/* Filter bar */}
       <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, position: "sticky", top: "70px", zIndex: 40 }}>
-        <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
+        <div className="cat-container" style={{ paddingTop: "16px", paddingBottom: "16px", display: "flex", flexWrap: "wrap", gap: "12px", alignItems: "center" }}>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "12px", flex: 1, minWidth: 0 }}>
             <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
               <option value="">Location</option>
@@ -210,7 +210,7 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
             </select>
           </div>
           <div style={{ position: "relative", flex: "0 1 256px", minWidth: "180px" }}>
-            <span className="material-symbols-outlined" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#c0c9c1", fontSize: "20px" }}>search</span>
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#c0c9c1", fontSize: "20px" }}>search</span>
             <input
               value={search}
               onChange={(e) => { setSearch(e.target.value); setVisible(PAGE_SIZE); }}
@@ -226,7 +226,7 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
         <div className="cat-container">
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>search_off</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>search_off</span>
               <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No dispensaries are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No dispensaries match your filters. Try removing a filter.</>}</p>
             </div>
           ) : (
@@ -235,7 +235,7 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
 
               {/* CTA tile — appended to the grid */}
               <div style={{ background: DF, borderRadius: "0.75rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "32px" }}>
-                <span className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px" }}>storefront</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px" }}>storefront</span>
                 <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: "0 0 8px" }}>Are you a dispensary operator?</h3>
                 <p style={{ fontSize: "15px", color: "rgba(251,249,248,0.8)", margin: "0 0 24px" }}>Join the largest verified network of cannabis retailers. Expand your B2B reach today.</p>
                 <Link href="/signup" style={{ fontSize: "14px", fontWeight: 500, background: SAGE, color: DF, padding: "12px 24px", borderRadius: "0.25rem", textDecoration: "none", width: "100%", boxSizing: "border-box" }}>Claim Your Listing</Link>

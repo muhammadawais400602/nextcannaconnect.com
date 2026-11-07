@@ -33,7 +33,7 @@ export default async function ExtractionCategoryPage() {
       title="Extraction & Processing"
       description="Licensed extraction and processing facilities producing concentrates, distillates, and refined cannabis products."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Facilities` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Facilities` },
         { icon: "science", label: "CO₂ / Ethanol / Hydrocarbon" },
         { icon: "inventory_2", label: "White Label Available" },
       ]}

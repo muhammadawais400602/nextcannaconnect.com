@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import ConsultantsListingsGrid from "./ConsultantsListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function ConsultantsCategoryPage() {
   const companies = await getCompaniesByCategory("consultants-advisors");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function ConsultantsCategoryPage() {
       title="Consultants & Advisors"
       description="Strategic advisors, operational consultants, and specialized guidance for cannabis business owners at every stage."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Consultants` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Consultants` },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "school", label: "Licensing to Operations" },
       ]}

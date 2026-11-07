@@ -167,7 +167,7 @@ export default function OurCategories() {
                 }}
               >
                 Explore Category
-                <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>arrow_forward</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px" }}>arrow_forward</span>
               </div>
             </Link>
           ))}

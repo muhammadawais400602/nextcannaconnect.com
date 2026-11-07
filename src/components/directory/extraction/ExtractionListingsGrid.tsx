@@ -34,12 +34,12 @@ function FacilityCard({ company }: { company: Company }) {
           <img src={company.bannerImageUrl} alt={company.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}33, ${company.logoColor}11)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>science</span>
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>science</span>
           </div>
         )}
         {(verified || company.accreditation) && (
           <div style={{ position: "absolute", top: "16px", left: "16px", background: SAGE, color: DF, fontSize: "12px", fontWeight: 600, padding: "4px 8px", borderRadius: "0.25rem", boxShadow: "0 1px 2px rgba(0,0,0,0.1)", display: "flex", alignItems: "center", gap: "4px" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> {company.accreditation || "Verified"}
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> {company.accreditation || "Verified"}
           </div>
         )}
       </div>
@@ -51,13 +51,13 @@ function FacilityCard({ company }: { company: Company }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
-              <span className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>science</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>science</span>
             )}
           </div>
           <div style={{ minWidth: 0 }}>
             <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
               <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
             </div>
           </div>
@@ -90,11 +90,11 @@ function FacilityCard({ company }: { company: Company }) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: `1px solid ${PARCHMENT}`, paddingTop: "16px", marginTop: "auto" }}>
           {company.accreditation ? (
             <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", fontSize: "12px", fontWeight: 600, color: "#396751" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>{company.accreditation}
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", fontVariationSettings: "'FILL' 1" }}>verified</span>{company.accreditation}
             </span>
           ) : <span />}
           <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+            View Profile <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
           </Link>
         </div>
       </div>
@@ -143,9 +143,9 @@ export default function ExtractionListingsGrid({ companies }: { companies: Compa
   return (
     <>
       <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, position: "sticky", top: "70px", zIndex: 40 }}>
-        <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
+        <div className="cat-container" style={{ paddingTop: "16px", paddingBottom: "16px", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
           <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
-            <span className="material-symbols-outlined">filter_list</span> Filters:
+            <span aria-hidden="true" className="material-symbols-outlined">filter_list</span> Filters:
           </span>
           <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Locations</option>
@@ -167,7 +167,7 @@ export default function ExtractionListingsGrid({ companies }: { companies: Compa
         <div className="cat-container">
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>science</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>science</span>
               <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No extraction facilities are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No extraction facilities match your filters. Try removing a filter.</>}</p>
             </div>
           ) : (
@@ -175,7 +175,7 @@ export default function ExtractionListingsGrid({ companies }: { companies: Compa
               {shown.map((c) => <FacilityCard key={c.slug} company={c} />)}
 
               <div style={{ background: DF, borderRadius: "0.75rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "32px" }}>
-                <span className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px" }}>science</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE, fontSize: "48px", marginBottom: "16px" }}>science</span>
                 <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: "0 0 8px" }}>Are you an extraction facility?</h3>
                 <p style={{ fontSize: "15px", color: "rgba(251,249,248,0.8)", margin: "0 0 24px" }}>List your operation and reach verified cannabis buyers.</p>
                 <Link href="/signup" style={{ fontSize: "14px", fontWeight: 500, background: SAGE, color: DF, padding: "12px 24px", borderRadius: "0.25rem", textDecoration: "none", width: "100%", boxSizing: "border-box" }}>List Your Facility</Link>

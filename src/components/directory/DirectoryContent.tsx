@@ -101,7 +101,7 @@ export default function DirectoryContent({ companies, initialCategory }: Props) 
               alignItems: "center",
             }}
           >
-            <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>close</span>
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "22px" }}>close</span>
           </button>
         </div>
 

@@ -3,29 +3,33 @@ import { CATEGORIES } from "@/data/categories";
 import { getAllCompanies } from "@/lib/getCompaniesFromDB";
 import { getPosts } from "@/lib/wordpress";
 
-const BASE_URL = "https://nextcannaconnect.com";
+import { SITE_URL } from "@/lib/siteUrl";
+
+const BASE_URL = SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ── Static pages ──────────────────────────────────────────────
+  // No lastModified on static pages: a timestamp that changes on every request
+  // tells crawlers nothing and makes them distrust the sitemap.
   const staticPages: MetadataRoute.Sitemap = [
-    { url: BASE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
-    { url: `${BASE_URL}/directory`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
-    { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
-    { url: `${BASE_URL}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE_URL}/membership`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE_URL}/pricing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${BASE_URL}/signup`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
-    { url: `${BASE_URL}/signin`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
-    { url: `${BASE_URL}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/disclaimer`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
-    { url: `${BASE_URL}/cookie-policy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: BASE_URL, changeFrequency: "weekly", priority: 1 },
+    { url: `${BASE_URL}/directory`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${BASE_URL}/blog`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${BASE_URL}/rfp-board`, changeFrequency: "daily", priority: 0.7 },
+    { url: `${BASE_URL}/about`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/membership`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE_URL}/pricing`, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${BASE_URL}/contact`, changeFrequency: "yearly", priority: 0.5 },
+    { url: `${BASE_URL}/signup`, changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE_URL}/privacy`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/terms`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/disclaimer`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${BASE_URL}/cookie-policy`, changeFrequency: "yearly", priority: 0.3 },
   ];
 
   // ── Category pages ────────────────────────────────────────────
   const categoryPages: MetadataRoute.Sitemap = CATEGORIES.map((cat) => ({
     url: `${BASE_URL}/directory/${cat.slug}`,
-    lastModified: new Date(),
     changeFrequency: "daily" as const,
     priority: 0.8,
   }));
@@ -38,7 +42,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((c) => c.tier !== "free")
       .map((c) => ({
         url: `${BASE_URL}/vendor/${c.slug}`,
-        lastModified: new Date(),
         changeFrequency: "weekly" as const,
         priority: 0.7,
       }));

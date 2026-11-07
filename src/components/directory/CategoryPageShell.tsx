@@ -103,7 +103,7 @@ export default function CategoryPageShell({
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", marginBottom: "32px" }}>
             {stats.map((s) => (
               <div key={s.label} style={{ background: "rgba(251,249,248,0.1)", backdropFilter: "blur(4px)", border: "1px solid rgba(251,249,248,0.2)", padding: "8px 16px", borderRadius: "0.5rem", display: "flex", alignItems: "center", gap: "8px", color: "#FBF9F8" }}>
-                <span className="material-symbols-outlined" style={{ color: SAGE }}>{s.icon}</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE }}>{s.icon}</span>
                 <span style={{ fontSize: "14px", fontWeight: 500 }}>{s.label}</span>
               </div>
             ))}
@@ -122,14 +122,14 @@ export default function CategoryPageShell({
             <details style={{ background: "white", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, overflow: "hidden" }}>
               <summary style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "24px", cursor: "pointer", listStyle: "none" }}>
                 <h2 style={{ fontFamily: "'Noto Serif', Georgia, serif", fontSize: "26px", fontWeight: 700, color: DF, margin: 0 }}>{guideTitle}</h2>
-                <span className="material-symbols-outlined" style={{ color: DF }}>expand_more</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ color: DF }}>expand_more</span>
               </summary>
               <div style={{ padding: "24px", borderTop: `1px solid ${PARCHMENT}`, background: "#FBF9F8" }}>
                 <div className="cat-guide-grid">
                   {guide.map((g) => (
                     <div key={g.title} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                       <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: DF, color: SAGE, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "16px" }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: "32px" }}>{g.icon}</span>
+                        <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "32px" }}>{g.icon}</span>
                       </div>
                       <h3 style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", margin: "0 0 8px" }}>{g.title}</h3>
                       <p style={{ fontSize: "14px", color: VARIANT, margin: 0, lineHeight: 1.5 }}>{g.body}</p>
@@ -154,7 +154,7 @@ export default function CategoryPageShell({
               {related.map((r) => (
                 <Link key={r.slug} href={`/directory/${r.slug}`} style={{ background: "white", padding: "24px", borderRadius: "0.75rem", border: `1px solid ${PARCHMENT}`, textAlign: "center", textDecoration: "none", display: "block" }}>
                   <div style={{ width: "48px", height: "48px", margin: "0 auto 16px", borderRadius: "50%", background: "#efedec", display: "flex", alignItems: "center", justifyContent: "center", color: OUTLINE }}>
-                    <span className="material-symbols-outlined">{r.icon}</span>
+                    <span aria-hidden="true" className="material-symbols-outlined">{r.icon}</span>
                   </div>
                   <h3 style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", margin: 0 }}>{r.label}</h3>
                 </Link>

@@ -44,12 +44,12 @@ function CarrierCard({ company }: { company: Company }) {
           <img src={company.bannerImageUrl} alt={company.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         ) : (
           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}33, ${company.logoColor}11)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>local_shipping</span>
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "44px", color: company.logoColor, opacity: 0.4 }}>local_shipping</span>
           </div>
         )}
         {verified && (
           <span style={{ position: "absolute", top: "16px", left: "16px", background: SAGE, color: DF, padding: "4px 8px", borderRadius: "0.25rem", fontSize: "12px", fontWeight: 600, display: "flex", alignItems: "center", gap: "4px", boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}>
-            <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> VERIFIED
+            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px" }}>verified</span> VERIFIED
           </span>
         )}
       </div>
@@ -62,13 +62,13 @@ function CarrierCard({ company }: { company: Company }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img src={company.logoUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             ) : (
-              <span className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>local_shipping</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ color: "#c0c9c1" }}>local_shipping</span>
             )}
           </div>
           <div style={{ minWidth: 0 }}>
             <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
               <span>{[company.location.city, company.location.state].filter(Boolean).join(", ") || "—"}</span>
             </div>
           </div>
@@ -97,14 +97,14 @@ function CarrierCard({ company }: { company: Company }) {
           <div style={{ display: "flex", alignItems: "center" }}>
             {typeof company.rating === "number" ? (
               <>
-                <span className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE, fontVariationSettings: "'FILL' 1" }}>star</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE, fontVariationSettings: "'FILL' 1" }}>star</span>
                 <span style={{ fontSize: "14px", fontWeight: 700, marginLeft: "4px" }}>{company.rating}</span>
                 {company.reviewCount ? <span style={{ color: VARIANT, fontSize: "12px", marginLeft: "4px" }}>({company.reviewCount} reviews)</span> : null}
               </>
             ) : <span />}
           </div>
           <Link href={`/vendor/${company.slug}`} style={{ color: DF, fontSize: "14px", fontWeight: 500, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
-            View Profile <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
+            View Profile <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
           </Link>
         </div>
       </div>
@@ -148,9 +148,9 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
     <>
     {/* Filter bar */}
     <div style={{ background: "white", borderTop: `1px solid ${PARCHMENT}`, borderBottom: `1px solid ${PARCHMENT}`, position: "sticky", top: "70px", zIndex: 40 }}>
-      <div className="cat-container" style={{ padding: "16px 0", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
+      <div className="cat-container" style={{ paddingTop: "16px", paddingBottom: "16px", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "12px" }}>
         <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
-          <span className="material-symbols-outlined">filter_list</span> Filters:
+          <span aria-hidden="true" className="material-symbols-outlined">filter_list</span> Filters:
         </span>
         <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
           <option value="">All Locations</option>
@@ -166,17 +166,17 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
         <h2 style={{ fontSize: "24px", fontWeight: 600, color: DF, margin: 0 }}>{filtered.length} Verified Carrier{filtered.length === 1 ? "" : "s"}</h2>
         <div style={{ display: "flex", alignItems: "center", gap: "8px", background: PARCHMENT, borderRadius: "0.5rem", padding: "4px" }}>
           <button onClick={() => setView("grid")} aria-label="Grid view" style={{ padding: "8px", borderRadius: "0.25rem", border: "none", cursor: "pointer", background: view === "grid" ? "white" : "transparent", color: view === "grid" ? DF : VARIANT, display: "flex", boxShadow: view === "grid" ? "0 1px 2px rgba(0,0,0,0.1)" : "none" }}>
-            <span className="material-symbols-outlined">grid_view</span>
+            <span aria-hidden="true" className="material-symbols-outlined">grid_view</span>
           </button>
           <button onClick={() => setView("list")} aria-label="List view" style={{ padding: "8px", borderRadius: "0.25rem", border: "none", cursor: "pointer", background: view === "list" ? "white" : "transparent", color: view === "list" ? DF : VARIANT, display: "flex", boxShadow: view === "list" ? "0 1px 2px rgba(0,0,0,0.1)" : "none" }}>
-            <span className="material-symbols-outlined">list</span>
+            <span aria-hidden="true" className="material-symbols-outlined">list</span>
           </button>
         </div>
       </div>
 
       {shown.length === 0 ? (
         <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>local_shipping</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>local_shipping</span>
           <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No carriers are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No carriers match your filters. Try removing a filter.</>}</p>
         </div>
       ) : (
@@ -185,7 +185,7 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
 
           {view === "grid" && (
             <div style={{ background: DF, borderRadius: "0.75rem", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center", padding: "32px" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "36px", color: SAGE, marginBottom: "16px" }}>directions_bus</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "36px", color: SAGE, marginBottom: "16px" }}>directions_bus</span>
               <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#FBF9F8", margin: "0 0 16px" }}>Run a cannabis fleet?</h3>
               <p style={{ fontSize: "16px", color: "#EEEAE3", margin: "0 0 32px" }}>Connect with licensed producers and retailers looking for reliable transportation partners in your region.</p>
               <Link href="/signup" style={{ background: SAGE, color: DF, padding: "12px 24px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>Claim Your Listing</Link>

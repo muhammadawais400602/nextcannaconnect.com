@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import CultivationListingsGrid from "./CultivationListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function CultivationCategoryPage() {
   const companies = await getCompaniesByCategory("cultivation-growing");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function CultivationCategoryPage() {
       title="Cultivation & Growing"
       description="Licensed cannabis cultivation operations — indoor, outdoor, and greenhouse grows supplying the commercial supply chain."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Cultivators` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Cultivators` },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "nature", label: "Indoor & Outdoor" },
       ]}

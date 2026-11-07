@@ -226,7 +226,7 @@ export default function HeroSection() {
               onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#1a4a35"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = "#003320"; }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>search</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>search</span>
               Browse
             </button>
           </div>

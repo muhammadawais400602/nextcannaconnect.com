@@ -53,8 +53,8 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
                 whiteSpace: "nowrap",
               }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>{t.icon}</span>
-              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px" }}>lock</span>}</button>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>{t.icon}</span>
+              {t.label}{t.locked && <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px" }}>lock</span>}</button>
           ))}
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
                       <td style={{ padding: "16px 24px", color: VARIANT, fontFamily: "monospace", fontSize: "14px" }}>{l.number || "—"}</td>
                       <td style={{ padding: "16px 24px" }}>
                         <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", background: SEC_CONTAINER, color: ON_SEC_CONTAINER, padding: "2px 8px", borderRadius: "0.25rem", fontSize: "12px", fontWeight: 500 }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: "12px" }}>check</span>
+                          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "12px" }}>check</span>
                           {l.status || "Active"}
                         </span>
                       </td>
@@ -118,7 +118,7 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
                     <img src={p.imageUrl} alt={p.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
                     <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "40px", color: company.logoColor, opacity: 0.4 }}>apartment</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "40px", color: company.logoColor, opacity: 0.4 }}>apartment</span>
                     </div>
                   )}
                 </div>
@@ -148,7 +148,7 @@ export default function RealEstateProfileTabs({ company }: { company: Company })
 
       {tabs.find(t => t.id === active)?.locked && (
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
           <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>{isFree ? "Select Feature" : "Verified Pro Feature"}</h3>
           <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>{isFree ? "Upgrade to add listing details." : "Upgrade to Verified Pro to unlock this section."}</p>
           <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>

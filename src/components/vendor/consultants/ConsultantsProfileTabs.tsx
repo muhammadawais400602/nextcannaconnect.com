@@ -64,7 +64,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
                 whiteSpace: "nowrap",
               }}
             >
-              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
+              {t.label}{t.locked && <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
             </button>
           ))}
         </nav>
@@ -92,7 +92,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
             {[...(company.credentials ?? []), ...(company.certifications ?? [])].map((cred) => (
               <span key={cred} style={{ display: "flex", alignItems: "center", gap: "8px", background: "rgba(187,238,209,0.15)", border: `1px solid ${SAGE}44`, borderRadius: "0.5rem", padding: "10px 16px", fontSize: "14px", fontWeight: 500, color: INK }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE }}>workspace_premium</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE }}>workspace_premium</span>
                 {cred}
               </span>
             ))}
@@ -106,7 +106,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {(company.serviceTags ?? []).map((tag) => (
               <div key={tag} style={{ display: "flex", alignItems: "center", gap: "12px", padding: "12px 0", borderBottom: `1px solid ${PARCHMENT}` }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE }}>check_circle</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "20px", color: SAGE }}>check_circle</span>
                 <span style={{ fontSize: "16px", color: INK }}>{tag}</span>
               </div>
             ))}
@@ -135,7 +135,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
       )}
       {tabs.find(t => t.id === active)?.locked && (
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
           <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>{isFree ? "Select Feature" : "Verified Pro Feature"}</h3>
           <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>{isFree ? "Upgrade to add listing details." : "Upgrade to Verified Pro to unlock this section."}</p>
           <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>
@@ -155,7 +155,7 @@ export default function ConsultantsProfileTabs({ company, similar }: { company: 
                     <img src={c.bannerImageUrl} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
                     <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${c.logoColor}33, ${c.logoColor}11)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "32px", color: c.logoColor, opacity: 0.4 }}>support_agent</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "32px", color: c.logoColor, opacity: 0.4 }}>support_agent</span>
                     </div>
                   )}
                 </div>

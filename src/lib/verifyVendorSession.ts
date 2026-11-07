@@ -27,24 +27,24 @@ export function createVendorSession(userId: string, sessionVersion = 0): string 
   return `nc-vendor:${payload}:${sign(payload)}`;
 }
 
+/** Non-secret marker readable by client JS, so pages only check the session when one might exist. */
+export const SIGNED_IN_MARKER = "nc_vendor";
+
 export function setVendorSessionCookie(response: NextResponse, userId: string, sessionVersion = 0) {
-  response.cookies.set(VENDOR_SESSION_COOKIE, createVendorSession(userId, sessionVersion), {
-    httpOnly: true,
+  const base = {
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "lax" as const,
     maxAge: VENDOR_SESSION_MAX_AGE_SECONDS,
     path: "/",
-  });
+  };
+  response.cookies.set(VENDOR_SESSION_COOKIE, createVendorSession(userId, sessionVersion), { ...base, httpOnly: true });
+  response.cookies.set(SIGNED_IN_MARKER, "1", { ...base, httpOnly: false });
 }
 
 export function clearVendorSessionCookie(response: NextResponse) {
-  response.cookies.set(VENDOR_SESSION_COOKIE, "", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: 0,
-    path: "/",
-  });
+  const base = { secure: process.env.NODE_ENV === "production", sameSite: "lax" as const, maxAge: 0, path: "/" };
+  response.cookies.set(VENDOR_SESSION_COOKIE, "", { ...base, httpOnly: true });
+  response.cookies.set(SIGNED_IN_MARKER, "", { ...base, httpOnly: false });
 }
 
 /** Checks the signature and age of a session token. Does not touch the database. */

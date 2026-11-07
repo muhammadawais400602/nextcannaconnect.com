@@ -12,7 +12,7 @@ const VARIANT = "#414943";
 function StatTile({ icon, value, label }: { icon: string; value: string; label: string }) {
   return (
     <div style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", padding: "16px", textAlign: "center" }}>
-      <span className="material-symbols-outlined" style={{ fontSize: "24px", color: SAGE, display: "block", marginBottom: "8px" }}>{icon}</span>
+      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "24px", color: SAGE, display: "block", marginBottom: "8px" }}>{icon}</span>
       <div style={{ fontSize: "24px", fontWeight: 600, color: "#001c10" }}>{value}</div>
       <div style={{ fontSize: "12px", fontWeight: 600, color: VARIANT }}>{label}</div>
     </div>
@@ -65,7 +65,7 @@ export default function TransportProfileTabs({ company }: { company: Company }) 
                 cursor: "pointer",
               }}
             >
-              {t.label}{t.locked && <span className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
+              {t.label}{t.locked && <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px", marginLeft: "4px", verticalAlign: "middle" }}>lock</span>}
             </button>
           ))}
         </div>
@@ -108,7 +108,7 @@ export default function TransportProfileTabs({ company }: { company: Company }) 
                       <td style={{ padding: "16px", fontFamily: "monospace", fontSize: "14px" }}>{l.number}</td>
                       <td style={{ padding: "16px" }}>
                         <span style={{ display: "inline-flex", alignItems: "center", gap: "4px", color: SAGE, fontSize: "12px", fontWeight: 600, background: "rgba(184,235,206,0.2)", padding: "4px 8px", borderRadius: "0.25rem" }}>
-                          <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>check_circle</span>
+                          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px" }}>check_circle</span>
                           {l.status || "Active"}
                         </span>
                       </td>
@@ -128,7 +128,7 @@ export default function TransportProfileTabs({ company }: { company: Company }) 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
             {services.map((s) => (
               <span key={s} style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "10px 16px", fontSize: "14px", fontWeight: 500, color: "#1b1c1b" }}>
-                <span className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE }}>check_circle</span>
+                <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE }}>check_circle</span>
                 {s}
               </span>
             ))}
@@ -138,7 +138,7 @@ export default function TransportProfileTabs({ company }: { company: Company }) 
 
       {tabs.find(t => t.id === active)?.locked && (
         <section style={{ background: "white", border: `1px solid ${PARCHMENT}`, borderRadius: "0.5rem", padding: "40px 32px", textAlign: "center" }}>
-          <span className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "32px", color: "#9CA3AF", marginBottom: "12px", display: "block" }}>lock</span>
           <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#1A1A1A", margin: "0 0 8px" }}>{isFree ? "Select Feature" : "Verified Pro Feature"}</h3>
           <p style={{ fontSize: "14px", color: "#414943", margin: "0 0 16px" }}>{isFree ? "Upgrade to add listing details." : "Upgrade to Verified Pro to unlock this section."}</p>
           <Link href="/pricing" style={{ fontSize: "13px", fontWeight: 700, color: "#003320", textDecoration: "none" }}>View Plans &rarr;</Link>

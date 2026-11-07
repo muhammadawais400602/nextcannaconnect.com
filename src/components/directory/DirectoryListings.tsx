@@ -185,7 +185,7 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
                 whiteSpace: "nowrap",
               }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>tune</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>tune</span>
               Filters
               {activeFilterCount > 0 && (
                 <span
@@ -258,7 +258,7 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
             textAlign: "center",
           }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "#D1D5DB" }}>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "40px", color: "#D1D5DB" }}>
             search_off
           </span>
           <p style={{ fontSize: "16px", fontWeight: 600, color: "#111827", margin: "12px 0 6px", fontFamily: "'Inter', sans-serif" }}>

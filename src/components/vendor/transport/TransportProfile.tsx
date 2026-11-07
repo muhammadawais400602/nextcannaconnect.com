@@ -45,11 +45,11 @@ export default function TransportProfile({ company }: { company: Company }) {
       <div className="tp-container" style={{ paddingTop: "16px", paddingBottom: "16px" }}>
         <nav style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", fontWeight: 600, color: VARIANT, flexWrap: "wrap" }}>
           <Link href="/" style={{ color: VARIANT, textDecoration: "none" }}>Home</Link>
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
           <Link href="/directory" style={{ color: VARIANT, textDecoration: "none" }}>Directory</Link>
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
           <Link href="/directory/transportation-logistics" style={{ color: VARIANT, textDecoration: "none" }}>Transportation &amp; Logistics</Link>
-          <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
+          <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>chevron_right</span>
           <span style={{ color: DF, fontWeight: 500 }}>{company.name}</span>
         </nav>
       </div>
@@ -66,7 +66,7 @@ export default function TransportProfile({ company }: { company: Company }) {
         <div className="tp-container" style={{ position: "relative", height: "100%" }}>
           <div style={{ position: "absolute", top: "16px", left: "20px" }}>
             <Link href="/directory/transportation-logistics" style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "#FBF9F8", fontSize: "14px", fontWeight: 500, background: "rgba(26,26,26,0.5)", padding: "6px 12px", borderRadius: "0.25rem", backdropFilter: "blur(4px)", textDecoration: "none" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>arrow_back</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "20px" }}>arrow_back</span>
               <span>Back to Transportation &amp; Logistics</span>
             </Link>
           </div>
@@ -93,7 +93,7 @@ export default function TransportProfile({ company }: { company: Company }) {
                   <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "16px", fontSize: "14px", fontWeight: 500, color: VARIANT, paddingTop: "8px" }}>
                     {metaItems.map((m) => (
                       <span key={m.label} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE, fontVariationSettings: m.icon === "star" ? "'FILL' 1" : undefined }}>{m.icon}</span>
+                        <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px", color: SAGE, fontVariationSettings: m.icon === "star" ? "'FILL' 1" : undefined }}>{m.icon}</span>
                         <span>{m.label}</span>
                       </span>
                     ))}
@@ -111,7 +111,7 @@ export default function TransportProfile({ company }: { company: Company }) {
             <div style={{ marginTop: "24px", paddingTop: "24px", borderTop: `1px solid ${PARCHMENT}`, display: "flex", flexWrap: "wrap", gap: "12px" }}>
               {pills.map((p) => (
                 <span key={p.label} style={{ display: "inline-flex", alignItems: "center", gap: "6px", padding: "4px 12px", background: "#f5f3f2", border: `1px solid ${PARCHMENT}`, borderRadius: "0.25rem", fontSize: "12px", fontWeight: 600, color: "#001c10" }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "16px", color: SAGE }}>{p.icon}</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: SAGE }}>{p.icon}</span>
                   {p.label}
                 </span>
               ))}
@@ -137,17 +137,17 @@ export default function TransportProfile({ company }: { company: Company }) {
                   <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                     {company.phone && (
                       <a href={`tel:${company.phone}`} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "16px", color: "#1b1c1b", textDecoration: "none" }}>
-                        <span className="material-symbols-outlined" style={{ color: VARIANT }}>phone</span> {company.phone}
+                        <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT }}>phone</span> {company.phone}
                       </a>
                     )}
                     {company.email && (
                       <a href={`mailto:${company.email}`} style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "16px", color: "#1b1c1b", textDecoration: "none" }}>
-                        <span className="material-symbols-outlined" style={{ color: VARIANT }}>mail</span> {company.email}
+                        <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT }}>mail</span> {company.email}
                       </a>
                     )}
                     {company.website && (
                       <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "12px", fontSize: "16px", color: "#1b1c1b", textDecoration: "none" }}>
-                        <span className="material-symbols-outlined" style={{ color: VARIANT }}>language</span> {company.website.replace(/^https?:\/\//, "")}
+                        <span aria-hidden="true" className="material-symbols-outlined" style={{ color: VARIANT }}>language</span> {company.website.replace(/^https?:\/\//, "")}
                       </a>
                     )}
                   </div>

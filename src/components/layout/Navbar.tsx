@@ -303,13 +303,30 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/auth/vendor-me")
+    // Only ask the server about a session when a sign-in marker cookie exists,
+    // so anonymous visitors don't make two failing (401) requests on every page.
+    const cookies = typeof document !== "undefined" ? document.cookie : "";
+    const maybeVendor = cookies.includes("nc_vendor=1");
+    const maybeAdmin = cookies.includes("nc_admin=1");
+    if (!maybeVendor && !maybeAdmin) {
+      Promise.resolve().then(() => {
+        setAuthUser(null);
+        setAuthLoading(false);
+      });
+      return;
+    }
+    (maybeVendor ? fetch("/api/auth/vendor-me") : Promise.resolve(new Response(null, { status: 401 })))
       .then((r) => r.ok ? r.json() : null)
       .then((data) => {
         if (data?.user) {
           setAuthUser(data.user);
         } else {
           // Check admin session
+          if (!maybeAdmin) {
+            setAuthUser(null);
+            setAuthLoading(false);
+            return;
+          }
           fetch("/api/admin/auth/me")
             .then((r) => r.ok ? r.json() : null)
             .then((adminData) => {
@@ -435,7 +452,8 @@ export default function Navbar() {
           className="md:hidden p-2 rounded-lg"
           style={{ color: "#003320" }}
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle menu"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -446,7 +464,7 @@ export default function Navbar() {
         <div
           className="md:hidden"
           style={{
-            backgroundColor: "rgba(251,249,248,0.98)",
+            backgroundColor: "#fbf9f8",
             borderBottom: "1px solid rgba(192,201,193,0.4)",
           }}
         >
@@ -493,7 +511,7 @@ export default function Navbar() {
                       backgroundColor: pathname === `/directory/${cat.slug}` ? "#f3f7f5" : "transparent",
                     }}
                   >
-                    <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#88B99E" }}>
+                    <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: "#88B99E" }}>
                       {CATEGORY_ICONS[cat.slug] || "category"}
                     </span>
                     {cat.shortLabel || cat.label}

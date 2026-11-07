@@ -54,7 +54,7 @@ export default function TestingProfile({ company }: { company: Company }) {
         <div className="ts-container" style={{ position: "relative", height: "100%" }}>
           <div style={{ paddingTop: "24px" }}>
             <Link href="/directory/testing-science" style={{ display: "inline-flex", alignItems: "center", gap: "8px", color: "#FBF9F8", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_back</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_back</span>
               Back to Testing &amp; Science Directory
             </Link>
           </div>
@@ -82,7 +82,7 @@ export default function TestingProfile({ company }: { company: Company }) {
               <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", alignItems: "center", fontSize: "12px", fontWeight: 600, color: VARIANT }}>
                 {meta.map((m) => (
                   <div key={m.label} style={{ display: "flex", alignItems: "center", gap: "4px", background: "#efedec", padding: "4px 12px", borderRadius: "0.75rem" }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: "16px", color: m.icon === "star" ? "#F59E0B" : undefined, fontVariationSettings: m.fill ? "'FILL' 1" : undefined }}>{m.icon}</span>
+                    <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: m.icon === "star" ? "#F59E0B" : undefined, fontVariationSettings: m.fill ? "'FILL' 1" : undefined }}>{m.icon}</span>
                     {m.label}
                   </div>
                 ))}
@@ -100,11 +100,11 @@ export default function TestingProfile({ company }: { company: Company }) {
           <div style={{ display: "flex", flexDirection: "column", gap: "12px", width: "100%", maxWidth: "260px", flexShrink: 0 }}>
             <a href="#contact-lab" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", background: SAGE, color: "#001c10", padding: "12px 24px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 700, textDecoration: "none", boxShadow: "0 1px 2px rgba(0,0,0,0.06)" }}>
               Request a Testing Quote
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
             </a>
             <a href="#contact-lab" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", border: `1px solid ${DF}`, color: DF, padding: "12px 24px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
               Schedule Sample Pickup
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>local_shipping</span>
+              <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>local_shipping</span>
             </a>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function TestingProfile({ company }: { company: Company }) {
                 <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "16px" }}>
                   {company.phone && (
                     <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                      <span className="material-symbols-outlined" style={{ color: OUTLINE, marginTop: "2px" }}>call</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ color: OUTLINE, marginTop: "2px" }}>call</span>
                       <div>
                         <div style={{ fontWeight: 700, fontSize: "16px" }}>Phone</div>
                         <a href={`tel:${company.phone}`} style={{ color: VARIANT, fontSize: "16px", textDecoration: "none" }}>{company.phone}</a>
@@ -136,7 +136,7 @@ export default function TestingProfile({ company }: { company: Company }) {
                   )}
                   {company.email && (
                     <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                      <span className="material-symbols-outlined" style={{ color: OUTLINE, marginTop: "2px" }}>mail</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ color: OUTLINE, marginTop: "2px" }}>mail</span>
                       <div>
                         <div style={{ fontWeight: 700, fontSize: "16px" }}>Email</div>
                         <a href={`mailto:${company.email}`} style={{ color: VARIANT, fontSize: "16px", textDecoration: "none", wordBreak: "break-all" }}>{company.email}</a>
@@ -145,7 +145,7 @@ export default function TestingProfile({ company }: { company: Company }) {
                   )}
                   {company.sampleIntakeHours && (
                     <li style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
-                      <span className="material-symbols-outlined" style={{ color: OUTLINE, marginTop: "2px" }}>schedule</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ color: OUTLINE, marginTop: "2px" }}>schedule</span>
                       <div>
                         <div style={{ fontWeight: 700, fontSize: "16px" }}>Sample Intake Hours</div>
                         <div style={{ color: VARIANT, fontSize: "16px", whiteSpace: "pre-line" }}>{company.sampleIntakeHours}</div>
@@ -169,9 +169,9 @@ export default function TestingProfile({ company }: { company: Company }) {
                         {f.value !== undefined ? (
                           <span>{f.value}</span>
                         ) : f.check ? (
-                          <span className="material-symbols-outlined" style={{ color: SAGE, fontVariationSettings: "'FILL' 1" }}>check_circle</span>
+                          <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE, fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                         ) : (
-                          <span className="material-symbols-outlined" style={{ color: OUTLINE }}>remove</span>
+                          <span aria-hidden="true" className="material-symbols-outlined" style={{ color: OUTLINE }}>remove</span>
                         )}
                       </div>
                     ))}

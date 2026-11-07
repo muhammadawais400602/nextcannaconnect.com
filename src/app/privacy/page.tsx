@@ -43,7 +43,7 @@ export default function PrivacyPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-10 space-y-4" style={{ border: "0.5px solid rgba(192, 201, 193, 0.3)" }}>
               <div className="flex items-center gap-4 text-[#003320] mb-2">
-                <span className="material-symbols-outlined">dataset</span>
+                <span aria-hidden="true" className="material-symbols-outlined">dataset</span>
                 <span className="text-[0.6875rem] font-bold uppercase tracking-widest" style={{ fontFamily: "'Inter', sans-serif" }}>Section 02</span>
               </div>
               <h3 className="text-xl font-bold" style={{ fontFamily: "'Noto Serif', serif" }}>Personal Information We Collect</h3>

@@ -1,3 +1,4 @@
+import { stateOptions } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import MarketingListingsGrid from "./MarketingListingsGrid";
@@ -26,7 +27,7 @@ const FAQS = [
 
 export default async function MarketingCategoryPage() {
   const companies = await getCompaniesByCategory("marketing-branding-packaging");
-  const statesCovered = new Set(companies.map((c) => c.location.state).filter(Boolean)).size;
+  const statesCovered = stateOptions(companies).length;
 
   return (
     <CategoryPageShell
@@ -34,7 +35,7 @@ export default async function MarketingCategoryPage() {
       title="Marketing, Branding & Packaging"
       description="Cannabis-specialized agencies offering brand strategy, packaging design, digital marketing, and creative services."
       stats={[
-        { icon: "verified", label: `${companies.length} Verified Agencies` },
+        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Agencies` },
         { icon: "palette", label: "Cannabis Compliance Experts" },
         { icon: "brush", label: "Full-Service Creative" },
       ]}

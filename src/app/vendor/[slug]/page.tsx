@@ -1,4 +1,18 @@
 import { notFound } from "next/navigation";
+import VendorJsonLd from "@/components/vendor/VendorJsonLd";
+import mongoose from "mongoose";
+import { connectDB } from "@/lib/mongodb";
+import User from "@/lib/models/User";
+
+async function isCompanyClaimed(companyId: string): Promise<boolean> {
+  if (!mongoose.Types.ObjectId.isValid(companyId)) return false;
+  try {
+    await connectDB();
+    return !!(await User.exists({ companyId }));
+  } catch {
+    return false;
+  }
+}
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -95,11 +109,19 @@ export default async function VendorPage({ params }: Props) {
   const allInCategory = await getCompaniesByCategory(company.category);
   const similar = allInCategory.filter((c) => c.slug !== company.slug).slice(0, 4);
 
-  const tracker = <ProfileViewTracker slug={company.slug} />;
-  const claimBanner = company.tier === "free" ? <ClaimBanner slug={company.slug} /> : null;
+  const tracker = (
+    <>
+      <ProfileViewTracker slug={company.slug} />
+      <VendorJsonLd company={company} />
+    </>
+  );
+  // A listing is claimed once an account owns it, on any plan. Free-plan owners
+  // used to see "This listing has not been claimed yet" on their own page.
+  const isClaimed = company.tier !== "free" || (await isCompanyClaimed(company.id));
+  const claimBanner = !isClaimed ? <ClaimBanner slug={company.slug} /> : null;
 
   // UNCLAIMED — show claim page instead of full profile
-  if (company.tier === "free") {
+  if (!isClaimed) {
     return (
       <div style={{ backgroundColor: "#F7F9F7", minHeight: "100vh" }}>
         {tracker}
@@ -386,7 +408,7 @@ export default async function VendorPage({ params }: Props) {
                           <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width:768px) 100vw, 200px" style={{ objectFit: "cover" }} />
                         ) : (
                           <div style={{ width: "100%", height: "100%", background: `linear-gradient(135deg, ${company.logoColor}44, ${company.logoColor}22)`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <span className="material-symbols-outlined" style={{ fontSize: "36px", color: company.logoColor, opacity: 0.4 }}>inventory_2</span>
+                            <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "36px", color: company.logoColor, opacity: 0.4 }}>inventory_2</span>
                           </div>
                         )}
                       </div>
@@ -430,7 +452,7 @@ export default async function VendorPage({ params }: Props) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {services.map((s) => (
                     <div key={s} style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>check_circle</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px", color: "#003320" }}>check_circle</span>
                       <span style={{ fontSize: "13px", color: "#374151" }}>{s}</span>
                     </div>
                   ))}
@@ -465,37 +487,37 @@ export default async function VendorPage({ params }: Props) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {company.website && (
                     <a href={company.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#003320", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>language</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>language</span>
                       Website
                     </a>
                   )}
                   {company.instagramUrl && (
                     <a href={company.instagramUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#E1306C", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>photo_camera</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>photo_camera</span>
                       Instagram
                     </a>
                   )}
                   {company.facebookUrl && (
                     <a href={company.facebookUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#1877F2", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>thumb_up</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>thumb_up</span>
                       Facebook
                     </a>
                   )}
                   {company.twitterUrl && (
                     <a href={company.twitterUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#1DA1F2", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>alternate_email</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>alternate_email</span>
                       Twitter / X
                     </a>
                   )}
                   {company.yelpUrl && (
                     <a href={company.yelpUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#D32323", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>star</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>star</span>
                       Yelp
                     </a>
                   )}
                   {company.leaflyUrl && (
                     <a href={company.leaflyUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: "13px", fontWeight: "600", color: "#4caf50", textDecoration: "none", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>local_florist</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>local_florist</span>
                       Leafly
                     </a>
                   )}

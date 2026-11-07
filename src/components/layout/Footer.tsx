@@ -9,7 +9,7 @@ export default function Footer() {
   if (pathname.startsWith("/vendor/dashboard") || pathname.startsWith("/vendor/login") || pathname.startsWith("/admin")) return null;
 
   return (
-    <footer style={{ backgroundColor: "#003320", color: "rgba(136,185,158,0.7)" }}>
+    <footer style={{ backgroundColor: "#003320", color: "#a9cdb8" }}>
       <div className="mx-auto px-4 md:px-8 pt-10 md:pt-14 pb-8" style={{ maxWidth: "1440px" }}>
 
         {/* Top: Logo + Description | Platform | Company | Legal */}
@@ -29,12 +29,12 @@ export default function Footer() {
             >
               NextCanna Connect
             </Link>
-            <p style={{ fontSize: "12px", lineHeight: 1.7, color: "rgba(136,185,158,0.7)", maxWidth: "480px" }}>
+            <p style={{ fontSize: "12px", lineHeight: 1.7, color: "#a9cdb8", maxWidth: "480px" }}>
               NextCanna Connect is the commercial backbone of the cannabis industry. We unify every critical component of the value chain from funding and licensing to cultivation, manufacturing, and retail into a single, institutional-grade platform. By connecting operators with vetted partners across legal, banking, accounting, and advisory services, we enable seamless execution, faster scaling, and consistent performance across state markets.
             </p>
           </div>
           <div>
-            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "14px" }}>Platform</h4>
+            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: "14px" }}>Platform</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {[{ label: "Directory", href: "/directory" }, { label: "Pricing", href: "/pricing" }, { label: "Blog", href: "/blog" }, { label: "Sign Up", href: "/signup" }].map((item) => (
                 <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
@@ -42,7 +42,7 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "14px" }}>Company</h4>
+            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: "14px" }}>Company</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {[{ label: "About", href: "/about" }, { label: "Contact", href: "/contact" }].map((item) => (
                 <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
@@ -50,7 +50,7 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", marginBottom: "14px" }}>Legal</h4>
+            <h4 style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.25em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: "14px" }}>Legal</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
               {[{ label: "Privacy Policy", href: "/privacy" }, { label: "Terms & Conditions", href: "/terms" }, { label: "Disclaimer", href: "/disclaimer" }, { label: "Cookie Policy", href: "/cookie-policy" }].map((item) => (
                 <Link key={item.label} href={item.href} className="footer-link" style={{ fontSize: "13px", fontWeight: 500 }}>{item.label}</Link>
@@ -67,7 +67,7 @@ export default function Footer() {
               fontWeight: 700,
               letterSpacing: "0.25em",
               textTransform: "uppercase",
-              color: "rgba(255,255,255,0.3)",
+              color: "rgba(255,255,255,0.7)",
               marginBottom: "16px",
             }}
           >
@@ -95,7 +95,7 @@ export default function Footer() {
               fontWeight: 500,
               letterSpacing: "0.3em",
               textTransform: "uppercase",
-              color: "rgba(255,255,255,0.15)",
+              color: "rgba(255,255,255,0.6)",
               margin: 0,
             }}
           >

@@ -145,7 +145,7 @@ export default function CookiePolicyPage() {
               <p>You have several options to control or limit cookie use:</p>
               <ul className="space-y-6">
                 <li className="flex gap-4">
-                  <span className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">settings</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">settings</span>
                   <div>
                     <strong className="text-[#003320] block mb-1">Browser Settings.</strong>
                     Most browsers allow you to block or delete cookies through their settings. Note that disabling strictly necessary cookies will impair platform functionality.
@@ -157,14 +157,14 @@ export default function CookiePolicyPage() {
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <span className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">analytics</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">analytics</span>
                   <div>
                     <strong className="text-[#003320] block mb-1">Google Analytics Opt-Out.</strong>
                     You can prevent Google Analytics from collecting your data by installing the Google Analytics Opt-Out Browser Add-on, available at tools.google.com/dlpage/gaoptout.
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <span className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">ads_click</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">ads_click</span>
                   <div>
                     <strong className="text-[#003320] block mb-1">Ad Network Opt-Outs.</strong>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2">
@@ -178,7 +178,7 @@ export default function CookiePolicyPage() {
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <span className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">gavel</span>
+                  <span aria-hidden="true" className="material-symbols-outlined text-[#1a4a35] shrink-0 mt-1">gavel</span>
                   <div>
                     <strong className="text-[#003320] block mb-1">California Residents — Do Not Sell or Share.</strong>
                     The use of advertising and retargeting cookies constitutes &quot;sharing&quot; of personal information under the CCPA/CPRA. To opt out, email us at <span className="text-[#003320] underline font-semibold">info@NextCannaConnect.com</span> with the subject line &quot;Do Not Sell or Share My Information&quot; and we will disable advertising cookies associated with your account.
@@ -219,7 +219,7 @@ export default function CookiePolicyPage() {
             <div className="pl-14 space-y-2">
               <p className="text-lg font-bold">NextCanna, LLC</p>
               <p className="flex items-center gap-2" style={{ color: "#88b99e" }}>
-                <span className="material-symbols-outlined text-sm">mail</span>
+                <span aria-hidden="true" className="material-symbols-outlined text-sm">mail</span>
                 info@NextCannaConnect.com
               </p>
             </div>

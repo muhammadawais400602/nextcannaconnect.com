@@ -65,7 +65,7 @@ export default function DisclaimerPage() {
               />
             </div>
             <div className="pl-0 md:pl-8">
-              <span className="material-symbols-outlined text-[#1a4a35] text-4xl mb-4 block">gavel</span>
+              <span aria-hidden="true" className="material-symbols-outlined text-[#1a4a35] text-4xl mb-4 block">gavel</span>
               <p className="text-lg italic text-[#003320] leading-snug" style={{ fontFamily: "'Noto Serif', serif" }}>
                 &quot;Compliance is the cornerstone of sustainable growth in the sovereign marketplace.&quot;
               </p>

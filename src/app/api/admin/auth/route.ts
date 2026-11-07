@@ -27,6 +27,13 @@ export async function POST(request: NextRequest) {
     path: "/",
     maxAge: 60 * 60 * 8, // 8 hours
   });
+  // Non-secret marker so public pages only probe the admin session when signed in.
+  response.cookies.set("nc_admin", "1", {
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 8,
+  });
 
   return response;
 }
@@ -34,5 +41,6 @@ export async function POST(request: NextRequest) {
 export async function DELETE() {
   const response = NextResponse.json({ ok: true });
   response.cookies.delete("admin_session");
+  response.cookies.delete("nc_admin");
   return response;
 }

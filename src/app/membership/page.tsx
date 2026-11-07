@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import SectionDivider from "@/components/ui/SectionDivider";
-import SponsoredBanner from "@/components/home/SponsoredBanner";
 import { Check, X } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -248,15 +247,6 @@ export default function MembershipPage() {
 
       <SectionDivider reverse />
 
-      <SponsoredBanner
-        companyName="Cannabis Law Group"
-        tagline="Need legal guidance for your cannabis license? Our attorneys are licensed in 18 states."
-        logoInitials="CL"
-        destinationUrl="/vendor/cannabis-law-group"
-        ctaText="Speak to an Attorney →"
-      />
-
-      <SectionDivider />
     </>
   );
 }

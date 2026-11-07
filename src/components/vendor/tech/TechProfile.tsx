@@ -51,7 +51,7 @@ export default function TechProfile({ company }: { company: Company }) {
                   <h1 style={{ fontSize: "clamp(24px, 4vw, 32px)", fontWeight: 600, color: "#001c10", margin: 0, letterSpacing: "-0.01em" }}>{company.name}</h1>
                   {badge && (
                     <span style={{ display: "inline-flex", alignItems: "center", padding: "2px 10px", borderRadius: "0.75rem", fontSize: "12px", fontWeight: 500, background: "#b8ebce", color: SECONDARY, border: `1px solid ${SAGE}` }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: "14px", marginRight: "4px", fontVariationSettings: "'FILL' 1" }}>verified</span>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "14px", marginRight: "4px", fontVariationSettings: "'FILL' 1" }}>verified</span>
                       {badge}
                     </span>
                   )}
@@ -70,11 +70,11 @@ export default function TechProfile({ company }: { company: Company }) {
               <h3 style={{ fontSize: "24px", fontWeight: 600, color: "#001c10", margin: "0 0 16px" }}>Engage Vendor</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <a href={trialHref} target={company.website ? "_blank" : undefined} rel="noopener noreferrer" style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", background: DF, color: "white", padding: "12px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>play_arrow</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>play_arrow</span>
                   Start Free Trial
                 </a>
                 <a href={demoHref} style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", background: "transparent", border: `1px solid ${DF}`, color: DF, padding: "12px", borderRadius: "0.25rem", fontSize: "14px", fontWeight: 500, textDecoration: "none" }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>calendar_today</span>
+                  <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "18px" }}>calendar_today</span>
                   Book a Demo
                 </a>
               </div>
