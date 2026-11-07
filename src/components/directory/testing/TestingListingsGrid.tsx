@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
 import Link from "next/link";
 import { Company } from "@/types";
 
@@ -117,17 +119,19 @@ const selectStyle: React.CSSProperties = {
 const PAGE_SIZE = 9;
 
 export default function TestingListingsGrid({ companies }: { companies: Company[] }) {
-  const [location, setLocation] = useState("");
+  const searchParams = useSearchParams();
+  // Pre-select the state chosen in the home/directory search (?state=California or ?state=CA).
+  const [location, setLocation] = useState(() => toStateCode(searchParams.get("state")));
   const [accreditation, setAccreditation] = useState("");
   const [testCategory, setTestCategory] = useState("");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
-  const states = useMemo(() => [...new Set(companies.map((c) => c.location.state).filter(Boolean))].sort(), [companies]);
+  const states = useMemo(() => stateOptions(companies), [companies]);
   const accreditations = useMemo(() => [...new Set(companies.map((c) => c.accreditation).filter(Boolean) as string[])].sort(), [companies]);
   const categories = useMemo(() => [...new Set(companies.flatMap((c) => c.serviceTags ?? []))].sort(), [companies]);
 
   const filtered = useMemo(() => companies.filter((c) => {
-    if (location && c.location.state !== location) return false;
+    if (location && !matchesState(c, location)) return false;
     if (accreditation && c.accreditation !== accreditation) return false;
     if (testCategory && !(c.serviceTags ?? []).includes(testCategory)) return false;
     return true;
@@ -145,7 +149,7 @@ export default function TestingListingsGrid({ companies }: { companies: Company[
           </span>
           <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Locations</option>
-            {states.map((s) => <option key={s} value={s}>{s}</option>)}
+            {(location && !states.includes(location) ? [location, ...states] : states).map((s) => <option key={s} value={s}>{stateName(s)}</option>)}
           </select>
           <select value={accreditation} onChange={(e) => { setAccreditation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Accreditations</option>
@@ -164,7 +168,7 @@ export default function TestingListingsGrid({ companies }: { companies: Company[
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
               <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>science</span>
-              <p style={{ fontSize: "16px", marginTop: "12px" }}>No labs match your filters yet.</p>
+              <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No labs are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No labs match your filters. Try removing a filter.</>}</p>
             </div>
           ) : (
             <div className="cat-grid">

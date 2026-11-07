@@ -5,8 +5,19 @@ import type { Company as CompanyType } from "@/types";
 
 const TIER_ORDER: Record<string, number> = { elite: 0, select: 1, free: 2 };
 
+/**
+ * Drops undefined / null fields. Listing pages send
+ * thousands of companies to the browser, and every missing field was being
+ * serialized as "$undefined" — most of a 7.8 MB category page was padding.
+ */
+function compact<T extends object>(obj: T): T {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, v]) => v !== undefined && v !== null),
+  ) as T;
+}
+
 function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
-  return {
+  return compact({
     id: String(doc._id ?? doc.slug),
     slug: doc.slug!,
     name: doc.name!,
@@ -84,7 +95,7 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     credentialHeadline: doc.credentialHeadline,
     insurance: doc.insurance,
     processSteps: doc.processSteps,
-  };
+  } as CompanyType);
 }
 
 // ─── Cached DB fetchers ────────────────────────────────────────────────────

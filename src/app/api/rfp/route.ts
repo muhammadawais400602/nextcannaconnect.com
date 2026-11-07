@@ -4,6 +4,9 @@ import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
 import RFP from "@/lib/models/RFP";
 import { verifyVendorSession } from "@/lib/verifyVendorSession";
+import { rateLimit } from "@/lib/rateLimit";
+import { CATEGORIES } from "@/data/categories";
+import { str } from "@/lib/formGuard";
 
 async function getVendorUser(request: NextRequest) {
   const session = request.cookies.get("vendor_session")?.value;
@@ -58,17 +61,27 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, description, categorySlug, budget, city, state, deadline } = body;
 
-    if (!title || !description || !categorySlug) {
+    if (!str(title) || !str(description, 2000) || !categorySlug) {
       return NextResponse.json({ error: "Title, description, and category are required" }, { status: 400 });
+    }
+    if (!CATEGORIES.some((c) => c.slug === categorySlug)) {
+      return NextResponse.json({ error: "Please choose a valid category" }, { status: 400 });
+    }
+    const deadlineDate = deadline ? new Date(deadline) : undefined;
+    if (deadlineDate && Number.isNaN(deadlineDate.getTime())) {
+      return NextResponse.json({ error: "Invalid deadline" }, { status: 400 });
+    }
+    if (!(await rateLimit(`rfp-post:${user.id}`, 5, 24 * 60 * 60_000))) {
+      return NextResponse.json({ error: "You can post up to 5 RFPs per day." }, { status: 429 });
     }
 
     const rfp = await RFP.create({
-      title: String(title).slice(0, 200),
-      description: String(description).slice(0, 2000),
+      title: str(title, 200),
+      description: str(description, 2000),
       categorySlug,
       budget: budget ? String(budget).slice(0, 100) : undefined,
-      location: { city: city || "", state: state || "" },
-      deadline: deadline ? new Date(deadline) : undefined,
+      location: { city: str(city, 100), state: str(state, 60) },
+      deadline: deadlineDate,
       postedBy: new mongoose.Types.ObjectId(user.id),
       postedByName: user.name,
     });

@@ -5,6 +5,9 @@ import User from "@/lib/models/User";
 import Company from "@/lib/models/Company";
 import RFP from "@/lib/models/RFP";
 import { verifyVendorSession } from "@/lib/verifyVendorSession";
+import { sendEmail, emailLayout, emailButton } from "@/lib/email";
+import { escapeHtml } from "@/lib/escapeHtml";
+import { SITE_URL } from "@/lib/siteUrl";
 
 export async function POST(
   request: NextRequest,
@@ -62,6 +65,21 @@ export async function POST(
       tier: user.tier,
     });
     await rfp.save();
+
+    // Let the poster know a vendor responded.
+    const poster = await User.findById(rfp.postedBy).select("email fullName").lean();
+    if (poster?.email) {
+      await sendEmail({
+        to: poster.email,
+        subject: `New response to your RFP: ${rfp.title}`,
+        html: emailLayout(
+          "You have a new RFP response",
+          `<p style="line-height:1.6;color:#4A5E4A"><strong>${escapeHtml(company.name)}</strong> responded to <strong>${escapeHtml(rfp.title)}</strong>.</p>
+           ${emailButton(`${SITE_URL}/rfp-board/${rfp._id}`, "Read the response")}
+           <p style="font-size:13px;color:#6B7280">Responses are only visible to you while signed in.</p>`,
+        ),
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {

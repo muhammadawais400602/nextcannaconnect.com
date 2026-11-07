@@ -6,6 +6,7 @@ import ListingCard from "@/components/directory/ListingCard";
 import { Company } from "@/types";
 import { getCategoryBySlug } from "@/data/categories";
 import CustomDropdown from "@/components/ui/CustomDropdown";
+import { matchesState } from "@/lib/states";
 
 const PAGE_SIZE = 20;
 
@@ -38,6 +39,10 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
 
   const [query, setQuery] = useState(initialQuery);
   const [stateFilter, setStateFilter] = useState(initialState);
+
+  // Re-sync when a new search is submitted on the same page (URL changes, component stays mounted).
+  useEffect(() => { setQuery(initialQuery); }, [initialQuery]);
+  useEffect(() => { setStateFilter(initialState); }, [initialState]);
   const [sort, setSort] = useState("rating");
   const [page, setPage] = useState(1);
 
@@ -52,7 +57,7 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
 
     let list = companies.filter((c) => {
       if (categoryFilter && c.category !== categoryFilter) return false;
-      if (stateFilter && c.location.state !== stateFilter) return false;
+      if (stateFilter && !matchesState(c, stateFilter)) return false;
       if (allowedTiers && !allowedTiers.includes(c.tier)) return false;
       if (serviceFilters.length > 0) {
         const tags = (c.serviceTags ?? []).map((t) => t.toLowerCase());

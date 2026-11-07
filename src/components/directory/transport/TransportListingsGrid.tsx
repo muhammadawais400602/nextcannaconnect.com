@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
 import Link from "next/link";
 import { Company } from "@/types";
 
@@ -126,14 +128,16 @@ const PAGE_SIZE = 9;
 
 export default function TransportListingsGrid({ companies }: { companies: Company[] }) {
   const [view, setView] = useState<"grid" | "list">("grid");
-  const [location, setLocation] = useState("");
+  const searchParams = useSearchParams();
+  // Pre-select the state chosen in the home/directory search (?state=California or ?state=CA).
+  const [location, setLocation] = useState(() => toStateCode(searchParams.get("state")));
   const [visible, setVisible] = useState(PAGE_SIZE);
 
-  const states = useMemo(() => [...new Set(companies.map((c) => c.location.state).filter(Boolean))].sort(), [companies]);
+  const states = useMemo(() => stateOptions(companies), [companies]);
 
   const filtered = useMemo(() => {
     return companies.filter((c) => {
-      if (location && c.location.state !== location) return false;
+      if (location && !matchesState(c, location)) return false;
       return true;
     });
   }, [companies, location]);
@@ -150,7 +154,7 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
         </span>
         <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
           <option value="">All Locations</option>
-          {states.map((s) => <option key={s} value={s}>{s}</option>)}
+          {(location && !states.includes(location) ? [location, ...states] : states).map((s) => <option key={s} value={s}>{stateName(s)}</option>)}
         </select>
       </div>
     </div>
@@ -173,7 +177,7 @@ export default function TransportListingsGrid({ companies }: { companies: Compan
       {shown.length === 0 ? (
         <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
           <span className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>local_shipping</span>
-          <p style={{ fontSize: "16px", marginTop: "12px" }}>No carriers listed yet. Check back soon.</p>
+          <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No carriers are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No carriers match your filters. Try removing a filter.</>}</p>
         </div>
       ) : (
         <div className={view === "grid" ? "cat-grid" : undefined} style={view === "grid" ? { marginBottom: "48px" } : { display: "grid", gridTemplateColumns: "1fr", gap: "16px", marginBottom: "48px" }}>

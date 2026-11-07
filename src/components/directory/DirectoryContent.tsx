@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Suspense } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Company } from "@/types";
 import FiltersPanel from "@/components/directory/FiltersPanel";
 import DirectoryListings from "@/components/directory/DirectoryListings";
@@ -19,8 +19,13 @@ export default function DirectoryContent({ companies, initialCategory }: Props) 
   const [serviceFilters, setServiceFilters] = useState<string[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  const searchParams = useSearchParams();
+
   function handleCategoryChange(slug: string | null) {
-    router.push(slug ? `/directory/${slug}` : "/directory");
+    // Keep the chosen state when switching category (search text only applies to /directory).
+    const state = searchParams.get("state");
+    const qs = state ? `?state=${encodeURIComponent(state)}` : "";
+    router.push(slug ? `/directory/${slug}${qs}` : `/directory${qs}`);
   }
 
   const activeFilterCount =
