@@ -102,7 +102,7 @@ export default function RFPBoardPage() {
               RFP Board Access Required
             </h2>
             <p style={{ fontSize: "14px", color: "#6B7280", lineHeight: 1.6, marginBottom: "20px", maxWidth: "420px", margin: "0 auto 20px" }}>
-              Upgrade to Select ($49.99/mo) or Verified Pro ($99/mo) to view and respond to RFPs from buyers in your category.
+              Upgrade to Select ($19.99/mo) or Verified Pro ($39.99/mo) to view and respond to RFPs from buyers in your category.
             </p>
             <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
               <Link href="/vendor/login" style={{ padding: "10px 20px", borderRadius: "8px", fontSize: "13px", fontWeight: 700, border: "1px solid #1A4A35", color: "#1A4A35", textDecoration: "none" }}>

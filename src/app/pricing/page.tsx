@@ -17,16 +17,16 @@ const TIERS = [
     badge: null,
     highlight: false,
     pill: null,
-    description: "Get your business listed in our directory at no cost.",
+    description: "Basic directory presence at no cost.",
     included: [
-      "Standard directory listing",
-      "Business name & location visible",
-      "Circle logo displayed",
+      "Basic directory listing",
+      "Business name, location & circular logo",
     ],
     excluded: [
-      "Contact information",
-      "Full company profile page",
-      "Tier badge",
+      "Full company profile",
+      "Public contact information",
+      "Customer inquiry form",
+      "Photo gallery",
       "Analytics dashboard",
     ],
     cta: "Get Listed Free",
@@ -36,33 +36,28 @@ const TIERS = [
   {
     key: "select",
     name: "Select",
-    price: "$49.99",
+    price: "$19.99",
     badge: { label: "SELECT", bg: "#185FA5", color: "white" },
     highlight: false,
     pill: null,
     description:
-      "A full company profile with the NextCanna Connect Select badge and direct inbound leads.",
+      "Enhanced listing with a full company profile and business inquiries.",
     included: [
       "Everything in Unclaimed",
       "Full company profile page",
       "NextCanna Connect Select badge",
-      "Contact info on profile (phone, email, website)",
-      "Enhanced directory card (2 field rows + tag pills)",
-      "Contact form (inquiries to your email)",
-      "Photo gallery (up to 10 photos)",
-      "4 profile tabs (Overview, Licenses, Reviews, Gallery)",
-      "Standard search placement",
+      "Public contact information",
+      "Customer inquiry form",
+      "Photo gallery (up to 3 photos)",
+      "Basic enhanced directory card",
+      "4 profile tabs",
     ],
     excluded: [
-      "Analytics dashboard",
       "Priority search placement",
-      "Category-specific profile tabs",
-      "Video embed",
-      "Booking / calendar link",
-      "Social media links",
-      "Featured in Similar Partners",
+      "Video embedding & social links",
       "Google Reviews integration",
-      "Dedicated account support",
+      "Analytics dashboard",
+      "Verified Pro badge",
     ],
     cta: "Get Select",
     ctaFilled: false,
@@ -71,27 +66,22 @@ const TIERS = [
   {
     key: "elite",
     name: "Verified Pro",
-    price: "$99",
+    price: "$39.99",
     badge: { label: "VERIFIED PRO", bg: "#1A4A35", color: "white" },
     highlight: true,
     pill: "MOST POPULAR",
     description:
-      "The highest tier — full vetting, premium placement, and every tool to convert profile visitors into clients.",
+      "Premium visibility and advanced profile tools for verified operators.",
     included: [
       "Everything in Select",
-      "Verified Pro badge (full vetting by NextCanna Connect)",
+      "Verified Pro badge (after verification)",
       "Priority search placement",
-      "All profile tabs unlocked (up to 7, category-specific)",
-      "Full directory card (4 field rows + all tag pills)",
-      "Hero banner image on listing",
-      "Video embed (YouTube / Vimeo)",
-      "Booking / calendar link",
-      "Social media links (LinkedIn, Instagram)",
+      "Profile tabs (up to 7)",
+      "Premium enhanced directory card",
       "Unlimited photo gallery",
-      'Featured in "Similar Partners" on other listings',
+      "Video embedding & social links",
       "Google Reviews integration",
-      "Full analytics dashboard (views, inquiries, search appearances, CTR)",
-      "Dedicated account support",
+      "Analytics dashboard",
     ],
     excluded: [],
     cta: "Get Verified Pro",
@@ -106,29 +96,19 @@ const COMPARISON_ROWS: {
   select: string;
   elite: string;
 }[] = [
-  { feature: "Directory Listing", free: "✓", select: "✓", elite: "✓" },
-  { feature: "Business Name & Location", free: "✓", select: "✓", elite: "✓" },
-  { feature: "Circle Logo", free: "✓", select: "✓", elite: "✓" },
-  { feature: "Tier Badge", free: "—", select: "SELECT", elite: "VERIFIED PRO" },
-  { feature: "Full Company Profile Page", free: "—", select: "✓", elite: "✓" },
-  { feature: "Contact Info on Profile", free: "—", select: "✓", elite: "✓" },
-  { feature: "Contact Form (Inquiries)", free: "—", select: "✓", elite: "✓" },
-  { feature: "Enhanced Directory Card", free: "—", select: "2 fields", elite: "4 fields" },
-  { feature: "Tag Pills on Card", free: "—", select: "2-3 tags", elite: "All tags" },
-  { feature: "Photo Gallery", free: "—", select: "Up to 10", elite: "Unlimited" },
-  { feature: "Profile Tabs", free: "—", select: "4 tabs", elite: "Up to 7 tabs" },
-  { feature: "Category-Specific Tabs", free: "—", select: "—", elite: "✓" },
-  { feature: "Hero Banner Image", free: "—", select: "—", elite: "✓" },
-  { feature: "Video Embed", free: "—", select: "—", elite: "✓" },
-  { feature: "Booking / Calendar Link", free: "—", select: "—", elite: "✓" },
-  { feature: "Social Media Links", free: "—", select: "—", elite: "✓" },
-  { feature: "Featured in Similar Partners", free: "—", select: "—", elite: "✓" },
+  { feature: "Basic Directory Listing", free: "✓", select: "✓", elite: "✓" },
+  { feature: "Business Name, Location & Logo", free: "✓", select: "✓", elite: "✓" },
+  { feature: "Full Company Profile", free: "—", select: "✓", elite: "✓" },
+  { feature: "Public Contact Information", free: "—", select: "✓", elite: "✓" },
+  { feature: "Customer Inquiry Form", free: "—", select: "✓", elite: "✓" },
+  { feature: "Photo Gallery", free: "—", select: "Up to 3", elite: "Unlimited" },
+  { feature: "Enhanced Directory Card", free: "—", select: "Basic", elite: "Premium" },
+  { feature: "Profile Tabs", free: "—", select: "4", elite: "Up to 7" },
+  { feature: "Priority Search Placement", free: "—", select: "—", elite: "✓" },
+  { feature: "Video Embedding & Social Links", free: "—", select: "—", elite: "✓" },
   { feature: "Google Reviews Integration", free: "—", select: "—", elite: "✓" },
   { feature: "Analytics Dashboard", free: "—", select: "—", elite: "✓" },
-  { feature: "Priority Search Placement", free: "—", select: "—", elite: "✓" },
-  { feature: "Dedicated Account Support", free: "—", select: "—", elite: "✓" },
-  { feature: "Vetting Required", free: "—", select: "—", elite: "✓" },
-  { feature: "Search Placement", free: "Last", select: "Standard", elite: "Priority" },
+  { feature: "Verified Pro Badge", free: "—", select: "—", elite: "After verification" },
 ];
 
 const FAQS = [
@@ -221,6 +201,45 @@ export default function PricingPage() {
         >
           Choose the plan that matches your goals. Upgrade anytime.
         </p>
+      </section>
+
+      {/* Promotional Terms */}
+      <section style={{ background: "#F7F9F7", padding: "32px 20px 0" }}>
+        <div
+          style={{
+            maxWidth: "780px",
+            margin: "0 auto",
+            background: "#FFFBF0",
+            border: "1px solid #FDE68A",
+            borderRadius: "12px",
+            padding: "20px 24px",
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "13px",
+              fontWeight: 700,
+              color: "#92400E",
+              marginBottom: "6px",
+            }}
+          >
+            Introductory Promotional Pricing
+          </p>
+          <p
+            style={{
+              fontSize: "13px",
+              color: "#92400E",
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
+            These prices are available for new enrollments during a 60-day
+            introductory promotion. The promotional monthly rate is locked for
+            the first 12 months of your subscription. Existing customers retain
+            their current contractual terms.
+          </p>
+        </div>
       </section>
 
       {/* Pricing Cards */}

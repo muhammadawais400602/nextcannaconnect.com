@@ -100,8 +100,8 @@ export default function AccountTab({
               Unlock more features
             </p>
             <p style={{ fontSize: "12px", color: "#92400E", margin: 0, lineHeight: 1.5 }}>
-              Upgrade to Select ($49.99/mo) to add social links, gallery images, and make your listing details public.
-              Or go Verified Pro ($99/mo) for video embeds, unlimited photos, and priority placement.
+              Upgrade to Select ($19.99/mo) to unlock your full company profile, public contact info, and a photo gallery.
+              Or go Verified Pro ($39.99/mo) for unlimited photos, video embedding, analytics, and priority placement.
             </p>
           </div>
         )}

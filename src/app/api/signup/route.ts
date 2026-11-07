@@ -9,13 +9,13 @@ import { rateLimit } from "@/lib/rateLimit";
 
 const TIER_LABELS: Record<string, string> = {
   free: "Claimed (Free)",
-  select: "Select — $49.99/mo",
-  elite: "Verified Pro — $99/mo",
+  select: "Select — $19.99/mo",
+  elite: "Verified Pro — $39.99/mo",
 };
 
 const TIER_PRICES: Record<string, { unit_amount: number; name: string }> = {
-  select: { unit_amount: 4999, name: "NextCanna Connect Select — $49.99/mo" },
-  elite:  { unit_amount: 9900, name: "NextCanna Connect Verified Pro — $99/mo" },
+  select: { unit_amount: 1999, name: "NextCanna Connect Select — $19.99/mo" },
+  elite:  { unit_amount: 3999, name: "NextCanna Connect Verified Pro — $39.99/mo" },
 };
 
 function getStripe() {

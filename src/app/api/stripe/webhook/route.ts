@@ -67,8 +67,8 @@ export async function POST(request: NextRequest) {
       }
 
       const tierLabels: Record<string, string> = {
-        select: "Select — $49.99/mo",
-        elite: "Verified Pro — $99/mo",
+        select: "Select — $19.99/mo",
+        elite: "Verified Pro — $39.99/mo",
       };
       const tierLabel = tierLabels[app.tier] ?? app.tier;
       const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
