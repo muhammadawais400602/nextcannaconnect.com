@@ -97,17 +97,31 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
   const paid = filtered.filter((c) => c.tier !== "free");
   const free = filtered.filter((c) => c.tier === "free");
 
-  const totalPages = Math.max(1, Math.ceil((paid.length + free.length) / PAGE_SIZE));
-  const pagedPaid = paid.slice(0, Math.min(page * PAGE_SIZE, paid.length));
-  const pagedFree = free.slice(0, Math.max(0, page * PAGE_SIZE - paid.length));
+  // Real pagination over paid listings first, then unclaimed ones.
+  const ordered = [...paid, ...free];
+  const totalPages = Math.max(1, Math.ceil(ordered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageItems = ordered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pagedPaid = pageItems.filter((c) => c.tier !== "free");
+  const pagedFree = pageItems.filter((c) => c.tier === "free");
 
-  const verifiedCount = paid.length;
+  // Page buttons: first, last, and a window around the current page.
+  const pageNumbers = Array.from(
+    new Set([1, currentPage - 1, currentPage, currentPage + 1, totalPages].filter((n) => n >= 1 && n <= totalPages)),
+  ).sort((a, b) => a - b);
+
+  function goToPage(n: number) {
+    setPage(Math.max(1, Math.min(totalPages, n)));
+    document.getElementById("directory-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 
   return (
     <>
       {/* Header row */}
       <div
+        id="directory-results"
         style={{
+          scrollMarginTop: "100px",
           display: "flex",
           alignItems: "flex-end",
           justifyContent: "space-between",
@@ -140,8 +154,11 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
             }}
           >
             Found{" "}
-            <span style={{ color: "#003320" }}>{verifiedCount}</span>{" "}
-            Verified Partners
+            <span style={{ color: "#003320" }}>{ordered.length.toLocaleString()}</span>{" "}
+            {ordered.length === 1 ? "Partner" : "Partners"}
+            {paid.length > 0 && paid.length < ordered.length && (
+              <span style={{ fontSize: "0.6em", fontWeight: 500, color: "#6B7280" }}> · {paid.length} featured</span>
+            )}
           </h2>
         </div>
 
@@ -333,8 +350,9 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
           }}
         >
           <button
-            disabled={page === 1}
-            onClick={() => setPage(page - 1)}
+            disabled={currentPage === 1}
+            aria-label="Previous page"
+            onClick={() => goToPage(currentPage - 1)}
             style={{
               width: "36px",
               height: "36px",
@@ -344,66 +362,49 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
               borderRadius: "8px",
               border: "1px solid #e5e7eb",
               backgroundColor: "white",
-              color: page === 1 ? "#D1D5DB" : "#6B7280",
-              cursor: page === 1 ? "default" : "pointer",
+              color: currentPage === 1 ? "#D1D5DB" : "#6B7280",
+              cursor: currentPage === 1 ? "default" : "pointer",
               fontSize: "16px",
             }}
           >
             ‹
           </button>
 
-          {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map((n) => (
-            <button
-              key={n}
-              onClick={() => setPage(n)}
-              style={{
-                width: "36px",
-                height: "36px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: "8px",
-                border: n === page ? "none" : "1px solid #e5e7eb",
-                backgroundColor: n === page ? "#003320" : "white",
-                color: n === page ? "white" : "#6B7280",
-                cursor: "pointer",
-                fontSize: "13px",
-                fontWeight: n === page ? 700 : 500,
-                fontFamily: "'Inter', sans-serif",
-              }}
-            >
-              {n}
-            </button>
-          ))}
-
-          {totalPages > 5 && (
-            <>
-              <span style={{ color: "#9CA3AF", fontSize: "13px" }}>…</span>
+          {pageNumbers.map((n, i) => (
+            <span key={n} style={{ display: "contents" }}>
+              {i > 0 && n - pageNumbers[i - 1] > 1 && (
+                <span aria-hidden="true" style={{ color: "#9CA3AF", fontSize: "13px" }}>…</span>
+              )}
               <button
-                onClick={() => setPage(totalPages)}
+                onClick={() => goToPage(n)}
+                aria-label={`Page ${n}`}
+                aria-current={n === currentPage ? "page" : undefined}
                 style={{
-                  width: "36px",
+                  minWidth: "36px",
                   height: "36px",
+                  padding: "0 8px",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: "8px",
-                  border: "1px solid #e5e7eb",
-                  backgroundColor: "white",
-                  color: "#6B7280",
+                  border: n === currentPage ? "none" : "1px solid #e5e7eb",
+                  backgroundColor: n === currentPage ? "#003320" : "white",
+                  color: n === currentPage ? "white" : "#6B7280",
                   cursor: "pointer",
                   fontSize: "13px",
+                  fontWeight: n === currentPage ? 700 : 500,
                   fontFamily: "'Inter', sans-serif",
                 }}
               >
-                {totalPages}
+                {n}
               </button>
-            </>
-          )}
+            </span>
+          ))}
 
           <button
-            disabled={page === totalPages}
-            onClick={() => setPage(page + 1)}
+            disabled={currentPage === totalPages}
+            aria-label="Next page"
+            onClick={() => goToPage(currentPage + 1)}
             style={{
               width: "36px",
               height: "36px",
@@ -413,8 +414,8 @@ export default function DirectoryListings({ companies, categoryFilter, verificat
               borderRadius: "8px",
               border: "1px solid #e5e7eb",
               backgroundColor: "white",
-              color: page === totalPages ? "#D1D5DB" : "#6B7280",
-              cursor: page === totalPages ? "default" : "pointer",
+              color: currentPage === totalPages ? "#D1D5DB" : "#6B7280",
+              cursor: currentPage === totalPages ? "default" : "pointer",
               fontSize: "16px",
             }}
           >

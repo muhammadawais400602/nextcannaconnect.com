@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { CATEGORIES } from "@/data/categories";
+
+const CATEGORY_SLUGS = new Set<string>(CATEGORIES.map((c) => c.slug));
 
 async function hmacHex(secret: string, data: string): Promise<string> {
   const enc = new TextEncoder();
@@ -36,6 +39,16 @@ async function isValidSession(request: NextRequest): Promise<boolean> {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Unknown directory categories: serve a real 404 (the page streams a loading
+  // skeleton first, so it can't change the status code itself).
+  const categoryMatch = pathname.match(/^\/directory\/([^/]+)\/?$/);
+  if (categoryMatch) {
+    if (!CATEGORY_SLUGS.has(decodeURIComponent(categoryMatch[1]))) {
+      return NextResponse.rewrite(new URL("/_not-found", request.url), { status: 404 });
+    }
+    return NextResponse.next();
+  }
+
   if (pathname === "/admin/login" || pathname.startsWith("/api/admin/auth")) {
     return NextResponse.next();
   }
@@ -58,5 +71,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*", "/directory/:slug"],
 };

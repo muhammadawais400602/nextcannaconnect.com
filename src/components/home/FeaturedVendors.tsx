@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useInView } from "@/hooks/useInView";
 import type { Company } from "@/types";
+import { formatLocation } from "@/lib/states";
 
 const TIER_LABELS: Record<string, string> = {
   elite:  "Verified Pro",
@@ -171,7 +172,7 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
                   </div>
                   <div className="flex items-center gap-1 mb-5" style={{ color: "#414943", fontSize: "11px" }}>
                     <span className="material-symbols-outlined" style={{ fontSize: "13px" }}>location_on</span>
-                    {company.location.city}, {company.location.state}
+                    {formatLocation(company.location) || "Location not listed"}
                   </div>
                   <button
                     className="mt-auto w-full py-2.5 rounded-lg"

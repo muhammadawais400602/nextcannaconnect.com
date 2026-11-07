@@ -22,6 +22,7 @@ import ConsultantsProfile from "@/components/vendor/consultants/ConsultantsProfi
 import MarketingProfile from "@/components/vendor/marketing/MarketingProfile";
 import ComplianceProfile from "@/components/vendor/compliance/ComplianceProfile";
 import FinanceProfile from "@/components/vendor/finance/FinanceProfile";
+import { formatLocation } from "@/lib/states";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -33,7 +34,8 @@ export const dynamicParams = true;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const company = await getCompanyBySlugFresh(slug);
-  if (!company) return {};
+  // Throwing here (before the page streams) makes unknown vendors return a real 404 status.
+  if (!company) notFound();
   const title = `${company.name} | NextCanna Connect`;
   const description = company.shortDescription || `${company.name} — verified cannabis business on NextCanna Connect.`;
   const location = [company.location?.city, company.location?.state].filter(Boolean).join(", ");
@@ -76,7 +78,7 @@ function SimilarCard({ company }: { company: Company }) {
         {company.location && (
           <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "8px", fontSize: "11px", color: "#9CA3AF" }}>
             <MapPin size={10} />
-            {company.location.city}, {company.location.state}
+            {formatLocation(company.location) || "Location not listed"}
           </div>
         )}
       </div>

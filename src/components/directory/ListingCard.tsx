@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Company, CategorySlug } from "@/types";
 import { getCardFieldCount, getCardTagCount, showBannerImage, CARD_FIELDS } from "@/lib/tier";
+import { formatLocation } from "@/lib/states";
 
 function getFieldValue(company: Company, key: string): string | null {
   const val = (company as unknown as Record<string, unknown>)[key];
@@ -75,7 +76,7 @@ export default function ListingCard({ company }: Props) {
               {company.name}
             </p>
             <p style={{ fontSize: "12px", color: "#9CA3AF" }}>
-              {company.location.city}, {company.location.state}
+              {formatLocation(company.location) || "Location not listed"}
             </p>
           </div>
         </div>
@@ -149,7 +150,7 @@ export default function ListingCard({ company }: Props) {
                 </span>
               </div>
               <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "2px" }}>
-                {company.location.city}, {company.location.state}
+                {formatLocation(company.location) || "Location not listed"}
               </p>
             </div>
           </div>
@@ -256,7 +257,7 @@ export default function ListingCard({ company }: Props) {
           </span>
         </div>
         <p style={{ fontSize: "12px", color: "#9CA3AF", marginBottom: "14px" }}>
-          {company.location.city}, {company.location.state}
+          {formatLocation(company.location) || "Location not listed"}
         </p>
 
         {/* Field rows (4) */}

@@ -16,6 +16,25 @@ function compact<T extends object>(obj: T): T {
   ) as T;
 }
 
+/**
+ * Cleans scraped logo/banner URLs: upgrades http:// to https:// (the image
+ * optimizer rejects http and browsers flag mixed content) and drops "images"
+ * that are really web pages (e.g. a company's homepage URL).
+ */
+export function cleanImageUrl(url?: string | null): string | undefined {
+  const v = url?.trim();
+  if (!v) return undefined;
+  let u: URL;
+  try {
+    u = new URL(v.replace(/^http:\/\//i, "https://"));
+  } catch {
+    return undefined;
+  }
+  if (u.protocol !== "https:") return undefined;
+  if (u.pathname === "/" || /\.(html?|php|aspx?|jsp)$/i.test(u.pathname)) return undefined;
+  return u.toString();
+}
+
 function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
   return compact({
     id: String(doc._id ?? doc.slug),
@@ -30,8 +49,8 @@ function docToCompany(doc: Partial<ICompany> & { _id?: unknown }): CompanyType {
     serviceTags: doc.serviceTags ?? [],
     logoPlaceholder: doc.logoPlaceholder!,
     logoColor: doc.logoColor ?? "#1A4A35",
-    logoUrl: doc.logoUrl,
-    bannerImageUrl: doc.bannerImageUrl,
+    logoUrl: cleanImageUrl(doc.logoUrl),
+    bannerImageUrl: cleanImageUrl(doc.bannerImageUrl),
     bannerCaption: doc.bannerCaption,
     foundedYear: doc.foundedYear,
     products: doc.products,

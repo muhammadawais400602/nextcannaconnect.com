@@ -65,3 +65,8 @@ export function stateOptions(companies: { location?: { state?: string } }[]): st
     stateName(a).localeCompare(stateName(b)),
   );
 }
+
+/** "Denver, CO" / "Denver" / "CO" / "" — never a lone comma. */
+export function formatLocation(location?: { city?: string; state?: string } | null): string {
+  return [location?.city?.trim(), location?.state?.trim()].filter(Boolean).join(", ");
+}

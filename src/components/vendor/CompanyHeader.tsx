@@ -3,6 +3,7 @@ import { Company } from "@/types";
 import TierBadge from "@/components/ui/TierBadge";
 import { getCategoryBySlug } from "@/data/categories";
 import Link from "next/link";
+import { formatLocation } from "@/lib/states";
 
 const TIER_ACCENT: Record<string, string> = {
   featured: "#F7941D",
@@ -73,7 +74,7 @@ export default function CompanyHeader({ company }: CompanyHeaderProps) {
             <div className="flex flex-wrap items-center gap-4 mb-4">
               <div className="flex items-center gap-1.5" style={{ color: "#6B7280", fontSize: "13px" }}>
                 <MapPin size={13} />
-                {company.location.city}, {company.location.state}
+                {formatLocation(company.location) || "Location not listed"}
               </div>
               {company.rating && (
                 <div className="flex items-center gap-1.5">
