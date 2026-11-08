@@ -18,6 +18,9 @@ const TIER_LABELS: Record<string, string> = {
 };
 
 
+// Hashing + database writes + two emails: allow more than the default time budget.
+export const maxDuration = 30;
+
 export async function POST(request: NextRequest) {
   try {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
