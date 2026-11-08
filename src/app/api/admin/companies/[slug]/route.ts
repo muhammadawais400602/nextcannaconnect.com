@@ -1,3 +1,5 @@
+import User from "@/lib/models/User";
+import { revalidateTag, revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Company from "@/lib/models/Company";
@@ -44,6 +46,12 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     const { slug } = await params;
     const result = await Company.findOneAndDelete({ slug });
     if (!result) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // Detach the owner's account (it would otherwise point at a missing listing)
+    // and clear cached pages so the listing disappears from the site right away.
+    await User.updateMany({ companyId: result._id }, { $unset: { companyId: "" } });
+    revalidateTag("companies", "max");
+    revalidatePath(`/vendor/${slug}`);
+    revalidatePath(`/directory/${result.category}`);
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);

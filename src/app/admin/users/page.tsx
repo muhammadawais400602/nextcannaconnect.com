@@ -10,7 +10,7 @@ const TIER_BG: Record<string, string> = {
 };
 
 const TIER_LABELS: Record<string, string> = {
-  free: "Claimed", select: "Select", elite: "Verified Pro",
+  free: "Free", select: "Select", elite: "Verified Pro",
 };
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
@@ -54,6 +54,10 @@ export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [usersLoading, setUsersLoading] = useState(true);
   const [usersEmpty, setUsersEmpty] = useState(false);
+  const [userSearch, setUserSearch] = useState("");
+  const [userDelete, setUserDelete] = useState<{ id: string; withListing: boolean } | null>(null);
+  const [userBusy, setUserBusy] = useState<string | null>(null);
+  const [userMsg, setUserMsg] = useState<{ text: string; error?: boolean } | null>(null);
 
   // ── Signups state ─────────────────────────────────────────────
   const [apps, setApps] = useState<SignupApp[]>([]);
@@ -87,9 +91,40 @@ export default function UsersPage() {
     });
     if (res.ok) {
       const { user } = await res.json();
-      setUsers((prev) => prev.map((u) => (u._id === id ? user : u)));
+      setUsers((prev) => prev.map((u) => (u._id === id ? { ...u, ...user } : u)));
+      setUserMsg({ text: `Plan updated for ${user.email}${user.companyId ? " (and their listing)" : ""}.` });
+    } else {
+      setUserMsg({ text: "Couldn't change the plan. Please try again.", error: true });
     }
   }
+
+  async function deleteUser(id: string, withListing: boolean) {
+    setUserBusy(id);
+    setUserMsg(null);
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, deleteListing: withListing }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Failed to delete user");
+      const removed = users.find((u) => u._id === id);
+      setUsers((prev) => prev.filter((u) => u._id !== id));
+      setApps((prev) => prev.filter((a) => a.email !== removed?.email));
+      setUserDelete(null);
+      setUserMsg({ text: `Deleted ${removed?.email ?? "user"}${data.listingDeleted ? " and their listing" : ""}.` });
+    } catch (err) {
+      setUserMsg({ text: err instanceof Error ? err.message : "Failed to delete user", error: true });
+    } finally {
+      setUserBusy(null);
+    }
+  }
+
+  const q = userSearch.trim().toLowerCase();
+  const shownUsers = q
+    ? users.filter((u) => `${u.fullName ?? ""} ${u.email ?? ""} ${u.companyName ?? ""} ${u.listing?.name ?? ""}`.toLowerCase().includes(q))
+    : users;
 
   async function deleteApp(id: string) {
     setActionLoading(id + "delete");
@@ -188,6 +223,22 @@ export default function UsersPage() {
 
       {/* ── Active Users Tab ────────────────────────────────────── */}
       {tab === "users" && (
+        <>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "12px", flexWrap: "wrap" }}>
+          <input
+            value={userSearch}
+            onChange={(e) => setUserSearch(e.target.value)}
+            placeholder="Search name, email or company…"
+            aria-label="Search users"
+            style={{ padding: "9px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", fontSize: "14px", minWidth: "280px" }}
+          />
+          <span style={{ fontSize: "13px", color: "#6B7280" }}>{shownUsers.length} of {users.length} users</span>
+        </div>
+        {userMsg && (
+          <div role="status" style={{ marginBottom: "12px", padding: "10px 14px", borderRadius: "8px", fontSize: "14px", background: userMsg.error ? "#FEF2F2" : "#F0FDF4", color: userMsg.error ? "#991B1B" : "#166534", border: `1px solid ${userMsg.error ? "#FECACA" : "#BBF7D0"}` }}>
+            {userMsg.text}
+          </div>
+        )}
         <div style={{ background: "white", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", overflow: "hidden" }}>
           {usersLoading ? (
             <div style={{ padding: "60px", textAlign: "center", color: "#9CA3AF", fontFamily: "sans-serif" }}>
@@ -203,7 +254,7 @@ export default function UsersPage() {
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ background: "#F9FAFB" }}>
-                  {["Name", "Email", "Company", "Type", "Tier", "Joined", "Actions"].map((h) => (
+                  {["Name", "Email", "Listing", "Type", "Plan", "Joined", "Actions"].map((h) => (
                     <th key={h} style={{ padding: "12px 20px", textAlign: "left", fontSize: "11px", fontWeight: "700", color: "#6B7280", textTransform: "uppercase", letterSpacing: "0.05em", fontFamily: "sans-serif" }}>
                       {h}
                     </th>
@@ -211,8 +262,8 @@ export default function UsersPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((u, i) => (
-                  <tr key={u._id} style={{ borderTop: i > 0 ? "1px solid #F3F4F6" : "none" }}>
+                {shownUsers.map((u, i) => (
+                  <tr key={u._id} style={{ borderTop: i > 0 ? "1px solid #F3F4F6" : "none", verticalAlign: "top" }}>
                     <td style={{ padding: "14px 20px" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <div style={{ width: "32px", height: "32px", borderRadius: "50%", background: "#1A4A35", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: "700", color: "white", fontFamily: "sans-serif", flexShrink: 0 }}>
@@ -224,7 +275,13 @@ export default function UsersPage() {
                       </div>
                     </td>
                     <td style={{ padding: "14px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>{u.email}</td>
-                    <td style={{ padding: "14px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>{u.companyName || "—"}</td>
+                    <td style={{ padding: "14px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>
+                      {u.listing ? (
+                        <a href={`/vendor/${u.listing.slug}`} target="_blank" rel="noreferrer" style={{ color: "#1A4A35", fontWeight: 600 }}>{u.listing.name} ↗</a>
+                      ) : (
+                        <>{u.companyName || "—"}<div style={{ fontSize: "11px", color: "#9CA3AF" }}>No listing linked</div></>
+                      )}
+                    </td>
                     <td style={{ padding: "14px 20px" }}>
                       <span style={{ fontSize: "11px", fontWeight: "600", textTransform: "capitalize", color: u.accountType === "vendor" ? "#1A4A35" : "#2563EB", background: u.accountType === "vendor" ? "#E8F5EE" : "#EFF6FF", padding: "3px 10px", borderRadius: "20px", fontFamily: "sans-serif" }}>
                         {u.accountType}
@@ -239,11 +296,49 @@ export default function UsersPage() {
                       {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "—"}
                     </td>
                     <td style={{ padding: "14px 20px" }}>
-                      <CustomSelect value={u.tier} onChange={(e) => handleTierChange(u._id, e.target.value)} style={{ fontSize: "12px", padding: "6px 28px 6px 10px" }}>
-                        {[{ v: "free", l: "Unclaimed" }, { v: "select", l: "Select" }, { v: "elite", l: "Verified Pro" }].map(({ v, l }) => (
-                          <option key={v} value={v}>{l}</option>
-                        ))}
-                      </CustomSelect>
+                      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                        <CustomSelect aria-label={`Plan for ${u.email}`} value={u.tier} onChange={(e) => handleTierChange(u._id, e.target.value)} style={{ fontSize: "12px", padding: "6px 28px 6px 10px" }}>
+                          {[{ v: "free", l: "Free" }, { v: "select", l: "Select" }, { v: "elite", l: "Verified Pro" }].map(({ v, l }) => (
+                            <option key={v} value={v}>{l}</option>
+                          ))}
+                        </CustomSelect>
+                        {userDelete?.id !== u._id && (
+                          <button
+                            onClick={() => setUserDelete({ id: u._id, withListing: !!u.listing })}
+                            style={{ padding: "6px 10px", background: "none", color: "#DC2626", border: "1px solid #FECACA", borderRadius: "7px", fontSize: "12px", fontWeight: 600, cursor: "pointer" }}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                      {userDelete?.id === u._id && (
+                        <div style={{ marginTop: "10px", padding: "10px 12px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: "8px", fontSize: "12px", color: "#7F1D1D", maxWidth: "280px" }}>
+                          <p style={{ margin: "0 0 8px", fontWeight: 600 }}>Delete {u.email}? This can&apos;t be undone.</p>
+                          {u.listing && (
+                            <label style={{ display: "flex", gap: "6px", alignItems: "flex-start", marginBottom: "8px", cursor: "pointer" }}>
+                              <input
+                                type="checkbox"
+                                checked={!!userDelete?.withListing}
+                                onChange={(e) => setUserDelete({ id: u._id, withListing: e.target.checked })}
+                              />
+                              <span>Also delete their listing &ldquo;{u.listing.name}&rdquo; (otherwise it stays as an unclaimed listing)</span>
+                            </label>
+                          )}
+                          {u.stripeSubscriptionId && <p style={{ margin: "0 0 8px" }}>Their paid subscription will be cancelled in Stripe.</p>}
+                          <div style={{ display: "flex", gap: "6px" }}>
+                            <button
+                              onClick={() => deleteUser(u._id, !!userDelete?.withListing)}
+                              disabled={userBusy === u._id}
+                              style={{ padding: "6px 12px", background: "#DC2626", color: "white", border: "none", borderRadius: "7px", fontSize: "12px", fontWeight: 700, cursor: "pointer" }}
+                            >
+                              {userBusy === u._id ? "Deleting…" : "Delete user"}
+                            </button>
+                            <button onClick={() => setUserDelete(null)} style={{ padding: "6px 10px", background: "white", color: "#374151", border: "1px solid #E5E7EB", borderRadius: "7px", fontSize: "12px", cursor: "pointer" }}>
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -251,6 +346,7 @@ export default function UsersPage() {
             </table>
           )}
         </div>
+        </>
       )}
 
       {/* ── Signups Tab ─────────────────────────────────────────── */}
