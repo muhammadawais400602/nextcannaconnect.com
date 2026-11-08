@@ -197,11 +197,15 @@ function SignUpForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...basicForm, tier: selectedTier, ...(claimSlug ? { claimSlug } : {}), ...extraFields }),
       });
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Submission failed");
+      // The server should always answer with JSON; if it doesn't (e.g. a timeout
+      // page), show a helpful message instead of a raw parsing error.
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data) {
+        throw new Error(
+          data?.error ||
+            `Something went wrong on our side (error ${res.status}). If you try again and it says your account already exists, just sign in — otherwise email hello@nextcannaconnect.com.`,
+        );
       }
-      const data = await res.json();
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
         return;

@@ -24,6 +24,8 @@ export async function sendEmail({ replyTo, ...payload }: EmailPayload): Promise<
       method: "POST",
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({ from: FROM_EMAIL, ...payload, ...(replyTo ? { reply_to: replyTo } : {}) }),
+      // Never let a slow email provider hold up signup, inquiries etc.
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) {
       console.error("[email] Resend error:", res.status, await res.text());
