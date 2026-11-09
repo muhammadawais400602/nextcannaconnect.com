@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { matchesSearch } from "@/lib/listingSearch";
 import { formatLocation, matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
 import Link from "next/link";
 import { Company } from "@/types";
@@ -68,7 +69,7 @@ function FirmCard({ company }: { company: Company }) {
             )}
           </div>
           <div style={{ minWidth: 0 }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}><Link href={`/vendor/${company.slug}`} className="card-title-link" style={{ color: "inherit", textDecoration: "none" }}>{company.name}</Link></h3>
+            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}><Link prefetch={false} href={`/vendor/${company.slug}`} className="card-title-link" style={{ color: "inherit", textDecoration: "none" }}>{company.name}</Link></h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
               <span>{formatLocation(company.location) || "Multi-State"}</span>
@@ -94,7 +95,7 @@ function FirmCard({ company }: { company: Company }) {
               {company.credentialHeadline}
             </span>
           ) : <span />}
-          <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+          <Link prefetch={false} href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
             View Profile <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
           </Link>
         </div>
@@ -134,6 +135,7 @@ export default function RealEstateListingsGrid({ companies }: { companies: Compa
   const searchParams = useSearchParams();
   // Pre-select the state chosen in the home/directory search (?state=California or ?state=CA).
   const [location, setLocation] = useState(() => toStateCode(searchParams.get("state")));
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const serviceTypes = useMemo(() => [...new Set(companies.flatMap((c) => c.serviceTags ?? []))].sort(), [companies]);
@@ -141,11 +143,12 @@ export default function RealEstateListingsGrid({ companies }: { companies: Compa
 
   const filtered = useMemo(() => {
     return companies.filter((c) => {
+      if (search && !matchesSearch(c, search)) return false;
       if (location && !matchesState(c, location)) return false;
       if (active.length > 0 && !active.every((a) => (c.serviceTags ?? []).includes(a))) return false;
       return true;
     });
-  }, [companies, location, active]);
+  }, [companies, search, location, active]);
 
   function toggle(tag: string) {
     setActive((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]));
@@ -162,6 +165,14 @@ export default function RealEstateListingsGrid({ companies }: { companies: Compa
           <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
             <span aria-hidden="true" className="material-symbols-outlined">filter_list</span> Filters:
           </span>
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setVisible(PAGE_SIZE); }}
+            placeholder="Search by name or keyword"
+            aria-label="Search listings"
+            style={{ ...selectStyle, cursor: "text", minWidth: "220px", flex: "1 1 220px" }}
+          />
           <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Locations</option>
             {(location && !states.includes(location) ? [location, ...states] : states).map((s) => <option key={s} value={s}>{stateName(s)}</option>)}
@@ -179,6 +190,13 @@ export default function RealEstateListingsGrid({ companies }: { companies: Compa
       {/* Grid */}
       <section style={{ background: "#f5f3f2", padding: "64px 0" }}>
         <div className="cat-container">
+          {companies.length > 0 && (
+            <p aria-live="polite" style={{ fontSize: "14px", color: VARIANT, margin: "0 0 20px" }}>
+              <strong style={{ color: "#1b1c1b" }}>{filtered.length.toLocaleString()}</strong> firms
+              {location ? ` in ${stateName(location)}` : ""}
+              {search ? ` matching “${search}”` : ""}
+            </p>
+          )}
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>domain</span>

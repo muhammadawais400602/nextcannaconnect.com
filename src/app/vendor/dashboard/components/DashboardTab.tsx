@@ -172,12 +172,32 @@ export default function DashboardTab({
         )}
       </div>
 
+      {/* RFP Board — included in Select and Verified Pro */}
+      <div style={{ ...cardStyle, marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "16px", flexWrap: "wrap" }}>
+        <div>
+          <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1A4A35", margin: "0 0 4px" }}>RFP Board</h3>
+          <p style={{ fontSize: "13px", color: "#6B7280", margin: 0 }}>
+            {vendor.tier === "free"
+              ? "Buyers post requests for proposals here. Upgrade to Select or Verified Pro to respond."
+              : "Buyers post requests for proposals here — respond to win new business."}
+          </p>
+        </div>
+        <Link
+          href="/rfp-board"
+          style={{ fontSize: "13px", fontWeight: 700, color: "#1A4A35", border: "1px solid #C6E0D0", borderRadius: "8px", padding: "8px 14px", textDecoration: "none", whiteSpace: "nowrap" }}
+        >
+          {vendor.tier === "free" ? "Browse RFPs →" : "Open RFP Board →"}
+        </Link>
+      </div>
+
       {/* View Listing */}
       {company && (
         <div style={{ textAlign: "center" }}>
-          <Link
+          {/* Plain <a> for a new-tab link: next/link + target="_blank" could open two tabs. */}
+          <a
             href={`/vendor/${company.slug}`}
             target="_blank"
+            rel="noopener noreferrer"
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -192,7 +212,7 @@ export default function DashboardTab({
             }}
           >
             View Live Listing →
-          </Link>
+          </a>
         </div>
       )}
     </div>

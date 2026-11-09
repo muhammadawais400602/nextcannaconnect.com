@@ -77,7 +77,7 @@ export default function ListingCard({ company }: Props) {
               {company.name}
             </p>
             <p style={{ fontSize: "12px", color: "#9CA3AF" }}>
-              {formatLocation(company.location) || "Location not listed"}
+              {formatLocation(company.location) || "\u00a0"}
             </p>
           </div>
         </div>
@@ -153,7 +153,7 @@ export default function ListingCard({ company }: Props) {
                 )}
               </div>
               <p style={{ fontSize: "12px", color: "#9CA3AF", marginTop: "2px" }}>
-                {formatLocation(company.location) || "Location not listed"}
+                {formatLocation(company.location) || "\u00a0"}
               </p>
             </div>
           </div>
@@ -186,6 +186,7 @@ export default function ListingCard({ company }: Props) {
           )}
 
           <Link
+            prefetch={false}
             href={`/vendor/${company.slug}`}
             style={{
               display: "block",
@@ -264,7 +265,7 @@ export default function ListingCard({ company }: Props) {
           )}
         </div>
         <p style={{ fontSize: "12px", color: "#9CA3AF", marginBottom: "14px" }}>
-          {formatLocation(company.location) || "Location not listed"}
+          {formatLocation(company.location) || "\u00a0"}
         </p>
 
         {/* Field rows (4) */}
@@ -295,6 +296,7 @@ export default function ListingCard({ company }: Props) {
         )}
 
         <Link
+          prefetch={false}
           href={`/vendor/${company.slug}`}
           style={{
             display: "block",

@@ -7,6 +7,7 @@ import { Menu, X, User, ChevronDown } from "lucide-react";
 import { CATEGORIES } from "@/data/categories";
 
 const NAV_LINKS = [
+  { label: "RFP Board", href: "/rfp-board" },
   { label: "Pricing", href: "/pricing" },
   { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
@@ -401,6 +402,8 @@ export default function Navbar() {
     <nav
       className="fixed top-0 w-full z-50 glass-panel"
       style={{
+        // Near-opaque so page content scrolling underneath doesn't show through.
+        backgroundColor: "rgba(251,249,248,0.97)",
         borderBottom: "1px solid rgba(192,201,193,0.3)",
         boxShadow: "0 4px 60px rgba(27,28,28,0.05)",
       }}

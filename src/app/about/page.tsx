@@ -1,3 +1,5 @@
+import JsonLd from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/siteUrl";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -12,6 +14,15 @@ const GOLD = "#C8922A";
 export default function AboutPage() {
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", backgroundColor: "#fbf9f8", color: "#1b1c1c", paddingTop: "70px" }}>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          url: `${SITE_URL}/about`,
+          name: "About NextCanna Connect",
+          about: { "@type": "Organization", name: "NextCanna Connect", url: SITE_URL },
+        }}
+      />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
       <section

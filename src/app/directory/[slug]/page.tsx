@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCategoryBySlug } from "@/data/categories";
+import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
+import JsonLd from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/siteUrl";
 import RetailCategoryPage from "@/components/directory/retail/RetailCategoryPage";
 import TransportCategoryPage from "@/components/directory/transport/TransportCategoryPage";
 import TestingCategoryPage from "@/components/directory/testing/TestingCategoryPage";
@@ -46,7 +49,37 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   if (!CUSTOM_TEMPLATE_SLUGS.has(slug)) notFound();
+  const page = renderCategory(slug);
+  if (!page) notFound();
 
+  const category = getCategoryBySlug(slug);
+  const companies = await getCompaniesByCategory(slug);
+  const listLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${category?.label ?? slug} Directory`,
+    description: category?.description,
+    url: `${SITE_URL}/directory/${slug}`,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: companies.length,
+      itemListElement: companies.slice(0, 30).map((c, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${SITE_URL}/vendor/${c.slug}`,
+        name: c.name,
+      })),
+    },
+  };
+  return (
+    <>
+      <JsonLd data={listLd} />
+      {page}
+    </>
+  );
+}
+
+function renderCategory(slug: string) {
   if (slug === "retail-dispensary") {
     return <RetailCategoryPage />;
   }
@@ -95,5 +128,5 @@ export default async function CategoryPage({ params }: Props) {
     return <FinanceCategoryPage />;
   }
 
-  notFound();
+  return null;
 }
