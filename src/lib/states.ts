@@ -23,8 +23,11 @@ export const CA_PROVINCES: Record<string, string> = {
 };
 
 const ALL: Record<string, string> = { ...US_STATES, ...CA_PROVINCES };
+// Keys ignore case, spaces and punctuation so "NewJersey", "new-jersey" and
+// "New Jersey" all resolve to NJ.
+const squash = (v: string) => v.toLowerCase().replace(/[^a-z]/g, "");
 const BY_NAME: Record<string, string> = Object.fromEntries(
-  Object.entries(ALL).map(([code, name]) => [name.toLowerCase(), code]),
+  Object.entries(ALL).map(([code, name]) => [squash(name), code]),
 );
 
 /** "California" / "california" / "CA" / "ca" → "CA". Unknown values are returned trimmed. */
@@ -33,7 +36,7 @@ export function toStateCode(value: string | null | undefined): string {
   if (!v) return "";
   const upper = v.toUpperCase();
   if (ALL[upper]) return upper;
-  return BY_NAME[v.toLowerCase()] ?? v;
+  return BY_NAME[squash(v)] ?? v;
 }
 
 /** "CA" → "California"; unknown values are returned as-is. */

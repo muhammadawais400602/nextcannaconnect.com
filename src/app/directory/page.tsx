@@ -9,7 +9,7 @@ export const revalidate = 120;
 
 export const metadata: Metadata = {
   title: "B2B Marketplace Directory | NextCanna Connect",
-  description: "Browse verified cultivators, extractors, and logistics partners across North America.",
+  description: "Browse cannabis cultivators, extractors, logistics partners and service providers by category and state.",
 };
 
 interface Props {

@@ -7,7 +7,6 @@ import { CATEGORIES } from "@/data/categories";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const US_STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
-const CA_PROVINCES = ["Alberta","British Columbia","Manitoba","New Brunswick","Newfoundland and Labrador","Northwest Territories","Nova Scotia","Nunavut","Ontario","Prince Edward Island","Quebec","Saskatchewan","Yukon"];
 
 export default function HeroSection() {
   const router = useRouter();
@@ -190,12 +189,13 @@ export default function HeroSection() {
               <CustomDropdown
                 value={state}
                 onChange={setState}
-                placeholder="Select State / Province"
+                placeholder="Select State"
                 wrapperStyle={{ flex: 1, minWidth: 0 }}
                 triggerStyle={{ color: state ? "#003320" : "#717973" }}
                 items={[
-                  { groupLabel: "United States", options: [{ value: "all-us", label: "All States (USA)" }, ...US_STATES.map((s) => ({ value: s, label: s }))] },
-                  { groupLabel: "Canada", options: [{ value: "all-ca", label: "All Provinces (Canada)" }, ...CA_PROVINCES.map((p) => ({ value: p, label: p }))] },
+                  // "" = all states (no filter). Canada is left out until there are Canadian listings.
+                  { value: "", label: "All States" },
+                  ...US_STATES.map((s) => ({ value: s, label: s })),
                 ]}
               />
             </div>

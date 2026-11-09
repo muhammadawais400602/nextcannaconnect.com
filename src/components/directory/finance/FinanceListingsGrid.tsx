@@ -57,7 +57,7 @@ function ProviderCard({ company }: { company: Company }) {
             )}
           </div>
           <div style={{ minWidth: 0 }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
+            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}><Link href={`/vendor/${company.slug}`} className="card-title-link" style={{ color: "inherit", textDecoration: "none" }}>{company.name}</Link></h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
               <span>{formatLocation(company.location) || (company.statesServed?.some((s) => /nationwide/i.test(s)) ? "Nationwide" : "Location not listed")}</span>
@@ -168,7 +168,7 @@ export default function FinanceListingsGrid({ companies }: { companies: Company[
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>account_balance</span>
-              <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No financial providers are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No financial providers match your filters. Try removing a filter.</>}</p>
+              <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No financial providers are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : (location ? <>No financial providers listed in {stateName(location)} yet. <button type="button" onClick={() => setLocation("")} style={{ background: "none", border: "none", padding: 0, color: "#003320", fontWeight: 600, textDecoration: "underline", cursor: "pointer", font: "inherit" }}>Show all states</button> or <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>list your business</a>.</> : <>No financial providers match your filters. Try removing a filter.</>)}</p>
             </div>
           ) : (
             <div className="cat-grid">

@@ -64,7 +64,7 @@ export default function DirectoryHero() {
           }}
         >
           Access the industry&apos;s most rigorous network of verified cultivators,
-          extractors, and logistics partners across North America.
+          extractors, and logistics partners for your cannabis business.
         </p>
 
         {/* Search bar */}

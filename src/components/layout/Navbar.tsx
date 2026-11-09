@@ -38,11 +38,24 @@ function ProfileMenu({ user, onLogout }: { user: AuthUser; onLogout: () => void 
 
   const displayName = user.fullName || user.companyName || user.email;
 
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openNow = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const closeSoon = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 180);
+  };
+
   return (
-    <div ref={ref} style={{ position: "relative" }}>
+    <div ref={ref} style={{ position: "relative" }} onMouseEnter={openNow} onMouseLeave={closeSoon}>
       <button
-        onClick={() => setOpen((o) => !o)}
-        onMouseEnter={() => setOpen(true)}
+        type="button"
+        aria-haspopup="true"
+        aria-expanded={open}
+        // Mouse click after hover-open keeps it open; keyboard (detail 0) toggles.
+        onClick={(e) => setOpen((o) => (e.detail === 0 ? !o : true))}
         title={displayName}
         style={{
           display: "flex",
@@ -55,7 +68,6 @@ function ProfileMenu({ user, onLogout }: { user: AuthUser; onLogout: () => void 
           cursor: "pointer",
           transition: "border-color 0.2s",
         }}
-        onMouseLeave={() => {}}
       >
         <div
           style={{
@@ -81,8 +93,6 @@ function ProfileMenu({ user, onLogout }: { user: AuthUser; onLogout: () => void 
 
       {open && (
         <div
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
           style={{
             position: "absolute",
             top: "calc(100% + 8px)",
@@ -181,6 +191,7 @@ const CATEGORY_ICONS: Record<string, string> = {
 function CategoriesDropdown() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const isOnCategory = pathname.startsWith("/directory/");
 
@@ -188,15 +199,42 @@ function CategoriesDropdown() {
     function handleClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
     document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+      document.removeEventListener("keydown", handleKey);
+    };
   }, []);
 
+  // Close the menu after navigating.
+  useEffect(() => {
+    setOpen(false); // eslint-disable-line react-hooks/set-state-in-effect
+  }, [pathname]);
+
+  // Hover opens; a short delay lets the pointer cross the gap into the panel.
+  const openNow = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const closeSoon = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 180);
+  };
+
   return (
-    <div ref={ref} style={{ position: "relative" }}>
+    <div ref={ref} style={{ position: "relative" }} onMouseEnter={openNow} onMouseLeave={closeSoon}>
       <button
-        onClick={() => setOpen((o) => !o)}
-        onMouseEnter={() => setOpen(true)}
+        type="button"
+        aria-haspopup="true"
+        aria-expanded={open}
+        aria-controls="categories-menu"
+        // A mouse click right after hover-open must not toggle the menu shut;
+        // keyboard activation (detail === 0) toggles.
+        onClick={(e) => setOpen((o) => (e.detail === 0 ? !o : true))}
         style={{
           display: "flex",
           alignItems: "center",
@@ -216,15 +254,13 @@ function CategoriesDropdown() {
           cursor: "pointer",
           transition: "color 0.2s ease",
         }}
-        onMouseLeave={() => {}}
       >
-        Categories <ChevronDown size={12} style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0)" }} />
+        Categories <ChevronDown aria-hidden="true" size={12} style={{ transition: "transform 0.2s", transform: open ? "rotate(180deg)" : "rotate(0)" }} />
       </button>
 
       {open && (
         <div
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
+          id="categories-menu"
           style={{
             position: "absolute",
             top: "calc(100% + 16px)",
@@ -262,6 +298,7 @@ function CategoriesDropdown() {
                   onMouseLeave={(e) => { if (!active) (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; }}
                 >
                   <span
+                    aria-hidden="true"
                     className="material-symbols-outlined"
                     style={{ fontSize: "18px", color: "#88B99E", flexShrink: 0 }}
                   >

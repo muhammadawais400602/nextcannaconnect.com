@@ -8,7 +8,7 @@ import { getFeaturedCompanies } from "@/lib/getCompaniesFromDB";
 export const metadata: Metadata = {
   title: "NextCanna Connect — Where Cannabis Operators Connect",
   description:
-    "The leading B2B cannabis marketplace connecting licensed operators, cultivators, manufacturers, retailers, and service providers across the US and Canada. Find verified partners in your state.",
+    "The B2B cannabis marketplace connecting licensed operators with cultivators, manufacturers, retailers and service providers. Find partners in your state — or businesses that serve every state.",
   keywords: [
     "cannabis B2B marketplace",
     "cannabis suppliers",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NextCanna Connect — Where Cannabis Operators Connect",
     description:
-      "The leading B2B cannabis marketplace. Find verified cultivators, manufacturers, retailers and service providers across North America.",
+      "The B2B cannabis marketplace. Find cultivators, manufacturers, retailers and service providers for your cannabis business.",
     type: "website",
     siteName: "NextCanna Connect",
   },
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "NextCanna Connect — Where Cannabis Operators Connect",
     description:
-      "The leading B2B cannabis marketplace. Find verified partners across the US and Canada.",
+      "The B2B cannabis marketplace. Find cannabis industry partners in your state.",
   },
   robots: {
     index: true,

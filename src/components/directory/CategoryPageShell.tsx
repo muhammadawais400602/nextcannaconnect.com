@@ -67,7 +67,11 @@ export default function CategoryPageShell({
         .cat-grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
         @media (min-width: 768px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (min-width: 1024px) { .cat-grid { grid-template-columns: repeat(3, 1fr); } }
-        .cat-card { transition: transform 0.3s, box-shadow 0.3s; }
+        .cat-card { transition: transform 0.3s, box-shadow 0.3s; position: relative; }
+        /* Whole card opens the vendor profile; other links/buttons in the card stay clickable above it. */
+        .cat-card .card-title-link::after { content: ""; position: absolute; inset: 0; z-index: 0; }
+        .cat-card a:not(.card-title-link), .cat-card button { position: relative; z-index: 1; }
+        .cat-card .card-title-link:focus-visible { outline: 2px solid #003320; outline-offset: 2px; }
         @media (hover: hover) { .cat-card:hover { transform: translateY(-6px); box-shadow: 0 10px 20px rgba(0,51,32,0.1); } }
         .cat-guide-grid { display: grid; grid-template-columns: 1fr; gap: 32px; text-align: center; }
         @media (min-width: 640px) { .cat-guide-grid { grid-template-columns: repeat(2, 1fr); } }
