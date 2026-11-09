@@ -125,7 +125,7 @@ export default async function VendorPage({ params }: Props) {
     return (
       <div style={{ backgroundColor: "#F7F9F7", minHeight: "100vh" }}>
         {tracker}
-        <div style={{ maxWidth: "600px", margin: "0 auto", padding: "120px 20px 80px", textAlign: "center" }}>
+        <div style={{ maxWidth: "640px", margin: "0 auto", padding: "120px 20px 80px", textAlign: "center" }}>
           <div style={{
             width: "64px", height: "64px", borderRadius: "50%", background: company.logoColor || "#E5E7EB",
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -142,24 +142,40 @@ export default async function VendorPage({ params }: Props) {
             {company.name}
           </h1>
           {(company.location.city || company.location.state) && (
-            <p style={{ fontSize: "14px", color: "#6B7280", marginBottom: "24px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
+            <p style={{ fontSize: "14px", color: "#6B7280", marginBottom: "16px", display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}>
               <MapPin size={14} />
               {[company.location.city, company.location.state].filter(Boolean).join(", ")}
             </p>
           )}
-          <div style={{
-            background: "white", borderRadius: "14px", border: "1px solid #E5E7EB", padding: "32px 28px", marginBottom: "24px",
-          }}>
-            <p style={{ fontSize: "15px", color: "#6B7280", lineHeight: 1.7, marginBottom: "20px" }}>
-              This listing has not been claimed yet.
+          {company.shortDescription && (
+            <p style={{ fontSize: "15px", color: "#374151", lineHeight: 1.7, margin: "0 auto 16px", maxWidth: "520px" }}>
+              {company.shortDescription}
             </p>
-            <p style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7, marginBottom: "24px" }}>
-              Are you the owner? Claim it free and upgrade anytime to unlock your full company profile, contact form, analytics, and more.
+          )}
+          {(company.serviceTags ?? []).length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center", marginBottom: "28px" }}>
+              {(company.serviceTags ?? []).slice(0, 6).map((t) => (
+                <span key={t} style={{ background: "white", border: "1px solid #E5E7EB", borderRadius: "6px", padding: "4px 10px", fontSize: "12px", fontWeight: 600, color: "#374151" }}>{t}</span>
+              ))}
+            </div>
+          )}
+          {/* Buyers can still reach an unclaimed business through the inquiry form. */}
+          <div style={{ textAlign: "left" }}>
+            <ContactForm companyName={company.name} vendorSlug={company.slug} serviceTags={company.serviceTags ?? []} />
+          </div>
+          <div style={{
+            background: "white", borderRadius: "14px", border: "1px solid #E5E7EB", padding: "24px", marginBottom: "24px",
+          }}>
+            <p style={{ fontSize: "15px", fontWeight: 700, color: "#0D2818", marginBottom: "8px" }}>
+              Is this your business?
+            </p>
+            <p style={{ fontSize: "14px", color: "#374151", lineHeight: 1.7, marginBottom: "20px" }}>
+              This listing hasn&apos;t been claimed yet. Claim it free to manage your profile, receive inquiries in your dashboard, and upgrade anytime.
             </p>
             <Link
               href={`/signup?claim=${company.slug}&category=${company.category}`}
               style={{
-                display: "inline-block", padding: "14px 32px", borderRadius: "8px",
+                display: "inline-block", padding: "12px 28px", borderRadius: "8px",
                 fontSize: "14px", fontWeight: 700, textDecoration: "none",
                 background: "#1A4A35", color: "white",
               }}

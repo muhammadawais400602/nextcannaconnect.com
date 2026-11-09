@@ -1,3 +1,4 @@
+import { passwordProblem } from "@/lib/password";
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
@@ -18,8 +19,9 @@ export async function POST(request: NextRequest) {
     if (!currentPassword || !newPassword) {
       return NextResponse.json({ error: "Both fields are required" }, { status: 400 });
     }
-    if (newPassword.length < 8) {
-      return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
+    const pwProblem = passwordProblem(newPassword);
+    if (pwProblem) {
+      return NextResponse.json({ error: pwProblem }, { status: 400 });
     }
 
     await connectDB();

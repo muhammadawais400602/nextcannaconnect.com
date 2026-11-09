@@ -1,3 +1,4 @@
+import { passwordProblem } from "@/lib/password";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
@@ -8,8 +9,12 @@ export async function POST(request: NextRequest) {
     await connectDB();
     const { token, password } = await request.json();
 
-    if (!token || !password || password.length < 8) {
+    if (!token) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+    }
+    const pwProblem = passwordProblem(password);
+    if (pwProblem) {
+      return NextResponse.json({ error: pwProblem }, { status: 400 });
     }
 
     const user = await User.findOne({

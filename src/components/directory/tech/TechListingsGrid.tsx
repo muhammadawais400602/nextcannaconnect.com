@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { matchesSearch } from "@/lib/listingSearch";
 import { formatLocation, matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
 import Link from "next/link";
 import { Company } from "@/types";
@@ -68,7 +69,7 @@ function VendorCard({ company }: { company: Company }) {
             )}
           </div>
           <div style={{ minWidth: 0 }}>
-            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}>{company.name}</h3>
+            <h3 style={{ fontSize: "18px", fontWeight: 600, color: DF, margin: "0 0 4px", lineHeight: 1.2 }}><Link prefetch={false} href={`/vendor/${company.slug}`} className="card-title-link" style={{ color: "inherit", textDecoration: "none" }}>{company.name}</Link></h3>
             <div style={{ display: "flex", alignItems: "center", gap: "4px", color: VARIANT, fontSize: "13px" }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>location_on</span>
               <span>{formatLocation(company.location) || (company.statesServed?.some((s) => /nationwide/i.test(s)) ? "Nationwide" : "Location not listed")}</span>
@@ -94,7 +95,7 @@ function VendorCard({ company }: { company: Company }) {
               {company.accreditation}
             </span>
           ) : <span />}
-          <Link href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
+          <Link prefetch={false} href={`/vendor/${company.slug}`} style={{ fontSize: "14px", fontWeight: 500, color: DF, textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}>
             View Profile <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "16px" }}>arrow_forward</span>
           </Link>
         </div>
@@ -123,6 +124,7 @@ export default function TechListingsGrid({ companies }: { companies: Company[] }
   const searchParams = useSearchParams();
   // Pre-select the state chosen in the home/directory search (?state=California or ?state=CA).
   const [location, setLocation] = useState(() => toStateCode(searchParams.get("state")));
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const integrations = useMemo(() => [...new Set(companies.flatMap((c) => c.serviceTags ?? []))].sort(), [companies]);
@@ -130,11 +132,12 @@ export default function TechListingsGrid({ companies }: { companies: Company[] }
   const states = useMemo(() => stateOptions(companies), [companies]);
 
   const filtered = useMemo(() => companies.filter((c) => {
+      if (search && !matchesSearch(c, search)) return false;
     if (location && !matchesState(c, location)) return false;
     if (integration && !(c.serviceTags ?? []).includes(integration)) return false;
     if (security && c.accreditation !== security) return false;
     return true;
-  }), [companies, location, integration, security]);
+  }), [companies, search, location, integration, security]);
 
   const shown = filtered.slice(0, visible);
 
@@ -146,6 +149,14 @@ export default function TechListingsGrid({ companies }: { companies: Company[] }
           <span style={{ fontSize: "14px", fontWeight: 500, color: "#1b1c1b", display: "flex", alignItems: "center", gap: "4px", marginRight: "4px" }}>
             <span aria-hidden="true" className="material-symbols-outlined">filter_list</span> Filters:
           </span>
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setVisible(PAGE_SIZE); }}
+            placeholder="Search by name or keyword"
+            aria-label="Search listings"
+            style={{ ...selectStyle, cursor: "text", minWidth: "220px", flex: "1 1 220px" }}
+          />
           <select value={location} onChange={(e) => { setLocation(e.target.value); setVisible(PAGE_SIZE); }} style={selectStyle}>
             <option value="">All Locations</option>
             {(location && !states.includes(location) ? [location, ...states] : states).map((s) => <option key={s} value={s}>{stateName(s)}</option>)}
@@ -164,10 +175,17 @@ export default function TechListingsGrid({ companies }: { companies: Company[] }
       {/* Grid */}
       <section style={{ background: "#f5f3f2", padding: "64px 0" }}>
         <div className="cat-container">
+          {companies.length > 0 && (
+            <p aria-live="polite" style={{ fontSize: "14px", color: VARIANT, margin: "0 0 20px" }}>
+              <strong style={{ color: "#1b1c1b" }}>{filtered.length.toLocaleString()}</strong> vendors
+              {location ? ` in ${stateName(location)}` : ""}
+              {search ? ` matching “${search}”` : ""}
+            </p>
+          )}
           {shown.length === 0 ? (
             <div style={{ textAlign: "center", padding: "60px 20px", color: VARIANT }}>
               <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "48px", color: "#c0c9c1" }}>terminal</span>
-              <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No vendors are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : <>No vendors match your filters. Try removing a filter.</>}</p>
+              <p style={{ fontSize: "16px", marginTop: "12px" }}>{companies.length === 0 ? <>No vendors are listed here yet. <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>List your business</a> to be the first.</> : (location ? <>No vendors listed in {stateName(location)} yet. <button type="button" onClick={() => setLocation("")} style={{ background: "none", border: "none", padding: 0, color: "#003320", fontWeight: 600, textDecoration: "underline", cursor: "pointer", font: "inherit" }}>Show all states</button> or <a href="/signup" style={{ color: "#003320", fontWeight: 600 }}>list your business</a>.</> : <>No vendors match your filters. Try removing a filter.</>)}</p>
             </div>
           ) : (
             <div className="cat-grid">

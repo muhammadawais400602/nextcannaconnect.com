@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         ...body,
         isFeatured: body.tier === "elite",
       },
-      { new: true, runValidators: true }
+      { returnDocument: "after", runValidators: true }
     ).lean();
 
     if (!company) return NextResponse.json({ error: "Not found" }, { status: 404 });

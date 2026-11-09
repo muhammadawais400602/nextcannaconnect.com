@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { rateLimit, clientIp, tooManyRequests } from "@/lib/rateLimit";
+
+/** Constant-time comparison so response timing doesn't leak the password. */
+function safeEqual(a: string, b: string): boolean {
+  const ha = crypto.createHash("sha256").update(a).digest();
+  const hb = crypto.createHash("sha256").update(b).digest();
+  return crypto.timingSafeEqual(ha, hb);
+}
 
 function generateToken(secret: string): string {
   const nonce = crypto.randomUUID();
@@ -10,10 +18,14 @@ function generateToken(secret: string): string {
 }
 
 export async function POST(request: NextRequest) {
-  const { password } = await request.json();
+  const ip = clientIp(request);
+  if (!(await rateLimit(`admin-login:${ip}`, 5, 60_000)) || !(await rateLimit(`admin-login-h:${ip}`, 20, 60 * 60_000))) {
+    return tooManyRequests("Too many login attempts. Please wait and try again.", 60);
+  }
+  const { password } = await request.json().catch(() => ({}));
   const adminSecret = process.env.ADMIN_SECRET;
 
-  if (!adminSecret || password !== adminSecret) {
+  if (!adminSecret || typeof password !== "string" || !safeEqual(password, adminSecret)) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 

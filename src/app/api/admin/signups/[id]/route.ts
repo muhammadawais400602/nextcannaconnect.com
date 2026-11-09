@@ -1,4 +1,5 @@
-import { sendEmail } from "@/lib/email";
+import { getStripe, stripeConfigured } from "@/lib/stripe";
+import { sendEmail, emailFooterHtml } from "@/lib/email";
 import { SITE_URL } from "@/lib/siteUrl";
 import { escapeHtml } from "@/lib/escapeHtml";
 import { NextRequest, NextResponse } from "next/server";
@@ -76,6 +77,18 @@ export async function PATCH(
     const eFullName = escapeHtml(app.fullName);
     const eCompanyName = escapeHtml(app.companyName);
     const eTierLabel = escapeHtml(tierLabel);
+    const isPaidPlan = app.tier === "select" || app.tier === "elite";
+    // Before Stripe: paid plans are invoiced by hand — say so in the email.
+    const paymentBlock =
+      isPaidPlan && app.paymentStatus !== "paid"
+        ? `<div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:14px 16px;margin:20px 0;color:#92400E;line-height:1.6">
+             <strong>Payment setup</strong> — your ${eTierLabel} subscription (${app.tier === "elite" ? "$39.99" : "$19.99"}/mo) hasn't been invoiced yet.
+             Our team will reach out within 1 business day to arrange payment. If you'd like to pay sooner, just reply to this email.
+           </div>`
+        : "";
+    const rfpBlock = isPaidPlan
+      ? `<p style="line-height:1.6;color:#4A5E4A">Your plan includes the <a href="${siteUrl}/rfp-board" style="color:#1A4A35;font-weight:600">RFP Board</a>, where buyers post requests for proposals you can respond to.</p>`
+      : "";
 
     if (status === "approved") {
       // Create Company record if one doesn't exist yet (best-effort — never blocks approval)
@@ -150,7 +163,7 @@ export async function PATCH(
       await User.findOneAndUpdate(
         { email: app.email },
         userUpdate,
-        { upsert: true, new: true, setDefaultsOnInsert: true }
+        { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
       );
 
       if (hasPassword) {
@@ -168,6 +181,8 @@ export async function PATCH(
                   Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>. Your account is now active!
                 </p>
+                ${paymentBlock}
+                ${rfpBlock}
                 <div style="text-align:center;margin:28px 0">
                   <a href="${siteUrl}/signin"
                      style="background:#1A4A35;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;display:inline-block">
@@ -175,6 +190,7 @@ export async function PATCH(
                   </a>
                 </div>
                 <p style="color:#4A5E4A;margin-top:24px">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
               </div>
             </div>
           `,
@@ -195,6 +211,8 @@ export async function PATCH(
                   Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>.
                 </p>
+                ${paymentBlock}
+                ${rfpBlock}
                 <p style="line-height:1.6;color:#4A5E4A">
                   Click the button below to set your password and activate your account.
                   This link expires in <strong>72 hours</strong>.
@@ -209,6 +227,7 @@ export async function PATCH(
                   Or copy this link: <a href="${setupLink}" style="color:#1A4A35;word-break:break-all">${setupLink}</a>
                 </p>
                 <p style="color:#4A5E4A;margin-top:24px">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
               </div>
             </div>
           `,
@@ -216,6 +235,30 @@ export async function PATCH(
       }
 
     } else if (status === "rejected") {
+      // Rejecting takes effect on the account, not just the email:
+      // sign the applicant out, stop any subscription, and if they had been
+      // approved before, detach their listing (kept as an unclaimed Free listing).
+      const rejectedUser = await User.findOne({ email: app.email }).select("companyId stripeSubscriptionId sessionVersion");
+      if (rejectedUser) {
+        if (rejectedUser.stripeSubscriptionId && stripeConfigured()) {
+          try {
+            await getStripe().subscriptions.cancel(rejectedUser.stripeSubscriptionId);
+          } catch (err) {
+            console.error("[signups reject] Stripe cancel failed — cancel it in Stripe manually:", err);
+          }
+        }
+        if (rejectedUser.companyId) {
+          await Company.updateOne({ _id: rejectedUser.companyId }, { tier: "free", isFeatured: false });
+          revalidateTag("companies", "max");
+        }
+        await User.updateOne(
+          { _id: rejectedUser._id },
+          {
+            $set: { isActive: false, tier: "free", sessionVersion: (rejectedUser.sessionVersion ?? 0) + 1 },
+            $unset: { companyId: "", stripeSubscriptionId: "" },
+          },
+        );
+      }
       await sendEmail({
         to: app.email,
         subject: "Update on your NextCanna Connect application",
@@ -231,10 +274,16 @@ export async function PATCH(
                 After review, we're unable to approve your application at this time.
               </p>
               <p style="line-height:1.6;color:#4A5E4A">
+                If your details change, you're welcome to re-apply: sign up again at
+                <a href="${siteUrl}/signup" style="color:#1A4A35">${siteUrl.replace(/^https?:\/\//, "")}/signup</a>
+                using the same email address and password.
+              </p>
+              <p style="line-height:1.6;color:#4A5E4A">
                 If you have questions, reply to this email or contact us at
                 <a href="mailto:hello@nextcannaconnect.com" style="color:#1A4A35">hello@nextcannaconnect.com</a>.
               </p>
               <p style="color:#4A5E4A">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
             </div>
           </div>
         `,

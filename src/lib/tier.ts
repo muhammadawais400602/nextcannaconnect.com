@@ -119,3 +119,10 @@ export const CARD_FIELDS: Record<CategorySlug, { label: string; key: string }[]>
 export function isVerifiedListing(c: { tier: Tier; claimed?: boolean }): boolean {
   return (c.tier === "elite" || c.tier === "select") && c.claimed !== false;
 }
+
+/** One vocabulary for plans everywhere (admin, dashboard, emails, pricing). */
+export const PLAN_LABEL: Record<string, string> = {
+  free: "Free",
+  select: "Select",
+  elite: "Verified Pro",
+};

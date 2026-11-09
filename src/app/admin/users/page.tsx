@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CustomSelect from "@/components/ui/CustomSelect";
+import { PLAN_LABEL } from "@/lib/tier";
 
 const TIER_COLORS: Record<string, string> = {
   elite: "#1A4A35", select: "#2563EB", free: "#6B7280",
@@ -167,6 +168,38 @@ export default function UsersPage() {
     }
   }
 
+  // Approve / Reject wait 8 seconds before anything is saved or emailed, so a
+  // misclick can be undone.
+  const [pending, setPending] = useState<{ id: string; status: "approved" | "rejected"; name: string; secondsLeft: number } | null>(null);
+  const pendingTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  function scheduleStatus(id: string, status: "approved" | "rejected", name: string) {
+    if (pending) commitPending(); // finish any earlier one first
+    setPending({ id, status, name, secondsLeft: 8 });
+    if (pendingTimer.current) clearInterval(pendingTimer.current);
+    pendingTimer.current = setInterval(() => {
+      setPending((p) => (p ? { ...p, secondsLeft: p.secondsLeft - 1 } : p));
+    }, 1000);
+  }
+
+  function undoPending() {
+    if (pendingTimer.current) clearInterval(pendingTimer.current);
+    setPending(null);
+  }
+
+  function commitPending() {
+    if (!pending) return;
+    if (pendingTimer.current) clearInterval(pendingTimer.current);
+    const { id, status } = pending;
+    setPending(null);
+    updateStatus(id, status);
+  }
+
+  useEffect(() => {
+    if (pending && pending.secondsLeft <= 0) commitPending();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending?.secondsLeft]);
+
   const signupCounts = {
     all:      apps.length,
     pending:  apps.filter((a) => a.status === "pending").length,
@@ -196,6 +229,27 @@ export default function UsersPage() {
 
   return (
     <div>
+      {pending && (
+        <div
+          role="status"
+          style={{
+            position: "fixed", bottom: "24px", left: "50%", transform: "translateX(-50%)", zIndex: 1000,
+            background: "#111827", color: "white", borderRadius: "12px", padding: "14px 18px",
+            display: "flex", alignItems: "center", gap: "16px", boxShadow: "0 12px 32px rgba(0,0,0,0.25)", fontSize: "14px",
+          }}
+        >
+          <span>
+            {pending.status === "approved" ? "Approving" : "Rejecting"} <strong>{pending.name}</strong> in {pending.secondsLeft}s…
+            <span style={{ opacity: 0.7 }}> (an email is sent when this completes)</span>
+          </span>
+          <button onClick={undoPending} style={{ background: "white", color: "#111827", border: "none", borderRadius: "8px", padding: "6px 14px", fontWeight: 700, cursor: "pointer" }}>
+            Undo
+          </button>
+          <button onClick={commitPending} style={{ background: "none", color: "white", border: "1px solid rgba(255,255,255,0.4)", borderRadius: "8px", padding: "6px 12px", cursor: "pointer" }}>
+            Do it now
+          </button>
+        </div>
+      )}
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "28px", flexWrap: "wrap", gap: "12px" }}>
         <div>
@@ -289,7 +343,7 @@ export default function UsersPage() {
                     </td>
                     <td style={{ padding: "14px 20px" }}>
                       <span style={{ fontSize: "11px", fontWeight: "700", textTransform: "capitalize", color: TIER_COLORS[u.tier] || "#6B7280", background: TIER_BG[u.tier] || "#F9FAFB", padding: "3px 10px", borderRadius: "20px", fontFamily: "sans-serif" }}>
-                        {u.tier}
+                        {PLAN_LABEL[u.tier] ?? u.tier}
                       </span>
                     </td>
                     <td style={{ padding: "14px 20px", fontSize: "13px", color: "#9CA3AF", fontFamily: "sans-serif" }}>
@@ -464,8 +518,8 @@ export default function UsersPage() {
                   <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                     {app.status !== "approved" && (
                       <button
-                        onClick={() => updateStatus(app._id, "approved")}
-                        disabled={actionLoading === app._id + "approved"}
+                        onClick={() => scheduleStatus(app._id, "approved", app.companyName)}
+                        disabled={pending?.id === app._id || actionLoading === app._id + "approved"}
                         style={{ padding: "7px 16px", background: "#1A4A35", color: "white", border: "none", borderRadius: "7px", fontSize: "12px", fontWeight: 600, cursor: "pointer", opacity: actionLoading === app._id + "approved" ? 0.6 : 1, whiteSpace: "nowrap" }}
                       >
                         {actionLoading === app._id + "approved" ? "…" : "✓ Approve"}
@@ -473,8 +527,8 @@ export default function UsersPage() {
                     )}
                     {app.status !== "rejected" && (
                       <button
-                        onClick={() => updateStatus(app._id, "rejected")}
-                        disabled={actionLoading === app._id + "rejected"}
+                        onClick={() => scheduleStatus(app._id, "rejected", app.companyName)}
+                        disabled={pending?.id === app._id || actionLoading === app._id + "rejected"}
                         style={{ padding: "7px 16px", background: "white", color: "#DC2626", border: "1px solid #FECACA", borderRadius: "7px", fontSize: "12px", fontWeight: 600, cursor: "pointer", opacity: actionLoading === app._id + "rejected" ? 0.6 : 1, whiteSpace: "nowrap" }}
                       >
                         {actionLoading === app._id + "rejected" ? "…" : "✕ Reject"}

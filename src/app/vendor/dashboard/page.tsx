@@ -164,9 +164,11 @@ export default function VendorDashboardPage() {
           </Link>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
             {company && (
-              <Link
+              // Plain <a> for a new-tab link: next/link + target="_blank" could open two tabs.
+              <a
                 href={`/vendor/${company.slug}`}
                 target="_blank"
+                rel="noopener noreferrer"
                 style={{
                   fontSize: "13px",
                   color: "#1A4A35",
@@ -178,7 +180,7 @@ export default function VendorDashboardPage() {
                 }}
               >
                 <span className="hidden sm:inline">View </span>Listing →
-              </Link>
+              </a>
             )}
             <button
               onClick={handleLogout}

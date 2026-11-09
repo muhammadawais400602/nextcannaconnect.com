@@ -171,10 +171,14 @@ export default function FeaturedVendors({ companies }: { companies: Company[] })
                       {company.name}
                     </h3>
                   </div>
-                  <div className="flex items-center gap-1 mb-5" style={{ color: "#414943", fontSize: "11px" }}>
-                    <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "13px" }}>location_on</span>
-                    {formatLocation(company.location) || "Location not listed"}
-                  </div>
+                  {formatLocation(company.location) ? (
+                    <div className="flex items-center gap-1 mb-5" style={{ color: "#414943", fontSize: "11px" }}>
+                      <span aria-hidden="true" className="material-symbols-outlined" style={{ fontSize: "13px" }}>location_on</span>
+                      {formatLocation(company.location)}
+                    </div>
+                  ) : (
+                    <div className="mb-5" />
+                  )}
                   <button
                     className="mt-auto w-full py-2.5 rounded-lg"
                     style={{

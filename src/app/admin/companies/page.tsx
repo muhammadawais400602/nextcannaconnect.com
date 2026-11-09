@@ -1,17 +1,18 @@
 "use client";
+import { formatLocation } from "@/lib/states";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { CATEGORIES } from "@/data/categories";
 import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIERS = [
-  { value: "free",   label: "Unclaimed" },
+  { value: "free",   label: "Free" },
   { value: "select", label: "Select" },
   { value: "elite",  label: "Verified Pro" },
 ];
 
 const TIER_LABEL: Record<string, string> = {
-  free: "Unclaimed", select: "Select", elite: "Verified Pro",
+  free: "Free", select: "Select", elite: "Verified Pro",
 };
 const TIER_COLORS: Record<string, string> = {
   free: "#6B7280", select: "#2d6e52", elite: "#1A4A35",
@@ -152,13 +153,15 @@ export default function CompaniesPage() {
             No companies found. <Link href="/admin/companies/new" style={{ color: "#E8821E" }}>Add one?</Link>
           </div>
         ) : (
+          <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ background: "#F9FAFB" }}>
-                {["Company", "Category", "Location", "Tier", "Contact", "Actions"].map((h) => (
+                {["Company", "Category", "Location", "Plan", "Contact", "Actions"].map((h) => (
                   <th
                     key={h}
                     style={{
+                      ...(h === "Actions" ? { position: "sticky", right: 0, background: "#F9FAFB", boxShadow: "-6px 0 8px -6px rgba(0,0,0,0.12)" } : {}),
                       padding: "12px 20px", textAlign: "left", fontSize: "11px",
                       fontWeight: "700", color: "#6B7280", textTransform: "uppercase",
                       letterSpacing: "0.05em", fontFamily: "sans-serif",
@@ -202,7 +205,7 @@ export default function CompaniesPage() {
                     {CATEGORIES.find((cat) => cat.slug === c.category)?.shortLabel ?? c.category}
                   </td>
                   <td style={{ padding: "14px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>
-                    {c.location?.city}, {c.location?.state}
+                    {formatLocation(c.location) || "—"}
                   </td>
                   <td style={{ padding: "14px 20px" }}>
                     <span
@@ -217,9 +220,12 @@ export default function CompaniesPage() {
                     </span>
                   </td>
                   <td style={{ padding: "14px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>
-                    {c.email || c.website || "—"}
+                    <span style={{ display: "inline-block", maxWidth: "220px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", verticalAlign: "bottom" }} title={c.email || c.website || ""}>
+                      {c.email || c.website || "—"}
+                    </span>
                   </td>
-                  <td style={{ padding: "14px 20px" }}>
+                  {/* Pinned right so Edit / View / Delete stay visible on narrower screens. */}
+                  <td style={{ padding: "14px 20px", position: "sticky", right: 0, background: "white", boxShadow: "-6px 0 8px -6px rgba(0,0,0,0.12)" }}>
                     <div style={{ display: "flex", gap: "8px" }}>
                       <Link
                         href={`/admin/companies/${c.slug}/edit`}
@@ -259,6 +265,7 @@ export default function CompaniesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

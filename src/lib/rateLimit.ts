@@ -58,3 +58,11 @@ export async function rateLimit(key: string, limit: number, windowMs: number): P
 export function clientIp(request: NextRequest | Request): string {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 }
+
+/** 429 response with a Retry-After header (seconds). */
+export function tooManyRequests(message: string, retryAfterSeconds: number) {
+  return new Response(JSON.stringify({ error: message }), {
+    status: 429,
+    headers: { "Content-Type": "application/json", "Retry-After": String(Math.ceil(retryAfterSeconds)) },
+  });
+}

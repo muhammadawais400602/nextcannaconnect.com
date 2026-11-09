@@ -16,6 +16,8 @@ import {
 } from "@/lib/wordpress";
 import { sanitizePostHtml } from "@/lib/sanitizeHtml";
 import ShareButton from "@/components/blog/ShareButton";
+import JsonLd from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/siteUrl";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -28,6 +30,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${post.title.rendered} | NextCanna Connect`,
     description: stripHtml(post.excerpt.rendered).slice(0, 160),
+    openGraph: {
+      type: "article",
+      url: `/blog/${post.slug}`,
+      title: post.title.rendered,
+      description: stripHtml(post.excerpt.rendered).slice(0, 160),
+      publishedTime: post.date,
+      ...(getFeaturedImage(post) ? { images: [{ url: getFeaturedImage(post)! }] } : {}),
+    },
   };
 }
 
@@ -46,8 +56,24 @@ export default async function BlogPostPage({ params }: Props) {
   const cats = getPostCategories(post);
   const related = relatedPosts.filter((p) => p.slug !== slug).slice(0, 3);
 
+  const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title.rendered,
+    description: stripHtml(post.excerpt.rendered).slice(0, 300),
+    datePublished: post.date,
+    ...((post as { modified?: string }).modified ? { dateModified: (post as { modified?: string }).modified } : {}),
+    mainEntityOfPage: postUrl,
+    url: postUrl,
+    ...(featuredImage ? { image: [featuredImage] } : {}),
+    author: { "@type": "Person", name: author },
+    publisher: { "@type": "Organization", name: "NextCanna Connect", url: SITE_URL },
+  };
+
   return (
     <>
+      <JsonLd data={articleLd} />
       {/* ── Breadcrumb ── */}
       <div style={{ backgroundColor: "#f6f3f2", paddingTop: "90px" }}>
         <div className="mx-auto px-4 md:px-8 py-4" style={{ maxWidth: "1440px" }}>

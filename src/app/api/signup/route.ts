@@ -1,4 +1,5 @@
-import { sendEmail, ADMIN_EMAIL } from "@/lib/email";
+import { passwordProblem } from "@/lib/password";
+import { sendEmail, ADMIN_EMAIL, emailFooterHtml } from "@/lib/email";
 import { createSubscriptionCheckout, isPaidTier, stripeConfigured } from "@/lib/stripe";
 import Company from "@/lib/models/Company";
 import { CATEGORIES } from "@/data/categories";
@@ -49,8 +50,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    if (!password || password.length < 8) {
-      return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
+    const pwProblem = passwordProblem(password);
+    if (pwProblem) {
+      return NextResponse.json({ error: pwProblem }, { status: 400 });
     }
 
     const normalizedEmail = String(email).toLowerCase().trim();
@@ -73,7 +75,22 @@ export async function POST(request: NextRequest) {
     }
 
     const existingUser = await User.findOne({ email: normalizedEmail });
-    if (existingUser) {
+    // A rejected applicant can re-apply with the same email and password: their
+    // account is reused and a fresh application goes into the review queue.
+    let reapplying = false;
+    if (existingUser && !existingUser.isActive && existingUser.passwordHash) {
+      const latest = await SignupApplication.findOne({ email: normalizedEmail }).sort({ createdAt: -1 }).select("status").lean();
+      if (latest?.status === "rejected") {
+        if (!(await bcrypt.compare(String(password), existingUser.passwordHash))) {
+          return NextResponse.json(
+            { error: "To re-apply, use the same password as your previous application — or reset it with “Forgot password”." },
+            { status: 409 },
+          );
+        }
+        reapplying = true;
+      }
+    }
+    if (existingUser && !reapplying) {
       // Someone who started a paid signup but abandoned Stripe checkout can resume it
       // (previously they were locked out with "account already exists").
       const pendingApp = !existingUser.isActive
@@ -108,7 +125,12 @@ export async function POST(request: NextRequest) {
 
     // Create user account first (has unique index on email — fail fast on duplicates)
     const passwordHash = await bcrypt.hash(password, 12);
-    try {
+    if (reapplying) {
+      await User.updateOne(
+        { email: normalizedEmail },
+        { fullName, companyName, phone, stateProvince, category, tier, isActive: !isPaid },
+      );
+    } else try {
       await User.create({
         email: normalizedEmail,
         fullName,
@@ -199,6 +221,7 @@ export async function POST(request: NextRequest) {
               <a href="mailto:hello@nextcannaconnect.com" style="color:#1A4A35">hello@nextcannaconnect.com</a>.
             </p>
             <p style="color:#4A5E4A">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
           </div>
         </div>
       `,

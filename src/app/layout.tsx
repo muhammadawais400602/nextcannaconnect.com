@@ -36,6 +36,7 @@ const materialSymbols = localFont({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#003320",
 };
 
 export const metadata: Metadata = {
