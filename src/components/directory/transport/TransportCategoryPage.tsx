@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import TransportListingsGrid from "./TransportListingsGrid";
@@ -35,7 +36,7 @@ export default async function TransportCategoryPage() {
       title="Transportation & Logistics"
       description="Licensed cannabis distributors, secure carriers, and last-mile fleets moving product legally across state lines and within regulated markets."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Carriers` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Carriers" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "support_agent", label: "24/7 Support" },
       ]}

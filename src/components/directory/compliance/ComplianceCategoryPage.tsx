@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import ComplianceListingsGrid from "./ComplianceListingsGrid";
@@ -35,7 +36,7 @@ export default async function ComplianceCategoryPage() {
       title="Compliance & Legal"
       description="Cannabis-specialized attorneys, licensing experts, and regulatory compliance professionals."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Firms` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Firms" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "gavel", label: "Licensing to M&A" },
       ]}

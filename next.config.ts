@@ -2,6 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  turbopack: {
+    // Drop Next's legacy polyfills (Array.at, Object.hasOwn, flat, trimEnd…) that
+    // every supported browser already has — PageSpeed flags them as "Legacy JavaScript".
+    resolveAlias: {
+      "next/dist/build/polyfills/polyfill-module": "./src/polyfills/modern.js",
+      "../build/polyfills/polyfill-module": "./src/polyfills/modern.js",
+    },
+  },
   // /membership duplicated /pricing — keep one canonical page.
   async headers() {
     // CSP starts in report-only mode (violations are logged in the browser

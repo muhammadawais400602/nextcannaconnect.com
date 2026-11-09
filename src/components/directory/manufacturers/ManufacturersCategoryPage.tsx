@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import ManufacturersListingsGrid from "./ManufacturersListingsGrid";
@@ -35,7 +36,7 @@ export default async function ManufacturersCategoryPage() {
       title="Manufacturers & Suppliers"
       description="Equipment manufacturers, raw material suppliers, and wholesale distributors serving licensed cannabis operators."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Suppliers` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Suppliers" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "inventory_2", label: "B2B & Wholesale" },
       ]}

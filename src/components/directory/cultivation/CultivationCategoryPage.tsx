@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import CultivationListingsGrid from "./CultivationListingsGrid";
@@ -35,7 +36,7 @@ export default async function CultivationCategoryPage() {
       title="Cultivation & Growing"
       description="Licensed cannabis cultivation operations — indoor, outdoor, and greenhouse grows supplying the commercial supply chain."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Cultivators` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Cultivators" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "nature", label: "Indoor & Outdoor" },
       ]}

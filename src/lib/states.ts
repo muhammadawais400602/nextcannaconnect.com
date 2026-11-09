@@ -73,3 +73,19 @@ export function stateOptions(companies: { location?: { state?: string } }[]): st
 export function formatLocation(location?: { city?: string; state?: string } | null): string {
   return [location?.city?.trim(), location?.state?.trim()].filter(Boolean).join(", ");
 }
+
+/**
+ * How many companies match each state (same rules as the directory filter,
+ * including statesServed / Nationwide). Only states with at least one match.
+ */
+export function stateCounts(
+  companies: { location?: { state?: string }; statesServed?: string[] }[],
+): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const code of [...Object.keys(US_STATES), ...Object.keys(CA_PROVINCES)]) {
+    let n = 0;
+    for (const c of companies) if (matchesState(c, code)) n++;
+    if (n) counts[code] = n;
+  }
+  return counts;
+}

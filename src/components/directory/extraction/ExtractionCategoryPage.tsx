@@ -1,3 +1,5 @@
+import HeroListedCount from "@/components/directory/HeroListedCount";
+import { stateCounts } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import ExtractionListingsGrid from "./ExtractionListingsGrid";
@@ -33,7 +35,7 @@ export default async function ExtractionCategoryPage() {
       title="Extraction & Processing"
       description="Licensed extraction and processing facilities producing concentrates, distillates, and refined cannabis products."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Facilities` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Facilities" /> },
         { icon: "science", label: "CO₂ / Ethanol / Hydrocarbon" },
         { icon: "inventory_2", label: "White Label Available" },
       ]}

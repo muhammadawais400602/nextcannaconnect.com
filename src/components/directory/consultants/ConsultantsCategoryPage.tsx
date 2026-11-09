@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import ConsultantsListingsGrid from "./ConsultantsListingsGrid";
@@ -35,7 +36,7 @@ export default async function ConsultantsCategoryPage() {
       title="Consultants & Advisors"
       description="Strategic advisors, operational consultants, and specialized guidance for cannabis business owners at every stage."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Consultants` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Consultants" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "school", label: "Licensing to Operations" },
       ]}
