@@ -149,6 +149,14 @@ export default function CategoryPageShell({
       {/* Category-specific filter bar + listings grid */}
       {children}
 
+      {/* Where listings come from */}
+      <div className="cat-container" style={{ paddingTop: "8px", paddingBottom: "24px" }}>
+        <p style={{ fontSize: "12px", color: OUTLINE, margin: 0, lineHeight: 1.6 }}>
+          Many listings are compiled from public sources such as state cannabis license data. Businesses that have claimed and verified their
+          listing show a verified badge; unclaimed listings can be claimed for free by their owner.
+        </p>
+      </div>
+
       {/* Related categories */}
       {related.length > 0 && (
         <section style={{ background: "#FBF9F8", padding: "64px 0", borderTop: `1px solid ${PARCHMENT}` }}>

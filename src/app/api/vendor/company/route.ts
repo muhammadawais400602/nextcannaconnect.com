@@ -183,7 +183,7 @@ export async function PUT(request: NextRequest) {
     const company = await Company.findByIdAndUpdate(
       user.companyId,
       { $set: update },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     revalidateTag("companies", "max");

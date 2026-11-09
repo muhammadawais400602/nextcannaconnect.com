@@ -4,6 +4,8 @@ import { SITE_URL } from "@/lib/siteUrl";
 export const FROM_EMAIL =
   process.env.RESEND_FROM_EMAIL || "NextCanna Connect <noreply@nextcannaconnect.com>";
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "help@nextcannaconnect.com";
+/** Business mailing address shown in email footers (CAN-SPAM). Set COMPANY_POSTAL_ADDRESS in Vercel. */
+const POSTAL_ADDRESS = process.env.COMPANY_POSTAL_ADDRESS || "";
 
 interface EmailPayload {
   to: string | string[];
@@ -52,6 +54,7 @@ export function emailLayout(heading: string, bodyHtml: string): string {
     </div>
     <p style="text-align:center;font-size:12px;color:#9CA3AF;margin-top:12px">
       <a href="${SITE_URL}" style="color:#9CA3AF">nextcannaconnect.com</a>
+      ${POSTAL_ADDRESS ? `<br />${escapeHtml(POSTAL_ADDRESS)}` : ""}
     </p>
   </div>`;
 }

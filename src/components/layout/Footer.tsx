@@ -99,7 +99,7 @@ export default function Footer() {
               margin: 0,
             }}
           >
-            © 2026 NextCanna Connect. All Rights Reserved.
+            © {new Date().getFullYear()} NextCanna Connect. All Rights Reserved.
           </p>
         </div>
       </div>

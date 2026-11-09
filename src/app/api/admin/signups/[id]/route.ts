@@ -162,7 +162,7 @@ export async function PATCH(
       await User.findOneAndUpdate(
         { email: app.email },
         userUpdate,
-        { upsert: true, new: true, setDefaultsOnInsert: true }
+        { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
       );
 
       if (hasPassword) {
