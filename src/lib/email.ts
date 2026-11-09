@@ -40,6 +40,13 @@ export async function sendEmail({ replyTo, ...payload }: EmailPayload): Promise<
   }
 }
 
+/** Footer line with the business mailing address (CAN-SPAM), empty if not configured. */
+export function emailFooterHtml(): string {
+  return POSTAL_ADDRESS
+    ? `<p style="text-align:center;font-size:12px;color:#9CA3AF;margin:16px 0 0">NextCanna Connect · ${escapeHtml(POSTAL_ADDRESS)}</p>`
+    : "";
+}
+
 /** Branded wrapper used by transactional emails. `bodyHtml` must already be escaped. */
 export function emailLayout(heading: string, bodyHtml: string): string {
   return `

@@ -1,4 +1,4 @@
-import { sendEmail } from "@/lib/email";
+import { sendEmail, emailFooterHtml } from "@/lib/email";
 import { NextRequest, NextResponse } from "next/server";
 import { escapeHtml } from "@/lib/escapeHtml";
 import { rateLimit } from "@/lib/rateLimit";
@@ -68,6 +68,7 @@ export async function POST(request: NextRequest) {
               or read our <a href="https://nextcannaconnect.com/blog" style="color:#1A4A35">blog</a>.
             </p>
             <p style="color:#4A5E4A">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
           </div>
         </div>
       `,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
+import SignupApplication from "@/lib/models/SignupApplication";
 import { rateLimit, clientIp, tooManyRequests } from "@/lib/rateLimit";
 import { setVendorSessionCookie } from "@/lib/verifyVendorSession";
 
@@ -34,13 +35,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
     }
 
-    if (!user.isActive) {
-      return NextResponse.json({ error: "Your account is not active yet. It may be pending admin approval." }, { status: 403 });
-    }
-
     const valid = await bcrypt.compare(password, user.passwordHash);
     if (!valid) {
       return NextResponse.json({ error: "Invalid email or password." }, { status: 401 });
+    }
+
+    // Only explain an inactive account to someone who knows the password.
+    if (!user.isActive) {
+      const latest = await SignupApplication.findOne({ email: user.email }).sort({ createdAt: -1 }).select("status").lean();
+      const error =
+        latest?.status === "rejected"
+          ? "Your application wasn't approved. Reply to the email we sent you or contact hello@nextcannaconnect.com — you can also re-apply by signing up again with this email."
+          : "Your account isn't active yet — we're reviewing your application and will email you when it's approved.";
+      return NextResponse.json({ error }, { status: 403 });
     }
 
     const response = NextResponse.json({

@@ -1,4 +1,5 @@
-import { sendEmail } from "@/lib/email";
+import { getStripe, stripeConfigured } from "@/lib/stripe";
+import { sendEmail, emailFooterHtml } from "@/lib/email";
 import { SITE_URL } from "@/lib/siteUrl";
 import { escapeHtml } from "@/lib/escapeHtml";
 import { NextRequest, NextResponse } from "next/server";
@@ -189,6 +190,7 @@ export async function PATCH(
                   </a>
                 </div>
                 <p style="color:#4A5E4A;margin-top:24px">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
               </div>
             </div>
           `,
@@ -225,6 +227,7 @@ export async function PATCH(
                   Or copy this link: <a href="${setupLink}" style="color:#1A4A35;word-break:break-all">${setupLink}</a>
                 </p>
                 <p style="color:#4A5E4A;margin-top:24px">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
               </div>
             </div>
           `,
@@ -232,6 +235,30 @@ export async function PATCH(
       }
 
     } else if (status === "rejected") {
+      // Rejecting takes effect on the account, not just the email:
+      // sign the applicant out, stop any subscription, and if they had been
+      // approved before, detach their listing (kept as an unclaimed Free listing).
+      const rejectedUser = await User.findOne({ email: app.email }).select("companyId stripeSubscriptionId sessionVersion");
+      if (rejectedUser) {
+        if (rejectedUser.stripeSubscriptionId && stripeConfigured()) {
+          try {
+            await getStripe().subscriptions.cancel(rejectedUser.stripeSubscriptionId);
+          } catch (err) {
+            console.error("[signups reject] Stripe cancel failed — cancel it in Stripe manually:", err);
+          }
+        }
+        if (rejectedUser.companyId) {
+          await Company.updateOne({ _id: rejectedUser.companyId }, { tier: "free", isFeatured: false });
+          revalidateTag("companies", "max");
+        }
+        await User.updateOne(
+          { _id: rejectedUser._id },
+          {
+            $set: { isActive: false, tier: "free", sessionVersion: (rejectedUser.sessionVersion ?? 0) + 1 },
+            $unset: { companyId: "", stripeSubscriptionId: "" },
+          },
+        );
+      }
       await sendEmail({
         to: app.email,
         subject: "Update on your NextCanna Connect application",
@@ -247,10 +274,16 @@ export async function PATCH(
                 After review, we're unable to approve your application at this time.
               </p>
               <p style="line-height:1.6;color:#4A5E4A">
+                If your details change, you're welcome to re-apply: sign up again at
+                <a href="${siteUrl}/signup" style="color:#1A4A35">${siteUrl.replace(/^https?:\/\//, "")}/signup</a>
+                using the same email address and password.
+              </p>
+              <p style="line-height:1.6;color:#4A5E4A">
                 If you have questions, reply to this email or contact us at
                 <a href="mailto:hello@nextcannaconnect.com" style="color:#1A4A35">hello@nextcannaconnect.com</a>.
               </p>
               <p style="color:#4A5E4A">— The NextCanna Connect Team</p>
+              ${emailFooterHtml()}
             </div>
           </div>
         `,
