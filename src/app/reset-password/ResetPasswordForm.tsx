@@ -1,5 +1,6 @@
 "use client";
 
+import { passwordProblem } from "@/lib/password";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -29,7 +30,8 @@ export default function ResetPasswordForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 8) return setError("Password must be at least 8 characters.");
+    const pw = passwordProblem(password);
+    if (pw) return setError(pw);
     if (password !== confirm) return setError("Passwords do not match.");
     setSaving(true);
     setError("");
@@ -74,7 +76,7 @@ export default function ResetPasswordForm() {
       <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         <div>
           <label htmlFor="rp-new" style={authLabelStyle}>New password</label>
-          <input id="rp-new" type="password" required minLength={8} autoComplete="new-password" placeholder="At least 8 characters" value={password} onChange={(e) => setPassword(e.target.value)} style={authInputStyle} />
+          <input id="rp-new" type="password" required minLength={8} autoComplete="new-password" placeholder="8+ characters, a letter and a number" value={password} onChange={(e) => setPassword(e.target.value)} style={authInputStyle} />
         </div>
         <div>
           <label htmlFor="rp-confirm" style={authLabelStyle}>Confirm password</label>

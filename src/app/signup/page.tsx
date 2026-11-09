@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import SectionDivider from "@/components/ui/SectionDivider";
 import { CATEGORIES } from "@/data/categories";
+import { passwordProblem, PASSWORD_HINT } from "@/lib/password";
 import { Check, X } from "lucide-react";
 import CustomSelect from "@/components/ui/CustomSelect";
 
@@ -44,7 +45,7 @@ const TIERS = [
       { label: "Full company profile", included: true },
       { label: "NextCanna Connect Select badge", included: true },
       { label: "Public contact info & inquiry form", included: true },
-      { label: "Photo gallery — up to 3 photos (coming soon)", included: true },
+      { label: "Access to the RFP Board", included: true },
       { label: "Basic enhanced directory card", included: true },
     ],
   },
@@ -63,7 +64,6 @@ const TIERS = [
       { label: "Everything in Select", included: true },
       { label: "Verified Pro badge (after verification)", included: true },
       { label: "Priority search placement", included: true },
-      { label: "Unlimited photo gallery (coming soon)", included: true },
       { label: "Video embedding, social links & analytics", included: true },
     ],
   },
@@ -178,8 +178,16 @@ function SignUpForm() {
     };
   }, [claimSlug]);
 
+  const [step1Error, setStep1Error] = useState("");
+
   function handleBasicSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const pw = passwordProblem(basicForm.password);
+    if (pw) {
+      setStep1Error(pw);
+      return;
+    }
+    setStep1Error("");
     setStep(2);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -245,9 +253,15 @@ function SignUpForm() {
         </p>
         <ol style={{ textAlign: "left", margin: "20px auto", padding: "0 0 0 20px", fontSize: "14px", lineHeight: 1.7, opacity: 0.9, maxWidth: "340px" }}>
           <li>Our team reviews your listing — usually within 1–2 business days.</li>
-          <li>We email <strong>{basicForm.email}</strong> as soon as it&apos;s live.</li>
+          <li>We&apos;ll email <strong>{basicForm.email}</strong> as soon as you&apos;re approved and live on the directory.</li>
           <li>Buyer inquiries arrive in your inbox and your dashboard.</li>
         </ol>
+        {(selectedTier === "select" || selectedTier === "elite") && (
+          <p style={{ fontSize: "13px", lineHeight: 1.6, background: "rgba(255,255,255,0.12)", borderRadius: "8px", padding: "10px 14px", margin: "0 auto 16px", maxWidth: "380px" }}>
+            Our team will reach out within 1 business day to arrange payment for your{" "}
+            {selectedTier === "elite" ? "$39.99/mo Verified Pro" : "$19.99/mo Select"} subscription.
+          </p>
+        )}
         {signedIn ? (
           <Link
             href="/vendor/dashboard"
@@ -318,8 +332,9 @@ function SignUpForm() {
             </div>
             <div>
               <label style={labelStyle}>Password *</label>
-              <input required type="password" placeholder="Min. 8 characters" minLength={8} value={basicForm.password}
-                onChange={(e) => setBasicForm({ ...basicForm, password: e.target.value })} style={inputStyle} />
+              <input required type="password" placeholder="Min. 8 characters" minLength={8} autoComplete="new-password" value={basicForm.password}
+                onChange={(e) => { setBasicForm({ ...basicForm, password: e.target.value }); if (step1Error) setStep1Error(""); }} style={inputStyle} />
+              <p style={{ fontSize: "12px", color: "#6B7280", margin: "6px 0 0" }}>{PASSWORD_HINT}</p>
             </div>
           </div>
 
@@ -364,6 +379,9 @@ function SignUpForm() {
             </div>
           </div>
 
+          {step1Error && (
+            <p role="alert" style={{ color: "#B91C1C", fontSize: "13px", margin: 0 }}>{step1Error}</p>
+          )}
           <button type="submit" className="btn-primary justify-center mt-2" style={{ padding: "14px", fontSize: "15px" }}>
             Sign Up →
           </button>
@@ -385,7 +403,7 @@ function SignUpForm() {
         <StepIndicator step={2} />
         <div className="text-center mb-8">
           <h2 className="font-bold mb-2" style={{ fontSize: "24px", color: "#1A4A35" }}>Choose Your Plan</h2>
-          <p style={{ color: "#4A5E4A", fontSize: "15px" }}>Select the tier that best fits your business goals. <a href="/pricing" style={{ color: "#F7941D", fontWeight: 600, textDecoration: "none" }}>Compare plans →</a></p>
+          <p style={{ color: "#4A5E4A", fontSize: "15px" }}>Select the tier that best fits your business goals. <a href="/pricing" target="_blank" rel="noopener" style={{ color: "#F7941D", fontWeight: 600, textDecoration: "none" }}>Compare plans ↗</a></p>
         </div>
 
         <div className="grid gap-5" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", marginBottom: "32px" }}>

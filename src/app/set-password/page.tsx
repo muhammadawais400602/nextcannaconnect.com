@@ -1,5 +1,6 @@
 "use client";
 
+import { passwordProblem } from "@/lib/password";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -31,7 +32,8 @@ function SetPasswordForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (password !== confirm) { setError("Passwords do not match."); return; }
-    if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
+    const pw = passwordProblem(password);
+    if (pw) { setError(pw); return; }
     setError("");
     setSubmitting(true);
     try {
@@ -102,7 +104,7 @@ function SetPasswordForm() {
           </label>
           <input
             required type="password" minLength={8}
-            placeholder="At least 8 characters"
+            placeholder="8+ characters, a letter and a number"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             style={inputStyle}

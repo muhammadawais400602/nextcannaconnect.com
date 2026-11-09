@@ -1,5 +1,6 @@
 "use client";
 
+import { passwordProblem } from "@/lib/password";
 import { useState } from "react";
 import { TIER_LABELS, TIER_COLORS, inputStyle, labelStyle, cardStyle, sectionTitle } from "./shared";
 import type { VendorUser } from "./shared";
@@ -59,8 +60,9 @@ export default function AccountTab({
     setPwMsg("");
     setPwError("");
 
-    if (newPassword.length < 8) {
-      setPwError("Password must be at least 8 characters");
+    const pw = passwordProblem(newPassword);
+    if (pw) {
+      setPwError(pw);
       return;
     }
     if (newPassword !== confirmPassword) {

@@ -1,17 +1,18 @@
 "use client";
+import { formatLocation } from "@/lib/states";
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { CATEGORIES } from "@/data/categories";
 import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIERS = [
-  { value: "free",   label: "Unclaimed" },
+  { value: "free",   label: "Free" },
   { value: "select", label: "Select" },
   { value: "elite",  label: "Verified Pro" },
 ];
 
 const TIER_LABEL: Record<string, string> = {
-  free: "Unclaimed", select: "Select", elite: "Verified Pro",
+  free: "Free", select: "Select", elite: "Verified Pro",
 };
 const TIER_COLORS: Record<string, string> = {
   free: "#6B7280", select: "#2d6e52", elite: "#1A4A35",
@@ -202,7 +203,7 @@ export default function CompaniesPage() {
                     {CATEGORIES.find((cat) => cat.slug === c.category)?.shortLabel ?? c.category}
                   </td>
                   <td style={{ padding: "14px 20px", fontSize: "13px", color: "#6B7280", fontFamily: "sans-serif" }}>
-                    {c.location?.city}, {c.location?.state}
+                    {formatLocation(c.location) || "—"}
                   </td>
                   <td style={{ padding: "14px 20px" }}>
                     <span

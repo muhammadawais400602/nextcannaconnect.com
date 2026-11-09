@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // /membership duplicated /pricing — keep one canonical page.
+  async redirects() {
+    return [{ source: "/membership", destination: "/pricing", permanent: true }];
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

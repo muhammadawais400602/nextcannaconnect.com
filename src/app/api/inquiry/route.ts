@@ -10,6 +10,11 @@ import { escapeHtml } from "@/lib/escapeHtml";
 import { SITE_URL } from "@/lib/siteUrl";
 import { cleanEmail } from "@/lib/getCompaniesFromDB";
 
+const WEBMAIL = /@(gmail|googlemail|yahoo|ymail|hotmail|outlook|live|msn|aol|icloud|me|mac|proton|protonmail|gmx|mail|yandex|zoho)\./i;
+function isPersonalWebmail(email: string): boolean {
+  return WEBMAIL.test(email);
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => null);
@@ -53,7 +58,12 @@ export async function POST(req: NextRequest) {
 
     // Notify the vendor: the listing's public email plus the owner's account email.
     const owner = await User.findOne({ companyId: company._id }).select("email").lean();
-    const recipients = [...new Set([cleanEmail(company.email), owner?.email].filter(Boolean) as string[])];
+    // Unclaimed listings were imported from public sources; personal webmail
+    // addresses on them (e.g. random-looking Gmail accounts) may not belong to
+    // the business, so those leads go to the admin to forward instead.
+    const listingEmail = cleanEmail(company.email);
+    const trustedListingEmail = listingEmail && (owner || !isPersonalWebmail(listingEmail)) ? listingEmail : undefined;
+    const recipients = [...new Set([trustedListingEmail, owner?.email].filter(Boolean) as string[])];
 
     const rows = [
       ["Name", name],

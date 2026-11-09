@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { connectDB } from "@/lib/mongodb";
 import User from "@/lib/models/User";
-import { rateLimit, clientIp } from "@/lib/rateLimit";
+import { rateLimit, clientIp, tooManyRequests } from "@/lib/rateLimit";
 import { EMAIL_RE, str } from "@/lib/formGuard";
 import { sendEmail, emailLayout, emailButton } from "@/lib/email";
 import { SITE_URL } from "@/lib/siteUrl";
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
     const ip = clientIp(request);
     if (!(await rateLimit(`forgot:${ip}`, 5, 15 * 60_000)) || !(await rateLimit(`forgot:${email}`, 3, 60 * 60_000))) {
-      return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429 });
+      return tooManyRequests("Too many requests. Please try again later.", 15 * 60);
     }
 
     await connectDB();

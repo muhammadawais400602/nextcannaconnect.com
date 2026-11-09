@@ -19,7 +19,7 @@ const TIER_BG: Record<string, string> = {
 };
 
 const TIER_LABEL: Record<string, string> = {
-  free: "Unclaimed", select: "Select", elite: "Verified Pro",
+  free: "Free", select: "Select", elite: "Verified Pro",
 };
 
 function tierCounts() {
@@ -82,7 +82,7 @@ export default function DashboardPage() {
     { label: "Total Listings", value: COMPANIES.length, sub: "All tiers", color: "#1A4A35", bg: "#E8F5EE" },
     { label: "Paid Listings", value: (tiers.elite || 0) + (tiers.select || 0), sub: "Verified Pro + Select", color: "#E8821E", bg: "#FEF3E2" },
     { label: "Categories", value: CATEGORIES.length, sub: "Industry verticals", color: "#2563EB", bg: "#EFF6FF" },
-    { label: "Unclaimed", value: tiers.free || 0, sub: "Free tier listings", color: "#6B7280", bg: "#F3F4F6" },
+    { label: "Free", value: tiers.free || 0, sub: "Free plan listings", color: "#6B7280", bg: "#F3F4F6" },
   ];
 
   const tabStyle = (active: boolean): React.CSSProperties => ({

@@ -5,12 +5,12 @@ import { CATEGORIES } from "@/data/categories";
 import CustomSelect from "@/components/ui/CustomSelect";
 
 const TIERS = [
-  { value: "free",  label: "Unclaimed" },
+  { value: "free",  label: "Free" },
   { value: "select", label: "Select" },
   { value: "elite", label: "Verified Pro" },
 ];
 const TIER_LABEL: Record<string, string> = {
-  free: "Unclaimed", select: "Select", elite: "Verified Pro",
+  free: "Free", select: "Select", elite: "Verified Pro",
 };
 const LOGO_COLORS = ["#1A4A35", "#2563EB", "#7C3AED", "#E8821E", "#0D2818", "#047857", "#DC2626"];
 

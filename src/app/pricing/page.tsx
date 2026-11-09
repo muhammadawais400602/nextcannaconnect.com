@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
+import { stripeConfigured } from "@/lib/stripe";
 import FaqAccordion from "@/components/ui/FaqAccordion";
 
 export const metadata: Metadata = {
@@ -48,14 +49,13 @@ const TIERS = [
       "NextCanna Connect Select badge",
       "Public contact information",
       "Customer inquiry form",
-      "Photo gallery — up to 3 photos (coming soon)",
+      "Access to the RFP Board",
       "Basic enhanced directory card",
       "4 profile tabs",
     ],
     excluded: [
       "Priority search placement",
       "Video embedding & social links",
-      "Google Reviews integration (coming soon)",
       "Analytics dashboard",
       "Verified Pro badge",
     ],
@@ -78,10 +78,9 @@ const TIERS = [
       "Priority search placement",
       "Profile tabs (up to 7)",
       "Premium enhanced directory card",
-      "Unlimited photo gallery (coming soon)",
       "Video embedding & social links",
-      "Google Reviews integration (coming soon)",
       "Analytics dashboard",
+      "Access to the RFP Board",
     ],
     excluded: [],
     cta: "Get Verified Pro",
@@ -101,12 +100,11 @@ const COMPARISON_ROWS: {
   { feature: "Full Company Profile", free: "—", select: "✓", elite: "✓" },
   { feature: "Public Contact Information", free: "—", select: "✓", elite: "✓" },
   { feature: "Customer Inquiry Form", free: "✓", select: "✓", elite: "✓" },
-  { feature: "Photo Gallery (coming soon)", free: "—", select: "Up to 3", elite: "Unlimited" },
+  { feature: "RFP Board Access", free: "—", select: "✓", elite: "✓" },
   { feature: "Enhanced Directory Card", free: "—", select: "Basic", elite: "Premium" },
   { feature: "Profile Tabs", free: "—", select: "4", elite: "Up to 7" },
   { feature: "Priority Search Placement", free: "—", select: "—", elite: "✓" },
   { feature: "Video Embedding & Social Links", free: "—", select: "—", elite: "✓" },
-  { feature: "Google Reviews Integration (coming soon)", free: "—", select: "—", elite: "✓" },
   { feature: "Analytics Dashboard", free: "—", select: "—", elite: "✓" },
   { feature: "Verified Pro Badge", free: "—", select: "—", elite: "After verification" },
 ];
@@ -224,7 +222,7 @@ export default function PricingPage() {
               marginBottom: "6px",
             }}
           >
-            Introductory Promotional Pricing
+            Launch Pricing
           </p>
           <p
             style={{
@@ -234,10 +232,15 @@ export default function PricingPage() {
               margin: 0,
             }}
           >
-            These prices are available for new enrollments during a 60-day
-            introductory promotion. The promotional monthly rate is locked for
-            the first 12 months of your subscription. Existing customers retain
-            their current contractual terms.
+            These introductory rates are available to new members during our
+            launch period, and your monthly rate is locked for the first 12
+            months of your subscription.
+            {!stripeConfigured() && (
+              <>
+                {" "}During launch, payment is arranged directly with our team — we&apos;ll
+                contact you after you sign up. Online checkout is coming soon.
+              </>
+            )}
           </p>
         </div>
       </section>
@@ -567,6 +570,17 @@ export default function PricingPage() {
               </table>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Roadmap — not part of the plans until shipped */}
+      <section style={{ background: "white", padding: "0 20px 50px" }}>
+        <div style={{ maxWidth: "780px", margin: "0 auto", border: "1px dashed #C6E0D0", borderRadius: "12px", padding: "18px 22px" }}>
+          <p style={{ fontSize: "13px", fontWeight: 700, color: "#1A4A35", margin: "0 0 6px" }}>On the roadmap</p>
+          <p style={{ fontSize: "13px", color: "#4A5E4A", margin: 0, lineHeight: 1.6 }}>
+            Photo galleries (Select: up to 3 photos, Verified Pro: unlimited) and Google Reviews on your profile.
+            These aren&apos;t part of the plans yet — we&apos;ll announce them when they ship.
+          </p>
         </div>
       </section>
 

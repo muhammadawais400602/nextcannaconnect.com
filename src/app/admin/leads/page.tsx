@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { PLAN_LABEL } from "@/lib/tier";
 
 interface AdminInquiry {
   _id: string;
@@ -138,7 +139,7 @@ export default function LeadsPage() {
                       <a href={`/vendor/${l.vendorSlug}`} target="_blank" rel="noreferrer" style={{ color: "#1A4A35", fontWeight: 600 }}>
                         {l.vendor?.name ?? l.vendorSlug} ↗
                       </a>
-                      {l.vendor && <div style={{ fontSize: "11px", color: "#9CA3AF", textTransform: "capitalize" }}>{l.vendor.tier === "elite" ? "Verified Pro" : l.vendor.tier}</div>}
+                      {l.vendor && <div style={{ fontSize: "11px", color: "#9CA3AF", textTransform: "capitalize" }}>{PLAN_LABEL[l.vendor.tier] ?? l.vendor.tier}</div>}
                     </td>
                     <td style={{ padding: "12px 16px", maxWidth: "360px" }}>
                       {l.serviceNeeded && <div style={{ fontWeight: 600, color: "#1A4A35" }}>{l.serviceNeeded}</div>}

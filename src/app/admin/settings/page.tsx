@@ -14,7 +14,7 @@ interface DeleteResult {
 }
 
 const TIERS = [
-  { value: "free",   label: "Unclaimed",    color: "#6B7280", bg: "rgba(107,114,128,0.08)" },
+  { value: "free",   label: "Free",    color: "#6B7280", bg: "rgba(107,114,128,0.08)" },
   { value: "select", label: "Select",       color: "#2d6e52", bg: "rgba(45,110,82,0.1)"    },
   { value: "elite",  label: "Verified Pro", color: "#92400E", bg: "rgba(217,119,6,0.1)"    },
 ];
@@ -265,10 +265,10 @@ function DemoListingsCard() {
       </div>
       <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "12px" }}>
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-          <button onClick={() => run("load")} disabled={phase === "loading"} style={{ padding: "10px 20px", background: "#1A4A35", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: phase === "loading" ? "wait" : "pointer", opacity: phase === "loading" && action === "load" ? 0.7 : 1 }}>
+          <button onClick={() => { if (confirm("Add demo listings to the LIVE directory? They are fake businesses and will be visible to visitors until removed.")) run("load"); }} disabled={phase === "loading"} style={{ padding: "10px 20px", background: "#1A4A35", color: "white", border: "none", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: phase === "loading" ? "wait" : "pointer", opacity: phase === "loading" && action === "load" ? 0.7 : 1 }}>
             {phase === "loading" && action === "load" ? "Loading…" : "Load Demo Listings"}
           </button>
-          <button onClick={() => run("remove")} disabled={phase === "loading"} style={{ padding: "10px 20px", background: "white", color: "#DC2626", border: "1px solid #FECACA", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: phase === "loading" ? "wait" : "pointer", opacity: phase === "loading" && action === "remove" ? 0.7 : 1 }}>
+          <button onClick={() => { if (confirm("Remove all demo listings?")) run("remove"); }} disabled={phase === "loading"} style={{ padding: "10px 20px", background: "white", color: "#DC2626", border: "1px solid #FECACA", borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: phase === "loading" ? "wait" : "pointer", opacity: phase === "loading" && action === "remove" ? 0.7 : 1 }}>
             {phase === "loading" && action === "remove" ? "Removing…" : "Remove Demo Listings"}
           </button>
         </div>

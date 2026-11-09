@@ -76,6 +76,18 @@ export async function PATCH(
     const eFullName = escapeHtml(app.fullName);
     const eCompanyName = escapeHtml(app.companyName);
     const eTierLabel = escapeHtml(tierLabel);
+    const isPaidPlan = app.tier === "select" || app.tier === "elite";
+    // Before Stripe: paid plans are invoiced by hand — say so in the email.
+    const paymentBlock =
+      isPaidPlan && app.paymentStatus !== "paid"
+        ? `<div style="background:#FFFBEB;border:1px solid #FDE68A;border-radius:8px;padding:14px 16px;margin:20px 0;color:#92400E;line-height:1.6">
+             <strong>Payment setup</strong> — your ${eTierLabel} subscription (${app.tier === "elite" ? "$39.99" : "$19.99"}/mo) hasn't been invoiced yet.
+             Our team will reach out within 1 business day to arrange payment. If you'd like to pay sooner, just reply to this email.
+           </div>`
+        : "";
+    const rfpBlock = isPaidPlan
+      ? `<p style="line-height:1.6;color:#4A5E4A">Your plan includes the <a href="${siteUrl}/rfp-board" style="color:#1A4A35;font-weight:600">RFP Board</a>, where buyers post requests for proposals you can respond to.</p>`
+      : "";
 
     if (status === "approved") {
       // Create Company record if one doesn't exist yet (best-effort — never blocks approval)
@@ -168,6 +180,8 @@ export async function PATCH(
                   Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>. Your account is now active!
                 </p>
+                ${paymentBlock}
+                ${rfpBlock}
                 <div style="text-align:center;margin:28px 0">
                   <a href="${siteUrl}/signin"
                      style="background:#1A4A35;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;display:inline-block">
@@ -195,6 +209,8 @@ export async function PATCH(
                   Your application for <strong>${eCompanyName}</strong> on the <strong>${eTierLabel}</strong>
                   plan has been <strong style="color:#1A4A35">approved</strong>.
                 </p>
+                ${paymentBlock}
+                ${rfpBlock}
                 <p style="line-height:1.6;color:#4A5E4A">
                   Click the button below to set your password and activate your account.
                   This link expires in <strong>72 hours</strong>.
