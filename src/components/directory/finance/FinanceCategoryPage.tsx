@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import FinanceListingsGrid from "./FinanceListingsGrid";
@@ -35,7 +36,7 @@ export default async function FinanceCategoryPage() {
       title="Finance & Insurance"
       description="Cannabis-specialized banking, lending, insurance, and accounting services for licensed cannabis operators."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Providers` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Providers" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "account_balance", label: "Banking to Insurance" },
       ]}

@@ -1,3 +1,5 @@
+import HeroListedCount from "@/components/directory/HeroListedCount";
+import { stateCounts } from "@/lib/states";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import TechListingsGrid from "./TechListingsGrid";
@@ -34,7 +36,7 @@ export default async function TechCategoryPage() {
       title="Technology & Software"
       description="Institutional-grade enterprise solutions for the regulated cannabis supply chain — compliant POS, seed-to-sale tracking, and robust ERP platforms."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Vendors` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Vendors" /> },
         { icon: "hub", label: `${metrcCount} Metrc Integrations` },
         { icon: "shield", label: "SOC 2 Vetted" },
       ]}

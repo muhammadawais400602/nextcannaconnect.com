@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import TestingListingsGrid from "./TestingListingsGrid";
@@ -35,7 +36,7 @@ export default async function TestingCategoryPage() {
       title="Testing & Science"
       description="ISO 17025-accredited cannabis testing laboratories and analytical service providers."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Labs` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Labs" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "science", label: "ISO 17025 Accredited" },
       ]}

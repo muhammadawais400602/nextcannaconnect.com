@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import RealEstateListingsGrid from "./RealEstateListingsGrid";
@@ -35,7 +36,7 @@ export default async function RealEstateCategoryPage() {
       title="Real Estate & Construction"
       description="Institutional-grade architecture, general contracting, and specialized engineering firms verified for commercial cannabis cultivation and retail buildouts."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Firms` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Firms" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "task_alt", label: "100% Cannabis-Zoned Specs" },
       ]}

@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import MarketingListingsGrid from "./MarketingListingsGrid";
@@ -35,7 +36,7 @@ export default async function MarketingCategoryPage() {
       title="Marketing, Branding & Packaging"
       description="Cannabis-specialized agencies offering brand strategy, packaging design, digital marketing, and creative services."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Agencies` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Agencies" /> },
         { icon: "palette", label: "Cannabis Compliance Experts" },
         { icon: "brush", label: "Full-Service Creative" },
       ]}

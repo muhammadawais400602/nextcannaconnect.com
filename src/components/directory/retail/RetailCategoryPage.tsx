@@ -1,4 +1,5 @@
-import { stateOptions } from "@/lib/states";
+import { stateCounts, stateOptions } from "@/lib/states";
+import HeroListedCount from "@/components/directory/HeroListedCount";
 import { getCompaniesByCategory } from "@/lib/getCompaniesFromDB";
 import CategoryPageShell from "@/components/directory/CategoryPageShell";
 import RetailListingsGrid from "./RetailListingsGrid";
@@ -35,7 +36,7 @@ export default async function RetailCategoryPage() {
       title="Retail & Dispensary"
       description="Connect with licensed, verified retail operations across the nation. Browse trusted storefronts and delivery services evaluated for compliance and operational excellence."
       stats={[
-        { icon: "verified", label: `${companies.length.toLocaleString()} Listed Listings` },
+        { icon: "verified", label: <HeroListedCount total={companies.length} counts={stateCounts(companies)} noun="Listings" /> },
         { icon: "map", label: `${statesCovered} States Covered` },
         { icon: "update", label: "Updated Daily" },
       ]}

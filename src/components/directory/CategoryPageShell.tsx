@@ -9,7 +9,7 @@ const OUTLINE = "#717973";
 
 export interface HeroStat {
   icon: string;
-  label: string;
+  label: React.ReactNode;
 }
 export interface GuideItem {
   icon: string;
@@ -106,7 +106,7 @@ export default function CategoryPageShell({
           <p style={{ fontSize: "18px", color: "rgba(251,249,248,0.9)", maxWidth: "640px", margin: "0 0 32px", lineHeight: 1.5 }}>{description}</p>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", marginBottom: "32px" }}>
             {stats.map((s) => (
-              <div key={s.label} style={{ background: "rgba(251,249,248,0.1)", backdropFilter: "blur(4px)", border: "1px solid rgba(251,249,248,0.2)", padding: "8px 16px", borderRadius: "0.5rem", display: "flex", alignItems: "center", gap: "8px", color: "#FBF9F8" }}>
+              <div key={s.icon} style={{ background: "rgba(251,249,248,0.1)", backdropFilter: "blur(4px)", border: "1px solid rgba(251,249,248,0.2)", padding: "8px 16px", borderRadius: "0.5rem", display: "flex", alignItems: "center", gap: "8px", color: "#FBF9F8" }}>
                 <span aria-hidden="true" className="material-symbols-outlined" style={{ color: SAGE }}>{s.icon}</span>
                 <span style={{ fontSize: "14px", fontWeight: 500 }}>{s.label}</span>
               </div>

@@ -32,6 +32,8 @@ export default function VendorJsonLd({ company }: { company: Company }) {
   const served = (company.statesServed ?? []).filter(Boolean);
   if (served.length) data.areaServed = served.map((s) => ({ "@type": "AdministrativeArea", name: s }));
   else if (company.location?.state) data.areaServed = { "@type": "AdministrativeArea", name: company.location.state };
+  // priceRange is a LocalBusiness property; only the consultant hourly rate is real price data.
+  if (data["@type"] === "LocalBusiness" && company.hourlyRate?.trim()) data.priceRange = company.hourlyRate.trim().slice(0, 100);
   const sameAs = [company.linkedinUrl, company.instagramUrl, company.youtubeUrl].filter(Boolean);
   if (sameAs.length) data.sameAs = [...((data.sameAs as string[]) ?? []), ...sameAs];
 

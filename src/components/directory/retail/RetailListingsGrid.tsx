@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { formatLocation, matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
 import Link from "next/link";
@@ -142,6 +142,14 @@ export default function RetailListingsGrid({ companies }: { companies: Company[]
   const searchParams = useSearchParams();
   // Pre-select the state chosen in the home/directory search (?state=California or ?state=CA).
   const [location, setLocation] = useState(() => toStateCode(searchParams.get("state")));
+  // Keep ?state in the URL so the hero count and shared links match the filter.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if ((url.searchParams.get("state") ?? "") === location) return;
+    if (location) url.searchParams.set("state", location);
+    else url.searchParams.delete("state");
+    window.history.replaceState(null, "", url);
+  }, [location]);
   const [licenseType, setLicenseType] = useState("");
   const [serviceType, setServiceType] = useState("");
   const [verifiedOnly, setVerifiedOnly] = useState(false);

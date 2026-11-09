@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { matchesSearch } from "@/lib/listingSearch";
 import { formatLocation, matchesState, stateName, stateOptions, toStateCode } from "@/lib/states";
@@ -123,6 +123,14 @@ export default function ExtractionListingsGrid({ companies }: { companies: Compa
   const searchParams = useSearchParams();
   // Pre-select the state chosen in the home/directory search (?state=California or ?state=CA).
   const [location, setLocation] = useState(() => toStateCode(searchParams.get("state")));
+  // Keep ?state in the URL so the hero count and shared links match the filter.
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if ((url.searchParams.get("state") ?? "") === location) return;
+    if (location) url.searchParams.set("state", location);
+    else url.searchParams.delete("state");
+    window.history.replaceState(null, "", url);
+  }, [location]);
   const [search, setSearch] = useState(() => searchParams.get("q") ?? "");
   const [method, setMethod] = useState("");
   const [sort, setSort] = useState("");
